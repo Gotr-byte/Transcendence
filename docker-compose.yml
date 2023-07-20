@@ -10,8 +10,8 @@ services:
   backend:
     build: ./backend
     ports:
-      - "8080:8080"
-      - "5555:5555"
+      - "8080:8080"         #BACKEND PORT
+      - "5555:5555"         #PRISMA STUDIO PORT
     restart: unless-stopped
     env_file:
     - .env
