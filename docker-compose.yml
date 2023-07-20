@@ -1,0 +1,19 @@
+services:
+  database:
+    build: ./database
+    ports:
+      - "5432:5432"
+    restart: unless-stopped
+    env_file:
+    - .env
+
+  backend:
+    build: ./backend
+    ports:
+      - "8080:8080"
+      - "5555:5555"
+    restart: unless-stopped
+    env_file:
+    - .env
+    depends_on:
+      - database
