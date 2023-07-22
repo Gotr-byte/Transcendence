@@ -23,11 +23,11 @@ clean:
 	@docker compose -f ./docker-compose.yml down --rmi all
 	@echo $(RED) Images Removed $(EOC);
 
-pre_push:
-	@rm -rf ./frontend/dist/
-	@rm -rf ./frontend/node_modules/
-	@rm -rf ./backend/dist/
-	@rm -rf ./backend/node_modules/
+# pre_push:
+# 	@rm -rf ./frontend/dist/
+# 	@rm -rf ./frontend/node_modules/
+# 	@rm -rf ./backend/dist/
+# 	@rm -rf ./backend/node_modules/
 
 re: clean all
 
