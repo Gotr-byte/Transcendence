@@ -1,17 +1,42 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+generator client {
+  provider = "prisma-client-js"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+// This looks like a table in postgresql
+model Article {
+  id          Int      @id @default(autoincrement())
+  title       String   @unique
+  description String?
+  body        String
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
-generator client {
-  provider = "prisma-client-js"
+
+//changes made below
+
+model User {
+  id         Int       @id @default(autoincrement())
+  name       String?
+  followedBy Follows[] @relation("following")
+  following  Follows[] @relation("follower")
+}
+
+model Follows {
+  follower    User @relation("follower", fields: [followerId], references: [id])
+  followerId  Int
+  following   User @relation("following", fields: [followingId], references: [id])
+  followingId Int
+  isPending   Boolean @default(true)
+
+  @@id([followerId, followingId])
 }
