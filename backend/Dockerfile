@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:20.5.0
 
 WORKDIR /app
 
@@ -8,7 +8,8 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 8080
-EXPOSE 5555
+RUN yarn prisma generate
 
-CMD ["npm", "run", "prisma:studio"]
+EXPOSE 3001
+
+CMD ["npm", "run", "start:migrate:prod"]
