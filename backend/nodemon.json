@@ -1,0 +1,4 @@
+{   
+    "ignore": ["lib/*.js", "dist/", "logs/*.log"] 
+}
+
