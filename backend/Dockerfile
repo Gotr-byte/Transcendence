@@ -12,4 +12,4 @@ RUN yarn prisma generate
 
 EXPOSE 3001
 
-CMD ["npm", "run", "start:migrate:dev"]
+CMD ["npm", "run", "start:dev"]
