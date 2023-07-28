@@ -9,12 +9,12 @@ all: up
 
 up:	
 	@echo $(GREEN) Starting Containers ... $(EOC);
-	@docker-compose -f ./docker-compose.yml up --build
+	@docker compose -f ./docker-compose.yml up --build
 
 
 silent:	
 	@echo $(GREEN) Starting Containers silently ... $(EOC);
-	@docker-compose -f ./docker-compose.yml up -d --build
+	@docker compose -f ./docker-compose.yml up -d --build
 
 down:
 	@docker compose -f ./docker-compose.yml down
@@ -26,7 +26,7 @@ clean:
 
 dev_up:	
 	@echo $(GREEN) Starting Containers ... $(EOC);
-	@docker-compose -f ./docker-compose.dev.yml up --build
+	@docker compose -f ./docker-compose.dev.yml up --build
 
 dev_down:
 	@docker compose -f ./docker-compose.dev.yml down

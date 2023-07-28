@@ -8,7 +8,9 @@ services:
     - .env
 
   backend:
-    build: ./backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     ports:
       - "3001:3001"         #BACKEND PORT
     restart: unless-stopped

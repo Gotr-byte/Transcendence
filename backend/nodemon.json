@@ -1,4 +1,4 @@
-{   
-    "ignore": ["lib/*.js", "dist/", "logs/*.log"] 
+{
+    "ext": "js,ts,prisma",   
+    "ignore": ["dist/"]
 }
-
