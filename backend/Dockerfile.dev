@@ -6,10 +6,12 @@ COPY package*.json ./
 
 RUN npm install
 
+RUN yarn prisma generate
+
 COPY . .
 
-RUN yarn prisma generate
+RUN	npm run build
 
 EXPOSE 3001
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "dev:nodemon"]
