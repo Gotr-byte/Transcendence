@@ -1,4 +1,0 @@
-{
-    "ext": "js,ts,prisma",   
-    "ignore": ["dist/"]
-}

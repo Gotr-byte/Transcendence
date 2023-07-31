@@ -22,9 +22,7 @@ model Article {
   updatedAt   DateTime @updatedAt
 }
 
-
 //changes made below
-
 model User {
   id         Int       @id @default(autoincrement())
   name       String?
