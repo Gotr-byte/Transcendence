@@ -41,3 +41,11 @@ model Match {
   homeScore Int
   awayScore Int
 }
+
+model Jimmy {
+  id      Int      @id @default(autoincrement())
+  started DateTime
+  ended   DateTime
+  homeScore Int
+  awayScore Int
+}

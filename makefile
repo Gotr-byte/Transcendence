@@ -14,7 +14,7 @@ up:
 dev_up:	
 	@echo $(GREEN) Starting Containers ... $(EOC);
 	@BUILD_TARGET=dev docker-compose -f ./docker-compose.yml up --build
-	
+
 silent:	
 	@echo $(GREEN) Starting Containers silently ... $(EOC);
 	@BUILD_TARGET=prod docker-compose -f ./docker-compose.yml up -d --build
@@ -25,7 +25,8 @@ down:
 
 clean:
 	@docker-compose -f ./docker-compose.yml down --rmi all
-	@echo $(RED) Images Removed $(EOC);
+	@docker volume prune
+	@echo $(RED) Images and Volumes Removed $(EOC);
 
 
 re: clean all
