@@ -2,7 +2,7 @@ services:
   database:
     build: ./database
     ports:
-      - "5432:5432"
+      - ${DB_PORT}:${DB_PORT}
     restart: unless-stopped
     env_file:
     - .env
@@ -10,9 +10,13 @@ services:
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      target: ${BUILD_TARGET}
     ports:
-      - "3001:3001"         #BACKEND PORT
+      - ${BACKEND_PORT}:${BACKEND_PORT}
+      - 5555:5555                           #PRISMA STUDIO PORT FOR DEV
+    volumes:
+      - ./backend:/app:delegated
+      - /app/node_modules
     restart: unless-stopped
     env_file:
     - .env

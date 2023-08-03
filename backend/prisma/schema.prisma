@@ -3,7 +3,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  binaryTargets = ["native", "linux-arm64-openssl-3.0.x", "darwin-arm64"]
 }
 
 datasource db {
@@ -11,32 +10,34 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// This looks like a table in postgresql
-model Article {
-  id          Int      @id @default(autoincrement())
-  title       String   @unique
-  description String?
-  body        String
-  published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-//changes made below
 model User {
-  id         Int       @id @default(autoincrement())
-  name       String?
-  followedBy Follows[] @relation("following")
-  following  Follows[] @relation("follower")
+  id          Int      @id @default(autoincrement())
+  userName    String?  @unique @default("")
+  OAuthName   String   @unique
+  email       String?  @unique @default("")
+  avatar      String?  @default("https://avatarfiles.alphacoders.com/183/183501.jpg")
+  updatedAt   DateTime @updatedAt
+  accessToken String   @default("None")
+  is2Fa       Boolean  @default(false)
+  homeMatches Match[]  @relation("home")
+  awayMatches Match[] @relation("away")
+  wonMatches  Match[] @relation("winner")
 }
 
+model Match {
+  id      Int      @id @default(autoincrement())
+  started DateTime
+  ended   DateTime
 
-model Follows {
-  follower    User @relation("follower", fields: [followerId], references: [id])
-  followerId  Int
-  following   User @relation("following", fields: [followingId], references: [id])
-  followingId Int
-  isPending   Boolean @default(true)
+  homePlayer   User @relation("home", fields: [homePlayerId], references: [id])
+  homePlayerId Int
 
-  @@id([followerId, followingId])
+  awayPlayer   User @relation("away", fields: [awayPlayerId], references: [id])
+  awayPlayerId Int
+
+  winner   User @relation("winner", fields: [winnerId], references: [id])
+  winnerId Int
+
+  homeScore Int
+  awayScore Int
 }

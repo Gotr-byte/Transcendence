@@ -9,12 +9,15 @@ all: up
 
 up:	
 	@echo $(GREEN) Starting Containers ... $(EOC);
-	@docker-compose -f ./docker-compose.yml up --build
+	@BUILD_TARGET=prod docker-compose -f ./docker-compose.yml up --build
 
-
+dev_up:	
+	@echo $(GREEN) Starting Containers ... $(EOC);
+	@BUILD_TARGET=dev docker-compose -f ./docker-compose.yml up --build
+	
 silent:	
 	@echo $(GREEN) Starting Containers silently ... $(EOC);
-	@docker-compose -f ./docker-compose.yml up -d --build
+	@BUILD_TARGET=prod docker-compose -f ./docker-compose.yml up -d --build
 
 down:
 	@docker-compose -f ./docker-compose.yml down
@@ -24,17 +27,6 @@ clean:
 	@docker-compose -f ./docker-compose.yml down --rmi all
 	@echo $(RED) Images Removed $(EOC);
 
-dev_up:	
-	@echo $(GREEN) Starting Containers ... $(EOC);
-	@docker-compose -f ./docker-compose.dev.yml up --build
-
-dev_down:
-	@docker-compose -f ./docker-compose.dev.yml down
-	@echo $(YELLOW) Containers Removed $(EOC);
-
-dev_clean:
-	@docker-compose -f ./docker-compose.dev.yml down --rmi all
-	@echo $(RED) Images Removed $(EOC);
 
 re: clean all
 
