@@ -4,8 +4,10 @@ services:
     ports:
       - "5432:5432"
     restart: unless-stopped
+    # volumes:
+    #   - ./database/data/:/var/lib/postgresql/data
     env_file:
-    - .env
+      - .env
 
   backend:
     build:
@@ -13,11 +15,12 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "3001:3001"         #BACKEND PORT
+      - "5555:5555"         #PRISMA STUDIO
     restart: unless-stopped
     volumes:
       - ./backend:/app:delegated
       - /app/node_modules
     env_file:
-    - .env
+      - .env
     depends_on:
       - database

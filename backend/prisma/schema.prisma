@@ -30,6 +30,7 @@ model User {
   following  Follows[] @relation("follower")
 }
 
+
 model Follows {
   follower    User @relation("follower", fields: [followerId], references: [id])
   followerId  Int
