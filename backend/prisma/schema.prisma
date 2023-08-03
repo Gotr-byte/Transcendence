@@ -20,8 +20,8 @@ model User {
   accessToken String   @default("None")
   is2Fa       Boolean  @default(false)
   homeMatches Match[]  @relation("home")
-  awayMatches Match[] @relation("away")
-  wonMatches  Match[] @relation("winner")
+  awayMatches Match[]  @relation("away")
+  wonMatches  Match[]  @relation("winner")
 }
 
 model Match {
@@ -31,21 +31,11 @@ model Match {
 
   homePlayer   User @relation("home", fields: [homePlayerId], references: [id])
   homePlayerId Int
-
   awayPlayer   User @relation("away", fields: [awayPlayerId], references: [id])
   awayPlayerId Int
+  winner       User @relation("winner", fields: [winnerId], references: [id])
+  winnerId     Int
 
-  winner   User @relation("winner", fields: [winnerId], references: [id])
-  winnerId Int
-
-  homeScore Int
-  awayScore Int
-}
-
-model Jimmy {
-  id      Int      @id @default(autoincrement())
-  started DateTime
-  ended   DateTime
   homeScore Int
   awayScore Int
 }

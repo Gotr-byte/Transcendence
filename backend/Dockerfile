@@ -24,8 +24,7 @@ RUN npm install
 
 COPY . .
 
-RUN npx prisma generate
-
 EXPOSE 3001
+EXPOSE 5555
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "migrate:prod"]
