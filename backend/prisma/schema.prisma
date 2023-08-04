@@ -24,6 +24,12 @@ model User {
   wonMatches  Match[]  @relation("Winner")
   blockedBy   Blocked[] @relation("BlockedBy")
   blockedUsers   Blocked[] @relation("Blocked")
+
+  sentFriendRequest FriendRequest[] @relation("SentRequest")
+  recievedFriendRequest FriendRequest[] @relation("RecievedRequest")
+
+  friends User[] @relation("UserFriends")
+  friendsOf User[] @relation("UserFriends")
 }
 
 model Match {
@@ -42,10 +48,22 @@ model Match {
   awayScore Int
 }
 
-// model Friends {
-//   user  User @relation("User", fields: [userId], references: [Id])
-//   userId  Int
-// } 
+model FriendRequest {
+  sent  User @relation("SentRequest", fields: [senderId], references: [id])
+  senderId Int
+  recieved  User @relation("RecievedRequest", fields: [recieverId], references: [id])
+  recieverId  Int
+
+  status FriendRequestStatus @default(PENDING)
+
+  @@unique([senderId, recieverId])
+}
+
+enum FriendRequestStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+} 
 
 model Blocked {
   blockedUser User @relation("BlockedBy", fields: [blockedUserId], references: [id])
