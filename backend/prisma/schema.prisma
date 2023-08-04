@@ -19,9 +19,11 @@ model User {
   updatedAt   DateTime @updatedAt
   accessToken String   @default("None")
   is2Fa       Boolean  @default(false)
-  homeMatches Match[]  @relation("home")
-  awayMatches Match[]  @relation("away")
-  wonMatches  Match[]  @relation("winner")
+  homeMatches Match[]  @relation("Home")
+  awayMatches Match[]  @relation("Away")
+  wonMatches  Match[]  @relation("Winner")
+  blockedBy   Blocked[] @relation("BlockedBy")
+  blockedUsers   Blocked[] @relation("Blocked")
 }
 
 model Match {
@@ -29,13 +31,27 @@ model Match {
   started DateTime
   ended   DateTime
 
-  homePlayer   User @relation("home", fields: [homePlayerId], references: [id])
+  homePlayer   User @relation("Home", fields: [homePlayerId], references: [id])
   homePlayerId Int
-  awayPlayer   User @relation("away", fields: [awayPlayerId], references: [id])
+  awayPlayer   User @relation("Away", fields: [awayPlayerId], references: [id])
   awayPlayerId Int
-  winner       User @relation("winner", fields: [winnerId], references: [id])
+  winner       User @relation("Winner", fields: [winnerId], references: [id])
   winnerId     Int
 
   homeScore Int
   awayScore Int
+}
+
+// model Friends {
+//   user  User @relation("User", fields: [userId], references: [Id])
+//   userId  Int
+// } 
+
+model Blocked {
+  blockedUser User @relation("BlockedBy", fields: [blockedUserId], references: [id])
+  blockedUserId Int
+  blockingUser User @relation("Blocked", fields: [blockingUserId], references: [id])
+  blockingUserId Int
+
+  @@unique([blockingUserId, blockedUserId])
 }

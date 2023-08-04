@@ -28,7 +28,8 @@ clean:
 	@docker volume prune
 	@echo $(RED) Images and Volumes Removed $(EOC);
 
-
 re: clean all
+
+dev_re:	clean dev_up
 
 .PHONY: up
