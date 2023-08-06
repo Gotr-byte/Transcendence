@@ -25,8 +25,13 @@ down:
 
 clean:
 	@docker-compose -f ./docker-compose.yml down --rmi all
-	@docker volume prune
-	@echo $(RED) Images and Volumes Removed $(EOC);
+	@docker volume prune -a
+	@echo $(RED) Containers, Images and Volumes Removed $(EOC);
+
+docker_clean:
+	@docker volume prune -a
+	@docker system prune -a
+	@echo $(RED) Containers, Images, Volumes and Build Cache Removed $(EOC);
 
 re: clean all
 
