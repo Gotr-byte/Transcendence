@@ -1,4 +1,14 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 
 @Controller('auth')
-export class AuthController {}
+export class AuthController {
+	@Get('42/login')
+	handleLogin() {
+		return { msg: '42 Authentication' };
+	}
+
+	@Get('42/redirected')
+	handleRedirect() {
+		return { msg: 'OK' };
+	}
+}

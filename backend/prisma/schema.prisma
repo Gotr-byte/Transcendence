@@ -11,25 +11,128 @@ datasource db {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
-  userName    String?  @unique @default("")
-  OAuthName   String   @unique
-  email       String?  @unique @default("")
-  avatar      String?  @default("https://avatarfiles.alphacoders.com/183/183501.jpg")
-  updatedAt   DateTime @updatedAt
-  accessToken String   @default("None")
-  is2Fa       Boolean  @default(false)
-  homeMatches Match[]  @relation("Home")
-  awayMatches Match[]  @relation("Away")
-  wonMatches  Match[]  @relation("Winner")
-  blockedBy   Blocked[] @relation("BlockedBy")
-  blockedUsers   Blocked[] @relation("Blocked")
+  id           Int       @id @default(autoincrement())
+  userName     String?   @unique @default("")
+  OAuthName    String    @unique
+  email        String?   @unique @default("")
+  avatar       String?   @default("https://avatarfiles.alphacoders.com/183/183501.jpg")
+  createdAt    DateTime  @default(now())
+  accessToken  String    @default("None")
+  is2Fa        Boolean   @default(false)
 
-  sentFriendRequest FriendRequest[] @relation("SentRequest")
+  createdChannels Channel[] @relation("CreatedChannel")
+  followingChannels ChannelMember[] @relation("MemberOfChannel")
+  restrictedChannels ChannelUserRestriction[] @relation("UserRestriction")
+
+  sentMessages  Message[] @relation("SentMessage")
+  recievedMessages Message[] @relation("RecievedMessage")
+
+  homeMatches  Match[]   @relation("Home")
+  awayMatches  Match[]   @relation("Away")
+  wonMatches   Match[]   @relation("Winner")
+  blockedBy    Blocked[] @relation("BlockedBy")
+  blockedUsers Blocked[] @relation("Blocked")
+
+  sentFriendRequest     FriendRequest[] @relation("SentRequest")
   recievedFriendRequest FriendRequest[] @relation("RecievedRequest")
+}
+//It would be cool to have unread messages highlighted for a user, for that i can implement an other table for read messages later
 
-  friends User[] @relation("UserFriends")
-  friendsOf User[] @relation("UserFriends")
+model Message {
+  id Int  @id @default(autoincrement())
+  sender User @relation("SentMessage", fields: [senderId], references: [id])
+  senderId Int
+
+  // Receiver field is optional, a message can be sent to a user or a channel
+  receiver User? @relation("RecievedMessage", fields: [receiverId], references: [id])
+  receiverId Int?
+
+  // Thus channel field is optional as well
+  channel Channel? @relation("ChannelMessage", fields: [channelId], references: [id])
+  channelId Int?
+
+  content String
+  createdAt DateTime @default(now())
+}
+
+model Channel {  
+  id Int  @id @default(autoincrement())
+  creator User @relation("CreatedChannel", fields: [creatorId], references: [id])
+  creatorId Int
+  channelUsers ChannelMember[] @relation("ChannelfromMember")
+  restrictedUsers ChannelUserRestriction[] @relation("ChannelRestriction")
+  channelMessages Message[] @relation("ChannelMessage")
+
+  title String @unique
+  password String?
+  channelType ChannelTypes @default(PUBLIC)
+  createdAt DateTime @default(now())
+}
+
+model ChannelMember {
+  user User @relation("MemberOfChannel", fields: [userId], references: [id])
+  userId Int
+
+  channel Channel @relation("ChannelfromMember", fields: [channelId], references: [id])
+  channelId Int
+
+  role  ChannelMemberRole @default(USER)
+
+  @@unique([userId, channelId])
+}
+
+enum ChannelMemberRole {
+  ADMIN
+  USER
+}
+
+model ChannelUserRestriction {
+  restrictedUser User @relation("UserRestriction", fields: [restrictedUserId], references: [id])
+  restrictedUserId Int
+
+  restrictedChannel Channel @relation("ChannelRestriction", fields: [restrictedChannelId], references: [id])
+  restrictedChannelId Int
+
+  restrictionType ChannelUserRestrictionTypes
+
+  @@unique([restrictedUserId, restrictedChannelId])
+}
+
+enum ChannelUserRestrictionTypes {
+  MUTED
+  BANNED
+}
+
+// TO RETRIEVE FRIENDS OF A USER //
+// const userId = 1; // Replace with the actual user's ID
+
+// const acceptedFriendships = await prisma.friendRequest.findMany({
+//   where: {
+//     accepted: true,
+//     OR: [
+//       { senderId: userId },
+//       { receiverId: userId },
+//     ],
+//   },
+// });
+
+// const friendIds = acceptedFriendships.map((friendship) => {
+//   // Determine which side is the friend and which side is the user
+//   return friendship.senderId === userId ? friendship.receiverId : friendship.senderId;
+// });
+
+// const totalFriends = await prisma.user.count({
+//   where: {
+//     id: { in: friendIds },
+//   },
+// });
+
+// console.log(totalFriends);
+
+enum ChannelTypes {
+  PUBLIC
+  PROTECTED //visible to anyone but password protected
+  PRIVATE   //visible only to members, invitation only
 }
 
 model Match {
@@ -49,26 +152,20 @@ model Match {
 }
 
 model FriendRequest {
-  sent  User @relation("SentRequest", fields: [senderId], references: [id])
-  senderId Int
-  recieved  User @relation("RecievedRequest", fields: [recieverId], references: [id])
-  recieverId  Int
+  sent       User @relation("SentRequest", fields: [senderId], references: [id])
+  senderId   Int
+  recieved   User @relation("RecievedRequest", fields: [receiverId], references: [id])
+  receiverId Int
 
-  status FriendRequestStatus @default(PENDING)
+  isAccepted Boolean @default(false)
 
-  @@unique([senderId, recieverId])
+  @@unique([senderId, receiverId])
 }
 
-enum FriendRequestStatus {
-  PENDING
-  ACCEPTED
-  DECLINED
-} 
-
 model Blocked {
-  blockedUser User @relation("BlockedBy", fields: [blockedUserId], references: [id])
-  blockedUserId Int
-  blockingUser User @relation("Blocked", fields: [blockingUserId], references: [id])
+  blockedUser    User @relation("BlockedBy", fields: [blockedUserId], references: [id])
+  blockedUserId  Int
+  blockingUser   User @relation("Blocked", fields: [blockingUserId], references: [id])
   blockingUserId Int
 
   @@unique([blockingUserId, blockedUserId])
