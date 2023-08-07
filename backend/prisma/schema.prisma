@@ -20,9 +20,9 @@ model User {
   accessToken  String    @default("None")
   is2Fa        Boolean   @default(false)
 
-  createdChannels Channel[] @relation("CreatedChannel")
-  followingChannels ChannelMember[] @relation("MemberOfChannel")
-  restrictedChannels ChannelUserRestriction[] @relation("UserRestriction")
+  createdChannels Channel[] @relation
+  followingChannels ChannelMember[] @relation
+  restrictedChannels ChannelUserRestriction[] @relation
 
   sentMessages  Message[] @relation("SentMessage")
   recievedMessages Message[] @relation("RecievedMessage")
@@ -30,12 +30,14 @@ model User {
   homeMatches  Match[]   @relation("Home")
   awayMatches  Match[]   @relation("Away")
   wonMatches   Match[]   @relation("Winner")
+
+  blocked      Blocked[] @relation("Blocked")
   blockedBy    Blocked[] @relation("BlockedBy")
-  blockedUsers Blocked[] @relation("Blocked")
 
   sentFriendRequest     FriendRequest[] @relation("SentRequest")
   recievedFriendRequest FriendRequest[] @relation("RecievedRequest")
 }
+
 //It would be cool to have unread messages highlighted for a user, for that i can implement an other table for read messages later
 
 model Message {
@@ -48,7 +50,7 @@ model Message {
   receiverId Int?
 
   // Thus channel field is optional as well
-  channel Channel? @relation("ChannelMessage", fields: [channelId], references: [id])
+  channel Channel? @relation(fields: [channelId], references: [id])
   channelId Int?
 
   content String
@@ -57,11 +59,11 @@ model Message {
 
 model Channel {  
   id Int  @id @default(autoincrement())
-  creator User @relation("CreatedChannel", fields: [creatorId], references: [id])
+  creator User @relation(fields: [creatorId], references: [id])
   creatorId Int
-  channelUsers ChannelMember[] @relation("ChannelfromMember")
-  restrictedUsers ChannelUserRestriction[] @relation("ChannelRestriction")
-  channelMessages Message[] @relation("ChannelMessage")
+  channelUsers ChannelMember[] @relation
+  restrictedUsers ChannelUserRestriction[] @relation
+  channelMessages Message[] @relation
 
   title String @unique
   password String?
@@ -70,10 +72,10 @@ model Channel {
 }
 
 model ChannelMember {
-  user User @relation("MemberOfChannel", fields: [userId], references: [id])
+  user User @relation(fields: [userId], references: [id])
   userId Int
 
-  channel Channel @relation("ChannelfromMember", fields: [channelId], references: [id])
+  channel Channel @relation(fields: [channelId], references: [id])
   channelId Int
 
   role  ChannelMemberRole @default(USER)
@@ -87,10 +89,10 @@ enum ChannelMemberRole {
 }
 
 model ChannelUserRestriction {
-  restrictedUser User @relation("UserRestriction", fields: [restrictedUserId], references: [id])
+  restrictedUser User @relation(fields: [restrictedUserId], references: [id])
   restrictedUserId Int
 
-  restrictedChannel Channel @relation("ChannelRestriction", fields: [restrictedChannelId], references: [id])
+  restrictedChannel Channel @relation(fields: [restrictedChannelId], references: [id])
   restrictedChannelId Int
 
   restrictionType ChannelUserRestrictionTypes

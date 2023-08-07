@@ -8,8 +8,15 @@ RUN npm install
 
 COPY . .
 
+# RUN npx prisma generate
+
 EXPOSE 3001
 EXPOSE 5555
+
+# ENTRYPOINT SCRIPT FOR DATABASE CHANGES
+# COPY ./entrypoint/entry.sh /entry.sh 
+# RUN chmod +x /entry.sh
+# ENTRYPOINT ["/entry.sh"]
 
 CMD ["npm", "run", "dev:watch"]
 
