@@ -6,11 +6,11 @@ import { AuthController } from './auth.controller';
 @Module({
   providers: [AuthService],
   controllers: [AuthController],
-  imports: [ConfigModule.forRoot({
-    ignoreEnvFile: true,
-    isGlobal: true
-    })]
+  imports: [
+    ConfigModule.forRoot({
+      ignoreEnvFile: true,
+      isGlobal: true,
+    }),
+  ],
 })
-
-export class AuthModule {
-}
+export class AuthModule {}

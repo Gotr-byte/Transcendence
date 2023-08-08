@@ -11,28 +11,28 @@ datasource db {
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  userName     String?   @unique @default("")
-  OAuthName    String    @unique
-  email        String?   @unique @default("")
-  avatar       String?   @default("https://avatarfiles.alphacoders.com/183/183501.jpg")
-  createdAt    DateTime  @default(now())
-  accessToken  String    @default("None")
-  is2Fa        Boolean   @default(false)
+  id          Int      @id @default(autoincrement())
+  username    String?  @unique @default("")
+  OAuthName   String   @unique
+  email       String?  @unique @default("")
+  avatar      String?  @default("https://avatarfiles.alphacoders.com/183/183501.jpg")
+  createdAt   DateTime @default(now())
+  accessToken String   @default("None")
+  is2Fa       Boolean  @default(false)
 
-  createdChannels Channel[] @relation
-  followingChannels ChannelMember[] @relation
+  createdChannels    Channel[]                @relation
+  followingChannels  ChannelMember[]          @relation
   restrictedChannels ChannelUserRestriction[] @relation
 
-  sentMessages  Message[] @relation("SentMessage")
+  sentMessages     Message[] @relation("SentMessage")
   recievedMessages Message[] @relation("RecievedMessage")
 
-  homeMatches  Match[]   @relation("Home")
-  awayMatches  Match[]   @relation("Away")
-  wonMatches   Match[]   @relation("Winner")
+  homeMatches Match[] @relation("Home")
+  awayMatches Match[] @relation("Away")
+  wonMatches  Match[] @relation("Winner")
 
-  blocked      Blocked[] @relation("Blocked")
-  blockedBy    Blocked[] @relation("BlockedBy")
+  blocked   Blocked[] @relation("Blocked")
+  blockedBy Blocked[] @relation("BlockedBy")
 
   sentFriendRequest     FriendRequest[] @relation("SentRequest")
   recievedFriendRequest FriendRequest[] @relation("RecievedRequest")
@@ -41,58 +41,58 @@ model User {
 //It would be cool to have unread messages highlighted for a user, for that i can implement an other table for read messages later
 
 model Message {
-  id Int  @id @default(autoincrement())
-  sender User @relation("SentMessage", fields: [senderId], references: [id])
+  id       Int  @id @default(autoincrement())
+  sender   User @relation("SentMessage", fields: [senderId], references: [id])
   senderId Int
 
   // Receiver field is optional, a message can be sent to a user or a channel
-  receiver User? @relation("RecievedMessage", fields: [receiverId], references: [id])
+  receiver   User? @relation("RecievedMessage", fields: [receiverId], references: [id])
   receiverId Int?
 
   // Thus channel field is optional as well
-  channel Channel? @relation(fields: [channelId], references: [id])
+  channel   Channel? @relation(fields: [channelId], references: [id])
   channelId Int?
 
-  content String
+  content   String
   createdAt DateTime @default(now())
 }
 
-model Channel {  
-  id Int  @id @default(autoincrement())
-  creator User @relation(fields: [creatorId], references: [id])
-  creatorId Int
-  channelUsers ChannelMember[] @relation
+model Channel {
+  id              Int                      @id @default(autoincrement())
+  creator         User                     @relation(fields: [creatorId], references: [id])
+  creatorId       Int
+  channelUsers    ChannelMember[]          @relation
   restrictedUsers ChannelUserRestriction[] @relation
-  channelMessages Message[] @relation
+  channelMessages Message[]                @relation
 
-  title String @unique
-  password String?
+  title       String       @unique
+  password    String?
   channelType ChannelTypes @default(PUBLIC)
-  createdAt DateTime @default(now())
+  createdAt   DateTime     @default(now())
 }
 
 model ChannelMember {
-  user User @relation(fields: [userId], references: [id])
+  user   User @relation(fields: [userId], references: [id])
   userId Int
 
-  channel Channel @relation(fields: [channelId], references: [id])
+  channel   Channel @relation(fields: [channelId], references: [id])
   channelId Int
 
-  role  ChannelMemberRole @default(USER)
+  role ChannelMemberRoles @default(USER)
 
   @@unique([userId, channelId])
 }
 
-enum ChannelMemberRole {
+enum ChannelMemberRoles {
   ADMIN
   USER
 }
 
 model ChannelUserRestriction {
-  restrictedUser User @relation(fields: [restrictedUserId], references: [id])
+  restrictedUser   User @relation(fields: [restrictedUserId], references: [id])
   restrictedUserId Int
 
-  restrictedChannel Channel @relation(fields: [restrictedChannelId], references: [id])
+  restrictedChannel   Channel @relation(fields: [restrictedChannelId], references: [id])
   restrictedChannelId Int
 
   restrictionType ChannelUserRestrictionTypes
@@ -134,13 +134,13 @@ enum ChannelUserRestrictionTypes {
 enum ChannelTypes {
   PUBLIC
   PROTECTED //visible to anyone but password protected
-  PRIVATE   //visible only to members, invitation only
+  PRIVATE //visible only to members, invitation only
 }
 
 model Match {
   id      Int      @id @default(autoincrement())
-  started DateTime
-  ended   DateTime
+  started DateTime @default(now())
+  ended   DateTime @updatedAt
 
   homePlayer   User @relation("Home", fields: [homePlayerId], references: [id])
   homePlayerId Int

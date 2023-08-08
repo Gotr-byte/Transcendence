@@ -17,16 +17,16 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: ChannelMemberRole; Type: TYPE; Schema: public; Owner: myuser
+-- Name: ChannelMemberRoles; Type: TYPE; Schema: public; Owner: myuser
 --
 
-CREATE TYPE public."ChannelMemberRole" AS ENUM (
+CREATE TYPE public."ChannelMemberRoles" AS ENUM (
     'ADMIN',
     'USER'
 );
 
 
-ALTER TYPE public."ChannelMemberRole" OWNER TO myuser;
+ALTER TYPE public."ChannelMemberRoles" OWNER TO myuser;
 
 --
 -- Name: ChannelTypes; Type: TYPE; Schema: public; Owner: myuser
@@ -92,7 +92,7 @@ ALTER TABLE public."Channel" OWNER TO myuser;
 CREATE TABLE public."ChannelMember" (
     "userId" integer NOT NULL,
     "channelId" integer NOT NULL,
-    role public."ChannelMemberRole" DEFAULT 'USER'::public."ChannelMemberRole" NOT NULL
+    role public."ChannelMemberRoles" DEFAULT 'USER'::public."ChannelMemberRoles" NOT NULL
 );
 
 
@@ -152,7 +152,7 @@ ALTER TABLE public."FriendRequest" OWNER TO myuser;
 
 CREATE TABLE public."Match" (
     id integer NOT NULL,
-    started timestamp(3) without time zone NOT NULL,
+    started timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     ended timestamp(3) without time zone NOT NULL,
     "homePlayerId" integer NOT NULL,
     "awayPlayerId" integer NOT NULL,
@@ -230,7 +230,7 @@ ALTER SEQUENCE public."Message_id_seq" OWNED BY public."Message".id;
 
 CREATE TABLE public."User" (
     id integer NOT NULL,
-    "userName" text DEFAULT ''::text,
+    username text DEFAULT ''::text,
     "OAuthName" text NOT NULL,
     email text DEFAULT ''::text,
     avatar text DEFAULT 'https://avatarfiles.alphacoders.com/183/183501.jpg'::text,
@@ -315,9 +315,6 @@ ALTER TABLE ONLY public."User" ALTER COLUMN id SET DEFAULT nextval('public."User
 --
 
 COPY public."Blocked" ("blockedUserId", "blockingUserId") FROM stdin;
-7	8
-6	4
-4	7
 \.
 
 
@@ -326,9 +323,9 @@ COPY public."Blocked" ("blockedUserId", "blockingUserId") FROM stdin;
 --
 
 COPY public."Channel" (id, "creatorId", title, password, "channelType", "createdAt") FROM stdin;
-1	5	Old Gods Gang	G0ds	PROTECTED	2023-08-07 11:01:43.214
-2	8	Icons	\N	PRIVATE	2023-08-07 11:01:43.214
-3	4	Memes	\N	PUBLIC	2023-08-07 11:01:43.214
+1	5	Old Gods Gang	G0ds	PROTECTED	2023-08-08 12:31:14.543
+2	8	Icons	\N	PRIVATE	2023-08-08 12:31:14.543
+3	4	Memes	\N	PUBLIC	2023-08-08 12:31:14.543
 \.
 
 
@@ -369,14 +366,6 @@ COPY public."ChannelUserRestriction" ("restrictedUserId", "restrictedChannelId",
 --
 
 COPY public."FriendRequest" ("senderId", "receiverId", "isAccepted") FROM stdin;
-2	8	f
-6	8	t
-7	9	t
-3	4	t
-5	10	t
-3	6	f
-1	8	t
-3	7	f
 \.
 
 
@@ -385,13 +374,13 @@ COPY public."FriendRequest" ("senderId", "receiverId", "isAccepted") FROM stdin;
 --
 
 COPY public."Match" (id, started, ended, "homePlayerId", "awayPlayerId", "winnerId", "homeScore", "awayScore") FROM stdin;
-1	1970-01-01 00:00:00	1970-01-01 00:00:00	4	7	7	15	16
-2	1970-01-01 00:00:00	1970-01-01 00:00:00	8	3	3	0	9
-3	1970-01-01 00:00:00	1970-01-01 00:00:00	4	9	9	3	5
-4	1970-01-01 00:00:00	1970-01-01 00:00:00	10	5	10	17	2
-5	1970-01-01 00:00:00	1970-01-01 00:00:00	9	8	8	1	12
-6	1970-01-01 00:00:00	1970-01-01 00:00:00	3	1	3	11	2
-7	1970-01-01 00:00:00	1970-01-01 00:00:00	9	2	9	14	5
+1	2023-08-08 12:31:14.541	2023-08-08 12:31:14.541	4	7	7	15	16
+2	2023-08-08 12:31:14.541	2023-08-08 12:31:14.541	8	3	3	0	9
+3	2023-08-08 12:31:14.541	2023-08-08 12:31:14.541	4	9	9	3	5
+4	2023-08-08 12:31:14.541	2023-08-08 12:31:14.541	10	5	10	17	2
+5	2023-08-08 12:31:14.541	2023-08-08 12:31:14.541	9	8	8	1	12
+6	2023-08-08 12:31:14.541	2023-08-08 12:31:14.541	3	1	3	11	2
+7	2023-08-08 12:31:14.541	2023-08-08 12:31:14.541	9	2	9	14	5
 \.
 
 
@@ -407,17 +396,17 @@ COPY public."Message" (id, "senderId", "receiverId", "channelId", content, "crea
 -- Data for Name: User; Type: TABLE DATA; Schema: public; Owner: myuser
 --
 
-COPY public."User" (id, "userName", "OAuthName", email, avatar, "createdAt", "accessToken", "is2Fa") FROM stdin;
-1	John	sdfjalk	john@john.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-07 10:56:57.683	None	f
-2	Arthur	sfsh	arthur@morgan.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-07 10:56:57.683	None	f
-3	Morgana	hgflkj	morgana@persone.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-07 10:56:57.683	None	f
-4	Gladys	dghhg	gladys@wonder.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-07 10:56:57.683	None	f
-5	Zardos	gjfjfjfz	zardos@aol.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-07 10:56:57.683	None	f
-6	Helena	drhdthth	helena@olymp.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-07 10:56:57.683	None	f
-7	Xena	fjtdrtdjzf	xena@scream.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-07 10:56:57.683	None	f
-8	Anakin	thddthtj	anakin@lucasarts.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-07 10:56:57.683	None	f
-9	RubberDuck	fghzjfjnfg	rubrub@rub.ru	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-07 10:56:57.683	None	f
-10	Asterix	tjfjdhdh	asterix@google.gae	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-07 10:56:57.683	None	f
+COPY public."User" (id, username, "OAuthName", email, avatar, "createdAt", "accessToken", "is2Fa") FROM stdin;
+1	John	sdfjalk	john@john.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-08 12:31:14.538	None	f
+2	Arthur	sfsh	arthur@morgan.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-08 12:31:14.538	None	f
+3	Morgana	hgflkj	morgana@persone.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-08 12:31:14.538	None	f
+4	Gladys	dghhg	gladys@wonder.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-08 12:31:14.538	None	f
+5	Zardos	gjfjfjfz	zardos@aol.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-08 12:31:14.538	None	f
+6	Helena	drhdthth	helena@olymp.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-08 12:31:14.538	None	f
+7	Xena	fjtdrtdjzf	xena@scream.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-08 12:31:14.538	None	f
+8	Anakin	thddthtj	anakin@lucasarts.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-08 12:31:14.538	None	f
+9	RubberDuck	fghzjfjnfg	rubrub@rub.ru	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-08 12:31:14.538	None	f
+10	Asterix	tjfjdhdh	asterix@google.gae	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-08 12:31:14.538	None	f
 \.
 
 
@@ -426,7 +415,7 @@ COPY public."User" (id, "userName", "OAuthName", email, avatar, "createdAt", "ac
 --
 
 COPY public._prisma_migrations (id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count) FROM stdin;
-d3d612f1-659e-4ba0-8ea0-2c8d5d364114	639992b3c37f9c3dfde93ee1d56ed92d9237827d0dfc8bdf12261476ad1f3423	2023-08-07 10:50:47.042459+00	20230805104227_update	\N	\N	2023-08-07 10:50:47.006761+00	1
+4024816a-7880-4d82-8679-aa3d437a2ab5	cf3bbcf1e7ce4c3f996f7534da7d22178034d32bf31e5ced48a74f3747a673ec	2023-08-08 12:30:55.648071+00	20230808123055_init	\N	\N	2023-08-08 12:30:55.630955+00	1
 \.
 
 
@@ -548,10 +537,10 @@ CREATE UNIQUE INDEX "User_email_key" ON public."User" USING btree (email);
 
 
 --
--- Name: User_userName_key; Type: INDEX; Schema: public; Owner: myuser
+-- Name: User_username_key; Type: INDEX; Schema: public; Owner: myuser
 --
 
-CREATE UNIQUE INDEX "User_userName_key" ON public."User" USING btree ("userName");
+CREATE UNIQUE INDEX "User_username_key" ON public."User" USING btree (username);
 
 
 --

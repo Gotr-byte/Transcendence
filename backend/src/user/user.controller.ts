@@ -1,31 +1,50 @@
-import { Controller, Get, InternalServerErrorException, NotFoundException, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  ForbiddenException,
+  Get,
+  NotFoundException,
+  Param,
+  Patch,
+  Post,
+  Req,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 
 @Controller('users')
 export class UserController {
-	constructor(private userService: UserService) {}
+  constructor(private userService: UserService) {}
 
-	@Get('all')
-	async getAll() {
-		try {
-			const users = await this.userService.getAll();
-			return users
-		}
-		catch (error) {
-			throw new InternalServerErrorException('An error occurred while fetching all users');
-		}
-	}
+  @Get('all')
+  async getAll() {
+    try {
+      const users = await this.userService.getAll();
+      return users;
+    } catch (error) {
+      throw new ForbiddenException('No Users available');
+    }
+  }
 
-	@Get(':username')
-	async getUser(@Param('username') username: string) {
-		try {
-			const user = await this.userService.getUser(username);
-			if (!user)
-				throw new NotFoundException('${username} not found');
-			return user;
-		}
-		catch (error) {
-			throw new InternalServerErrorException('An error occurred while fetching user data');
-		}
-	}
+  @Get()
+  @Get(':username')
+  async getUserByName(@Param('username') username: string) {
+    try {
+      const user = await this.userService.getUserByName(username);
+      return user;
+    } catch (error) {
+      throw new ForbiddenException(`Username: ${username} Not found`);
+    }
+  }
+
+  @Patch(':username')
+  async updateUser(@Req() request: Request) {
+    console.log(request.body);
+    const validatedData = this.validateUpdate(request);
+  }
+
+  private validateUpdate(@Req() request: Request) {
+    const allowedFields = ['is2FaActive', 'username', 'avatar'];
+
+    const body = request.body;
+  }
 }
