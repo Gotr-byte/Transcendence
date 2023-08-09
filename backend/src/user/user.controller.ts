@@ -3,13 +3,13 @@ import {
   Controller,
   ForbiddenException,
   Get,
-  NotFoundException,
   Param,
   Patch,
   Post,
-  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
+import { AddUserDto, UpdateUserDto } from './dto';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @Controller('users')
 export class UserController {
@@ -27,24 +27,48 @@ export class UserController {
 
   @Get()
   @Get(':username')
-  async getUserByName(@Param('username') username: string) {
+  async getUserByName(@Param('username') name: string) {
     try {
-      const user = await this.userService.getUserByName(username);
+      const user = await this.userService.getUserByName(name);
       return user;
     } catch (error) {
-      throw new ForbiddenException(`Username: ${username} Not found`);
+      throw new ForbiddenException(`Username: ${name} not found`);
     }
   }
 
   @Patch(':username')
-  async updateUser(@Req() request: Request) {
-    console.log(request.body);
-    const validatedData = this.validateUpdate(request);
+  async updateUser(
+    @Param('username') name: string,
+    @Body() dto: UpdateUserDto,
+  ) {
+    try {
+      const updatedUser = await this.userService.updateUser(name, dto);
+      return updatedUser;
+    } catch (error) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ForbiddenException('Credentials already taken');
+      }
+      throw new ForbiddenException(`Username: ${name} could not be updated`);
+    }
   }
 
-  private validateUpdate(@Req() request: Request) {
-    const allowedFields = ['is2FaActive', 'username', 'avatar'];
-
-    const body = request.body;
+  //just for development testing:
+  @Post('add')
+  async addUser(@Body() dto: AddUserDto) {
+    try {
+      const newUser = await this.userService.addUser(dto);
+      return newUser;
+    } catch (error) {
+      if (
+        error instanceof PrismaClientKnownRequestError &&
+        error.code === 'P2002'
+      ) {
+        throw new ForbiddenException('Credentials already taken');
+      }
+      throw new ForbiddenException('New user could not be added');
+    }
   }
 }

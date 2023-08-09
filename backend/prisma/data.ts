@@ -1,5 +1,4 @@
 import {
-  PrismaClient,
   ChannelTypes,
   ChannelMemberRoles,
   ChannelUserRestrictionTypes,
@@ -56,6 +55,11 @@ export const users = [
     OAuthName: 'tjfjdhdh',
     email: 'asterix@google.gae',
   },
+  {
+    username: 'LOGGED-IN-USER',
+    OAuthName: 'PLACEHOLDING USER',
+    email: 'iAmLoggedIn@placeholder.com',
+  },
 ];
 
 export const matches = [
@@ -108,6 +112,27 @@ export const matches = [
     homeScore: 14,
     awayScore: 5,
   },
+  {
+    homePlayerId: 11,
+    awayPlayerId: 2,
+    winnerId: 9,
+    homeScore: 14,
+    awayScore: 5,
+  },
+  {
+    homePlayerId: 9,
+    awayPlayerId: 11,
+    winnerId: 9,
+    homeScore: 14,
+    awayScore: 5,
+  },
+  {
+    homePlayerId: 11,
+    awayPlayerId: 2,
+    winnerId: 9,
+    homeScore: 14,
+    awayScore: 5,
+  },
 ];
 
 export const friendRequests = [
@@ -151,6 +176,21 @@ export const friendRequests = [
     receiverId: 7,
     isAccepted: false,
   },
+  {
+    senderId: 11,
+    receiverId: 6,
+    isAccepted: false,
+  },
+  {
+    senderId: 1,
+    receiverId: 11,
+    isAccepted: false,
+  },
+  {
+    senderId: 11,
+    receiverId: 7,
+    isAccepted: true,
+  },
 ];
 
 export const channels = [
@@ -183,6 +223,16 @@ export const channelUserRestrictions = [
     restrictedChannelId: 3,
     restrictionType: ChannelUserRestrictionTypes.BANNED,
   },
+  {
+    restrictedUserId: 11,
+    restrictedChannelId: 1,
+    restrictionType: ChannelUserRestrictionTypes.MUTED,
+  },
+  {
+    restrictedUserId: 11,
+    restrictedChannelId: 2,
+    restrictionType: ChannelUserRestrictionTypes.BANNED,
+  },
 ];
 
 export const channelMembers = [
@@ -200,4 +250,6 @@ export const channelMembers = [
   { userId: 7, channelId: 1, role: ChannelMemberRoles.USER },
   { userId: 4, channelId: 3, role: ChannelMemberRoles.ADMIN },
   { userId: 3, channelId: 3, role: ChannelMemberRoles.ADMIN },
+  { userId: 11, channelId: 1, role: ChannelMemberRoles.USER },
+  { userId: 11, channelId: 3, role: ChannelMemberRoles.ADMIN },
 ];

@@ -10,13 +10,14 @@ CREATE TYPE "ChannelTypes" AS ENUM ('PUBLIC', 'PROTECTED', 'PRIVATE');
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
-    "username" TEXT DEFAULT '',
-    "OAuthName" TEXT NOT NULL,
+    "username" TEXT NOT NULL,
+    "OAuthName" TEXT DEFAULT 'notYetSet',
     "email" TEXT DEFAULT '',
     "avatar" TEXT DEFAULT 'https://avatarfiles.alphacoders.com/183/183501.jpg',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "accessToken" TEXT NOT NULL DEFAULT 'None',
+    "accessToken" TEXT NOT NULL DEFAULT 'notYetSet',
     "is2Fa" BOOLEAN NOT NULL DEFAULT false,
+    "isOnline" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -88,12 +89,6 @@ CREATE TABLE "Blocked" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_OAuthName_key" ON "User"("OAuthName");
-
--- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Channel_title_key" ON "Channel"("title");

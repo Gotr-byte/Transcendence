@@ -11,11 +11,11 @@ up:
 	@echo $(GREEN) Starting Containers ... $(EOC);
 	@BUILD_TARGET=prod docker-compose -f ./docker-compose.yml up --build
 
-dev_up:	
+dev:	
 	@echo $(GREEN) Starting Containers ... $(EOC);
 	@BUILD_TARGET=dev docker-compose -f ./docker-compose.yml up --build
 
-silent:	
+silent:
 	@echo $(GREEN) Starting Containers silently ... $(EOC);
 	@BUILD_TARGET=prod docker-compose -f ./docker-compose.yml up -d --build
 
@@ -28,13 +28,14 @@ clean:
 	@docker volume prune -a
 	@echo $(RED) Containers, Images and Volumes Removed $(EOC);
 
-docker_clean:
+fclean:
+	@docker-compose -f ./docker-compose.yml down --rmi all
 	@docker volume prune -a
 	@docker system prune -a
 	@echo $(RED) Containers, Images, Volumes and Build Cache Removed $(EOC);
 
 re: clean all
 
-dev_re:	clean dev_up
+dev_re:	clean dev
 
 .PHONY: up

@@ -12,13 +12,14 @@ datasource db {
 
 model User {
   id          Int      @id @default(autoincrement())
-  username    String?  @unique @default("")
-  OAuthName   String   @unique
-  email       String?  @unique @default("")
+  username    String   @unique
+  OAuthName   String?  @default("notYetSet")
+  email       String?  @default("") //@unique
   avatar      String?  @default("https://avatarfiles.alphacoders.com/183/183501.jpg")
   createdAt   DateTime @default(now())
-  accessToken String   @default("None")
+  accessToken String   @default("notYetSet")
   is2Fa       Boolean  @default(false)
+  isOnline    Boolean  @default(false)
 
   createdChannels    Channel[]                @relation
   followingChannels  ChannelMember[]          @relation
@@ -104,32 +105,6 @@ enum ChannelUserRestrictionTypes {
   MUTED
   BANNED
 }
-
-// TO RETRIEVE FRIENDS OF A USER //
-// const userId = 1; // Replace with the actual user's ID
-
-// const acceptedFriendships = await prisma.friendRequest.findMany({
-//   where: {
-//     accepted: true,
-//     OR: [
-//       { senderId: userId },
-//       { receiverId: userId },
-//     ],
-//   },
-// });
-
-// const friendIds = acceptedFriendships.map((friendship) => {
-//   // Determine which side is the friend and which side is the user
-//   return friendship.senderId === userId ? friendship.receiverId : friendship.senderId;
-// });
-
-// const totalFriends = await prisma.user.count({
-//   where: {
-//     id: { in: friendIds },
-//   },
-// });
-
-// console.log(totalFriends);
 
 enum ChannelTypes {
   PUBLIC
