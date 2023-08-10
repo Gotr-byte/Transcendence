@@ -1,4 +1,4 @@
-import { Controller, InternalServerErrorException, Get } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 
 import { FriendshipsService } from './friendships.service';
 
@@ -8,42 +8,24 @@ export class FriendshipsController {
 
   @Get()
   async getFriends() {
-    try {
-      const username = 'LOGGED-IN-USER'; //
-      const friends = await this.friendshipsService.getFriends(username);
-      return friends;
-    } catch (error) {
-      throw new InternalServerErrorException('Error getting friends');
-    }
+    const username = 'LOGGED-IN-USER'; //
+    const friends = await this.friendshipsService.getFriends(username);
+    return friends;
   }
 
   @Get('sent')
   async getSentFriendRequests() {
-    try {
-      const username = 'LOGGED-IN-USER'; //
-      const users = await this.friendshipsService.getSentFriendRequests(
-        username,
-      );
-      return users;
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Error getting sent friend requests',
-      );
-    }
+    const username = 'LOGGED-IN-USER'; //
+    const users = await this.friendshipsService.getSentFriendRequests(username);
+    return users;
   }
 
   @Get('received')
   async getReceivedFriendRequests() {
-    try {
-      const username = 'LOGGED-IN-USER'; //
-      const users = await this.friendshipsService.getReceivedFriendRequests(
-        username,
-      );
-      return users;
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Error getting received friend requests',
-      );
-    }
+    const username = 'LOGGED-IN-USER'; //
+    const users = await this.friendshipsService.getReceivedFriendRequests(
+      username,
+    );
+    return users;
   }
 }

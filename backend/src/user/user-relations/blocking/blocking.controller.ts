@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Get,
-  InternalServerErrorException,
-  Param,
-  Req,
-} from '@nestjs/common';
+import { Controller, Delete, Get, Param, Post } from '@nestjs/common';
 
 import { BlockingService } from './blocking.service';
 
@@ -14,25 +8,29 @@ export class BlockingController {
 
   @Get()
   async getBlockedUsers() {
-    try {
-      const username = 'LOGGED-IN-USER'; //
-      const users = await this.blockingService.getBlockedUsers(username);
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Error while getting blocked Users',
-      );
-    }
+    const username = 'LOGGED-IN-USER'; //
+    const users = await this.blockingService.getBlockedUsers(username);
+    return users;
   }
 
   @Get('by')
   async getBlockingUsers() {
-    try {
-      const username = 'LOGGED-IN-USER'; //
-      const users = await this.blockingService.getBlockingUsers(username);
-    } catch (error) {
-      throw new InternalServerErrorException(
-        'Error while getting blocking Users',
-      );
-    }
+    const username = 'LOGGED-IN-USER'; //
+    const users = await this.blockingService.getBlockingUsers(username);
+    return users;
+  }
+
+  @Post(':username')
+  async blockUser(@Param('username') blockUser: string) {
+    const username = 'LOGGED-IN-USER'; //
+    await this.blockingService.blockUser(username, blockUser);
+    return `User: '${blockUser}' successfully blocked`;
+  }
+
+  @Delete(':username')
+  async unblockUser(@Param('username') unblockUser: string) {
+    const username = 'LOGGED-IN-USER'; //
+    const users = await this.blockingService.unblockUser(username, unblockUser);
+    return `User: '${unblockUser}' successfully unblocked`;
   }
 }

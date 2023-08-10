@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from '@prisma/client';
 import { AddUserDto, UpdateUserDto } from './dto';
@@ -35,7 +35,7 @@ export class UserService {
   }
 
   async findByUsername(username: string) {
-    const user = this.prisma.user.findUnique({
+    const user = await this.prisma.user.findUniqueOrThrow({
       where: {
         username,
       },

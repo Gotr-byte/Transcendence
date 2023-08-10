@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -31,6 +31,12 @@ export class BlockingService {
     return usersList;
   }
 
+  async checkBlockAction(blockingId: number, blockedId: number) {
+    if (blockingId === blockedId) {
+      throw new BadRequestException('Cannot perform this action on yourself');
+    }
+  }
+
   async getBlockedUsers(name: string) {
     const user = await this.userService.findByUsername(name);
     const where = { blockingUserId: user.id };
@@ -43,5 +49,36 @@ export class BlockingService {
     const where = { blockedUserId: user.id };
     const blockingUsers = await this.getUsersfromBlockedList(user, where);
     return blockingUsers;
+  }
+
+  async blockUser(blockingUser: string, blockedUser: string) {
+    const blocking = await this.userService.getUserByName(blockingUser);
+    const blocked = await this.userService.getUserByName(blockedUser);
+
+    await this.checkBlockAction(blocked.id, blocking.id);
+
+    const newBlock = await this.prisma.blocked.create({
+      data: {
+        blockingUserId: blocking.id,
+        blockedUserId: blocked.id,
+      },
+    });
+    return newBlock;
+  }
+
+  async unblockUser(blockingUser: string, blockedUser: string) {
+    const blocking = await this.userService.getUserByName(blockingUser);
+    const blocked = await this.userService.getUserByName(blockedUser);
+
+    await this.checkBlockAction(blocked.id, blocking.id);
+
+    await this.prisma.blocked.delete({
+      where: {
+        blockingUserId_blockedUserId: {
+          blockedUserId: blocked.id,
+          blockingUserId: blocking.id,
+        },
+      },
+    });
   }
 }
