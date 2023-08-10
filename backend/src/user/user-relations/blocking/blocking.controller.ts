@@ -2,25 +2,25 @@ import { Controller, Delete, Get, Param, Post } from '@nestjs/common';
 
 import { BlockingService } from './blocking.service';
 
-@Controller('blocked')
+@Controller('block')
 export class BlockingController {
   constructor(private blockingService: BlockingService) {}
 
-  @Get()
+  @Get('blocked')
   async getBlockedUsers() {
     const username = 'LOGGED-IN-USER'; //
     const users = await this.blockingService.getBlockedUsers(username);
     return users;
   }
 
-  @Get('by')
+  @Get('blockedby')
   async getBlockingUsers() {
     const username = 'LOGGED-IN-USER'; //
     const users = await this.blockingService.getBlockingUsers(username);
     return users;
   }
 
-  @Post(':username')
+  @Post('/user/:username')
   async blockUser(@Param('username') blockUser: string) {
     const username = 'LOGGED-IN-USER'; //
     await this.blockingService.blockUser(username, blockUser);

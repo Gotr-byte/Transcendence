@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 
 import { FriendshipsService } from './friendships.service';
 
@@ -27,5 +27,29 @@ export class FriendshipsController {
       username,
     );
     return users;
+  }
+
+  @Post(':username')
+  async sendFriendRequest(@Param('username') receiver: string) {
+    const username = 'LOGGED-IN-USER'; //
+    await this.friendshipsService.sendFriendRequest(username, receiver);
+    return `'${username}' sent a friendReqest to '${receiver}' are now friends`;
+  }
+
+  @Patch(':username')
+  async acceptFriendRequest(@Param('username') inviter: string) {
+    const username = 'LOGGED-IN-USER'; //
+    await this.friendshipsService.acceptFriendRequest(username, inviter);
+    return `'${username}' and '${inviter}' are now friends`;
+  }
+
+  //deletes Friends and open friend requests
+  @Delete(':username')
+  async deleteFriendRequest(@Param('username') otherUser: string) {
+    const username = 'LOGGED-IN-USER'; //
+    console.log(otherUser);
+    console.log(username);
+    await this.friendshipsService.deleteFriendRequest(username, otherUser);
+    return `'${username}' and '${otherUser}' doesn't have a friendship or open requests`;
   }
 }

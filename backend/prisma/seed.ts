@@ -1,11 +1,12 @@
 import { PrismaClient } from '@prisma/client';
 import {
-  users,
-  friendRequests,
-  matches,
+  blocked,
   channels,
   channelMembers,
   channelUserRestrictions,
+  friendRequests,
+  matches,
+  users,
 } from './data';
 
 const prisma = new PrismaClient();
@@ -18,6 +19,10 @@ async function main() {
 
     await prisma.friendRequest.createMany({
       data: friendRequests,
+    });
+
+    await prisma.blocked.createMany({
+      data: blocked,
     });
 
     await prisma.match.createMany({

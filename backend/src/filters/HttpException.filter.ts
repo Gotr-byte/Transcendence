@@ -24,14 +24,14 @@ export class HttpExceptionFilter implements ExceptionFilter {
         response.status(HttpStatus.FORBIDDEN).json({
           message: 'This entity already exists',
           error: 'Forbidden',
-          statusCode: 404,
+          statusCode: 403,
         });
       }
       if (exception.code === 'P2025') {
         response.status(HttpStatus.NOT_FOUND).json({
           message: 'User was not found',
-          error: 'Bad Request',
-          statusCode: 400,
+          error: 'Not Found',
+          statusCode: 404,
         });
       }
     } else {

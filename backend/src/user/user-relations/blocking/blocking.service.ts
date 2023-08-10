@@ -51,32 +51,32 @@ export class BlockingService {
     return blockingUsers;
   }
 
-  async blockUser(blockingUser: string, blockedUser: string) {
-    const blocking = await this.userService.getUserByName(blockingUser);
-    const blocked = await this.userService.getUserByName(blockedUser);
+  async blockUser(blockingName: string, blockedName: string) {
+    const blockingUser = await this.userService.getUserByName(blockingName);
+    const blockedUser = await this.userService.getUserByName(blockedName);
 
-    await this.checkBlockAction(blocked.id, blocking.id);
+    await this.checkBlockAction(blockedUser.id, blockingUser.id);
 
     const newBlock = await this.prisma.blocked.create({
       data: {
-        blockingUserId: blocking.id,
-        blockedUserId: blocked.id,
+        blockingUserId: blockingUser.id,
+        blockedUserId: blockedUser.id,
       },
     });
     return newBlock;
   }
 
-  async unblockUser(blockingUser: string, blockedUser: string) {
-    const blocking = await this.userService.getUserByName(blockingUser);
-    const blocked = await this.userService.getUserByName(blockedUser);
+  async unblockUser(blockingName: string, blockedName: string) {
+    const blockingUser = await this.userService.getUserByName(blockingName);
+    const blockedUser = await this.userService.getUserByName(blockedName);
 
-    await this.checkBlockAction(blocked.id, blocking.id);
+    await this.checkBlockAction(blockedUser.id, blockingUser.id);
 
     await this.prisma.blocked.delete({
       where: {
         blockingUserId_blockedUserId: {
-          blockedUserId: blocked.id,
-          blockingUserId: blocking.id,
+          blockedUserId: blockedUser.id,
+          blockingUserId: blockingUser.id,
         },
       },
     });

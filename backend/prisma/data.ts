@@ -135,6 +135,29 @@ export const matches = [
   },
 ];
 
+export const blocked = [
+  {
+    blockedUserId: 11,
+    blockingUserId: 5,
+  },
+  {
+    blockedUserId: 2,
+    blockingUserId: 11,
+  },
+  {
+    blockedUserId: 4,
+    blockingUserId: 11,
+  },
+  {
+    blockedUserId: 5,
+    blockingUserId: 8,
+  },
+  {
+    blockedUserId: 7,
+    blockingUserId: 9,
+  },
+];
+
 export const friendRequests = [
   {
     senderId: 2,

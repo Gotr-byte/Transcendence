@@ -316,6 +316,11 @@ ALTER TABLE ONLY public."User" ALTER COLUMN id SET DEFAULT nextval('public."User
 --
 
 COPY public."Blocked" ("blockedUserId", "blockingUserId") FROM stdin;
+11	5
+2	11
+4	11
+5	8
+7	9
 \.
 
 
@@ -324,9 +329,9 @@ COPY public."Blocked" ("blockedUserId", "blockingUserId") FROM stdin;
 --
 
 COPY public."Channel" (id, "creatorId", title, password, "channelType", "createdAt") FROM stdin;
-1	5	Old Gods Gang	G0ds	PROTECTED	2023-08-09 15:01:02.453
-2	8	Icons	\N	PRIVATE	2023-08-09 15:01:02.453
-3	4	Memes	\N	PUBLIC	2023-08-09 15:01:02.453
+1	5	Old Gods Gang	G0ds	PROTECTED	2023-08-10 16:43:33.829
+2	8	Icons	\N	PRIVATE	2023-08-10 16:43:33.829
+3	4	Memes	\N	PUBLIC	2023-08-10 16:43:33.829
 \.
 
 
@@ -390,16 +395,16 @@ COPY public."FriendRequest" ("senderId", "receiverId", "isAccepted") FROM stdin;
 --
 
 COPY public."Match" (id, started, ended, "homePlayerId", "awayPlayerId", "winnerId", "homeScore", "awayScore") FROM stdin;
-1	2023-08-09 15:01:02.452	2023-08-09 15:01:02.452	4	7	7	15	16
-2	2023-08-09 15:01:02.452	2023-08-09 15:01:02.452	8	3	3	0	9
-3	2023-08-09 15:01:02.452	2023-08-09 15:01:02.452	4	9	9	3	5
-4	2023-08-09 15:01:02.452	2023-08-09 15:01:02.452	10	5	10	17	2
-5	2023-08-09 15:01:02.452	2023-08-09 15:01:02.452	9	8	8	1	12
-6	2023-08-09 15:01:02.452	2023-08-09 15:01:02.452	3	1	3	11	2
-7	2023-08-09 15:01:02.452	2023-08-09 15:01:02.452	9	2	9	14	5
-8	2023-08-09 15:01:02.452	2023-08-09 15:01:02.452	11	2	9	14	5
-9	2023-08-09 15:01:02.452	2023-08-09 15:01:02.452	9	11	9	14	5
-10	2023-08-09 15:01:02.452	2023-08-09 15:01:02.452	11	2	9	14	5
+1	2023-08-10 16:43:33.828	2023-08-10 16:43:33.828	4	7	7	15	16
+2	2023-08-10 16:43:33.828	2023-08-10 16:43:33.828	8	3	3	0	9
+3	2023-08-10 16:43:33.828	2023-08-10 16:43:33.828	4	9	9	3	5
+4	2023-08-10 16:43:33.828	2023-08-10 16:43:33.828	10	5	10	17	2
+5	2023-08-10 16:43:33.828	2023-08-10 16:43:33.828	9	8	8	1	12
+6	2023-08-10 16:43:33.828	2023-08-10 16:43:33.828	3	1	3	11	2
+7	2023-08-10 16:43:33.828	2023-08-10 16:43:33.828	9	2	9	14	5
+8	2023-08-10 16:43:33.828	2023-08-10 16:43:33.828	11	2	9	14	5
+9	2023-08-10 16:43:33.828	2023-08-10 16:43:33.828	9	11	9	14	5
+10	2023-08-10 16:43:33.828	2023-08-10 16:43:33.828	11	2	9	14	5
 \.
 
 
@@ -416,17 +421,17 @@ COPY public."Message" (id, "senderId", "receiverId", "channelId", content, "crea
 --
 
 COPY public."User" (id, username, "OAuthName", email, avatar, "createdAt", "accessToken", "is2Fa", "isOnline") FROM stdin;
-1	John	sdfjalk	john@john.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-09 15:01:02.441	notYetSet	f	f
-2	Arthur	sfsh	arthur@morgan.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-09 15:01:02.441	notYetSet	f	f
-3	Morgana	hgflkj	morgana@persone.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-09 15:01:02.441	notYetSet	f	f
-4	Gladys	dghhg	gladys@wonder.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-09 15:01:02.441	notYetSet	f	f
-5	Zardos	gjfjfjfz	zardos@aol.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-09 15:01:02.441	notYetSet	f	f
-6	Helena	drhdthth	helena@olymp.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-09 15:01:02.441	notYetSet	f	f
-7	Xena	fjtdrtdjzf	xena@scream.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-09 15:01:02.441	notYetSet	f	f
-8	Anakin	thddthtj	anakin@lucasarts.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-09 15:01:02.441	notYetSet	f	f
-9	RubberDuck	fghzjfjnfg	rubrub@rub.ru	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-09 15:01:02.441	notYetSet	f	f
-10	Asterix	tjfjdhdh	asterix@google.gae	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-09 15:01:02.441	notYetSet	f	f
-11	LOGGED-IN-USER	PLACEHOLDING USER	iAmLoggedIn@placeholder.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-09 15:01:02.441	notYetSet	f	f
+1	John	sdfjalk	john@john.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-10 16:43:33.819	notYetSet	f	f
+2	Arthur	sfsh	arthur@morgan.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-10 16:43:33.819	notYetSet	f	f
+3	Morgana	hgflkj	morgana@persone.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-10 16:43:33.819	notYetSet	f	f
+4	Gladys	dghhg	gladys@wonder.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-10 16:43:33.819	notYetSet	f	f
+5	Zardos	gjfjfjfz	zardos@aol.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-10 16:43:33.819	notYetSet	f	f
+6	Helena	drhdthth	helena@olymp.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-10 16:43:33.819	notYetSet	f	f
+7	Xena	fjtdrtdjzf	xena@scream.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-10 16:43:33.819	notYetSet	f	f
+8	Anakin	thddthtj	anakin@lucasarts.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-10 16:43:33.819	notYetSet	f	f
+9	RubberDuck	fghzjfjnfg	rubrub@rub.ru	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-10 16:43:33.819	notYetSet	f	f
+10	Asterix	tjfjdhdh	asterix@google.gae	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-10 16:43:33.819	notYetSet	f	f
+11	LOGGED-IN-USER	PLACEHOLDING USER	iAmLoggedIn@placeholder.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-10 16:43:33.819	notYetSet	f	f
 \.
 
 
@@ -435,7 +440,7 @@ COPY public."User" (id, username, "OAuthName", email, avatar, "createdAt", "acce
 --
 
 COPY public._prisma_migrations (id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count) FROM stdin;
-c3c41388-b54a-4dab-8bbe-21e5d447817c	919a8a979a70c3defe007040b50e1888e07058a63dcdbf3d34b69bab8b62b7d7	2023-08-09 15:01:00.815072+00	20230809150100_init	\N	\N	2023-08-09 15:01:00.795382+00	1
+18d2ff64-685d-49d0-b8e1-919a8a322c47	919a8a979a70c3defe007040b50e1888e07058a63dcdbf3d34b69bab8b62b7d7	2023-08-10 16:43:31.927635+00	20230810164331_init	\N	\N	2023-08-10 16:43:31.908231+00	1
 \.
 
 
