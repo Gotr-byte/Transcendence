@@ -24,13 +24,13 @@ export class BlockingController {
   async blockUser(@Param('username') blockUser: string) {
     const username = 'LOGGED-IN-USER'; //
     await this.blockingService.blockUser(username, blockUser);
-    return `User: '${blockUser}' successfully blocked`;
+    return { msg: `User: '${blockUser}' successfully blocked` };
   }
 
   @Delete(':username')
   async unblockUser(@Param('username') unblockUser: string) {
     const username = 'LOGGED-IN-USER'; //
     const users = await this.blockingService.unblockUser(username, unblockUser);
-    return `User: '${unblockUser}' successfully unblocked`;
+    return { msg: `User: '${unblockUser}' successfully unblocked` };
   }
 }

@@ -14,7 +14,7 @@ model User {
   id          Int      @id @default(autoincrement())
   username    String   @unique
   OAuthName   String?  @default("notYetSet")
-  email       String?  @default("") //@unique
+  email       String   @unique //@unique
   avatar      String?  @default("https://avatarfiles.alphacoders.com/183/183501.jpg")
   createdAt   DateTime @default(now())
   accessToken String   @default("notYetSet")
@@ -40,7 +40,6 @@ model User {
 }
 
 //It would be cool to have unread messages highlighted for a user, for that i can implement an other table for read messages later
-
 model Message {
   id       Int  @id @default(autoincrement())
   sender   User @relation("SentMessage", fields: [senderId], references: [id])

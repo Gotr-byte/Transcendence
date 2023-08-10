@@ -232,7 +232,7 @@ CREATE TABLE public."User" (
     id integer NOT NULL,
     username text NOT NULL,
     "OAuthName" text DEFAULT 'notYetSet'::text,
-    email text DEFAULT ''::text,
+    email text,
     avatar text DEFAULT 'https://avatarfiles.alphacoders.com/183/183501.jpg'::text,
     "createdAt" timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     "accessToken" text DEFAULT 'notYetSet'::text NOT NULL,
@@ -441,6 +441,7 @@ COPY public."User" (id, username, "OAuthName", email, avatar, "createdAt", "acce
 
 COPY public._prisma_migrations (id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count) FROM stdin;
 18d2ff64-685d-49d0-b8e1-919a8a322c47	919a8a979a70c3defe007040b50e1888e07058a63dcdbf3d34b69bab8b62b7d7	2023-08-10 16:43:31.927635+00	20230810164331_init	\N	\N	2023-08-10 16:43:31.908231+00	1
+144fa3e3-4dac-414f-89de-9283c3d23985	0d637893f195eea010a0c78b340ac20c0ec9865b92d5164e99aed5db0a5337ac	2023-08-10 19:28:00.363095+00	20230810192800_update	\N	\N	2023-08-10 19:28:00.359184+00	1
 \.
 
 
@@ -545,6 +546,13 @@ CREATE UNIQUE INDEX "Channel_title_key" ON public."Channel" USING btree (title);
 --
 
 CREATE UNIQUE INDEX "FriendRequest_senderId_receiverId_key" ON public."FriendRequest" USING btree ("senderId", "receiverId");
+
+
+--
+-- Name: User_email_key; Type: INDEX; Schema: public; Owner: myuser
+--
+
+CREATE UNIQUE INDEX "User_email_key" ON public."User" USING btree (email);
 
 
 --

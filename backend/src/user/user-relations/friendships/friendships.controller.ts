@@ -33,14 +33,16 @@ export class FriendshipsController {
   async sendFriendRequest(@Param('username') receiver: string) {
     const username = 'LOGGED-IN-USER'; //
     await this.friendshipsService.sendFriendRequest(username, receiver);
-    return `'${username}' sent a friendReqest to '${receiver}' are now friends`;
+    return {
+      msg: `'${username}' sent a friendReqest to '${receiver}' are now friends`,
+    };
   }
 
   @Patch(':username')
   async acceptFriendRequest(@Param('username') inviter: string) {
     const username = 'LOGGED-IN-USER'; //
     await this.friendshipsService.acceptFriendRequest(username, inviter);
-    return `'${username}' and '${inviter}' are now friends`;
+    return { msg: `'${username}' and '${inviter}' are now friends` };
   }
 
   //deletes Friends and open friend requests
@@ -50,6 +52,8 @@ export class FriendshipsController {
     console.log(otherUser);
     console.log(username);
     await this.friendshipsService.deleteFriendRequest(username, otherUser);
-    return `'${username}' and '${otherUser}' doesn't have a friendship or open requests`;
+    return {
+      msg: `'${username}' and '${otherUser}' doesn't have a friendship or open requests`,
+    };
   }
 }

@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -30,4 +31,8 @@ export class AddUserDto {
   @IsBoolean()
   @IsOptional()
   is2Fa: boolean;
+
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
 }
