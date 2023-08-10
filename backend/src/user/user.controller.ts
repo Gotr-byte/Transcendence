@@ -25,7 +25,6 @@ export class UserController {
     }
   }
 
-  @Get()
   @Get(':username')
   async getUserByName(@Param('username') name: string) {
     try {

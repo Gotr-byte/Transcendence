@@ -1,4 +1,10 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  InternalServerErrorException,
+  Param,
+  Req,
+} from '@nestjs/common';
 
 import { BlockingService } from './blocking.service';
 
@@ -6,10 +12,27 @@ import { BlockingService } from './blocking.service';
 export class BlockingController {
   constructor(private blockingService: BlockingService) {}
 
-  @Get(':username')
-  async getBlockedUsers(@Param('username') name: string) {
-    // const blockedUsers
+  @Get()
+  async getBlockedUsers() {
+    try {
+      const username = 'LOGGED-IN-USER'; //
+      const users = await this.blockingService.getBlockedUsers(username);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Error while getting blocked Users',
+      );
+    }
   }
 
-  // @Get('by/:username')
+  @Get('by')
+  async getBlockingUsers() {
+    try {
+      const username = 'LOGGED-IN-USER'; //
+      const users = await this.blockingService.getBlockingUsers(username);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Error while getting blocking Users',
+      );
+    }
+  }
 }

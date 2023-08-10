@@ -1,13 +1,13 @@
-// import { Controller, Get, Req, Res } from '@nestjs/common';
-// import { Request, Response } from 'express';
+import { Controller, Get, Req, Res } from '@nestjs/common';
+import { Request, Response } from 'express';
 
-// @Controller()
-// export class CurrentUserController {
-//   constructor() {}
+@Controller()
+export class CurrentUserController {
+  constructor() {}
 
-//   @Get('current-user')
-//   redirectToCurrentUser(@Req() req: Request, @Res() res: Response) {
-//     const { username } = req.user; // Assuming you have extracted the username from the JWT payload
-//     res.redirect(`/users/${username}`);
-//   }
-// }
+  @Get('profile')
+  redirectToCurrentUser(@Res() res: Response) {
+    // const { username } = req.user;
+    res.redirect(`/users/LOGGED-IN-USER`); //
+  }
+}
