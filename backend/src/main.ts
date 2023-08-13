@@ -11,9 +11,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(new ValidationPipe());
+  // app.enableCors({
+  //   origin: 'https://localhost:3000',
+  //   methods: 'GET, POST, PATCH, DELETE',
+  // });
   app.use(
     session({
-      secret: 'shiorghdogihsofiejozkjukutz56tj3445g4u6',
+      secret: process.env.SESSIONS_SECRET + "1896",
       saveUninitialized: false,
       resave: false,
       cookie: { maxAge: 4320000 },
