@@ -26,4 +26,4 @@ else
 fi
 
 rm backup.init.sql
-mv init.sql backup.init.sql && mv db_dump.sql init.sql
+mv init.sql backup.init.sql & mv db_dump.sql init.sql

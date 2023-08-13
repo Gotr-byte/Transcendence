@@ -11,15 +11,13 @@ datasource db {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
-  username    String   @unique
-  OAuthName   String?  @default("notYetSet")
-  email       String   @unique //@unique
-  avatar      String?  @default("https://avatarfiles.alphacoders.com/183/183501.jpg")
-  createdAt   DateTime @default(now())
-  accessToken String   @default("notYetSet")
-  is2Fa       Boolean  @default(false)
-  isOnline    Boolean  @default(false)
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique //@unique
+  avatar    String   @default("https://avatarfiles.alphacoders.com/183/183501.jpg")
+  createdAt DateTime @default(now())
+  is2Fa     Boolean  @default(false)
+  isOnline  Boolean  @default(false)
 
   createdChannels    Channel[]                @relation
   followingChannels  ChannelMember[]          @relation
@@ -145,4 +143,11 @@ model Blocked {
   blockingUserId Int
 
   @@unique([blockingUserId, blockedUserId])
+}
+
+model Session {
+  id        String   @id
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
 }

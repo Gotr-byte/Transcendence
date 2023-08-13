@@ -1,38 +1,53 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  ForbiddenException,
+  Get,
+  Param,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
-import { AddUserDto, UpdateUserDto } from './dto';
-import { AuthGuard42 } from 'src/auth/guards/Guards';
+import { ShowUserDto, UpdateUserDto } from './dto';
+import { AuthenticatedGuard } from 'src/auth/guards/Guards';
+import { User } from '@prisma/client';
+import { AuthUser } from 'src/auth/auth.decorator';
 
-@UseGuards(AuthGuard42)
+@UseGuards(AuthenticatedGuard)
 @Controller('users')
 export class UserController {
   constructor(private userService: UserService) {}
 
+  // Get all users
   @Get('all')
-  async getAll() {
+  async getAll(): Promise<ShowUserDto[]> {
     const users = await this.userService.getAll();
     return users;
   }
 
+  // Get user by username
   @Get(':username')
-  async getUserByName(@Param('username') name: string) {
-    const user = await this.userService.getUserByName(name);
+  async getUserByName(
+    @Param('username') username: string,
+  ): Promise<ShowUserDto> {
+    const user = await this.userService.getUserByName(username);
     return user;
   }
 
+  // Update user profile
   @Patch(':username')
   async updateUser(
-    @Param('username') name: string,
+    @Param('username') username: string,
+    @AuthUser() user: User,
     @Body() dto: UpdateUserDto,
-  ) {
-    const updatedUser = await this.userService.updateUser(name, dto);
+  ): Promise<ShowUserDto> {
+    // Validate that the authenticated user is authorized to update the profile
+    if (user.username != username)
+      throw new ForbiddenException(
+        `User: '${user.username} is not allowed to patch '${username}'`,
+      );
+    const updatedUser = await this.userService.updateUser(user, dto);
+    console.log(`User: ${username} was updated`);
     return updatedUser;
-  }
-
-  //just for development testing:
-  @Post('add')
-  async addUser(@Body() dto: AddUserDto) {
-    const newUser = await this.userService.addUser(dto);
-    return newUser;
   }
 }

@@ -1,13 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Blocked, User } from '@prisma/client';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
-
-type BlockedWhereInput = {
-  blockedUserId?: number;
-  blockingUserId?: number;
-};
+import { BlockedWhereInput } from 'src/user/types';
+import { ShowUserDto } from 'src/user/dto';
 
 @Injectable()
 export class BlockingService {
@@ -16,47 +13,56 @@ export class BlockingService {
     private readonly userService: UserService,
   ) {}
 
-  private async getUsersfromBlockedList(user: User, where: BlockedWhereInput) {
-    const blockUser = await this.prisma.blocked.findMany({
+  // Get a list of users based on the provided where clause
+  private async getUsersfromBlockedList(
+    user: User,
+    where: BlockedWhereInput,
+  ): Promise<ShowUserDto[]> {
+    const blockUsers = await this.prisma.blocked.findMany({
       where,
     });
 
-    const userIds = blockUser.map((block) =>
+    // Extract user IDs from the block list
+    const userIds = blockUsers.map((block) =>
       block.blockingUserId === user.id
         ? block.blockedUserId
         : block.blockingUserId,
     );
 
+    // Get user details based on extracted IDs
     const usersList = await this.userService.getUsersListFromIds(userIds);
     return usersList;
   }
 
-  async checkBlockAction(blockingId: number, blockedId: number) {
+  // Check if blocking and blocked users are the same
+  private async checkBlockAction(blockingId: number, blockedId: number) {
     if (blockingId === blockedId) {
       throw new BadRequestException('Cannot perform this action on yourself');
     }
   }
 
-  async getBlockedUsers(name: string) {
-    const user = await this.userService.findByUsername(name);
+  // Get a list of users blocked by the current user
+  async getBlockedUsers(user: User): Promise<ShowUserDto[]> {
     const where = { blockingUserId: user.id };
     const blockedUsers = await this.getUsersfromBlockedList(user, where);
     return blockedUsers;
   }
 
-  async getBlockingUsers(name: string) {
-    const user = await this.userService.findByUsername(name);
+  // Get a list of users who have blocked the current user
+  async getBlockingUsers(user: User): Promise<ShowUserDto[]> {
     const where = { blockedUserId: user.id };
     const blockingUsers = await this.getUsersfromBlockedList(user, where);
     return blockingUsers;
   }
 
-  async blockUser(blockingName: string, blockedName: string) {
-    const blockingUser = await this.userService.getUserByName(blockingName);
+  // Block a user by username
+  async blockUser(blockingUser: User, blockedName: string): Promise<Blocked> {
     const blockedUser = await this.userService.getUserByName(blockedName);
 
+    // Ensure the user is not blocking themselves
     await this.checkBlockAction(blockedUser.id, blockingUser.id);
 
+    // Create a new block record
     const newBlock = await this.prisma.blocked.create({
       data: {
         blockingUserId: blockingUser.id,
@@ -66,12 +72,14 @@ export class BlockingService {
     return newBlock;
   }
 
-  async unblockUser(blockingName: string, blockedName: string) {
-    const blockingUser = await this.userService.getUserByName(blockingName);
+  // Unblock a user by username
+  async unblockUser(blockingUser: User, blockedName: string): Promise<void> {
     const blockedUser = await this.userService.getUserByName(blockedName);
 
+    // Ensure the user is not unblocking themselves
     await this.checkBlockAction(blockedUser.id, blockingUser.id);
 
+    // Delete the block record
     await this.prisma.blocked.delete({
       where: {
         blockingUserId_blockedUserId: {

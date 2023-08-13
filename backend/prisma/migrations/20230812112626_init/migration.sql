@@ -11,11 +11,9 @@ CREATE TYPE "ChannelTypes" AS ENUM ('PUBLIC', 'PROTECTED', 'PRIVATE');
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "username" TEXT NOT NULL,
-    "OAuthName" TEXT DEFAULT 'notYetSet',
-    "email" TEXT DEFAULT '',
-    "avatar" TEXT DEFAULT 'https://avatarfiles.alphacoders.com/183/183501.jpg',
+    "email" TEXT NOT NULL,
+    "avatar" TEXT NOT NULL DEFAULT 'https://avatarfiles.alphacoders.com/183/183501.jpg',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "accessToken" TEXT NOT NULL DEFAULT 'notYetSet',
     "is2Fa" BOOLEAN NOT NULL DEFAULT false,
     "isOnline" BOOLEAN NOT NULL DEFAULT false,
 
@@ -87,8 +85,21 @@ CREATE TABLE "Blocked" (
     "blockingUserId" INTEGER NOT NULL
 );
 
+-- CreateTable
+CREATE TABLE "Session" (
+    "id" TEXT NOT NULL,
+    "sid" TEXT NOT NULL,
+    "data" TEXT NOT NULL,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Channel_title_key" ON "Channel"("title");
@@ -104,6 +115,9 @@ CREATE UNIQUE INDEX "FriendRequest_senderId_receiverId_key" ON "FriendRequest"("
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Blocked_blockingUserId_blockedUserId_key" ON "Blocked"("blockingUserId", "blockedUserId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Session_sid_key" ON "Session"("sid");
 
 -- AddForeignKey
 ALTER TABLE "Message" ADD CONSTRAINT "Message_senderId_fkey" FOREIGN KEY ("senderId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

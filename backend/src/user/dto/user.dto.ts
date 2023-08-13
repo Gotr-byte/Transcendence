@@ -1,6 +1,6 @@
+import { User } from '@prisma/client';
 import {
   IsBoolean,
-  IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -23,16 +23,19 @@ export class UpdateUserDto {
   is2Fa: boolean;
 }
 
-export class AddUserDto {
-  @IsString()
-  @IsNotEmpty()
+export class ShowUserDto {
+  id: number;
   username: string;
+  avatar: string;
+  isOnline: boolean;
 
-  @IsBoolean()
-  @IsOptional()
-  is2Fa: boolean;
+  constructor(user: User) {
+    (this.id = user.id), (this.username = user.username);
+    this.isOnline = user.isOnline;
+    this.avatar = user.avatar;
+  }
 
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
+  static from(user: User): ShowUserDto {
+    return new ShowUserDto(user);
+  }
 }

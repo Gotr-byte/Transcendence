@@ -1,59 +1,74 @@
-import { Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 
 import { FriendshipsService } from './friendships.service';
+import { AuthenticatedGuard } from 'src/auth/guards/Guards';
+import { User } from '@prisma/client';
+import { AuthUser } from 'src/auth/auth.decorator';
+import { ShowUserDto } from 'src/user/dto';
 
+@UseGuards(AuthenticatedGuard)
 @Controller('friends')
 export class FriendshipsController {
   constructor(private friendshipsService: FriendshipsService) {}
 
+  // Get the list of friends for the current user
   @Get()
-  async getFriends() {
-    const username = 'LOGGED-IN-USER'; //
-    const friends = await this.friendshipsService.getFriends(username);
+  async getFriends(@AuthUser() user: User): Promise<ShowUserDto[]> {
+    const friends = await this.friendshipsService.getFriends(user);
     return friends;
   }
 
+  // Get a list of sent friend requests by the current user
   @Get('sent')
-  async getSentFriendRequests() {
-    const username = 'LOGGED-IN-USER'; //
-    const users = await this.friendshipsService.getSentFriendRequests(username);
+  async getSentFriendRequests(@AuthUser() user: User): Promise<ShowUserDto[]> {
+    const users = await this.friendshipsService.getSentFriendRequests(user);
     return users;
   }
 
+  // Get a list of received friend requests by the current user
   @Get('received')
-  async getReceivedFriendRequests() {
-    const username = 'LOGGED-IN-USER'; //
-    const users = await this.friendshipsService.getReceivedFriendRequests(
-      username,
-    );
+  async getReceivedFriendRequests(
+    @AuthUser() user: User,
+  ): Promise<ShowUserDto[]> {
+    const users = await this.friendshipsService.getReceivedFriendRequests(user);
     return users;
   }
 
+  // Send a friend request to another user
   @Post(':username')
-  async sendFriendRequest(@Param('username') receiver: string) {
-    const username = 'LOGGED-IN-USER'; //
-    await this.friendshipsService.sendFriendRequest(username, receiver);
-    return {
-      msg: `'${username}' sent a friendReqest to '${receiver}' are now friends`,
-    };
+  async sendFriendRequest(
+    @AuthUser() user: User,
+    @Param('username') receiver: string,
+  ): Promise<string> {
+    await this.friendshipsService.sendFriendRequest(user, receiver);
+    return `'${user.username}' sent a friendReqest to '${receiver}' are now friends`;
   }
 
+  // Accept a friend request from another user
   @Patch(':username')
-  async acceptFriendRequest(@Param('username') inviter: string) {
-    const username = 'LOGGED-IN-USER'; //
-    await this.friendshipsService.acceptFriendRequest(username, inviter);
-    return { msg: `'${username}' and '${inviter}' are now friends` };
+  async acceptFriendRequest(
+    @AuthUser() user: User,
+    @Param('username') inviter: string,
+  ): Promise<string> {
+    await this.friendshipsService.acceptFriendRequest(user, inviter);
+    return `'${user.username}' and '${inviter}' are now friends`;
   }
 
-  //deletes Friends and open friend requests
+  // Delete a friend request or existing friendship
   @Delete(':username')
-  async deleteFriendRequest(@Param('username') otherUser: string) {
-    const username = 'LOGGED-IN-USER'; //
-    console.log(otherUser);
-    console.log(username);
-    await this.friendshipsService.deleteFriendRequest(username, otherUser);
-    return {
-      msg: `'${username}' and '${otherUser}' doesn't have a friendship or open requests`,
-    };
+  async deleteFriendRequest(
+    @AuthUser() user: User,
+    @Param('username') otherUser: string,
+  ): Promise<string> {
+    await this.friendshipsService.deleteFriendRequest(user, otherUser);
+    return `'${user.username}' and '${otherUser}' doesn't have a friendship or open requests`;
   }
 }

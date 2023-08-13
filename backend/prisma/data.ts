@@ -7,57 +7,46 @@ import {
 export const users = [
   {
     username: 'John',
-    OAuthName: 'sdfjalk',
     email: 'john@john.com',
   },
   {
     username: 'Arthur',
-    OAuthName: 'sfsh',
     email: 'arthur@morgan.org',
   },
   {
     username: 'Morgana',
-    OAuthName: 'hgflkj',
-    email: 'morgana@persone.com',
+    email: 'morgana@persona.com',
   },
   {
     username: 'Gladys',
-    OAuthName: 'dghhg',
     email: 'gladys@wonder.com',
   },
   {
     username: 'Zardos',
-    OAuthName: 'gjfjfjfz',
     email: 'zardos@aol.com',
   },
   {
     username: 'Helena',
-    OAuthName: 'drhdthth',
     email: 'helena@olymp.com',
   },
   {
     username: 'Xena',
-    OAuthName: 'fjtdrtdjzf',
     email: 'xena@scream.org',
   },
   {
     username: 'Anakin',
-    OAuthName: 'thddthtj',
     email: 'anakin@lucasarts.com',
   },
   {
     username: 'RubberDuck',
-    OAuthName: 'fghzjfjnfg',
     email: 'rubrub@rub.ru',
   },
   {
     username: 'Asterix',
-    OAuthName: 'tjfjdhdh',
     email: 'asterix@google.gae',
   },
   {
     username: 'LOGGED-IN-USER',
-    OAuthName: 'PLACEHOLDING USER',
     email: 'iAmLoggedIn@placeholder.com',
   },
 ];

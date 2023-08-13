@@ -3,12 +3,8 @@ import { User } from '@prisma/client';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
-
-type FriendRequestWhereInput = {
-  isAccepted: boolean;
-  senderId?: number;
-  receiverId?: number;
-};
+import { FriendRequestWhereInput } from 'src/user/types';
+import { ShowUserDto } from 'src/user/dto';
 
 @Injectable()
 export class FriendshipsService {
@@ -17,24 +13,28 @@ export class FriendshipsService {
     private readonly userService: UserService,
   ) {}
 
+  // Get a list of users based on the provided where clause
   private async getUsersFromFriendRequests(
     user: User,
     where: FriendRequestWhereInput,
-  ) {
+  ): Promise<ShowUserDto[]> {
+    // Fetch friend requests based on the provided criteria
     const friendRequests = await this.prisma.friendRequest.findMany({
       where,
     });
 
+    // Extract user IDs from friend requests
     const userIds = friendRequests.map((request) =>
       request.senderId === user.id ? request.receiverId : request.senderId,
     );
 
+    // Get user details based on extracted IDs
     const usersList = await this.userService.getUsersListFromIds(userIds);
     return usersList;
   }
 
-  async getFriends(name: string) {
-    const user = await this.userService.findByUsername(name);
+  // Get a friendlist of the current user
+  async getFriends(user: User): Promise<ShowUserDto[]> {
     const where = {
       isAccepted: true,
       OR: [{ senderId: user.id }, { receiverId: user.id }],
@@ -44,8 +44,8 @@ export class FriendshipsService {
     return friendsList;
   }
 
-  async getSentFriendRequests(name: string) {
-    const user = await this.userService.findByUsername(name);
+  // Get a list of sent friend requests, by the current user
+  async getSentFriendRequests(user: User): Promise<ShowUserDto[]> {
     const where = {
       isAccepted: false,
       receiverId: user.id,
@@ -58,8 +58,8 @@ export class FriendshipsService {
     return pendingSentUserList;
   }
 
-  async getReceivedFriendRequests(name: string) {
-    const user = await this.userService.findByUsername(name);
+  // Get a list of received friend requests by the current user
+  async getReceivedFriendRequests(user: User): Promise<ShowUserDto[]> {
     const where = {
       isAccepted: false,
       senderId: user.id,
@@ -72,36 +72,47 @@ export class FriendshipsService {
     return pendingReceivedUserList;
   }
 
-  async sendFriendRequest(username: string, receivingName: string) {
-    const user = await this.userService.getUserByName(username);
-    const receivingUser = await this.userService.getUserByName(receivingName);
+  // Send a friend request from the current user to another user
+  async sendFriendRequest(
+    sendingUser: User,
+    invitedName: string,
+  ): Promise<void> {
+    const receivingUser = await this.userService.getUserByName(invitedName);
 
+    // Check if a friend request already exists between these users
     const existingRequest = await this.prisma.friendRequest.findFirst({
       where: {
         OR: [
-          { senderId: user.id, receiverId: receivingUser.id },
-          { senderId: receivingUser.id, receiverId: user.id },
+          { senderId: sendingUser.id, receiverId: receivingUser.id },
+          { senderId: receivingUser.id, receiverId: sendingUser.id },
         ],
       },
     });
 
+    // Throw an exception if a request already exists
     if (existingRequest) {
       throw new BadRequestException(
-        `There is already a friendRequest for '${username}' and '${receivingName}'`,
+        `There is already a friendRequest for '${sendingUser.username}' and '${invitedName}'`,
       );
     }
+
+    // Create a new friend request record
     await this.prisma.friendRequest.create({
       data: {
-        senderId: user.id,
+        senderId: sendingUser.id,
         receiverId: receivingUser.id,
       },
     });
   }
 
-  async acceptFriendRequest(acceptingName: string, invitingName: string) {
-    const acceptingUser = await this.userService.getUserByName(acceptingName);
-    const invitingUser = await this.userService.getUserByName(invitingName);
+  // Accept a friend request from another user
+  async acceptFriendRequest(
+    acceptingUser: User,
+    sendingName: string,
+  ): Promise<void> {
+    const invitingUser = await this.userService.getUserByName(sendingName);
 
+    // Define criteria to find the pending friend request
     const where = {
       isAccepted: false,
       senderId_receiverId: {
@@ -110,6 +121,7 @@ export class FriendshipsService {
       },
     };
 
+    // Update the friend request to mark it as accepted
     await this.prisma.friendRequest.update({
       where,
       data: {
@@ -118,10 +130,11 @@ export class FriendshipsService {
     });
   }
 
-  async deleteFriendRequest(username: string, otherUsername: string) {
-    const user = await this.userService.getUserByName(username);
+  // Delete a friend request or an existing friendship
+  async deleteFriendRequest(user: User, otherUsername: string): Promise<void> {
     const otherUser = await this.userService.getUserByName(otherUsername);
 
+    // Define criteria to find friend requests involving the users
     const where = {
       OR: [
         { receiverId: user.id, senderId: otherUser.id },
@@ -129,6 +142,7 @@ export class FriendshipsService {
       ],
     };
 
+    // Delete the identified friend request(s)
     await this.prisma.friendRequest.deleteMany({
       where,
     });

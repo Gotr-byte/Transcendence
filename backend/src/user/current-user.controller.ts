@@ -1,16 +1,29 @@
-import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
-import { Request, Response } from 'express';
-import { AuthGuard42 } from 'src/auth/guards/Guards';
+import { Controller, Get, Patch, Req, Res, UseGuards } from '@nestjs/common';
+import { User } from '@prisma/client';
+import { Response } from 'express';
+import { AuthUser } from 'src/auth/auth.decorator';
+import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 
+@UseGuards(AuthenticatedGuard)
 @Controller()
 export class CurrentUserController {
   constructor() {}
 
-  // @UseGuards(AuthGuard42)
+  // Redirects the authenticated user to their profile page
   @Get('profile')
-  redirectToCurrentUser(@Req() request: Request, @Res() response: Response) {
-    const user = request.user;
-    console.log(user);
-    response.redirect(`/users/LOGGED-IN-USER`); //
+  async getCurrentUser(
+    @AuthUser() user: User,
+    @Res() response: Response,
+  ): Promise<void> {
+    response.redirect(`/users/` + user.username);
+  }
+
+  // Redirects the PATCH request of the authenticated user to user.controller.updateUser
+  @Patch('profile')
+  async patchCurrentUser(
+    @AuthUser() user: User,
+    @Res() response: Response,
+  ): Promise<void> {
+    response.redirect(`/users/` + user.username);
   }
 }

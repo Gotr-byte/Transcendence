@@ -1,50 +1,62 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from '@prisma/client';
-import { AddUserDto, UpdateUserDto } from './dto';
+import { UpdateUserDto, ShowUserDto } from './dto';
+import { UserDetails } from './types';
 
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
 
-  async getAll() {
+  // Get a list of all users
+  async getAll(): Promise<ShowUserDto[]> {
     const users = await this.prisma.user.findMany({});
-    return users.map(this.transformUser);
+    const userDtos = users.map((user) => ShowUserDto.from(user));
+    return userDtos;
   }
 
-  //i dont know if its necessary but ill leave it here
-  async getUserById(id: number) {
-    const user = await this.prisma.user.findUnique({
+  // Find a user by their username
+  async getUserByName(username: string): Promise<ShowUserDto> {
+    const user = await this.prisma.user.findUniqueOrThrow({
+      where: {
+        username,
+      },
+    });
+
+    return ShowUserDto.from(user);
+  }
+
+  // Get user details by ID
+  async getUserById(id: number): Promise<ShowUserDto> {
+    const user = await this.prisma.user.findUniqueOrThrow({
       where: {
         id,
       },
     });
-    return this.transformUser(user);
+
+    return ShowUserDto.from(user);
   }
 
-  async getUsersListFromIds(userIds: number[]) {
+  // Get user details by email
+  async getUserByEmail(userEmail: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        email: userEmail,
+      },
+    });
+    return user;
+  }
+
+  // Get a list of users based on their IDs
+  async getUsersListFromIds(userIds: number[]): Promise<ShowUserDto[]> {
     const userList = await Promise.all(
       userIds.map((userId) => this.getUserById(userId)),
     );
     return userList;
   }
 
-  async getUserByName(username: string) {
-    const user = await this.findByUsername(username);
-    return this.transformUser(user);
-  }
-
-  async findByUsername(username: string) {
-    const user = await this.prisma.user.findUniqueOrThrow({
-      where: {
-        username,
-      },
-    });
-    return user;
-  }
-
-  async updateUser(username: string, dto: UpdateUserDto) {
-    const user = await this.findByUsername(username);
+  // Update user profile
+  async updateUser(user: User, dto: UpdateUserDto): Promise<ShowUserDto> {
     const updatedUser = await this.prisma.user.update({
       where: {
         id: user.id,
@@ -54,28 +66,16 @@ export class UserService {
         ...dto,
       },
     });
-
-    return updatedUser;
+    return ShowUserDto.from(updatedUser);
   }
 
-  async addUser(dto: AddUserDto) {
+  // Create a new user
+  async createUser(details: UserDetails): Promise<User> {
     const newUser = await this.prisma.user.create({
       data: {
-        ...dto,
+        ...details,
       },
     });
     return newUser;
-  }
-
-  private transformUser(user: User) {
-    return {
-      id: user.id,
-      username: user.username,
-      OAuthName: user.OAuthName,
-      email: user.email,
-      createdAt: user.createdAt,
-      avatar: user.avatar,
-      isOnline: user.isOnline,
-    };
   }
 }
