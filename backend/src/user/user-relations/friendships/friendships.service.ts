@@ -4,7 +4,7 @@ import { User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { FriendRequestWhereInput } from 'src/user/types';
-import { ShowUserDto } from 'src/user/dto';
+import { ShowAnyUserDto } from 'src/user/dto';
 
 @Injectable()
 export class FriendshipsService {
@@ -17,7 +17,7 @@ export class FriendshipsService {
   private async getUsersFromFriendRequests(
     user: User,
     where: FriendRequestWhereInput,
-  ): Promise<ShowUserDto[]> {
+  ): Promise<ShowAnyUserDto[]> {
     // Fetch friend requests based on the provided criteria
     const friendRequests = await this.prisma.friendRequest.findMany({
       where,
@@ -34,7 +34,7 @@ export class FriendshipsService {
   }
 
   // Get a friendlist of the current user
-  async getFriends(user: User): Promise<ShowUserDto[]> {
+  async getFriends(user: User): Promise<ShowAnyUserDto[]> {
     const where = {
       isAccepted: true,
       OR: [{ senderId: user.id }, { receiverId: user.id }],
@@ -45,7 +45,7 @@ export class FriendshipsService {
   }
 
   // Get a list of sent friend requests, by the current user
-  async getSentFriendRequests(user: User): Promise<ShowUserDto[]> {
+  async getSentFriendRequests(user: User): Promise<ShowAnyUserDto[]> {
     const where = {
       isAccepted: false,
       receiverId: user.id,
@@ -59,7 +59,7 @@ export class FriendshipsService {
   }
 
   // Get a list of received friend requests by the current user
-  async getReceivedFriendRequests(user: User): Promise<ShowUserDto[]> {
+  async getReceivedFriendRequests(user: User): Promise<ShowAnyUserDto[]> {
     const where = {
       isAccepted: false,
       senderId: user.id,

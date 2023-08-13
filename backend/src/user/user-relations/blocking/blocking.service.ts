@@ -4,7 +4,7 @@ import { Blocked, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
 import { BlockedWhereInput } from 'src/user/types';
-import { ShowUserDto } from 'src/user/dto';
+import { ShowAnyUserDto } from 'src/user/dto';
 
 @Injectable()
 export class BlockingService {
@@ -17,7 +17,7 @@ export class BlockingService {
   private async getUsersfromBlockedList(
     user: User,
     where: BlockedWhereInput,
-  ): Promise<ShowUserDto[]> {
+  ): Promise<ShowAnyUserDto[]> {
     const blockUsers = await this.prisma.blocked.findMany({
       where,
     });
@@ -42,14 +42,14 @@ export class BlockingService {
   }
 
   // Get a list of users blocked by the current user
-  async getBlockedUsers(user: User): Promise<ShowUserDto[]> {
+  async getBlockedUsers(user: User): Promise<ShowAnyUserDto[]> {
     const where = { blockingUserId: user.id };
     const blockedUsers = await this.getUsersfromBlockedList(user, where);
     return blockedUsers;
   }
 
   // Get a list of users who have blocked the current user
-  async getBlockingUsers(user: User): Promise<ShowUserDto[]> {
+  async getBlockingUsers(user: User): Promise<ShowAnyUserDto[]> {
     const where = { blockedUserId: user.id };
     const blockingUsers = await this.getUsersfromBlockedList(user, where);
     return blockingUsers;

@@ -22,7 +22,7 @@ export class SessionSerializer extends PassportSerializer {
   // Deserialize the user from the session.
   deserializeUser(payload: User, done: Function): void {
     // Retrieve the user based on the user ID.
-    const user = this.userService.getUserByName(payload.username);
+    const user = this.userService.getUserByEmail(payload.email);
     // console.log('deserialize user');
     // console.log(user);
     return user ? done(null, user) : done(null, null);

@@ -14,7 +14,9 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "avatar" TEXT NOT NULL DEFAULT 'https://avatarfiles.alphacoders.com/183/183501.jpg',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "is2Fa" BOOLEAN NOT NULL DEFAULT false,
+    "is2FaActive" BOOLEAN NOT NULL DEFAULT false,
+    "is2FaValid" BOOLEAN NOT NULL DEFAULT false,
+    "twoFaSecret" TEXT NOT NULL DEFAULT '',
     "isOnline" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")

@@ -7,7 +7,7 @@ import {
   IsUrl,
 } from 'class-validator';
 
-export class UpdateUserDto {
+export class ChangeUserDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
@@ -17,13 +17,27 @@ export class UpdateUserDto {
   @IsNotEmpty()
   @IsOptional()
   avatar: string;
+}
+
+export class ChangeUserPropsDto {
+  @IsBoolean()
+  @IsOptional()
+  is2FaActive?: boolean;
 
   @IsBoolean()
   @IsOptional()
-  is2Fa: boolean;
+  is2FaValid?: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  isOnline?: boolean;
+
+  @IsString()
+  @IsOptional()
+  twoFaSecret?: string;
 }
 
-export class ShowUserDto {
+export class ShowAnyUserDto {
   id: number;
   username: string;
   avatar: string;
@@ -33,9 +47,29 @@ export class ShowUserDto {
     (this.id = user.id), (this.username = user.username);
     this.isOnline = user.isOnline;
     this.avatar = user.avatar;
+    // this.is2Fa = user.is2Fa;
   }
 
-  static from(user: User): ShowUserDto {
-    return new ShowUserDto(user);
+  static from(user: User): ShowAnyUserDto {
+    return new ShowAnyUserDto(user);
+  }
+}
+
+export class ShowLoggedUserDto {
+  id: number;
+  username: string;
+  avatar: string;
+  isOnline: boolean;
+  is2Fa: boolean;
+
+  constructor(user: User) {
+    (this.id = user.id), (this.username = user.username);
+    this.isOnline = user.isOnline;
+    this.avatar = user.avatar;
+    // this.is2Fa = user.is2Fa;
+  }
+
+  static from(user: User): ShowLoggedUserDto {
+    return new ShowLoggedUserDto(user);
   }
 }

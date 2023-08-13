@@ -2,10 +2,8 @@ import {
   ArgumentsHost,
   Catch,
   ExceptionFilter,
-  ForbiddenException,
   HttpException,
   HttpStatus,
-  NotFoundException,
 } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import { Request, Response } from 'express';
@@ -21,10 +19,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     if (exception instanceof PrismaClientKnownRequestError) {
       if (exception.code === 'P2002') {
-        response.status(HttpStatus.FORBIDDEN).json({
+        response.status(HttpStatus.CONFLICT).json({
           message: 'This entity already exists',
-          error: 'Forbidden',
-          statusCode: 403,
+          error: 'Conflict',
+          statusCode: 409,
         });
       }
       if (exception.code === 'P2025') {

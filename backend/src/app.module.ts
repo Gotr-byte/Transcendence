@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PassportModule } from '@nestjs/passport';
+import { TwoFaAuthModule } from './two-fa-auth/two-fa-auth.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PassportModule } from '@nestjs/passport';
       ignoreEnvFile: true,
       isGlobal: true,
     }),
+    TwoFaAuthModule,
   ],
 })
 export class AppModule {}

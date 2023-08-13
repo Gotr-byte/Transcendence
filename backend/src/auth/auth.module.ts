@@ -4,12 +4,14 @@ import { AuthController } from './auth.controller';
 import { AuthStrategy } from './strategy/auth.strategy';
 import { SessionSerializer } from './Serializer';
 import { UserService } from 'src/user/user.service';
+import { TwoFaAuthService } from 'src/two-fa-auth/two-fa-auth.service';
 
 @Module({
   controllers: [AuthController],
   providers: [
     AuthStrategy,
     AuthService,
+    TwoFaAuthService,
     UserService,
     SessionSerializer,
     {

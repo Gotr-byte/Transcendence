@@ -11,13 +11,15 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  email     String   @unique //@unique
-  avatar    String   @default("https://avatarfiles.alphacoders.com/183/183501.jpg")
-  createdAt DateTime @default(now())
-  is2Fa     Boolean  @default(false)
-  isOnline  Boolean  @default(false)
+  id          Int      @id @default(autoincrement())
+  username    String   @unique
+  email       String   @unique //@unique
+  avatar      String   @default("https://avatarfiles.alphacoders.com/183/183501.jpg")
+  createdAt   DateTime @default(now())
+  is2FaActive Boolean  @default(false)
+  is2FaValid  Boolean  @default(false)
+  twoFaSecret String   @default("")
+  isOnline    Boolean  @default(false)
 
   createdChannels    Channel[]                @relation
   followingChannels  ChannelMember[]          @relation

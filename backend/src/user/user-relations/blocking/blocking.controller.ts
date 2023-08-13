@@ -11,7 +11,7 @@ import { BlockingService } from './blocking.service';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { User } from '@prisma/client';
-import { ShowUserDto } from 'src/user/dto';
+import { ShowAnyUserDto } from 'src/user/dto';
 
 @UseGuards(AuthenticatedGuard)
 @Controller('block')
@@ -20,14 +20,14 @@ export class BlockingController {
 
   // Get a list of users blocked by the current user
   @Get()
-  async getBlockedUsers(@AuthUser() user: User): Promise<ShowUserDto[]> {
+  async getBlockedUsers(@AuthUser() user: User): Promise<ShowAnyUserDto[]> {
     const users = await this.blockingService.getBlockedUsers(user);
     return users;
   }
 
   // Get a list of users who have blocked the current user
   @Get('by')
-  async getBlockingUsers(@AuthUser() user: User): Promise<ShowUserDto[]> {
+  async getBlockingUsers(@AuthUser() user: User): Promise<ShowAnyUserDto[]> {
     const users = await this.blockingService.getBlockingUsers(user);
     return users;
   }

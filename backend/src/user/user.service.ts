@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from '@prisma/client';
-import { UpdateUserDto, ShowUserDto } from './dto';
+import {
+  ChangeUserDto,
+  ChangeUserPropsDto,
+  ShowAnyUserDto,
+  ShowLoggedUserDto,
+} from './dto';
 import { UserDetails } from './types';
 
 @Injectable()
@@ -9,32 +14,32 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
   // Get a list of all users
-  async getAll(): Promise<ShowUserDto[]> {
+  async getAll(): Promise<ShowAnyUserDto[]> {
     const users = await this.prisma.user.findMany({});
-    const userDtos = users.map((user) => ShowUserDto.from(user));
+    const userDtos = users.map((user) => ShowAnyUserDto.from(user));
     return userDtos;
   }
 
   // Find a user by their username
-  async getUserByName(username: string): Promise<ShowUserDto> {
+  async getUserByName(username: string): Promise<User> {
     const user = await this.prisma.user.findUniqueOrThrow({
       where: {
         username,
       },
     });
 
-    return ShowUserDto.from(user);
+    return user;
   }
 
   // Get user details by ID
-  async getUserById(id: number): Promise<ShowUserDto> {
+  async getUserById(id: number): Promise<ShowAnyUserDto> {
     const user = await this.prisma.user.findUniqueOrThrow({
       where: {
         id,
       },
     });
 
-    return ShowUserDto.from(user);
+    return ShowAnyUserDto.from(user);
   }
 
   // Get user details by email
@@ -48,7 +53,7 @@ export class UserService {
   }
 
   // Get a list of users based on their IDs
-  async getUsersListFromIds(userIds: number[]): Promise<ShowUserDto[]> {
+  async getUsersListFromIds(userIds: number[]): Promise<ShowAnyUserDto[]> {
     const userList = await Promise.all(
       userIds.map((userId) => this.getUserById(userId)),
     );
@@ -56,7 +61,10 @@ export class UserService {
   }
 
   // Update user profile
-  async updateUser(user: User, dto: UpdateUserDto): Promise<ShowUserDto> {
+  async updateUser(
+    user: User,
+    dto: ChangeUserDto | ChangeUserPropsDto,
+  ): Promise<ShowLoggedUserDto> {
     const updatedUser = await this.prisma.user.update({
       where: {
         id: user.id,
@@ -66,7 +74,7 @@ export class UserService {
         ...dto,
       },
     });
-    return ShowUserDto.from(updatedUser);
+    return ShowLoggedUserDto.from(updatedUser);
   }
 
   // Create a new user
