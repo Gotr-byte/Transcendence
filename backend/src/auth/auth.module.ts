@@ -4,20 +4,27 @@ import { AuthController } from './auth.controller';
 import { AuthStrategy } from './strategy/auth.strategy';
 import { SessionSerializer } from './Serializer';
 import { UserService } from 'src/user/user.service';
-import { TwoFaAuthService } from 'src/two-fa-auth/two-fa-auth.service';
+import {
+  AuthenticatedGuard,
+  SessionGuard,
+  TwoFactorGuard,
+} from './guards/Guards';
 
 @Module({
   controllers: [AuthController],
   providers: [
     AuthStrategy,
     AuthService,
-    TwoFaAuthService,
-    UserService,
+    AuthenticatedGuard,
+    SessionGuard,
+    TwoFactorGuard,
     SessionSerializer,
+    UserService,
     {
       provide: 'AUTH_SERVICE',
       useClass: AuthService,
     },
   ],
+  exports: [AuthenticatedGuard, SessionGuard, TwoFactorGuard],
 })
 export class AuthModule {}

@@ -17,7 +17,7 @@ async function bootstrap() {
   // });
   app.use(
     session({
-      secret: process.env.SESSIONS_SECRET + "1896",
+      secret: process.env.SESSIONS_SECRET + '1896',
       saveUninitialized: false,
       resave: false,
       cookie: { maxAge: 4320000 },

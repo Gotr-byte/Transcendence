@@ -10,9 +10,13 @@ export class TwoFaAuthService {
   constructor(private readonly userService: UserService) {}
 
   async getQrCode(user: User) {
-    if (user.twoFaSecret === '') {
+    if (!user.is2FaActive) {
       const secret = await this.generateSecret();
-      await this.userService.updateUser(user, { twoFaSecret: secret });
+      user.twoFaSecret = secret;
+      await this.userService.updateUser(user, {
+        twoFaSecret: secret,
+        is2FaActive: true,
+      });
     }
     const qrCode = await this.generateQrCode(user.twoFaSecret);
     return qrCode;
@@ -27,13 +31,13 @@ export class TwoFaAuthService {
     const otpauthUrl = await speakeasy.otpauthURL({
       secret: secret,
       label: 'ft_transcendence',
-      issuer: 'fr_transcendence',
+      issuer: '42',
     });
     const qrCode = await qrcode.toDataURL(otpauthUrl);
     return qrCode;
   }
 
-  async verifyToken(user: User, dto: Verify2FADto): Promise<boolean> {
+  async verifyToken(user: User, dto: Verify2FADto): Promise<void> {
     const secret = user.twoFaSecret;
     const verified = await speakeasy.totp.verify({
       secret: secret,
@@ -43,16 +47,15 @@ export class TwoFaAuthService {
     if (verified === false) {
       throw new UnauthorizedException('Invalid 2FA code');
     }
-    await this.userService.updateUser(user, { is2FaValid: true });
-    if (user.is2FaActive === false)
-      await this.userService.updateUser(user, { is2FaActive: true });
-    return verified;
+    await this.userService.updateUser(user, {
+      is2FaValid: true,
+      is2FaActive: true,
+    });
   }
 
   async deactivate2Fa(user: User): Promise<void> {
     await this.userService.updateUser(user, {
       twoFaSecret: '',
-      is2FaActive: false,
       is2FaValid: false,
     });
   }
