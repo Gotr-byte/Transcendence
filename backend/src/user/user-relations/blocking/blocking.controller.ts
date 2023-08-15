@@ -16,7 +16,7 @@ import { ShowAnyUserDto } from 'src/user/dto';
 @UseGuards(AuthenticatedGuard)
 @Controller('block')
 export class BlockingController {
-  constructor(private blockingService: BlockingService) {}
+  constructor(private readonly blockingService: BlockingService) {}
 
   // Get a list of users blocked by the current user
   @Get()

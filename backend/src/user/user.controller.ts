@@ -17,7 +17,7 @@ import { AuthUser } from 'src/auth/auth.decorator';
 @UseGuards(AuthenticatedGuard)
 @Controller('users')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   // Get all users
   @Get('all')

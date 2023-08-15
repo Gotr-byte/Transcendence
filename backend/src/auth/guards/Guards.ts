@@ -35,9 +35,11 @@ export class SessionGuard implements CanActivate {
 }
 
 @Injectable()
-export class TwoFactorGuard implements CanActivate {
-  // Checks if the user's 2FA is valid
+export class AuthenticatedGuard implements CanActivate {
+  constructor(private readonly sessionGuard: SessionGuard) {}
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isSessionValid = await this.sessionGuard.canActivate(context);
     const request = context.switchToHttp().getRequest();
     const user = request.session.passport?.user;
 
@@ -45,21 +47,6 @@ export class TwoFactorGuard implements CanActivate {
       throw new UnauthorizedException(`${user.username} 2fa is not validated`);
     }
 
-    return true;
-  }
-}
-
-@Injectable()
-export class AuthenticatedGuard implements CanActivate {
-  constructor(
-    private readonly sessionGuard: SessionGuard,
-    private readonly twoFactorGuard: TwoFactorGuard,
-  ) {}
-
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const isTwoFactorValid = await this.twoFactorGuard.canActivate(context);
-    const isOAuthValid = await this.sessionGuard.canActivate(context);
-
-    return isTwoFactorValid && isOAuthValid;
+    return isSessionValid;
   }
 }

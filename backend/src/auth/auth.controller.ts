@@ -1,4 +1,4 @@
-import { Controller, Get, Req, Res, Session, UseGuards } from '@nestjs/common';
+import { Controller, Get, Inject, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard42, SessionGuard } from './guards/Guards';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
@@ -9,7 +9,7 @@ import { AuthUser } from './auth.decorator';
 @Controller('auth')
 export class AuthController {
   constructor(
-    private authService: AuthService,
+    @Inject('AUTH_SERVICE') private readonly authService: AuthService,
     private readonly userService: UserService,
   ) {}
   // Initiates the 42 login process using AuthGuard42

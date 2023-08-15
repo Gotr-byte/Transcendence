@@ -17,7 +17,7 @@ import { ShowAnyUserDto } from 'src/user/dto';
 @UseGuards(AuthenticatedGuard)
 @Controller('friends')
 export class FriendshipsController {
-  constructor(private friendshipsService: FriendshipsService) {}
+  constructor(private readonly friendshipsService: FriendshipsService) {}
 
   // Get the list of friends for the current user
   @Get()

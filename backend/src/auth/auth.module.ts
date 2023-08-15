@@ -4,20 +4,14 @@ import { AuthController } from './auth.controller';
 import { AuthStrategy } from './strategy/auth.strategy';
 import { SessionSerializer } from './Serializer';
 import { UserService } from 'src/user/user.service';
-import {
-  AuthenticatedGuard,
-  SessionGuard,
-  TwoFactorGuard,
-} from './guards/Guards';
+import { AuthenticatedGuard, SessionGuard } from './guards/Guards';
 
 @Module({
   controllers: [AuthController],
   providers: [
     AuthStrategy,
-    AuthService,
     AuthenticatedGuard,
     SessionGuard,
-    TwoFactorGuard,
     SessionSerializer,
     UserService,
     {
@@ -25,6 +19,6 @@ import {
       useClass: AuthService,
     },
   ],
-  exports: [AuthenticatedGuard, SessionGuard, TwoFactorGuard],
+  exports: [AuthenticatedGuard, SessionGuard],
 })
 export class AuthModule {}

@@ -6,7 +6,6 @@ import {
   Get,
   Post,
   Res,
-  Session,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -19,7 +18,7 @@ import { Response } from 'express';
 
 @Controller('2fa')
 export class TwoFaAuthController {
-  constructor(private twoFaService: TwoFaAuthService) {}
+  constructor(private readonly twoFaService: TwoFaAuthService) {}
 
   @UseGuards(AuthenticatedGuard)
   @Get('activate')
