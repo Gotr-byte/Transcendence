@@ -23,7 +23,7 @@ export class AuthController {
   @Get('42/callback')
   @UseGuards(AuthGuard42)
   async handleRedirect(@Res() response: Response): Promise<void> {
-    response.redirect('/auth/status'); // should redirect to the frontend
+    response.redirect(process.env.FRONTEND_URL || "http://localhost:3000");
   }
 
   // Checks the authentication status of the user
