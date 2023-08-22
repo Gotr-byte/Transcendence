@@ -9,7 +9,7 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"prisma/*.prisma\" \"prisma/*.ts\"",
     "migrate:prod": "prisma migrate deploy && npm run start",
-    "start": "nest start & npx prisma studio",
+    "start": "npx prisma generate && nest start & npx prisma studio",
     "start:dev": "nest start --watch",
     "dev:watch": "npx prisma generate && npm run start:dev & npx prisma studio",
     "start:debug": "nest start --debug --watch",
