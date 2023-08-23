@@ -6,7 +6,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 
 @Catch(HttpException, PrismaClientKnownRequestError)
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -27,7 +27,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       }
       if (exception.code === 'P2025') {
         response.status(HttpStatus.NOT_FOUND).json({
-          message: 'User was not found',
+          message: 'Entity was not found',
           error: 'Not Found',
           statusCode: 404,
         });

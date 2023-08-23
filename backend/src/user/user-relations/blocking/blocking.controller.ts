@@ -33,7 +33,7 @@ export class BlockingController {
   }
 
   // Block a user by username
-  @Post('/user/:username')
+  @Post('user/:username')
   async blockUser(
     @AuthUser() user: User,
     @Param('username') blockUser: string,

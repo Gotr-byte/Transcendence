@@ -6,10 +6,12 @@ import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PassportModule } from '@nestjs/passport';
 import { TwoFaAuthModule } from './two-fa-auth/two-fa-auth.module';
+import { ChatModule } from './chat/channels.module';
 
 @Module({
   imports: [
     AuthModule,
+    ChatModule,
     UserModule,
     PrismaModule,
     PassportModule.register({ session: true }),

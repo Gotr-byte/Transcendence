@@ -20,7 +20,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   // Get all users
-  @Get('all')
+  @Get()
   async getAll(): Promise<ShowAnyUserDto[]> {
     const users = await this.userService.getAll();
     return users;
