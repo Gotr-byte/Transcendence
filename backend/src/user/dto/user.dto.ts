@@ -47,7 +47,6 @@ export class ShowAnyUserDto {
     (this.id = user.id), (this.username = user.username);
     this.isOnline = user.isOnline;
     this.avatar = user.avatar;
-    // this.is2Fa = user.is2Fa;
   }
 
   static from(user: User): ShowAnyUserDto {
@@ -60,13 +59,13 @@ export class ShowLoggedUserDto {
   username: string;
   avatar: string;
   isOnline: boolean;
-  is2Fa: boolean;
+  is2FaActive: boolean;
 
   constructor(user: User) {
     (this.id = user.id), (this.username = user.username);
     this.isOnline = user.isOnline;
     this.avatar = user.avatar;
-    // this.is2Fa = user.is2Fa;
+    this.is2FaActive = user.is2FaActive;
   }
 
   static from(user: User): ShowLoggedUserDto {
