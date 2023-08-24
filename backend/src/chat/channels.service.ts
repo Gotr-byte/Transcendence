@@ -2,6 +2,7 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import {
   CreateChannelDto,
+  JoinChannelDto,
   ShowChannelDto,
   ShowChannelsDto,
 } from './dto';
@@ -61,10 +62,12 @@ export class ChannelService {
 
   async getChannel(channelId: number, userId: number): Promise<ShowChannelDto> {
     let channel = await this.prisma.channel.findUnique({
+      //
       where: {
         id: channelId,
         channelType: { in: [ChannelTypes.PUBLIC, ChannelTypes.PROTECTED] },
       },
+      //
     });
     if (!channel) {
       channel = await this.prisma.channel.findUniqueOrThrow({
@@ -132,5 +135,9 @@ export class ChannelService {
     return batchPayload.count;
   }
 
-  
+  async joinChannel(userId: number, channelId: number, joinChannelDto: JoinChannelDto) {
+    // if channel is protected, check for password existance and check if password is valid,
+    // then add user to channel
+  }
+
 }

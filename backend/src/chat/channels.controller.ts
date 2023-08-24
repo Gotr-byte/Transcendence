@@ -74,6 +74,7 @@ export class ChannelController {
     @AuthUser() user: User,
     @Body() dto: JoinChannelDto,
   ) {
-    
+    const joinChannel = await this.channelService.joinChannel(user.id, +channelId, dto.password)
+    return `User: '${user.username}' was added to channelId: '${channelId}'`
   }
 }
