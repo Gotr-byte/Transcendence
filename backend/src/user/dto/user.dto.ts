@@ -1,11 +1,18 @@
 import { User } from '@prisma/client';
 import {
+  IsArray,
   IsBoolean,
   IsNotEmpty,
   IsOptional,
   IsString,
   IsUrl,
 } from 'class-validator';
+
+export class AddUsersDto {
+  @IsArray()
+  @IsNotEmpty()
+  users: number[];
+}
 
 export class ChangeUserDto {
   @IsString()

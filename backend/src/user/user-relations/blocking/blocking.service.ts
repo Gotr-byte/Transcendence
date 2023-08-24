@@ -64,10 +64,7 @@ export class BlockingService {
 
     // Create a new block record
     const newBlock = await this.prisma.blocked.create({
-      data: {
-        blockingUserId: blockingUser.id,
-        blockedUserId: blockedUser.id,
-      },
+      data: { blockingUserId: blockingUser.id, blockedUserId: blockedUser.id },
     });
     return newBlock;
   }

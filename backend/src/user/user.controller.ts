@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   UseGuards,
-  ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ShowAnyUserDto, ChangeUserDto, ShowLoggedUserDto } from './dto';
@@ -42,9 +41,10 @@ export class UserController {
   async updateUser(
     @Param('username') username: string,
     @AuthUser() user: User,
-    @Body(new ValidationPipe()) dto: ChangeUserDto,
+    @Body() dto: ChangeUserDto,
   ): Promise<ShowLoggedUserDto> {
     // Validate that the authenticated user is authorized to update the profile
+    console.log(dto);
     if (user.username != username)
       throw new ForbiddenException(
         `User: '${user.username} is not allowed to patch '${username}'`,

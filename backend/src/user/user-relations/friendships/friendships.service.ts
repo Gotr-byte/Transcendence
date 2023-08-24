@@ -46,10 +46,7 @@ export class FriendshipsService {
 
   // Get a list of sent friend requests, by the current user
   async getSentFriendRequests(user: User): Promise<ShowAnyUserDto[]> {
-    const where = {
-      isAccepted: false,
-      receiverId: user.id,
-    };
+    const where = { isAccepted: false, receiverId: user.id };
 
     const pendingSentUserList = await this.getUsersFromFriendRequests(
       user,
@@ -60,10 +57,7 @@ export class FriendshipsService {
 
   // Get a list of received friend requests by the current user
   async getReceivedFriendRequests(user: User): Promise<ShowAnyUserDto[]> {
-    const where = {
-      isAccepted: false,
-      senderId: user.id,
-    };
+    const where = { isAccepted: false, senderId: user.id };
 
     const pendingReceivedUserList = await this.getUsersFromFriendRequests(
       user,
@@ -98,10 +92,7 @@ export class FriendshipsService {
 
     // Create a new friend request record
     await this.prisma.friendRequest.create({
-      data: {
-        senderId: sendingUser.id,
-        receiverId: receivingUser.id,
-      },
+      data: { senderId: sendingUser.id, receiverId: receivingUser.id },
     });
   }
 
@@ -124,9 +115,7 @@ export class FriendshipsService {
     // Update the friend request to mark it as accepted
     await this.prisma.friendRequest.update({
       where,
-      data: {
-        isAccepted: true,
-      },
+      data: { isAccepted: true },
     });
   }
 

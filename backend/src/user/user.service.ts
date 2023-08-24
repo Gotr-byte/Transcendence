@@ -23,9 +23,7 @@ export class UserService {
   // Find a user by their username
   async getUserByName(username: string): Promise<User> {
     const user = await this.prisma.user.findUniqueOrThrow({
-      where: {
-        username,
-      },
+      where: { username },
     });
 
     return user;
@@ -45,9 +43,7 @@ export class UserService {
   // Get user details by email
   async getUserByEmail(userEmail: string): Promise<User | null> {
     const user = await this.prisma.user.findUnique({
-      where: {
-        email: userEmail,
-      },
+      where: { email: userEmail },
     });
     return user;
   }
@@ -66,13 +62,8 @@ export class UserService {
     dto: ChangeUserDto | ChangeUserPropsDto,
   ): Promise<ShowLoggedUserDto> {
     const updatedUser = await this.prisma.user.update({
-      where: {
-        id: user.id,
-      },
-      data: {
-        ...user,
-        ...dto,
-      },
+      where: { id: user.id },
+      data: { ...dto },
     });
     return ShowLoggedUserDto.from(updatedUser);
   }
@@ -80,9 +71,7 @@ export class UserService {
   // Create a new user
   async createUser(details: UserDetails): Promise<User> {
     const newUser = await this.prisma.user.create({
-      data: {
-        ...details,
-      },
+      data: { ...details },
     });
     return newUser;
   }

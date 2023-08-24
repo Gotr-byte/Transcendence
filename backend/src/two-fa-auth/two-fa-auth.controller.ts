@@ -7,7 +7,6 @@ import {
   Post,
   Res,
   UseGuards,
-  ValidationPipe,
 } from '@nestjs/common';
 import { TwoFaAuthService } from './two-fa-auth.service';
 import { AuthenticatedGuard, SessionGuard } from 'src/auth/guards/Guards';
@@ -33,7 +32,7 @@ export class TwoFaAuthController {
   @Post('verify')
   async verifyToken(
     @AuthUser() user: User,
-    @Body(new ValidationPipe()) dto: Verify2FADto,
+    @Body() dto: Verify2FADto,
     @Res() response: Response,
   ): Promise<void> {
     if (user) {
