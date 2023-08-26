@@ -21,7 +21,9 @@ export class UserController {
 
   // Get all users
   @Get('all')
-  async getAll(): Promise<ShowAnyUserDto[]> {
+  async getAll(
+    @AuthUser() user: User
+  ): Promise<ShowAnyUserDto[]> {
     const users = await this.userService.getAll();
     return users;
   }

@@ -6,11 +6,13 @@ import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PassportModule } from '@nestjs/passport';
 import { TwoFaAuthModule } from './two-fa-auth/two-fa-auth.module';
+import { MatchesModule } from './matches/matches.module';
 
 @Module({
   imports: [
     AuthModule,
     UserModule,
+    MatchesModule,
     PrismaModule,
     PassportModule.register({ session: true }),
     ConfigModule.forRoot({
