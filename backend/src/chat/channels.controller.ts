@@ -68,13 +68,13 @@ export class ChannelController {
     return `Added ${addedUserNo} users to channelId: '${channelId}'`;
   }
 
-  @Post('id/:channelId/join')
-  async joinChannel(
-    @Param('channelId') channelId: string,
-    @AuthUser() user: User,
-    @Body() dto: JoinChannelDto,
-  ) {
-    const joinChannel = await this.channelService.joinChannel(user.id, +channelId, dto.password)
-    return `User: '${user.username}' was added to channelId: '${channelId}'`
-  }
+  // @Post('id/:channelId/join')
+  // async joinChannel(
+  //   @Param('channelId') channelId: string,
+  //   @AuthUser() user: User,
+  //   @Body() dto: JoinChannelDto,
+  // ) {
+  //   const joinChannel = await this.channelService.joinChannel(user.id, +channelId, dto.password)
+  //   return `User: '${user.username}' was added to channelId: '${channelId}'`
+  // }
 }
