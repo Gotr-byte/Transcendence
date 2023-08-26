@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { PassportModule } from '@nestjs/passport';
 import { TwoFaAuthModule } from './two-fa-auth/two-fa-auth.module';
+import { MatchesModule } from './matches/matches.module';
 import { ChatModule } from './chat/channels.module';
 
 @Module({
@@ -13,6 +14,7 @@ import { ChatModule } from './chat/channels.module';
     AuthModule,
     ChatModule,
     UserModule,
+    MatchesModule,
     PrismaModule,
     PassportModule.register({ session: true }),
     ConfigModule.forRoot({
