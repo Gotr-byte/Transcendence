@@ -7,7 +7,7 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { UserService } from './user.service';
+import { ChannelUserService } from './channel-user.service';
 import { JoinChannelDto } from './dto/join-channel.dto';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { User } from '@prisma/client';
@@ -17,8 +17,8 @@ import { ShowChannelDto } from '../shared/dto/show-channel.dto';
 
 @UseGuards(AuthenticatedGuard)
 @Controller('chat/user')
-export class UserController {
-  constructor(private readonly userService: UserService) {}
+export class ChannelUserController {
+  constructor(private readonly channelUserService: ChannelUserService) {}
 
   // Retrieves all public and protected channels in that the
   // logged-in user is not blocked on
@@ -27,13 +27,13 @@ export class UserController {
   async getNonPrivateChannels(
     @AuthUser() user: User,
   ): Promise<ShowChannelsDto> {
-    const channels = await this.userService.getNonPrivateChannels(user.id);
+    const channels = await this.channelUserService.getNonPrivateChannels(user.id);
     return channels;
   }
 
   @Get('memberships')
   async getUserChannels(@AuthUser() user: User): Promise<ShowChannelsDto> {
-    const channels = await this.userService.getUserChannels(user.id);
+    const channels = await this.channelUserService.getUserChannels(user.id);
     return channels;
   }
 
@@ -42,7 +42,7 @@ export class UserController {
     @Param('channelId') channelId: string,
     @AuthUser() user: User,
   ): Promise<ShowChannelDto> {
-    const channel = await this.userService.getChannel(+channelId, user.id);
+    const channel = await this.channelUserService.getChannel(+channelId, user.id);
     return channel;
   }
 
@@ -52,7 +52,7 @@ export class UserController {
     @AuthUser() user: User,
     @Body() joinChannelDto: JoinChannelDto,
   ): Promise<string> {
-    await this.userService.joinChannel(user.id, +channelId, joinChannelDto);
+    await this.channelUserService.joinChannel(user.id, +channelId, joinChannelDto);
     return `User: '${user.username}' has joined channelId: '${channelId}'`;
   }
 
@@ -61,7 +61,7 @@ export class UserController {
     @Param('channelId') channelId: string,
     @AuthUser() user: User,
   ): Promise<string> {
-    await this.userService.leaveChannel(user.id, +channelId);
+    await this.channelUserService.leaveChannel(user.id, +channelId);
     return `User: '${user.username}' has left channelId: '${channelId}'`;
   }
 }

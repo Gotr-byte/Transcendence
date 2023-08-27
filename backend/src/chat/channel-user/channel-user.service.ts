@@ -17,7 +17,7 @@ import { ShowChannelsDto } from '../shared/dto/show-channels.dto';
 import * as argon from 'argon2';
 
 @Injectable()
-export class UserService {
+export class ChannelUserService {
   constructor(
     private prisma: PrismaService,
     private readonly sharedService: SharedService,
