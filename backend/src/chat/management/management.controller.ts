@@ -8,13 +8,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ManagementService } from './management.service';
-import { CreateChannelDto } from './dto/create-channel.dto';
-import { UpdateChannelDto } from './dto/update-channel.dto';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { User } from '@prisma/client';
-import { ChannelDto } from '../shared/dto/channel.dto';
-import { ShowChannelDto } from '../shared/dto/show-channel.dto';
+import { CreateChannelDto, UpdateChannelDto } from './dto';
+import { ChannelDto, ShowChannelDto } from '../shared/dto';
 
 @UseGuards(AuthenticatedGuard)
 @Controller('chat/management')

@@ -1,8 +1,9 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { AddUsersDto } from './dto/add-users.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SharedService } from '../shared/shared.service';
-import { ChannelMemberRoles } from '@prisma/client';
+import { ChannelMemberRoles, User } from '@prisma/client';
+import { ShowUsersRolesRestrictions } from './dto';
+import { extendedChannel } from './types';
 
 @Injectable()
 export class AdminService {
@@ -10,6 +11,34 @@ export class AdminService {
     private prisma: PrismaService,
     private readonly sharedService: SharedService,
   ) {}
+
+  async getChannelUsersAsAdmin(userId: number, channelId: number): Promise<ShowUsersRolesRestrictions> {
+    await this.ensureUserIsAdmin(userId, channelId);
+
+    const channelUsers = await this.prisma.user.findMany({
+      where: { followingChannels: { some: { channelId: channelId } } },
+    });
+
+    const usersProps = await Promise.all(
+      channelUsers.map(async (user) => {
+        const channel = await this.getUsersRolesRestrictions(channelId, user.id);
+        return { user, channel };
+      })
+    );
+
+    return ShowUsersRolesRestrictions.from(usersProps);
+  }
+
+  async getUsersRolesRestrictions(channelId: number, userId: number): Promise<extendedChannel | null>  {
+    const props = this.prisma.channel.findUnique({
+      where: { id: channelId },
+      include: {
+        channelUsers: { where: { userId } },
+        restrictedUsers: { where: { restrictedUserId: userId } },
+      },
+    });
+    return props
+  }
 
   async addUsersToChannel(
     userId: number,

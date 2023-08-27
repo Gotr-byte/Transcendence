@@ -7,7 +7,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { PassportModule } from '@nestjs/passport';
 import { TwoFaAuthModule } from './two-fa-auth/two-fa-auth.module';
 import { MatchesModule } from './matches/matches.module';
-import { ChatModule } from './chat/channels.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [

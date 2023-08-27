@@ -1,12 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Channel, ChannelMemberRoles, ChannelTypes } from '@prisma/client';
-import { CreateChannelDto } from './dto/create-channel.dto';
-import { UpdateChannelDto } from './dto/update-channel.dto';
-import * as argon from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ShowChannelDto } from '../shared/dto/show-channel.dto';
-import { ChannelDto } from '../shared/dto/channel.dto';
 import { SharedService } from '../shared/shared.service';
+import { CreateChannelDto, UpdateChannelDto } from './dto';
+import { ChannelDto, ShowChannelDto } from '../shared/dto';
+import * as argon from 'argon2';
 
 @Injectable()
 export class ManagementService {

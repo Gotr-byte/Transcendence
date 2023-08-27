@@ -3,7 +3,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JoinChannelDto } from './dto/join-channel.dto';
+import { JoinChannelDto, ShowUsersRoles } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SharedService } from '../shared/shared.service';
 import {
@@ -12,8 +12,7 @@ import {
   ChannelTypes,
   ChannelUserRestrictionTypes,
 } from '@prisma/client';
-import { ShowChannelDto } from '../shared/dto/show-channel.dto';
-import { ShowChannelsDto } from '../shared/dto/show-channels.dto';
+import { ShowChannelDto, ShowChannelsDto } from '../shared/dto';
 import * as argon from 'argon2';
 
 @Injectable()
@@ -58,14 +57,25 @@ export class ChannelUserService {
   }
 
   async getChannel(channelId: number, userId: number): Promise<ShowChannelDto> {
-    let channel = await this.getPublicProtectedChannel(channelId);
-    if (!channel) {
-      channel = await this.getPrivateChannel(channelId, userId);
-    }
+    const channel = await this.validateAndGetChannel(channelId, userId);
 
     const usersNo = await this.countChannelMembers(channel.id);
 
     return ShowChannelDto.from(channel, usersNo);
+  }
+
+  async getChannelUsers(
+    userId: number,
+    channelId: number,
+  ): Promise<ShowUsersRoles> {
+    await this.validateAndGetChannel(channelId, userId);
+
+    const channelUsers = await this.prisma.channelMember.findMany({
+      where: { channelId },
+      include: { user: true },
+    });
+
+    return ShowUsersRoles.from(channelUsers);
   }
 
   async joinChannel(
@@ -95,13 +105,33 @@ export class ChannelUserService {
     }
   }
 
+  private async validateAndGetChannel(
+    channelId: number,
+    userId: number,
+  ): Promise<Channel> {
+    let channel = await this.getPublicProtectedChannel(channelId, userId);
+    if (!channel) {
+      channel = await this.getPrivateChannel(channelId, userId);
+    }
+    return channel;
+  }
+
   private async getPublicProtectedChannel(
     channelId: number,
+    userId: number,
   ): Promise<Channel | null> {
     const channel = await this.prisma.channel.findUnique({
       where: {
         id: channelId,
         channelType: { in: [ChannelTypes.PUBLIC, ChannelTypes.PROTECTED] },
+        NOT: {
+          restrictedUsers: {
+            some: {
+              restrictedUserId: userId,
+              restrictionType: ChannelUserRestrictionTypes.BANNED,
+            },
+          },
+        },
       },
     });
     return channel;

@@ -8,7 +8,12 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ShowAnyUserDto, ChangeUserDto, ShowLoggedUserDto } from './dto';
+import {
+  ShowAnyUserDto,
+  ChangeUserDto,
+  ShowLoggedUserDto,
+  ShowUsersDto,
+} from './dto';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { User } from '@prisma/client';
 import { AuthUser } from 'src/auth/auth.decorator';
@@ -20,7 +25,7 @@ export class UserController {
 
   // Get all users
   @Get()
-  async getAll(): Promise<ShowAnyUserDto[]> {
+  async getAll(): Promise<ShowUsersDto> {
     const users = await this.userService.getAll();
     return users;
   }

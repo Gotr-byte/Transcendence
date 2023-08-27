@@ -5,9 +5,10 @@ import {
   Param,
   Delete,
   UseGuards,
+  Get,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { AddUsersDto } from './dto/add-users.dto';
+import { AddUsersDto, ShowUsersRolesRestrictions } from './dto';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { User } from '@prisma/client';
@@ -16,6 +17,18 @@ import { User } from '@prisma/client';
 @Controller('chat/admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
+
+  @Get('id/:channelId/users')
+  async getChannelUsersAsAdmin(
+    @Param('channelId') channelId: string,
+    @AuthUser() user: User,
+  ): Promise<ShowUsersRolesRestrictions>{
+    const users = await this.adminService.getChannelUsersAsAdmin(
+      user.id,
+      +channelId,
+    );
+    return users;
+  }
 
   @Post('id/:channelId/add')
   async addUsersToChannel(
