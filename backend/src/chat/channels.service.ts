@@ -103,7 +103,11 @@ export class ChannelService {
     return ShowChannelDto.from(channel, 1);
   }
 
-  async addUsersToChannel(userId: number, channelId: number, users: number[]): Promise<number> {
+  async addUsersToChannel(
+    userId: number,
+    channelId: number,
+    users: number[],
+  ): Promise<number> {
     try {
       await this.prisma.channelMember.findUniqueOrThrow({
         where: {
@@ -135,9 +139,12 @@ export class ChannelService {
     return batchPayload.count;
   }
 
-  async joinChannel(userId: number, channelId: number, joinChannelDto: JoinChannelDto) {
+  async joinChannel(
+    userId: number,
+    channelId: number,
+    joinChannelDto: JoinChannelDto,
+  ) {
     // if channel is protected, check for password existance and check if password is valid,
     // then add user to channel
   }
-
 }

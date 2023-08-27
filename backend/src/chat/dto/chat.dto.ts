@@ -65,12 +65,12 @@ export class CreateChannelDto {
 export class AddUsersDto {
   @IsArray()
   @IsNotEmpty()
-  users: number[]
+  users: number[];
 }
 
 export class JoinChannelDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  password: string
+  password: string;
 }

@@ -1,16 +1,21 @@
 import { Controller, Get, Patch, Req, Res, UseGuards } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { Response } from 'express';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 
 @UseGuards(AuthenticatedGuard)
+@ApiTags('User-relations: CurrentUser')
 @Controller()
 export class CurrentUserController {
   constructor() {}
 
-  // Redirects the authenticated user to their profile page
   @Get('profile')
+  @ApiOperation({
+    summary:
+      'Redirects the authenticated user to their profile page (id, username, isOnline, avatar, is2FaActive)',
+  })
   async getCurrentUser(
     @AuthUser() user: User,
     @Res() response: Response,
