@@ -47,30 +47,16 @@ export class ShowChannelsDto {
   }
 }
 
-export class CreateChannelDto {
-  @IsNotEmpty()
-  @IsString()
-  title: string;
-
-  @IsNotEmpty()
-  @IsString()
-  channelType: ChannelTypes;
-
-  @IsNotEmpty()
-  @IsString()
-  @IsOptional()
-  password: string;
-}
-
 export class AddUsersDto {
   @IsArray()
   @IsNotEmpty()
-  users: number[]
+  users: number[];
 }
 
 export class JoinChannelDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  password: string
+  password: string;
 }
+

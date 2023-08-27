@@ -36,16 +36,16 @@ async function bootstrap() {
   );
   app.use(passport.initialize());
   app.use(passport.session());
-      // Swagger configuration
-    const config = new DocumentBuilder()
-        .setTitle('Transcendence API Testing Ground')
-        .setDescription('API description + testing ground for Transcendence')
-        .setVersion('1.0')
-        .addTag('api')
-        .addBearerAuth()
-        .build();
-    const document = SwaggerModule.createDocument(app, config);
-    SwaggerModule.setup('api', app, document);
+  // Swagger configuration
+  const config = new DocumentBuilder()
+    .setTitle('Transcendence API Testing Ground')
+    .setDescription('API description + testing ground for Transcendence')
+    .setVersion('1.0')
+    .addTag('api')
+    .addBearerAuth()
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
 
   await app.listen(process.env.BACKEND_PORT || 4000);
 }

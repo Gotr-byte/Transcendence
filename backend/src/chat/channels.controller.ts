@@ -1,17 +1,24 @@
 import {
-  BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
+  Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
 import { ChannelService } from './channels.service';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { AuthUser } from 'src/auth/auth.decorator';
-import { ChannelTypes, User } from '@prisma/client';
-import { ShowChannelDto, ShowChannelsDto, CreateChannelDto, JoinChannelDto } from './dto';
+import { User } from '@prisma/client';
+import {
+  ShowChannelDto,
+  ShowChannelsDto,
+  JoinChannelDto,
+  ChannelDto,
+  EditChannelDto,
+} from './dto';
 import { AddUsersDto } from 'src/user/dto';
 
 @UseGuards(AuthenticatedGuard)
@@ -29,21 +36,8 @@ export class ChannelController {
     return channels;
   }
 
-  @Post('create')
-  async createChannel(
-    @AuthUser() user: User,
-    @Body() dto: CreateChannelDto,
-  ): Promise<ShowChannelDto> {
-    if (dto.channelType === ChannelTypes.PROTECTED && !dto.password)
-      throw new BadRequestException(
-        'Password is missing to create PROTECTED CHANNEL',
-      );
-    const channel = await this.channelService.createChannel(user.id, dto);
-    return channel;
-  }
-
   // Gets all channels, the user is member of and the user is not blocked on
-  @Get('user')
+  @Get('users')
   async getUserChannels(@AuthUser() user: User): Promise<ShowChannelsDto> {
     const channels = await this.channelService.getUserChannels(user.id);
     return channels;
@@ -58,23 +52,39 @@ export class ChannelController {
     return channel;
   }
 
+
+
   @Post('id/:channelId/add')
   async addUsersToChannel(
     @Param('channelId') channelId: string,
     @AuthUser() user: User,
-    @Body() dto: AddUsersDto,
+    @Body() addUsersDto: AddUsersDto,
   ): Promise<string> {
-    const addedUserNo = await this.channelService.addUsersToChannel(user.id, +channelId, dto.users)
+    const addedUserNo = await this.channelService.addUsersToChannel(
+      user.id,
+      +channelId,
+      addUsersDto.users,
+    );
     return `Added ${addedUserNo} users to channelId: '${channelId}'`;
   }
 
-  // @Post('id/:channelId/join')
-  // async joinChannel(
-  //   @Param('channelId') channelId: string,
-  //   @AuthUser() user: User,
-  //   @Body() dto: JoinChannelDto,
-  // ) {
-  //   const joinChannel = await this.channelService.joinChannel(user.id, +channelId, dto.password)
-  //   return `User: '${user.username}' was added to channelId: '${channelId}'`
-  // }
+  @Post('id/:channelId/join')
+  async joinChannel(
+    @Param('channelId') channelId: string,
+    @AuthUser() user: User,
+    @Body() joinChannelDto: JoinChannelDto,
+  ): Promise<string> {
+    await this.channelService.joinChannel(user.id, +channelId, joinChannelDto);
+    return `User: '${user.username}' has joined channelId: '${channelId}'`;
+  }
+
+  @Delete('id/:channeldId/leave')
+  async leaveChannel(
+    @Param('channelId') channelId: string,
+    @AuthUser() user: User,
+  ): Promise<string> {
+    await this.channelService.leaveChannel(user.id, +channelId);
+    return `User: '${user.username}' has left channelId: '${channelId}'`;
+  }
+
 }
