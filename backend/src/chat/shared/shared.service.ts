@@ -27,4 +27,13 @@ export class SharedService {
 	  async removeChannel(channelId: number): Promise<void> {
 		await this.prisma.channel.delete({ where: { id: channelId } });
 	  }
+
+  async deleteUserFromChannel(
+    userId: number,
+    channelId: number,
+  ): Promise<void> {
+    await this.prisma.channelMember.delete({
+      where: { userId_channelId: { userId, channelId } },
+    });
+  }
 }

@@ -37,7 +37,7 @@ export class ChannelController {
   }
 
   // Gets all channels, the user is member of and the user is not blocked on
-  @Get('users')
+  @Get('user')
   async getUserChannels(@AuthUser() user: User): Promise<ShowChannelsDto> {
     const channels = await this.channelService.getUserChannels(user.id);
     return channels;

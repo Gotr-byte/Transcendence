@@ -23,52 +23,6 @@ import * as argon from 'argon2';
 export class ChannelService {
   constructor(private prisma: PrismaService) {}
 
-  async getNonPrivateChannels(userId: number): Promise<ShowChannelsDto> {
-    const nonPrivateChannels = await this.prisma.channel.findMany({
-      where: {
-        channelType: { in: [ChannelTypes.PUBLIC, ChannelTypes.PROTECTED] },
-        NOT: {
-          restrictedUsers: {
-            some: {
-              restrictedUserId: userId,
-              restrictionType: ChannelUserRestrictionTypes.BANNED,
-            },
-          },
-        },
-      },
-    });
-
-    return ShowChannelsDto.from(nonPrivateChannels);
-  }
-
-  async getUserChannels(userId: number): Promise<ShowChannelsDto> {
-    const userMemberships = await this.prisma.channelMember.findMany({
-      where: { userId },
-      include: { channel: true },
-    });
-
-    const userChannels = await Promise.all(
-      userMemberships.map(async (membership) => {
-        const channel = await this.prisma.channel.findUniqueOrThrow({
-          where: { id: membership.channelId },
-        });
-        return channel;
-      }),
-    );
-    return ShowChannelsDto.from(userChannels);
-  }
-
-  async getChannel(channelId: number, userId: number): Promise<ShowChannelDto> {
-    let channel = await this.getPublicProtectedChannel(channelId);
-    if (!channel) {
-      channel = await this.getPrivateChannel(channelId, userId);
-    }
-
-    const usersNo = await this.countChannelMembers(channel.id);
-
-    return ShowChannelDto.from(channel, usersNo);
-  }
-
   async addUsersToChannel(
     userId: number,
     channelId: number,
@@ -194,51 +148,5 @@ export class ChannelService {
   }
 
 
-  private async getChannelForJoin(
-    channelId: number,
-    userId: number,
-  ): Promise<Channel> {
-    const channel = await this.prisma.channel.findUniqueOrThrow({
-      where: {
-        id: channelId,
-        channelType: { in: [ChannelTypes.PUBLIC, ChannelTypes.PROTECTED] },
-        NOT: {
-          restrictedUsers: {
-            some: {
-              restrictedUserId: userId,
-              restrictionType: ChannelUserRestrictionTypes.BANNED,
-            },
-          },
-        },
-      },
-    });
-    return channel;
-  }
 
-  private async verifyJoinChannel(
-    channel: Channel,
-    joinChannelDto: JoinChannelDto,
-  ): Promise<void> {
-    if (channel.channelType === ChannelTypes.PROTECTED) {
-      const channelPassword = channel.password ?? '';
-
-      if (!joinChannelDto.password) {
-        throw new BadRequestException(
-          'No Password provided for Protected Channel',
-        );
-      }
-
-      const isValid = await argon.verify(
-        channelPassword,
-        joinChannelDto.password,
-      );
-
-      if (!isValid) {
-        throw new UnauthorizedException('Incorrect password');
-      }
-    }
-    if (channel.channelType === ChannelTypes.PRIVATE) {
-      throw new UnauthorizedException('User is trying to Join Private Channel');
-    }
-  }
 }
