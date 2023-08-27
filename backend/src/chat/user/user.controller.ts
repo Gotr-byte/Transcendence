@@ -1,19 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { JoinChannelDto } from './dto/join-channel.dto';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { User } from '@prisma/client';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { ShowChannelsDto } from '../shared/dto/show-channels.dto';
-import { ShowChannelDto } from '../dto';
+import { ShowChannelDto } from '../shared/dto/show-channel.dto';
 
 @UseGuards(AuthenticatedGuard)
 @Controller('chat/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-    // Retrieves all public and protected channels in that the
-  // logged-in user is not blocked on 
+  // Retrieves all public and protected channels in that the
+  // logged-in user is not blocked on
   // ADD channels where user is member in should not be shown
   @Get('all')
   async getNonPrivateChannels(

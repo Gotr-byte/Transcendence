@@ -1,7 +1,7 @@
-import { IsArray, IsNotEmpty } from "class-validator";
+import { IsArray, IsNotEmpty } from 'class-validator';
 
 export class AddUsersDto {
-	@IsArray()
-	@IsNotEmpty()
-	users: number[];
+  @IsArray()
+  @IsNotEmpty()
+  users: number[];
 }

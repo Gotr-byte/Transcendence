@@ -7,8 +7,12 @@ import { MessagesModule } from './messages/messages.module';
 import { SharedModule } from './shared/shared.module';
 
 @Module({
-  imports: [AuthModule, ManagementModule, AdminModule, UserModule, MessagesModule, SharedModule],
-  controllers: [],
-  providers: [],
+  imports: [
+    ManagementModule,
+    AdminModule,
+    UserModule,
+    MessagesModule,
+    SharedModule,
+  ],
 })
 export class ChatModule {}

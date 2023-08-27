@@ -6,7 +6,10 @@ import { ChannelMemberRoles } from '@prisma/client';
 
 @Injectable()
 export class AdminService {
-  constructor(private prisma: PrismaService, private readonly sharedService: SharedService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly sharedService: SharedService,
+  ) {}
 
   async addUsersToChannel(
     userId: number,

@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { AdminService } from './admin.service';
 import { AddUsersDto } from './dto/add-users.dto';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
@@ -33,5 +42,4 @@ export class AdminController {
     await this.adminService.kickUser(+channelId, +userId, user.id);
     return `User with ID: '${userId}' was kicked from channel with ID: '${channelId}' by '${user.username}'`;
   }
-
 }

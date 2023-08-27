@@ -1,15 +1,27 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JoinChannelDto } from './dto/join-channel.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SharedService } from '../shared/shared.service';
-import { Channel, ChannelMemberRoles, ChannelTypes, ChannelUserRestrictionTypes } from '@prisma/client';
+import {
+  Channel,
+  ChannelMemberRoles,
+  ChannelTypes,
+  ChannelUserRestrictionTypes,
+} from '@prisma/client';
 import { ShowChannelDto } from '../shared/dto/show-channel.dto';
 import { ShowChannelsDto } from '../shared/dto/show-channels.dto';
-import * as argon from 'argon2'
+import * as argon from 'argon2';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService, private readonly sharedService: SharedService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly sharedService: SharedService,
+  ) {}
 
   async getNonPrivateChannels(userId: number): Promise<ShowChannelsDto> {
     const nonPrivateChannels = await this.prisma.channel.findMany({
