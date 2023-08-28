@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <title>Gamedev Canvas Workshop</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+      }
+      canvas {
+        background: #eee;
+        display: block;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="myCanvas" width="1024" height="678"></canvas>
+
+    <script>
+		// JavaScript code goes here
+		const canvas = document.getElementById("myCanvas");
+		const ctx = canvas.getContext("2d");
+	  
+		let x = canvas.width / 2;
+		let y = canvas.height / 2;
+		let dx = 1;
+		let dy = -1;
+		if (Math.floor(Math.random()*100) % 2 === 0)
+		{
+			dy = -1;
+		}
+		else
+		{
+			dy = 1;
+		}
+		
+		var colorCodeRGBBall = "0095DD"
+		var colorCodeRGBP1 = "0095DD"
+		var colorCodeRGBP2 = "0095DD"
+		
+		const ballRadius = 10;
+		let ballPaddleBounces = 0;
+		
+		const paddleHeight = 10;
+		const paddleWidth = 75;
+		let paddleP1X = (canvas.width - paddleWidth) / 2;
+		let paddleP2X = (canvas.width - paddleWidth) / 2;
+		let paddleSpeed = 3;
+		
+		let rightPressed = false;
+		let leftPressed = false;
+		let keyAPressed = false;
+		let keyDPressed = false;
+		
+		let scoreP1 = 0;
+		let scoreP2 = 0;
+		
+		let whoLostBall = 0;
+		
+		// Handicaps for longer games:
+		var paddleReduction = 0;
+		var ballSpeedIncrease = 0;
+		var randomRGB = false;
+		var	gnome = false;
+		var audioGnome = new Audio('im-a-gnome-meme-sound-effect-woo_shortened.mp3');
+		const imageGnome = new Image(356, 442);
+		imageGnome.src = "Noggin_Gnome_cropped.png";
+		var crazyMusic = false;
+		var audioCrazyMusic = new Audio('mcrolld.mp3');
+		
+		function drawBall()
+		{
+			ctx.beginPath();
+			ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+			ctx.fillStyle = "#" + colorCodeRGBBall;
+			ctx.fill();
+			ctx.closePath();
+		}
+		
+		function drawPaddle()
+		{
+			ctx.beginPath();
+			ctx.rect(paddleP1X, canvas.height - paddleHeight, paddleWidth + paddleReduction, paddleHeight);
+			ctx.fillStyle = "#" + colorCodeRGBBall;
+			ctx.fill();
+			ctx.closePath();
+			
+			ctx.beginPath();
+			ctx.rect(paddleP2X, 0, paddleWidth + paddleReduction, paddleHeight);
+			ctx.fillStyle = "#" + colorCodeRGBBall;
+			ctx.fill();
+			ctx.closePath();
+		}
+		
+		function drawScore()
+		{
+			ctx.font = "16px Arial";
+			ctx.fillStyle = "#0095DD";
+			ctx.fillText(`Score P1: ${scoreP1}`, canvas.width - 100, canvas.height - 10);
+			ctx.fillText(`Score P2: ${scoreP2}`, 8, 20);
+		}
+		
+		let startTime = null;
+		let isImageDisplayed = false;
+		
+		function draw(timestamp)
+		{
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			
+			if (Math.floor(Math.random()*1000) === 666)
+			{
+				if (!startTime)
+				{
+					startTime = timestamp;
+				}
+				audioGnome.play();
+			}
+			if (startTime != null && timestamp - startTime < 200)
+			{
+				//ctx.drawImage(imageGnome, x - 200, y - 200);
+				isImageDisplayed = true;
+			}
+			if (startTime != null && timestamp - startTime >= 200)
+			{
+				startTime = null;
+			}
+			
+			if (ballPaddleBounces % 10 === 0 && ballPaddleBounces > 0)
+			{
+				ballSpeedIncrease++;
+				if (dx < 0)
+				{
+					dx--;
+				}
+				else
+				{
+					dx++;
+				}
+				if (dy < 0)
+				{
+					dy--;
+				}
+				else
+				{
+					dy++;
+				}
+				ballPaddleBounces++;
+			}
+			
+			drawBall();
+			if (startTime != null && timestamp - startTime < 200)
+			{
+				ctx.drawImage(imageGnome, x - 200, y - 200);
+				isImageDisplayed = true;
+			}
+			drawPaddle();
+			drawScore();
+			
+			if (x + dx > canvas.width - ballRadius || x + dx < ballRadius)
+			{
+				dx = -dx;
+				colorCodeRGBBall = Math.floor(Math.random()*16777215).toString(16);
+			}
+			if (y + dy < 0 + ballRadius)
+			{
+				if (x > paddleP2X && x < paddleP2X + paddleWidth)
+				{
+					if ((dx < 0 && keyDPressed) || (dx > 0 && keyAPressed))
+					{
+						dx = -dx;
+					}
+					dy = -dy;
+					ballPaddleBounces++;
+					colorCodeRGBBall = Math.floor(Math.random()*16777215).toString(16);
+				}
+				else
+				{
+					whoLostBall = 2;
+					scoreP1++;
+					if (scoreP1 > 20 && scoreP1 - scoreP2 > 1)
+					{
+						alert("P1 DEFEATED\n\nP2 DIED");
+						document.location.reload();
+					}
+					if (scoreP1 + scoreP2 > 9 && (scoreP1 + scoreP2) % 5 === 0)
+					{
+						randomRGB = true;
+						if (scoreP1 + scoreP2 == 15)
+						{
+							crazyMusic = true;
+							audioCrazyMusic.play();
+						}
+						if (scoreP1 + scoreP2 > 19)
+						{
+							gnome = true;
+						}
+						
+						let handicapSelector = Math.floor(Math.random()*100);
+						if (handicapSelector % 2 === 0)
+						{
+							ballSpeedIncrease++;
+							if (dx < 0)
+							{
+								dx--;
+							}
+							else
+							{
+								dx++;
+							}
+							if (dy < 0)
+							{
+								dy--;
+							}
+							else
+							{
+								dy++;
+							}
+						}
+						else if (handicapSelector % 2 === 1)
+						{
+							paddleReduction = paddleReduction - 10;
+						}
+					}
+					x = canvas.width / 2;
+					y = canvas.height / 2;
+					ballSpeedIncrease = ballSpeedIncrease - ballPaddleBounces / 10;
+					if (dx < 0)
+					{
+						dx = dx + ballPaddleBounces / 10;
+					}
+					else
+					{
+						dx = dx - ballPaddleBounces / 10;
+					}
+					if (dy < 0)
+					{
+						dy = dy + ballPaddleBounces / 10;
+					}
+					else
+					{
+						dy = dy - ballPaddleBounces / 10;
+					}
+					ballPaddleBounces = 0;
+					// clearInterval(interval); // Needed for Chrome to end game
+				}
+			}
+			else if (y + dy > canvas.height - ballRadius)
+			{
+				if (x > paddleP1X && x < paddleP1X + paddleWidth)
+				{
+					if ((dx < 0 && rightPressed) || (dx > 0 && leftPressed))
+					{
+						dx = -dx;
+					}
+					dy = -dy;
+					ballPaddleBounces++;
+					colorCodeRGBBall = Math.floor(Math.random()*16777215).toString(16);
+				}
+				else
+				{
+					whoLostBall = 1;
+					scoreP2++;
+					audioGnome.play();
+					ctx.drawImage(imageGnome, 0, 0);
+					if (scoreP2 > 20 && scoreP2 - scoreP1 > 1)
+					{
+						alert("P2 DEFEATED\n\nP1 DIED");
+						document.location.reload();
+					}
+					if (scoreP1 + scoreP2 > 9 && (scoreP1 + scoreP2) % 5 === 0)
+					{
+						randomRGB = true;
+						if (scoreP1 + scoreP2 == 15)
+						{
+							crazyMusic = true;
+							audioCrazyMusic.play();
+						}
+						if (scoreP1 + scoreP2 > 19)
+						{
+							gnome = true;
+						}
+						
+						let handicapSelector = Math.floor(Math.random()*100);
+						if (handicapSelector % 2 === 0)
+						{
+							ballSpeedIncrease++;
+							if (dx < 0)
+							{
+								dx--;
+							}
+							else
+							{
+								dx++;
+							}
+							if (dy < 0)
+							{
+								dy--;
+							}
+							else
+							{
+								dy++;
+							}
+						}
+						else if (handicapSelector % 2 === 1)
+						{
+							paddleReduction = paddleReduction - 10;
+						}
+					}
+					x = canvas.width / 2;
+					y = canvas.height / 2;
+					ballSpeedIncrease = ballSpeedIncrease - ballPaddleBounces / 10;
+					if (dx < 0)
+					{
+						dx = dx + ballPaddleBounces / 10;
+					}
+					else
+					{
+						dx = dx - ballPaddleBounces / 10;
+					}
+					if (dy < 0)
+					{
+						dy = dy + ballPaddleBounces / 10;
+					}
+					else
+					{
+						dy = dy - ballPaddleBounces / 10;
+					}
+					ballPaddleBounces = 0;
+					// clearInterval(interval); // Needed for Chrome to end game
+				}
+			}
+			
+			x += dx;
+			y += dy;
+			
+			if (rightPressed)
+			{
+				paddleP1X = Math.min(paddleP1X + paddleSpeed, canvas.width - paddleWidth);
+			}
+			else if (leftPressed)
+			{
+				paddleP1X = Math.max(paddleP1X - paddleSpeed, 0);
+			}
+			
+			if (keyDPressed)
+			{
+				paddleP2X = Math.min(paddleP2X + paddleSpeed, canvas.width - paddleWidth);
+			}
+			else if (keyAPressed)
+			{
+				paddleP2X = Math.max(paddleP2X - paddleSpeed, 0);
+			}
+			
+			requestAnimationFrame(draw);
+		}
+		
+		document.addEventListener("keydown", keyDownHandler, false);
+		document.addEventListener("keyup", keyUpHandler, false);
+		
+		function keyDownHandler(e)
+		{
+			if (e.key === "Right" || e.key === "ArrowRight")
+			{
+				rightPressed = true;
+			}
+			else if (e.key === "Left" || e.key === "ArrowLeft")
+			{
+				leftPressed = true;
+			}
+			
+			if (e.keyCode === 65)
+			{
+				keyAPressed = true;
+			}
+			else if (e.keyCode === 68)
+			{
+				keyDPressed = true;
+			}
+		}
+		
+		function keyUpHandler(e)
+		{
+			if (e.key === "Right" || e.key === "ArrowRight")
+			{
+				rightPressed = false;
+			}
+			else if (e.key === "Left" || e.key === "ArrowLeft")
+			{
+				leftPressed = false;
+			}
+			
+			if (e.keyCode === 65)
+			{
+				keyAPressed = false;
+			}
+			else if (e.keyCode === 68)
+			{
+				keyDPressed = false;
+			}
+		}
+		
+		// const interval = setInterval(draw, 1);
+		draw();
+    </script>
+  </body>
+</html>
