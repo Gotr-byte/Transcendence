@@ -19,8 +19,8 @@ export class ChannelDto {
 }
 
 export class ShowChannelDto {
-  channel: ChannelDto;
   usersNo: number;
+  channel: ChannelDto;
 
   constructor(channel: Channel, usersNo: number) {
     this.channel = ChannelDto.from(channel);
@@ -33,8 +33,8 @@ export class ShowChannelDto {
 }
 
 export class ShowChannelsDto {
-  channels: ChannelDto[];
   channelsNo: number;
+  channels: ChannelDto[];
 
   constructor(channels: Channel[]) {
     this.channelsNo = channels.length;

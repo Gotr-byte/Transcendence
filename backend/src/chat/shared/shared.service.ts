@@ -6,11 +6,11 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class SharedService {
   constructor(private prisma: PrismaService) {}
 
-  async addUsers(channelMember: ChannelMember[]): Promise<number> {
-    const batchPayload = await this.prisma.channelMember.createMany({
+  async addUser(channelMember: ChannelMember): Promise<ChannelMember> {
+    const newMembership = await this.prisma.channelMember.create({
       data: channelMember,
     });
-    return batchPayload.count;
+    return newMembership;
   }
 
   async deleteAllChannelRestrictions(channelId: number): Promise<void> {
@@ -28,8 +28,8 @@ export class SharedService {
   }
 
   async deleteUserFromChannel(
-    userId: number,
     channelId: number,
+    userId: number,
   ): Promise<void> {
     await this.prisma.channelMember.delete({
       where: { userId_channelId: { userId, channelId } },

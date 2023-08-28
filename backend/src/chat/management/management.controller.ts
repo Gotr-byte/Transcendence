@@ -38,8 +38,8 @@ export class ManagementController {
     @Body() editChannelDto: UpdateChannelDto,
   ): Promise<ChannelDto> {
     const channel = await this.managementService.editChannel(
-      user.id,
       +channelId,
+      user.id,
       editChannelDto,
     );
     return channel;
@@ -50,6 +50,7 @@ export class ManagementController {
     @Param('channelId') channelId: string,
     @AuthUser() user: User,
   ): Promise<string> {
+    await this.managementService.deleteChannel(+channelId, user.id);
     return `Channel with ID: ${channelId} was deleted with all containing messages and restrictions by ${user.username}`;
   }
 }

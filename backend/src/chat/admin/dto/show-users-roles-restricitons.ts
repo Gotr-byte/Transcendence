@@ -1,5 +1,4 @@
 import {
-  Channel,
   ChannelMemberRoles,
   ChannelUserRestrictionTypes,
   User,
@@ -13,6 +12,7 @@ export class ShowUserRolesRestrictions {
   isOnline: boolean;
   role: ChannelMemberRoles;
   restriction?: ChannelUserRestrictionTypes;
+  //   restrictionDuration?: Date;
 
   constructor(user: User, channel: extendedChannel) {
     this.id = user.id;
@@ -21,6 +21,7 @@ export class ShowUserRolesRestrictions {
     this.isOnline = user.isOnline;
     this.role = channel.channelUsers[0].role;
     this.restriction = channel.restrictedUsers?.[0]?.restrictionType;
+    // this.restrictionDuration = channel.restrictedUsers?.[0].restrictedUntil;
   }
 
   static from(user: User, channel: extendedChannel): ShowUserRolesRestrictions {
@@ -35,7 +36,7 @@ export class ShowUsersRolesRestrictions {
   constructor(users: UserWithRolesRestrictions[]) {
     this.usersNo = users.length;
     this.users = users.map((member) =>
-      ShowUserRolesRestrictions.from(member.user, member.channel!),
+      ShowUserRolesRestrictions.from(member.user, member.channel),
     );
   }
 

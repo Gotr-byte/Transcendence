@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ManagementModule } from './management/management.module';
 import { AdminModule } from './admin/admin.module';
-import { ChannelUserModule } from './channel-user/channel-user.module';
+import { ChannelModule } from './channel/channel.module';
 import { MessagesModule } from './messages/messages.module';
 import { SharedModule } from './shared/shared.module';
 
@@ -9,7 +9,7 @@ import { SharedModule } from './shared/shared.module';
   imports: [
     ManagementModule,
     AdminModule,
-    ChannelUserModule,
+    ChannelModule,
     MessagesModule,
     SharedModule,
   ],

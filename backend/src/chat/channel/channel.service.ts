@@ -16,22 +16,25 @@ import { ShowChannelDto, ShowChannelsDto } from '../shared/dto';
 import * as argon from 'argon2';
 
 @Injectable()
-export class ChannelUserService {
+export class ChannelService {
   constructor(
     private prisma: PrismaService,
     private readonly sharedService: SharedService,
   ) {}
 
-  async getNonPrivateChannels(userId: number): Promise<ShowChannelsDto> {
+  async getNonMemberChannels(userId: number): Promise<ShowChannelsDto> {
     const nonPrivateChannels = await this.prisma.channel.findMany({
       where: {
-        channelType: { in: [ChannelTypes.PUBLIC, ChannelTypes.PROTECTED] },
         NOT: {
-          restrictedUsers: {
-            some: {
-              restrictedUserId: userId,
-              restrictionType: ChannelUserRestrictionTypes.BANNED,
-            },
+          channelUsers: { some: { userId } },
+        },
+        channelType: {
+          in: [ChannelTypes.PUBLIC, ChannelTypes.PROTECTED],
+        },
+        restrictedUsers: {
+          none: {
+            restrictedUserId: userId,
+            restrictionType: ChannelUserRestrictionTypes.BANNED,
           },
         },
       },
@@ -57,7 +60,12 @@ export class ChannelUserService {
   }
 
   async getChannel(channelId: number, userId: number): Promise<ShowChannelDto> {
-    const channel = await this.validateAndGetChannel(channelId, userId);
+    const typesInScope = [ChannelTypes.PUBLIC, ChannelTypes.PROTECTED];
+    const channel = await this.validateAndGetChannel(
+      channelId,
+      userId,
+      typesInScope,
+    );
 
     const usersNo = await this.countChannelMembers(channel.id);
 
@@ -65,10 +73,11 @@ export class ChannelUserService {
   }
 
   async getChannelUsers(
-    userId: number,
     channelId: number,
+    userId: number,
   ): Promise<ShowUsersRoles> {
-    await this.validateAndGetChannel(channelId, userId);
+    const typesInScope = [ChannelTypes.PUBLIC];
+    await this.validateAndGetChannel(channelId, userId, typesInScope);
 
     const channelUsers = await this.prisma.channelMember.findMany({
       where: { channelId },
@@ -79,24 +88,23 @@ export class ChannelUserService {
   }
 
   async joinChannel(
-    userId: number,
     channelId: number,
+    userId: number,
     joinChannelDto: JoinChannelDto,
   ): Promise<void> {
-    const channel = await this.getChannelForJoin(userId, channelId);
+    const channel = await this.getChannelForJoin(channelId, userId);
+
     await this.verifyJoinChannel(channel, joinChannelDto);
 
-    await this.sharedService.addUsers([
-      {
-        userId: userId,
-        channelId: channel.id,
-        role: ChannelMemberRoles.USER,
-      },
-    ]);
+    await this.sharedService.addUser({
+      channelId: channel.id,
+      userId: userId,
+      role: ChannelMemberRoles.USER,
+    });
   }
 
-  async leaveChannel(userId: number, channelId: number): Promise<void> {
-    await this.sharedService.deleteUserFromChannel(userId, channelId);
+  async leaveChannel(channelId: number, userId: number): Promise<void> {
+    await this.sharedService.deleteUserFromChannel(channelId, userId);
     const usersNo = await this.countChannelMembers(channelId);
     if (!usersNo) {
       await this.sharedService.deleteAllChannelRestrictions(channelId);
@@ -108,22 +116,28 @@ export class ChannelUserService {
   private async validateAndGetChannel(
     channelId: number,
     userId: number,
+    channelTypes: ChannelTypes[],
   ): Promise<Channel> {
-    let channel = await this.getPublicProtectedChannel(channelId, userId);
+    let channel = await this.getNonMemberChannel(
+      channelId,
+      userId,
+      channelTypes,
+    );
     if (!channel) {
-      channel = await this.getPrivateChannel(channelId, userId);
+      channel = await this.getMemberChannel(channelId, userId);
     }
     return channel;
   }
 
-  private async getPublicProtectedChannel(
+  private async getNonMemberChannel(
     channelId: number,
     userId: number,
+    channelTypes: ChannelTypes[],
   ): Promise<Channel | null> {
     const channel = await this.prisma.channel.findUnique({
       where: {
         id: channelId,
-        channelType: { in: [ChannelTypes.PUBLIC, ChannelTypes.PROTECTED] },
+        channelType: { in: channelTypes },
         NOT: {
           restrictedUsers: {
             some: {
@@ -137,13 +151,12 @@ export class ChannelUserService {
     return channel;
   }
 
-  private async getPrivateChannel(
+  private async getMemberChannel(
     channelId: number,
     userId: number,
   ): Promise<Channel> {
     const channel = await this.prisma.channel.findUniqueOrThrow({
-      where: { id: channelId },
-      include: { channelUsers: { where: { userId } } },
+      where: { id: channelId, channelUsers: { some: { userId } } },
     });
     return channel;
   }

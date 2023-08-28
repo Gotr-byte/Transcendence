@@ -23,17 +23,21 @@ export class AuthController {
   @Get('42/callback')
   @UseGuards(AuthGuard42)
   async handleRedirect(@Res() response: Response): Promise<void> {
-    response.redirect(process.env.FRONTEND_URL || '/auth/status');
+    response.redirect('/auth/status');
   }
 
   // Checks the authentication status of the user
   @Get('status')
   @UseGuards(SessionGuard)
-  async status(@AuthUser() user: User): Promise<string> {
+  async status(
+    @AuthUser() user: User,
+    @Res() response: Response,
+  ): Promise<string | void> {
     if (user.is2FaActive && !user.is2FaValid) {
       return `${user.username}'s 2fa is not validated`;
     }
     await this.userService.updateUser(user, { isOnline: true });
+    if (process.env.FRONTEND_URL) response.redirect(process.env.FRONTEND_URL);
     return 'You are Authenticated and your status is set to online!';
   }
 

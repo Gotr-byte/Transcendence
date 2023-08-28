@@ -46,7 +46,7 @@ export class FriendshipsService {
 
   // Get a list of sent friend requests, by the current user
   async getSentFriendRequests(user: User): Promise<ShowUsersDto> {
-    const where = { isAccepted: false, receiverId: user.id };
+    const where = { isAccepted: false, senderId: user.id };
 
     const pendingSentUserList = await this.getUsersFromFriendRequests(
       user,
@@ -57,7 +57,7 @@ export class FriendshipsService {
 
   // Get a list of received friend requests by the current user
   async getReceivedFriendRequests(user: User): Promise<ShowUsersDto> {
-    const where = { isAccepted: false, senderId: user.id };
+    const where = { isAccepted: false, receiverId: user.id };
 
     const pendingReceivedUserList = await this.getUsersFromFriendRequests(
       user,

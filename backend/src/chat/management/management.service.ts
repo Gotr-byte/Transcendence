@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Channel, ChannelMemberRoles, ChannelTypes } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SharedService } from '../shared/shared.service';
@@ -34,20 +38,19 @@ export class ManagementService {
   }
 
   async editChannel(
-    userId: number,
     channelId: number,
+    userId: number,
     editChannelDto: UpdateChannelDto,
   ): Promise<ChannelDto> {
     const channel = await this.verifyCreator(channelId, userId);
 
     const isChannelProtected = await this.isChannelProtected(
-      editChannelDto,
       channel,
+      editChannelDto,
     );
 
     if (isChannelProtected) {
-      this.validatePasswordPresence(editChannelDto.password);
-      const hash = await argon.hash(editChannelDto.password);
+      await this.validatePasswordPresence(editChannelDto.password);
       editChannelDto.password = await this.hashPassword(
         editChannelDto.password,
       );
@@ -58,8 +61,8 @@ export class ManagementService {
     return ChannelDto.from(updatedChannel);
   }
 
-  async deleteChannel(userId: number, channelId: number): Promise<void> {
-    await this.verifyCreator(userId, channelId);
+  async deleteChannel(channelId: number, userId: number): Promise<void> {
+    await this.verifyCreator(channelId, userId);
     await this.sharedService.deleteAllChannelRestrictions(channelId);
     await this.sharedService.deleteAllChannelMessages(channelId);
     await this.kickAllUsers(channelId);
@@ -67,11 +70,10 @@ export class ManagementService {
   }
 
   private async validatePasswordPresence(password: string): Promise<void> {
-    if (!password) {
+    if (!password)
       throw new BadRequestException(
         'Password is missing for protected channel',
       );
-    }
   }
 
   private async hashPassword(password: string): Promise<string> {
@@ -79,24 +81,30 @@ export class ManagementService {
   }
 
   private async addAdminUser(userId: number, channelId: number): Promise<void> {
-    await this.sharedService.addUsers([
-      { userId, channelId, role: ChannelMemberRoles.ADMIN },
-    ]);
+    await this.sharedService.addUser({
+      channelId,
+      userId,
+      role: ChannelMemberRoles.ADMIN,
+    });
   }
 
   private async verifyCreator(
     channelId: number,
     userId: number,
   ): Promise<Channel> {
-    const channel = await this.prisma.channel.findUniqueOrThrow({
+    const channel = await this.prisma.channel.findUnique({
       where: { id: channelId, creatorId: userId },
     });
+    if (!channel)
+      throw new UnauthorizedException(
+        `User with id '${userId}' is not creator of channel (ID:${channelId})`,
+      );
     return channel;
   }
 
   private async isChannelProtected(
-    channelProps: UpdateChannelDto | CreateChannelDto,
     channel: Channel,
+    channelProps: UpdateChannelDto | CreateChannelDto,
   ): Promise<boolean> {
     const isProtected =
       channelProps?.channelType === ChannelTypes.PROTECTED ||
