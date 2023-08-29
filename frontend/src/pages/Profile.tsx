@@ -25,8 +25,10 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { Form } from "react-router-dom";
+import Friends from "../components/Friends";
 
 export default function Profile() {
+
   const [currentUsername, setCurrentUsername] = useState<string>("");
   const [newUsername, setNewUsername] = useState<string>("");
   const [avatar, setAvatar] = useState<string>("");
@@ -51,13 +53,13 @@ export default function Profile() {
     event.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:4000/users/Zelda`, {
+      const response = await fetch(`http://localhost:4000/users/${currentUsername}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          username: "newUsername",
+          username: newUsername,
           avatar: avatar,
         }),
       });
@@ -165,6 +167,9 @@ export default function Profile() {
               Lorem impsum dolor sit amet consecteur adipisicing elit.
             </ListItem>
           </List>
+        </TabPanel>
+        <TabPanel>
+          <Friends/>
         </TabPanel>
       </TabPanels>
     </Tabs>
