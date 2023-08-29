@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from '@prisma/client';
-import { ShowAnyMatchDto } from './dto/matchDto';
+import { CreateMatchDto, ShowAnyMatchDto } from './dto/matchDto';
 
 @Injectable()
 export class matchesService {
@@ -26,4 +26,11 @@ export class matchesService {
     const userDtos = matches.map((match) => ShowAnyMatchDto.from(match));
     return userDtos;
   }
+
+  // Post a match
+    async createMatch( dto: CreateMatchDto): Promise<ShowAnyMatchDto> {
+        const matchBody = CreateMatchDto.toMatch(dto);
+        const result = await this.prisma.match.create({ data: matchBody });
+        return result;
+    }
 }
