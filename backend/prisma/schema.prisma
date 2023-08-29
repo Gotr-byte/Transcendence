@@ -20,8 +20,7 @@ model User {
   is2FaValid  Boolean  @default(false)
   twoFaSecret String   @default("")
   isOnline    Boolean  @default(false)
-
-  // achievements string[] @default("")
+  achievements String[] @default([""])
 
   createdChannels    Channel[]                @relation
   followingChannels  ChannelMember[]          @relation
@@ -68,7 +67,7 @@ model Channel {
   channelMessages Message[]                @relation
 
   title       String       @unique
-  // password    String?
+  hash        String?
   channelType ChannelTypes @default(PUBLIC)
   createdAt   DateTime     @default(now())
 }
