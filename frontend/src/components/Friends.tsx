@@ -5,7 +5,7 @@ interface User {
   username: string;
 }
 
-const AuthFetch: React.FC = () => {
+const Friends: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [showUsers, setShowUsers] = useState(false);
 
@@ -21,10 +21,10 @@ const AuthFetch: React.FC = () => {
         setShowUsers(true);
       });
   };
-
+  fetchUserData();
   return (
     <div>
-      <button onClick={fetchUserData}>Load Users</button>
+      {/* <button onClick={fetchUserData}>Load Users</button> */}
       
       {showUsers && users.length > 0 && (
         <ul>
@@ -33,11 +33,8 @@ const AuthFetch: React.FC = () => {
           ))}
         </ul>
       )}
-      <button onClick={() => window.location.href = "http://localhost:4000/auth/42/login"}>
-        Authenticate
-      </button>
     </div>
   );
 }
 
-export default AuthFetch;
+export default Friends;

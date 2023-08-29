@@ -19,7 +19,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<RootLayout />}>
       {/* <Route index element={<Dashboard />} loader={tasksLoader}/> */}
       <Route index element={<AuthFetch />} />
-      <Route path="create" element={<Create />} action={createAction}/>
+      {/* <Route path="create" element={<Create />} action={createAction}/> */}
       <Route path="profile" element={<Profile />} />
       <Route path="chat" element={<Chat />} />
       <Route path="game" element={<Game />} />
