@@ -18,6 +18,7 @@ CREATE TABLE "User" (
     "is2FaValid" BOOLEAN NOT NULL DEFAULT false,
     "twoFaSecret" TEXT NOT NULL DEFAULT '',
     "isOnline" BOOLEAN NOT NULL DEFAULT false,
+    "inGame" BOOLEAN NOT NULL DEFAULT false,
     "achievements" TEXT[] DEFAULT ARRAY['']::TEXT[],
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")

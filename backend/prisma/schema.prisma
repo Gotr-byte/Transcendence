@@ -20,6 +20,7 @@ model User {
   is2FaValid  Boolean  @default(false)
   twoFaSecret String   @default("")
   isOnline    Boolean  @default(false)
+  inGame      Boolean  @default(false) 
   achievements String[] @default([""])
 
   createdChannels    Channel[]                @relation
