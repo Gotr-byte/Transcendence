@@ -1,34 +1,52 @@
-import { Avatar, Flex, Box, Text, Button, Heading, Spacer, HStack, useToast, AvatarBadge } from '@chakra-ui/react'
-import { UnlockIcon } from '@chakra-ui/icons'
+import { Avatar, Flex, Text, Heading, Spacer, HStack, AvatarBadge } from '@chakra-ui/react';
+import React, { useEffect, useState } from "react";
+
+interface User 
+{
+	id: string;
+	username: string;
+	isOnline: boolean;
+	avatar: string;
+	is2FaActive: boolean;
+}
 
 export const Navbar = () => {
-  const toast = useToast()
+    const [user, setUser] = useState<User | null>(null);  // Note the change here
+    const [showUser, setShowUser] = useState(false);  // Renamed for clarity
 
-  const showToast = () => {
-	toast({
-		title: 'Logged out',
-		description: 'Successfully logged out',
-		duration: 5000,
-		isClosable: true,
-		status: 'success',
-		position: 'top',
-		icon: <UnlockIcon />,
-	})
-  }
-  return (
-	<Flex as="nav" p="10x" mb="40px" alignItems="center" gap="10px">
-		<Heading as="h1" color="black">Transcendence</Heading>
-		<Spacer />
+    const fetchUserData = () => {
+        fetch("http://localhost:4000/profile", {
+            credentials: "include",
+        })
+            .then(response => {
+                return response.json();
+            })
+            .then(data => {
+                setUser(data);
+                setShowUser(true);
+            });
+    };
 
-		<HStack spacing="10px">
-		  <Avatar name="mario" src="/img/mario.png" background="purple">
-			<AvatarBadge width="1.3em" bg="teal.500">
-				<Text fontSize="xs" color="white">10</Text>
-			</AvatarBadge>
-		  </Avatar>
-		  <Text>piotr@email.com</Text>
-		  <Button colorScheme='purple' onClick={showToast} >Logout</Button>	
-		</HStack>
-	</Flex>
-  )
+    useEffect(() => {
+        fetchUserData();
+    }, []); // Empty dependency array ensures this runs only once when the component mounts
+
+    return (
+        <Flex as="nav" p="10x" mb="40px" alignItems="center" gap="10px">
+            <Heading as="h1" color="black">Transcendence</Heading>
+            <Spacer />
+
+            <HStack spacing="10px">
+                <Avatar name="mario" src="/img/mario.png" background="purple">
+                    <AvatarBadge width="1.3em" bg="teal.500">
+                        <Text fontSize="xs" color="white">10</Text>
+                    </AvatarBadge>
+                </Avatar>
+
+                {showUser && user?.username && (
+					<Text>{user.username}</Text>  // Note the change here
+                )}
+            </HStack>
+        </Flex>
+    )
 }
