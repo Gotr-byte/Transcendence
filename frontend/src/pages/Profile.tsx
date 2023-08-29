@@ -80,7 +80,6 @@ export default function Profile() {
       Profile
       <TabList>
         <Tab _selected={{ color: "white", bg: "purple.400" }}>Account Info</Tab>
-        <Tab _selected={{ color: "white", bg: "purple.400" }}>Task History</Tab>
         <Tab _selected={{ color: "white", bg: "purple.400" }}>Friends</Tab>
       </TabList>
       <TabPanels>
@@ -114,7 +113,6 @@ export default function Profile() {
                     onChange={handleAvatarChange}
                   />
                 </FormControl>
-
                 <Button type="submit">Submit</Button>
               </Form>
             </ListItem>
@@ -128,42 +126,6 @@ export default function Profile() {
             </ListItem>
             <ListItem>
               <ListIcon as={StarIcon} />
-              Lorem impsum dolor sit amet consecteur adipisicing elit.
-            </ListItem>
-          </List>
-        </TabPanel>
-        <TabPanel>
-          <List spacing={4}>
-            <ListItem>
-              <ListIcon as={CheckCircleIcon} color="teal.400" />
-              <Box maxW="480px">
-                <Form method="post" action="/create">
-                  <FormControl isRequired mb="40px">
-                    <FormLabel>Change username</FormLabel>
-                    <Input type="text" name="title" />
-                    <FormHelperText>
-                      Fill out field and click submit to change username
-                    </FormHelperText>
-                  </FormControl>
-                  <Button type="submit">Submit</Button>
-                </Form>
-              </Box>
-              Lorem impsum dolor sit amet consecteur adipisicing elit.
-            </ListItem>
-            <ListItem>
-              <ListIcon as={CheckCircleIcon} color="teal.400" />
-              Lorem impsum dolor sit amet consecteur adipisicing elit.
-            </ListItem>
-            <ListItem>
-              <ListIcon as={WarningIcon} color="red.400" />
-              Lorem impsum dolor sit amet consecteur adipisicing elit.
-            </ListItem>
-            <ListItem>
-              <ListIcon as={CheckCircleIcon} color="teal.400" />
-              Lorem impsum dolor sit amet consecteur adipisicing elit.
-            </ListItem>
-            <ListItem>
-              <ListIcon as={CheckCircleIcon} color="teal.400" />
               Lorem impsum dolor sit amet consecteur adipisicing elit.
             </ListItem>
           </List>
