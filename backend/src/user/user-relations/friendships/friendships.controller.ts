@@ -12,7 +12,7 @@ import { FriendshipsService } from './friendships.service';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { User } from '@prisma/client';
 import { AuthUser } from 'src/auth/auth.decorator';
-import { ShowAnyUserDto } from 'src/user/dto';
+import { ShowUsersDto } from 'src/user/dto';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthenticatedGuard)
@@ -23,7 +23,7 @@ export class FriendshipsController {
 
   @Get()
   @ApiOperation({ summary: 'Get the list of friends for the current user' })
-  async getFriends(@AuthUser() user: User): Promise<ShowAnyUserDto[]> {
+  async getFriends(@AuthUser() user: User): Promise<ShowUsersDto> {
     const friends = await this.friendshipsService.getFriends(user);
     return friends;
   }
@@ -32,9 +32,7 @@ export class FriendshipsController {
   @ApiOperation({
     summary: 'Get a list of sent friend requests by the current user',
   })
-  async getSentFriendRequests(
-    @AuthUser() user: User,
-  ): Promise<ShowAnyUserDto[]> {
+  async getSentFriendRequests(@AuthUser() user: User): Promise<ShowUsersDto> {
     const users = await this.friendshipsService.getSentFriendRequests(user);
     return users;
   }
@@ -45,7 +43,7 @@ export class FriendshipsController {
   })
   async getReceivedFriendRequests(
     @AuthUser() user: User,
-  ): Promise<ShowAnyUserDto[]> {
+  ): Promise<ShowUsersDto> {
     const users = await this.friendshipsService.getReceivedFriendRequests(user);
     return users;
   }
