@@ -21,6 +21,8 @@ model User {
   twoFaSecret String   @default("")
   isOnline    Boolean  @default(false)
 
+  // achievements string[] @default("")
+
   createdChannels    Channel[]                @relation
   followingChannels  ChannelMember[]          @relation
   restrictedChannels ChannelUserRestriction[] @relation
@@ -66,7 +68,7 @@ model Channel {
   channelMessages Message[]                @relation
 
   title       String       @unique
-  password    String?
+  // password    String?
   channelType ChannelTypes @default(PUBLIC)
   createdAt   DateTime     @default(now())
 }
@@ -95,6 +97,7 @@ model ChannelUserRestriction {
   restrictedChannel   Channel @relation(fields: [restrictedChannelId], references: [id])
   restrictedChannelId Int
 
+  duration  DateTime?
   restrictionType ChannelUserRestrictionTypes
 
   @@unique([restrictedUserId, restrictedChannelId])

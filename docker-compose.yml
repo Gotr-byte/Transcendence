@@ -22,17 +22,4 @@ services:
     - .env
     depends_on:
       - database
-
-  frontend:
-    build:
-      context: ./frontend
-    ports:
-      - ${FRONTEND_PORT}:${FRONTEND_PORT}
-    volumes:
-      - ./frontend:/app:delegated
-      - /app/node_modules
-    restart: unless-stopped
-    env_file:
-    - .env
-    depends_on:
-      - backend
+      

@@ -35,7 +35,7 @@ export class AdminController {
     @Param('channelId') channelId: string,
     @AuthUser() admin: User,  
   ) {
-    const users = await this.getRestrictedUsers(+channelId, admin.id)
+    const users = await this.adminService.getRestrictedUsers(+channelId, admin.id)
   }
 
   @Post('id/:channelId/:username/add')
