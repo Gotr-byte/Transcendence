@@ -40,7 +40,7 @@ CREATE TABLE "Channel" (
     "id" SERIAL NOT NULL,
     "creatorId" INTEGER NOT NULL,
     "title" TEXT NOT NULL,
-    "hash" TEXT,
+    "password" TEXT,
     "channelType" "ChannelTypes" NOT NULL DEFAULT 'PUBLIC',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 

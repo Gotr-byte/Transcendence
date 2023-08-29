@@ -67,7 +67,7 @@ model Channel {
   channelMessages Message[]                @relation
 
   title       String       @unique
-  hash        String?
+  password        String?
   channelType ChannelTypes @default(PUBLIC)
   createdAt   DateTime     @default(now())
 }
