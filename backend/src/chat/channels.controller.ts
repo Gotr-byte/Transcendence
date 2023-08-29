@@ -11,14 +11,10 @@ import { ChannelService } from './channels.service';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { ChannelTypes, User } from '@prisma/client';
-import {
-  ShowChannelDto,
-  ShowChannelsDto,
-  CreateChannelDto,
-  JoinChannelDto,
-} from './dto';
 import { AddUsersDto } from 'src/user/dto';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ShowChannelDto, ShowChannelsDto } from './shared/dto';
+import { CreateChannelDto } from './management/dto';
 
 @UseGuards(AuthenticatedGuard)
 @ApiTags('Channels')

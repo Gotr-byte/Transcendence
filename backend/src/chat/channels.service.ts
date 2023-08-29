@@ -1,11 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import {
-  CreateChannelDto,
-  JoinChannelDto,
-  ShowChannelDto,
-  ShowChannelsDto,
-} from './dto';
+import { ShowChannelDto, ShowChannelsDto } from './shared/dto';
 import {
   ChannelMember,
   ChannelMemberRoles,
@@ -13,6 +8,8 @@ import {
   ChannelUserRestrictionTypes,
 } from '@prisma/client';
 import * as argon from 'argon2';
+import { CreateChannelDto } from './management/dto';
+import { JoinChannelDto } from './channel/dto';
 
 @Injectable()
 export class ChannelService {

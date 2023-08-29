@@ -194,7 +194,7 @@ export class ChannelService {
     joinChannelDto: JoinChannelDto,
   ): Promise<void> {
     if (channel.channelType === ChannelTypes.PROTECTED) {
-      const channelPassword = channel.password ?? '';
+      const channelPassword = joinChannelDto.password ?? '';
 
       if (!joinChannelDto.password) {
         throw new BadRequestException(
