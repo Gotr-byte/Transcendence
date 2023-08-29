@@ -21,13 +21,21 @@ export class AdminController {
   @Get('id/:channelId/users')
   async getChannelUsersAsAdmin(
     @Param('channelId') channelId: string,
-    @AuthUser() user: User,
+    @AuthUser() admin: User,
   ): Promise<ShowUsersRolesRestrictions> {
     const users = await this.adminService.getChannelUsersAsAdmin(
       +channelId,
-      user.id,
+      admin.id,
     );
     return users;
+  }
+
+  @Get('id/:channelId/restricted')
+  async getRestrictedUsers(
+    @Param('channelId') channelId: string,
+    @AuthUser() admin: User,  
+  ) {
+    const users = await this.getRestrictedUsers(+channelId, admin.id)
   }
 
   @Post('id/:channelId/:username/add')

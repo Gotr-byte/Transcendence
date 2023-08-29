@@ -48,6 +48,11 @@ export class AdminService {
     return ShowUsersRolesRestrictions.from(usersProps);
   }
 
+  async getRestrictedUsers(channelId: number, adminId: number) {
+    await this.ensureUserIsAdmin(channelId, adminId);
+      
+  }
+
   async addUserToChannel(
     channelId: number,
     adminId: number,
