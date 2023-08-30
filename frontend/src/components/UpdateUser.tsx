@@ -1,99 +1,77 @@
-import { Avatar, Flex, Text, Heading, Spacer, HStack, AvatarBadge, Input, Button, useToast } from '@chakra-ui/react';
-import React, { useEffect, useState } from "react";
+import React, { useState } from 'react';
 
-interface User {
-    id: string;
-    username: string;
-    isOnline: boolean;
-    avatar: string;
-    is2FaActive: boolean;
+// Define the shape of the payload you want to send to the server
+interface UserPayload {
+  username: string;
 }
 
-export const UpdateUser = () => {
-    const [user, setUser] = useState<User | null>(null);
-    const [newUsername, setNewUsername] = useState("");
-    const [newAvatar, setNewAvatar] = useState(""); // State to hold the new avatar URL from the input
+const UpdateUser: React.FC = () => {
+  // Define state variables for userId and username
+  const [userId, setUserId] = useState<string>('');
+  const [username, setName] = useState<string>('');
 
-    const toast = useToast();
+  // This is the function that will be called when you click the "Update" button
+  const handleUpdate = async () => {
+    try {
+      // Prepare your payload. It will look like { "username": "Fooby" }
+      const payload: UserPayload = {
+        username,
+      };
+  
+      // Send the PATCH request to the server
+      const response = await fetch(`http://localhost:4000/users/${userId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',  // This ensures cookies, HTTP authentication, and client-side SSL certificates are sent in the request
+        body: JSON.stringify(payload),  // Converts your payload object to a JSON string
+      });
+  
+      // Check if the request was successful
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      // Parse and log the response
+      const data = await response.json();
+      console.log(data);
+  
+    } catch (error) {
+      // Log any errors
+      console.error('There was an error updating the user:', error);
+    }
+  };
 
-    const fetchUserData = () => {
-        fetch("http://localhost:4000/profile", {
-            credentials: "include",
-        })
-            .then(response => response.json())
-            .then(data => {
-                setUser(data);
-                setShowUser(true);
-            });
-    };
+  // Render the component
+  return (
+    <div>
+      <h1>Update User</h1>
+      
+      {/* User ID Input */}
+      <div>
+        <label>Current username (ID): </label>
+        <input
+          type="text"
+          value={userId}
+          onChange={(e) => setUserId(e.target.value)}
+        />
+      </div>
+      
+      {/* New Username Input */}
+      <div>
+        <label>Update username: </label>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setName(e.target.value)}
+        />
+      </div>
+      
+      {/* Update Button */}
+      <button onClick={handleUpdate}>Update</button>
+    </div>
+  );
+};
 
-    const updateUsername = () => {
-        fetch(`http://localhost:4000/users/${user?.id}`, { // Assuming user id is the required path parameter
-            method: 'PATCH',
-            credentials: "include",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                username: newUsername,
-                avatar: newAvatar
-            }),
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then(data => {
-                setUser(data); // Assuming the server returns the updated user data
-                toast({
-                    title: 'Profile updated',
-                    description: 'Your profile has been updated successfully.',
-                    status: 'success',
-                    duration: 3000,
-                    isClosable: true,
-                });
-            })
-            .catch(error => {
-                toast({
-                    title: 'Error',
-                    description: 'Failed to update profile.',
-                    status: 'error',
-                    duration: 3000,
-                    isClosable: true,
-                });
-            });
-    };
-
-    useEffect(() => {
-        fetchUserData();
-    }, []);
-
-    return (
-        <Flex as="nav" p="10x" mb="40px" alignItems="center" gap="10px" flexDirection="column">
-            <Heading as="h1" color="black">Transcendence</Heading>
-            <Spacer />
-
-            {showUser && user?.username && (
-                <>
-                    <HStack spacing="10px">
-                        <Avatar name={user.username} src={user.avatar} background="purple">
-                            <AvatarBadge width="1.3em" bg="teal.500">
-                                <Text fontSize="xs" color="white">10</Text>
-                            </AvatarBadge>
-                        </Avatar>
-                        <Text>{user.username}</Text>
-                    </HStack>
-
-                    {/* Add a form for updating the username and avatar */}
-                    <Flex my={4} direction="column" width="300px" gap="16px">
-                        <Input placeholder="Enter new username" value={newUsername} onChange={e => setNewUsername(e.target.value)} />
-                        <Input placeholder="Enter new avatar URL" value={newAvatar} onChange={e => setNewAvatar(e.target.value)} />
-                        <Button colorScheme="purple" onClick={updateUsername}>Update Profile</Button>
-                    </Flex>
-                </>
-            )}
-        </Flex>
-    );
-}
+export default UpdateUser;
