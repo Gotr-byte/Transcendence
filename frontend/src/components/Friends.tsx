@@ -1,45 +1,61 @@
 import React, { useEffect, useState } from 'react';
 
 interface User {
-  id: string;
+  id: number;
   username: string;
   isOnline: boolean;
+  avatar: string;
+}
+
+interface FriendsList {
+  usersNo: number;
+  users: User[];
 }
 
 const Friends: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const [friendsList, setFriendsList] = useState<FriendsList>({ usersNo: 0, users: [] });
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchFriends = async () => {
       try {
         const response = await fetch('http://localhost:4000/friends', {
           credentials: 'include',
         });
-        
+
         if (!response.ok) {
-          throw new Error('Failed to fetch user data');
+          throw new Error('Failed to fetch friends');
         }
 
-        const data = await response.json();
-        setUsers(data);
+        const data: FriendsList = await response.json();
+        setFriendsList(data);
+
       } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Error fetching friends:', error);
       }
     };
 
-    fetchUserData();
-  }, []); // Empty dependency array to run this effect only once when the component mounts.
+    fetchFriends();
+  }, []);  // Empty dependency array ensures this runs only when the component mounts.
 
   return (
     <div>
-      {users.length > 0 && (
+      <h1>Friends List</h1>
+      {friendsList.usersNo > 0 ? (
         <ul>
-          {users.map((user) => (
+          {friendsList.users.map((user) => (
             <li key={user.id}>
               {user.username} is online: {user.isOnline ? 'Yes' : 'No'}
+              <img 
+  style={{ width: '50px', height: '50px', borderRadius: '50%' }} 
+  src={user.avatar} 
+  alt={`${user.username}'s avatar`} 
+/>
+
             </li>
           ))}
         </ul>
+      ) : (
+        <p>No friends found.</p>
       )}
     </div>
   );

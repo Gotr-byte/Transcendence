@@ -27,6 +27,7 @@ import UpdateUser from "../components/UpdateUser";
 import DeleteFriend from "../components/DeleteFriend";
 import AddFriend from "../components/AddFriend"
 import SentFriendRequests from "../components/SentFriendRequests";
+import ReceivedFriendRequests from "../components/RecievedFriendRequests";
 
 export default function Profile() {
   // Initialize state to keep track of userId
@@ -37,6 +38,8 @@ export default function Profile() {
       <TabList>
         <Tab _selected={{ color: "white", bg: "purple.400" }}>Account Info</Tab>
         <Tab _selected={{ color: "white", bg: "purple.400" }}>Friends</Tab>
+        <Tab _selected={{ color: "white", bg: "purple.400" }}>Sent Friend Requests</Tab>
+        <Tab _selected={{ color: "white", bg: "purple.400" }}>Recieved Friend Request</Tab>
       </TabList>
       <TabPanels>
         <TabPanel>  
@@ -47,7 +50,13 @@ export default function Profile() {
           <Friends />
           <DeleteFriend/>
           <AddFriend/>
+        </TabPanel>
+        <TabPanel>
           <SentFriendRequests/>
+          <AddFriend/>
+        </TabPanel>
+        <TabPanel>
+          <ReceivedFriendRequests/>
         </TabPanel>
       </TabPanels>
     </Tabs>
