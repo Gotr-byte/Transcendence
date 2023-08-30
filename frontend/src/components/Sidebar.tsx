@@ -1,4 +1,4 @@
-import { AtSignIcon, CalendarIcon, ChatIcon, EditIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import { AtSignIcon, ChatIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import { List, ListItem, ListIcon } from "@chakra-ui/react"
 import { NavLink } from 'react-router-dom';
 
