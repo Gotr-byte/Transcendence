@@ -1,19 +1,6 @@
 import { ChannelTypes } from '@prisma/client';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { CreateChannelDto } from './create-channel.dto';
+import { PartialType } from '@nestjs/swagger';
 
-export class UpdateChannelDto {
-  @IsNotEmpty()
-  @IsOptional()
-  @IsString()
-  title: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @IsOptional()
-  channelType: ChannelTypes;
-
-  @IsNotEmpty()
-  @IsString()
-  @IsOptional()
-  password: string;
-}
+export class UpdateChannelDto extends PartialType(CreateChannelDto) {}
