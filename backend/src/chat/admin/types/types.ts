@@ -10,7 +10,12 @@ export type extendedChannel = Channel & {
   restrictedUsers?: ChannelUserRestriction[];
 };
 
-export type UserWithRolesRestrictions = {
+export type UserWithRoleRestriction = {
   user: User;
   channel: extendedChannel;
+};
+
+export type UserWithRestriction = {
+  user: User;
+  restriction: ChannelUserRestriction;
 };

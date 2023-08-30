@@ -11,9 +11,12 @@ import {
   ChannelMemberRoles,
   ChannelUserRestriction,
   ChannelUserRestrictionTypes,
-  User,
 } from '@prisma/client';
-import { CreateRestrictionDto, ShowUsersRolesRestrictions } from './dto';
+import {
+  CreateRestrictionDto,
+  ShowUsersRestrictions,
+  ShowUsersRolesRestrictions,
+} from './dto';
 import { extendedChannel } from './types';
 import { UserService } from 'src/user/user.service';
 
@@ -37,10 +40,7 @@ export class AdminService {
 
     const usersProps = await Promise.all(
       channelUsers.map(async (user) => {
-        const channel = await this.getUserRoleRestriction(
-          channelId,
-          user.id,
-        );
+        const channel = await this.getUserRoleRestriction(channelId, user.id);
         return { user, channel };
       }),
     );
@@ -48,22 +48,27 @@ export class AdminService {
     return ShowUsersRolesRestrictions.from(usersProps);
   }
 
-//   async getRestrictedUsers(channelId: number, adminId: number) {
-//     await this.ensureUserIsAdmin(channelId, adminId);
+  async getRestrictedUsers(
+    channelId: number,
+    adminId: number,
+  ): Promise<ShowUsersRestrictions> {
+    await this.ensureUserIsAdmin(channelId, adminId);
 
-//     const allRestrictions = await this.prisma.channelUserRestriction.findMany({
-//       where: { restrictedChannelId: channelId },
-//     });
+    const allRestrictions = await this.prisma.channelUserRestriction.findMany({
+      where: { restrictedChannelId: channelId },
+    });
 
-// // const usersProps = await Promise.all(
-// //   allRestrictions.map(async (restriction) => {
-// //     const user = await this.getRestrictedUserProps(
-// //       restriction.restrictedUserId,
-// //     );
-// //     return { restriction, user };
-// //   }),
-// // );
-// // }
+    const usersProps = await Promise.all(
+      allRestrictions.map(async (restriction) => {
+        const user = await this.userService.getUserById(
+          restriction.restrictedUserId,
+        );
+        return { restriction, user };
+      }),
+    );
+
+    return ShowUsersRestrictions.from(usersProps);
+  }
 
   async addUserToChannel(
     channelId: number,

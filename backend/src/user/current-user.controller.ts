@@ -1,9 +1,18 @@
-import { Controller, Get, Patch, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { Response } from 'express';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
+import { ChangeUserDto } from './dto';
 
 @UseGuards(AuthenticatedGuard)
 @ApiTags('User-relations: CurrentUser')
@@ -27,6 +36,7 @@ export class CurrentUserController {
   @Patch('profile')
   async patchCurrentUser(
     @AuthUser() user: User,
+    @Body() body: ChangeUserDto, // Intentionally not used in this function
     @Res() response: Response,
   ): Promise<void> {
     response.redirect(`/users/` + user.username);

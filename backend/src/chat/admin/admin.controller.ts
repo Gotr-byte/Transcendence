@@ -9,7 +9,11 @@ import {
   Patch,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { CreateRestrictionDto, ShowUsersRolesRestrictions, UpdateRestrictionDto } from './dto';
+import {
+  CreateRestrictionDto,
+  ShowUsersRolesRestrictions,
+  UpdateRestrictionDto,
+} from './dto';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { ChannelUserRestriction, User } from '@prisma/client';
@@ -31,16 +35,16 @@ export class AdminController {
     return users;
   }
 
-  // @Get('id/:channelId/restricted')
-  // async getMutedUsers(
-  //   @Param('channelId') channelId: string,
-  //   @AuthUser() admin: User,
-  // ) {
-  //   const users = await this.adminService.getRestrictedUsers(
-  //     +channelId,
-  //     admin.id,
-  //   );
-  // }
+  @Get('id/:channelId/restricted')
+  async getMutedUsers(
+    @Param('channelId') channelId: string,
+    @AuthUser() admin: User,
+  ) {
+    const users = await this.adminService.getRestrictedUsers(
+      +channelId,
+      admin.id,
+    );
+  }
 
   @Post('id/:channelId/:username/add')
   async addUserToChannel(
