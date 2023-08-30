@@ -1,11 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import {
-  CreateChannelDto,
-  JoinChannelDto,
-  ShowChannelDto,
-  ShowChannelsDto,
-} from './dto';
+import { ShowChannelDto, ShowChannelsDto } from './shared/dto';
 import {
   ChannelMember,
   ChannelMemberRoles,
@@ -13,6 +8,8 @@ import {
   ChannelUserRestrictionTypes,
 } from '@prisma/client';
 import * as argon from 'argon2';
+import { CreateChannelDto } from './management/dto';
+import { JoinChannelDto } from './channel/dto';
 
 @Injectable()
 export class ChannelService {
@@ -103,7 +100,11 @@ export class ChannelService {
     return ShowChannelDto.from(channel, 1);
   }
 
-  async addUsersToChannel(userId: number, channelId: number, users: number[]): Promise<number> {
+  async addUsersToChannel(
+    userId: number,
+    channelId: number,
+    users: number[],
+  ): Promise<number> {
     try {
       await this.prisma.channelMember.findUniqueOrThrow({
         where: {
@@ -135,9 +136,12 @@ export class ChannelService {
     return batchPayload.count;
   }
 
-  async joinChannel(userId: number, channelId: number, joinChannelDto: JoinChannelDto) {
+  async joinChannel(
+    userId: number,
+    channelId: number,
+    joinChannelDto: JoinChannelDto,
+  ) {
     // if channel is protected, check for password existance and check if password is valid,
     // then add user to channel
   }
-
 }

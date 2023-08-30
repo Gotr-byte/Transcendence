@@ -18,6 +18,8 @@ CREATE TABLE "User" (
     "is2FaValid" BOOLEAN NOT NULL DEFAULT false,
     "twoFaSecret" TEXT NOT NULL DEFAULT '',
     "isOnline" BOOLEAN NOT NULL DEFAULT false,
+    "inGame" BOOLEAN NOT NULL DEFAULT false,
+    "achievements" TEXT[] DEFAULT ARRAY['']::TEXT[],
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -57,6 +59,7 @@ CREATE TABLE "ChannelMember" (
 CREATE TABLE "ChannelUserRestriction" (
     "restrictedUserId" INTEGER NOT NULL,
     "restrictedChannelId" INTEGER NOT NULL,
+    "duration" TIMESTAMP(3),
     "restrictionType" "ChannelUserRestrictionTypes" NOT NULL
 );
 

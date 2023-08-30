@@ -14,7 +14,9 @@ import { AuthUser } from 'src/auth/auth.decorator';
 import { User } from '@prisma/client';
 import { Verify2FADto } from './dto/two-fa-auth.dto.';
 import { Response } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('2f-auth')
 @Controller('2fa')
 export class TwoFaAuthController {
   constructor(private readonly twoFaService: TwoFaAuthService) {}

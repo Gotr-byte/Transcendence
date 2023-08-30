@@ -6,6 +6,7 @@ import {
   ChangeUserPropsDto,
   ShowAnyUserDto,
   ShowLoggedUserDto,
+  ShowUsersDto,
 } from './dto';
 import { UserDetails } from './types';
 
@@ -14,10 +15,9 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
 
   // Get a list of all users
-  async getAll(): Promise<ShowAnyUserDto[]> {
+  async getAll(): Promise<ShowUsersDto> {
     const users = await this.prisma.user.findMany({});
-    const userDtos = users.map((user) => ShowAnyUserDto.from(user));
-    return userDtos;
+    return ShowUsersDto.from(users);
   }
 
   // Find a user by their username
@@ -30,14 +30,14 @@ export class UserService {
   }
 
   // Get user details by ID
-  async getUserById(id: number): Promise<ShowAnyUserDto> {
+  async getUserById(id: number): Promise<User> {
     const user = await this.prisma.user.findUniqueOrThrow({
       where: {
         id,
       },
     });
 
-    return ShowAnyUserDto.from(user);
+    return user;
   }
 
   // Get user details by email
@@ -49,11 +49,11 @@ export class UserService {
   }
 
   // Get a list of users based on their IDs
-  async getUsersListFromIds(userIds: number[]): Promise<ShowAnyUserDto[]> {
+  async getUsersListFromIds(userIds: number[]): Promise<ShowUsersDto> {
     const userList = await Promise.all(
       userIds.map((userId) => this.getUserById(userId)),
     );
-    return userList;
+    return ShowUsersDto.from(userList);
   }
 
   // Update user profile

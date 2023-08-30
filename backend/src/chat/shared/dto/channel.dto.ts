@@ -1,5 +1,4 @@
 import { Channel, ChannelTypes } from '@prisma/client';
-import { IsArray, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class ChannelDto {
   id: number;
@@ -20,8 +19,8 @@ export class ChannelDto {
 }
 
 export class ShowChannelDto {
-  channel: ChannelDto;
   usersNo: number;
+  channel: ChannelDto;
 
   constructor(channel: Channel, usersNo: number) {
     this.channel = ChannelDto.from(channel);
@@ -34,8 +33,8 @@ export class ShowChannelDto {
 }
 
 export class ShowChannelsDto {
-  channels: ChannelDto[];
   channelsNo: number;
+  channels: ChannelDto[];
 
   constructor(channels: Channel[]) {
     this.channelsNo = channels.length;
@@ -45,32 +44,4 @@ export class ShowChannelsDto {
   static from(channels: Channel[]): ShowChannelsDto {
     return new ShowChannelsDto(channels);
   }
-}
-
-export class CreateChannelDto {
-  @IsNotEmpty()
-  @IsString()
-  title: string;
-
-  @IsNotEmpty()
-  @IsString()
-  channelType: ChannelTypes;
-
-  @IsNotEmpty()
-  @IsString()
-  @IsOptional()
-  password: string;
-}
-
-export class AddUsersDto {
-  @IsArray()
-  @IsNotEmpty()
-  users: number[]
-}
-
-export class JoinChannelDto {
-  @IsString()
-  @IsNotEmpty()
-  @IsOptional()
-  password: string
 }

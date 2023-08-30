@@ -105,6 +105,7 @@ ALTER TABLE public."ChannelMember" OWNER TO myuser;
 CREATE TABLE public."ChannelUserRestriction" (
     "restrictedUserId" integer NOT NULL,
     "restrictedChannelId" integer NOT NULL,
+    duration timestamp(3) without time zone,
     "restrictionType" public."ChannelUserRestrictionTypes" NOT NULL
 );
 
@@ -251,7 +252,9 @@ CREATE TABLE public."User" (
     "is2FaActive" boolean DEFAULT false NOT NULL,
     "is2FaValid" boolean DEFAULT false NOT NULL,
     "twoFaSecret" text DEFAULT ''::text NOT NULL,
-    "isOnline" boolean DEFAULT false NOT NULL
+    "isOnline" boolean DEFAULT false NOT NULL,
+    "inGame" boolean DEFAULT false NOT NULL,
+    achievements text[] DEFAULT ARRAY[''::text]
 );
 
 
@@ -343,9 +346,9 @@ COPY public."Blocked" ("blockedUserId", "blockingUserId") FROM stdin;
 --
 
 COPY public."Channel" (id, "creatorId", title, password, "channelType", "createdAt") FROM stdin;
-1	5	Old Gods Gang	G0ds	PROTECTED	2023-08-13 15:06:46.758
-2	8	Icons	\N	PRIVATE	2023-08-13 15:06:46.758
-3	4	Memes	\N	PUBLIC	2023-08-13 15:06:46.758
+1	5	Old Gods Gang	G0ds	PROTECTED	2023-08-29 15:36:41.306
+2	8	Icons	\N	PRIVATE	2023-08-29 15:36:41.306
+3	4	Memes	\N	PUBLIC	2023-08-29 15:36:41.306
 \.
 
 
@@ -377,11 +380,11 @@ COPY public."ChannelMember" ("userId", "channelId", role) FROM stdin;
 -- Data for Name: ChannelUserRestriction; Type: TABLE DATA; Schema: public; Owner: myuser
 --
 
-COPY public."ChannelUserRestriction" ("restrictedUserId", "restrictedChannelId", "restrictionType") FROM stdin;
-6	1	MUTED
-1	3	BANNED
-11	1	MUTED
-11	2	BANNED
+COPY public."ChannelUserRestriction" ("restrictedUserId", "restrictedChannelId", duration, "restrictionType") FROM stdin;
+6	1	\N	MUTED
+1	3	\N	BANNED
+11	1	\N	MUTED
+11	2	\N	BANNED
 \.
 
 
@@ -409,16 +412,16 @@ COPY public."FriendRequest" ("senderId", "receiverId", "isAccepted") FROM stdin;
 --
 
 COPY public."Match" (id, started, ended, "homePlayerId", "awayPlayerId", "winnerId", "homeScore", "awayScore") FROM stdin;
-1	2023-08-13 15:06:46.757	2023-08-13 15:06:46.757	4	7	7	15	16
-2	2023-08-13 15:06:46.757	2023-08-13 15:06:46.757	8	3	3	0	9
-3	2023-08-13 15:06:46.757	2023-08-13 15:06:46.757	4	9	9	3	5
-4	2023-08-13 15:06:46.757	2023-08-13 15:06:46.757	10	5	10	17	2
-5	2023-08-13 15:06:46.757	2023-08-13 15:06:46.757	9	8	8	1	12
-6	2023-08-13 15:06:46.757	2023-08-13 15:06:46.757	3	1	3	11	2
-7	2023-08-13 15:06:46.757	2023-08-13 15:06:46.757	9	2	9	14	5
-8	2023-08-13 15:06:46.757	2023-08-13 15:06:46.757	11	2	9	14	5
-9	2023-08-13 15:06:46.757	2023-08-13 15:06:46.757	9	11	9	14	5
-10	2023-08-13 15:06:46.757	2023-08-13 15:06:46.757	11	2	9	14	5
+1	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	4	7	7	15	16
+2	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	8	3	3	0	9
+3	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	4	9	9	3	5
+4	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	10	5	10	17	2
+5	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	9	8	8	1	12
+6	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	3	1	3	11	2
+7	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	9	2	9	14	5
+8	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	11	2	9	14	5
+9	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	9	11	9	14	5
+10	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	11	2	9	14	5
 \.
 
 
@@ -442,18 +445,18 @@ COPY public."Session" (id, sid, data, "expiresAt") FROM stdin;
 -- Data for Name: User; Type: TABLE DATA; Schema: public; Owner: myuser
 --
 
-COPY public."User" (id, username, email, avatar, "createdAt", "is2FaActive", "is2FaValid", "twoFaSecret", "isOnline") FROM stdin;
-1	John	john@john.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-13 15:06:46.75	f	f		f
-2	Arthur	arthur@morgan.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-13 15:06:46.75	f	f		f
-3	Morgana	morgana@persona.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-13 15:06:46.75	f	f		f
-4	Gladys	gladys@wonder.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-13 15:06:46.75	f	f		f
-5	Zardos	zardos@aol.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-13 15:06:46.75	f	f		f
-6	Helena	helena@olymp.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-13 15:06:46.75	f	f		f
-7	Xena	xena@scream.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-13 15:06:46.75	f	f		f
-8	Anakin	anakin@lucasarts.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-13 15:06:46.75	f	f		f
-9	RubberDuck	rubrub@rub.ru	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-13 15:06:46.75	f	f		f
-10	Asterix	asterix@google.gae	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-13 15:06:46.75	f	f		f
-11	LOGGED-IN-USER	iAmLoggedIn@placeholder.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-13 15:06:46.75	f	f		f
+COPY public."User" (id, username, email, avatar, "createdAt", "is2FaActive", "is2FaValid", "twoFaSecret", "isOnline", "inGame", achievements) FROM stdin;
+1	John	john@john.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+2	Arthur	arthur@morgan.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+3	Morgana	morgana@persona.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+4	Gladys	gladys@wonder.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+5	Zardos	zardos@aol.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+6	Helena	helena@olymp.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+7	Xena	xena@scream.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+8	Anakin	anakin@lucasarts.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+9	RubberDuck	rubrub@rub.ru	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+10	Asterix	asterix@google.gae	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+11	LOGGED-IN-USER	iAmLoggedIn@placeholder.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
 \.
 
 
@@ -462,7 +465,7 @@ COPY public."User" (id, username, email, avatar, "createdAt", "is2FaActive", "is
 --
 
 COPY public._prisma_migrations (id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count) FROM stdin;
-6c36dce6-9c84-4cb1-8a64-d936f9ee0e56	c7dfaedbd022e0e5e3d41b40e24e498238936269c1533b9747cd2f0a54fbaaa7	2023-08-13 15:06:29.870675+00	20230813150629_init	\N	\N	2023-08-13 15:06:29.849247+00	1
+ddadabdf-479b-4056-93a4-cd989b1a963b	49807342ff2ad4ddb7a8eb5dc3cb3019308bb3fd7086b5d406a47f5605a156b6	2023-08-29 15:36:39.004158+00	20230829153638_init	\N	\N	2023-08-29 15:36:38.967088+00	1
 \.
 
 

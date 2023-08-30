@@ -6,14 +6,6 @@ COPY package*.json ./
 
 RUN npm install
 
-COPY . .
-
-# RUN npx prisma generate
-
-EXPOSE 3001
-EXPOSE 5555
-
-
 CMD ["npm", "run", "dev:watch"]
 
 
@@ -26,8 +18,5 @@ COPY package*.json ./
 RUN npm install
 
 COPY . .
-
-EXPOSE 3001
-EXPOSE 5555
 
 CMD ["npm", "run", "migrate:prod"]

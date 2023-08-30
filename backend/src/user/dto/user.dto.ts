@@ -61,6 +61,20 @@ export class ShowAnyUserDto {
   }
 }
 
+export class ShowUsersDto {
+  users: ShowAnyUserDto[];
+  usersNo: number;
+
+  constructor(users: User[]) {
+    this.usersNo = users.length;
+    this.users = users.map((user) => ShowAnyUserDto.from(user));
+  }
+
+  static from(user: User[]): ShowUsersDto {
+    return new ShowUsersDto(user);
+  }
+}
+
 export class ShowLoggedUserDto {
   id: number;
   username: string;

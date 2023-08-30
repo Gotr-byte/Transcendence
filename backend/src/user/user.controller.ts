@@ -8,25 +8,32 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ShowAnyUserDto, ChangeUserDto, ShowLoggedUserDto } from './dto';
+import {
+  ShowAnyUserDto,
+  ChangeUserDto,
+  ShowLoggedUserDto,
+  ShowUsersDto,
+} from './dto';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { User } from '@prisma/client';
 import { AuthUser } from 'src/auth/auth.decorator';
+import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthenticatedGuard)
+@ApiTags('User')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  // Get all users
   @Get()
-  async getAll(): Promise<ShowAnyUserDto[]> {
+  @ApiOperation({ summary: 'Get all users' })
+  async getAll(): Promise<ShowUsersDto> {
     const users = await this.userService.getAll();
     return users;
   }
 
-  // Get user by username
   @Get(':username')
+  @ApiOperation({ summary: 'Get user by username' })
   async getUserByName(
     @Param('username') username: string,
   ): Promise<ShowLoggedUserDto | ShowAnyUserDto> {
@@ -36,8 +43,20 @@ export class UserController {
       : ShowAnyUserDto.from(user);
   }
 
-  // Update user profile
   @Patch(':username')
+  @ApiOperation({ summary: 'Update user profile: username or avatar or both' })
+  @ApiParam({ name: 'username', description: 'Username of the user' })
+  @ApiBody({
+    type: ChangeUserDto,
+    examples: {
+      example1: {
+        value: {
+          username: 'newUSername',
+          avatar: 'new avatar Path',
+        },
+      },
+    },
+  })
   async updateUser(
     @Param('username') username: string,
     @AuthUser() user: User,
