@@ -21,7 +21,7 @@ import { ChannelUserRestriction, User } from '@prisma/client';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthenticatedGuard)
-@ApiTags('Chat: channel-admin-operations')
+@ApiTags('Chat: channel-admin-operations || need more testing')
 @Controller('chat/admin')
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}

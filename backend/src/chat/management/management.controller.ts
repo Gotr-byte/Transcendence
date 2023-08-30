@@ -16,7 +16,7 @@ import { ChannelDto, ShowChannelDto } from '../shared/dto';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthenticatedGuard)
-@ApiTags('Chat: channel-creator-operations')
+@ApiTags('Chat: channel-creator-operations || need more testing')
 @Controller('chat/management')
 export class ManagementController {
   constructor(private readonly managementService: ManagementService) {}
@@ -80,7 +80,7 @@ export class ManagementController {
   @Delete('id/:channelId')
   @ApiOperation({
     summary:
-      'Delete Channel, only possible for channel creator, deletes all messages, restrictions and memberships on channel',
+      'Delete Channel, only possible for channel creator, deletes all messages, restrictions and memberships of channel',
   })
   @ApiParam({ name: 'channelId', description: 'ID of the channel' })
   async deleteChannel(
