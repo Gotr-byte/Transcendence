@@ -7,7 +7,7 @@ import { User } from '@prisma/client';
 import { AuthUser } from './auth.decorator';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@ApiTags('Auth')
+@ApiTags('Authentication')
 @Controller('auth')
 export class AuthController {
   constructor(

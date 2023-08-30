@@ -13,7 +13,7 @@ datasource db {
 model User {
   id           Int      @id @default(autoincrement())
   username     String   @unique
-  email        String   @unique //@unique
+  email        String   @unique
   avatar       String   @default("https://avatarfiles.alphacoders.com/183/183501.jpg")
   createdAt    DateTime @default(now())
   is2FaActive  Boolean  @default(false)
