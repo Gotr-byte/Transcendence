@@ -21,12 +21,12 @@ const AddFriend: React.FC = () => {
       }
 
       const data = await response.json();
-	  window.location.reload();
       console.log('Friend added:', data);
-
+      
     } catch (error) {
       console.error('There was a problem adding the friend:', error);
     }
+    window.location.reload();
   };
 
   return (
@@ -40,7 +40,7 @@ const AddFriend: React.FC = () => {
       />
 
       {/* Button to trigger POST request */}
-      <button onClick={handleAddFriend}>Add Friend</button>
+      <button onClick={handleAddFriend}>Add Friend </button>
     </div>
   );
 };

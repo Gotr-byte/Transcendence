@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import {
   ChatIcon,
   CheckCircleIcon,
@@ -12,15 +11,6 @@ import {
   TabPanels,
   TabPanel,
   Tabs,
-  List,
-  ListItem,
-  ListIcon,
-  Box,
-  FormControl,
-  FormLabel,
-  Input,
-  FormHelperText,
-  Button,
 } from "@chakra-ui/react";
 import Friends from "../components/Friends";
 import UpdateUser from "../components/UpdateUser";
