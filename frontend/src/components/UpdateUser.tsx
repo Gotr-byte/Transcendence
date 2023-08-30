@@ -19,7 +19,7 @@ const UpdateUser: React.FC = () => {
       };
   
       // Send the PATCH request to the server
-      const response = await fetch(`http://localhost:4000/users/${userId}`, {
+      const response = await fetch(`http://localhost:4000/profile`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -47,18 +47,6 @@ const UpdateUser: React.FC = () => {
   // Render the component
   return (
     <div>
-      <h1>Update User</h1>
-      
-      {/* User ID Input */}
-      <div>
-        <label>Current username (ID): </label>
-        <input
-          type="text"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
-        />
-      </div>
-      
       {/* New Username Input */}
       <div>
         <label>Update username: </label>
