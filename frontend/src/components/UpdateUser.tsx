@@ -36,7 +36,8 @@ const UpdateUser: React.FC = () => {
       // Parse and log the response
       const data = await response.json();
       console.log(data);
-  
+      
+      window.location.reload();
     } catch (error) {
       // Log any errors
       console.error('There was an error updating the user:', error);
