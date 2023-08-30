@@ -76,6 +76,22 @@ export class AdminController {
     return newRestriction;
   }
 
+  @Patch('id/:channelId/:username/restrict')
+  async updateRestriction(
+    @Param('channelId') channelId: string,
+    @Param('username') username: string,
+    @AuthUser() admin: User,
+    @Body() updateRestrictionDto: UpdateRestrictionDto,
+  ): Promise<ChannelUserRestriction> {
+    const newRestriction = await this.adminService.updateRestriction(
+      +channelId,
+      username,
+      admin.id,
+      updateRestrictionDto,
+    );
+    return newRestriction;
+  }
+
   @Delete('id/:channelId/:username/liberate')
   async liberateUser(
     @Param('channelId') channelId: string,
