@@ -25,6 +25,8 @@ import {
 import Friends from "../components/Friends";
 import UpdateUser from "../components/UpdateUser";
 import DeleteFriend from "../components/DeleteFriend";
+import AddFriend from "../components/AddFriend"
+import SentFriendRequests from "../components/SentFriendRequests";
 
 export default function Profile() {
   // Initialize state to keep track of userId
@@ -44,6 +46,8 @@ export default function Profile() {
         <TabPanel>
           <Friends />
           <DeleteFriend/>
+          <AddFriend/>
+          <SentFriendRequests/>
         </TabPanel>
       </TabPanels>
     </Tabs>

@@ -7,7 +7,6 @@ interface UserPayload {
 
 const UpdateUser: React.FC = () => {
   // Define state variables for userId and username
-  const [userId, setUserId] = useState<string>('');
   const [username, setName] = useState<string>('');
 
   // This is the function that will be called when you click the "Update" button
