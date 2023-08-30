@@ -13,6 +13,7 @@ import { AuthUser } from 'src/auth/auth.decorator';
 import { User } from '@prisma/client';
 import { CreateChannelDto, UpdateChannelDto } from './dto';
 import { ChannelDto, ShowChannelDto } from '../shared/dto';
+import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthenticatedGuard)
 @Controller('chat/management')
@@ -20,6 +21,22 @@ export class ManagementController {
   constructor(private readonly managementService: ManagementService) {}
 
   @Post('create')
+  @ApiOperation({
+    summary: 'Create a new Channel, user is set to creator and admin',
+  })
+  @ApiParam({ name: 'channelId', description: 'ID of the channel' })
+  @ApiBody({
+    type: CreateChannelDto,
+    examples: {
+      example1: {
+        value: {
+          title: 'Sample Channel',
+          channelType: 'PUBLIC, PROTECTED or PRIVATE',
+          password: 'only mandatory for PROTECTED channel',
+        },
+      },
+    },
+  })
   async createChannel(
     @AuthUser() user: User,
     @Body() createUserDto: CreateChannelDto,
@@ -32,6 +49,20 @@ export class ManagementController {
   }
 
   @Patch('id/:channelId/edit')
+  @ApiOperation({ summary: 'Edit Channel, only possible for channel creator' })
+  @ApiParam({ name: 'channelId', description: 'ID of the channel' })
+  @ApiBody({
+    type: UpdateChannelDto,
+    examples: {
+      example1: {
+        value: {
+          title: 'optional: Edited Channel',
+          channelType: 'optional: PUBLIC, PROTECTED or PRIVATE',
+          password: 'only mandatory for PROTECTED channel',
+        },
+      },
+    },
+  })
   async editChannel(
     @Param('channelId') channelId: string,
     @AuthUser() user: User,
@@ -46,6 +77,11 @@ export class ManagementController {
   }
 
   @Delete('id/:channelId')
+  @ApiOperation({
+    summary:
+      'Delete Channel, only possible for channel creator, deletes all messages, restrictions and memberships on channel',
+  })
+  @ApiParam({ name: 'channelId', description: 'ID of the channel' })
   async deleteChannel(
     @Param('channelId') channelId: string,
     @AuthUser() user: User,
