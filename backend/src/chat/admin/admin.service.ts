@@ -150,10 +150,6 @@ export class AdminService {
 
   private async createRestriction(
     restrictedChannelId: number,
-
-
-
-    
     restrictedUserId: number,
     createRestrictionDto: CreateRestrictionDto,
   ): Promise<ChannelUserRestriction> {
