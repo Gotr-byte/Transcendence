@@ -24,6 +24,7 @@ import {
 } from "@chakra-ui/react";
 import Friends from "../components/Friends";
 import UpdateUser from "../components/UpdateUser";
+import DeleteFriend from "../components/DeleteFriend";
 
 export default function Profile() {
   // Initialize state to keep track of userId
@@ -42,6 +43,7 @@ export default function Profile() {
         </TabPanel>
         <TabPanel>
           <Friends />
+          <DeleteFriend/>
         </TabPanel>
       </TabPanels>
     </Tabs>
