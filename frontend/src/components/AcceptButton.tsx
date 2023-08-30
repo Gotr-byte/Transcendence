@@ -1,0 +1,34 @@
+import React from 'react';
+
+interface AcceptButtonProps {
+  username: string; // The username of the user who sent the friend request
+}
+
+const AcceptButton: React.FC<AcceptButtonProps> = ({ username }) => {
+  // The advanced secret jutsu to accept a friend request
+  const acceptRequest = async () => {
+    try {
+      const response = await fetch(`http://localhost:4000/friends/${username}`, {
+        method: 'PATCH', // PATCH is the jutsu style here
+        credentials: "include",
+    }); 
+
+      if (response.ok) {
+        alert('Friend request accepted.'); // Celebration incantation
+      } else {
+        throw new Error('Failed to accept friend request.'); // Bad omen
+      }
+    } catch (error) {
+      console.error('An error occurred:', error); // Display the curse
+    }
+    window.location.reload();
+  };
+
+  return (
+    <button onClick={acceptRequest}>
+      Accept
+    </button>
+  );
+};
+
+export default AcceptButton;

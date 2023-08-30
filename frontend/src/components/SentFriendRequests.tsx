@@ -1,47 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 
-interface FriendRequest {
-  to: string;
-  from: string;
-  status: string; // assuming status could be something like 'pending', 'accepted', etc.
+// Define the shape of your user
+interface User {
+  id: number;
+  username: string;
+  isOnline: boolean;
+  avatar: string;
 }
 
+// Main component, the dojo where the magic happens
 const SentFriendRequests: React.FC = () => {
-  const [sentRequests, setSentRequests] = useState<FriendRequest[]>([]);
+  const [sentRequests, setSentRequests] = useState<User[]>([]); // Store the list of friends
 
+  // Summoning technique for API calls
   useEffect(() => {
-    const fetchSentRequests = async () => {
+    const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:4000/friends/sent', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include', // Send cookies if needed
-        });
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        const response = await fetch("http://localhost:4000/friends/sent", {
+          credentials: "include",
+        }); // Summon data from endpoint
+        if (response.ok) {
+          const data = await response.json();
+          setSentRequests(data.users); // Update the state with fetched users
+        } else {
+          throw new Error("Failed to fetch the data, young warrior");
         }
-
-        const data = await response.json();
-        setSentRequests(data); // assuming the data is an array of friend requests
-
       } catch (error) {
-        console.error('There was a problem fetching sent friend requests:', error);
+        console.error("An error occurred:", error); // Log any summoning errors
       }
     };
 
-    fetchSentRequests();
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
+    fetchData(); // Invoke the summoning
+  }, []); // Empty array means this technique is used once when the component mounts
 
+  // The visual part of your dojo, what the world will see
   return (
     <div>
       <h1>Sent Friend Requests</h1>
       <ul>
-        {sentRequests.map((request, index) => (
-          <li key={index}>
-            To: {request.to}, Status: {request.status}
+        {sentRequests.map((user) => (
+          <li key={user.id}>
+            <span>{user.username}</span>
+            <span>{user.isOnline ? "Online" : "Offline"}</span>
+            <img
+              style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+              src={user.avatar}
+              alt={`${user.username}'s avatar`}
+            />
           </li>
         ))}
       </ul>
