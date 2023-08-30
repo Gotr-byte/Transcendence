@@ -80,9 +80,7 @@ export class ChannelController {
     examples: {
       example1: {
         value: {
-          title: 'Sample Channel',
-          channelType: 'PUBLIC or PROTECTED',
-          password: 'optional-password for Public but mandatory for Protected',
+          password: 'mandatory for PROTECTED channel',
         },
       },
     },

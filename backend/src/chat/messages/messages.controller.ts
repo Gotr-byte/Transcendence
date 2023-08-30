@@ -13,6 +13,8 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { ApiTags } from '@nestjs/swagger';
+import { AuthUser } from 'src/auth/auth.decorator';
+import { Message, User } from '@prisma/client';
 
 @UseGuards(AuthenticatedGuard)
 @ApiTags('Chat: messages || not working, in progress')
@@ -20,28 +22,36 @@ import { ApiTags } from '@nestjs/swagger';
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
 
-  @Post()
-  create(@Body() createMessageDto: CreateMessageDto) {
-    return this.messagesService.create(createMessageDto);
+  @Post('channel/:channelId')
+  async createChannelMessage(
+    @Param('channelId') channelId: string,
+    @Body() createMessageDto: CreateMessageDto,
+    @AuthUser() user: User,
+  ): Promise<Message> {
+    const newMessage = await this.messagesService.createChannelMessage(
+      +channelId,
+      user.id,
+      createMessageDto,
+    );
+    return newMessage;
   }
 
-  @Get()
-  findAll() {
-    return this.messagesService.findAll();
+  @Post('user/:username')
+  async createUserMessage(
+    @Param('username') username: string,
+    @Body() createMessageDto: CreateMessageDto,
+    @AuthUser() user: User,
+  ) {
+    const newMessage = await this.messagesService.createUserMessage(
+      user.id,
+      username,
+      createMessageDto,
+    );
+    return newMessage;
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.messagesService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMessageDto: UpdateMessageDto) {
-    return this.messagesService.update(+id, updateMessageDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.messagesService.remove(+id);
   }
 }

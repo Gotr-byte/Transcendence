@@ -219,7 +219,7 @@ export class AdminService {
     await this.ensureUserIsAdmin(channelId, adminId);
     const user = await this.userService.getUserByName(username);
     await this.ensureUserIsNotCreator(channelId, user.id);
-    await this.ensureUserIsMember(channelId, user.id);
+    await this.sharedService.ensureUserIsMember(channelId, user.id);
     return user.id;
   }
 
@@ -249,19 +249,6 @@ export class AdminService {
     if (channel)
       throw new BadRequestException(
         `User with id: '${userId}' the creator of this channel (ID: ${channelId})`,
-      );
-  }
-
-  private async ensureUserIsMember(
-    channelId: number,
-    userId: number,
-  ): Promise<void> {
-    const channel = await this.prisma.channel.findUnique({
-      where: { id: channelId, channelUsers: { some: { userId } } },
-    });
-    if (!channel)
-      throw new BadRequestException(
-        `User with id: '${userId}' is not a member of this channel (ID: ${channelId})`,
       );
   }
 

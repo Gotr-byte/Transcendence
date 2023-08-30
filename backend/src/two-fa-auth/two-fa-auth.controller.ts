@@ -24,7 +24,10 @@ export class TwoFaAuthController {
 
   @UseGuards(AuthenticatedGuard)
   @Get('activate')
-  @ApiOperation({ summary: 'Activates 2Fa for logged user and returns a qr code to register to authenticator app, if executed again qr code will be shown again' })
+  @ApiOperation({
+    summary:
+      'Activates 2Fa for logged user and returns a qr code to register to authenticator app, if executed again qr code will be shown again',
+  })
   async getQrCode(@AuthUser() user: User): Promise<string> {
     const qrCode = await this.twoFaService.getQrCode(user);
     return `<h2>Two-Factor Authentication Setup</h2>
@@ -34,7 +37,9 @@ export class TwoFaAuthController {
 
   @UseGuards(SessionGuard)
   @Post('verify')
-  @ApiOperation({ summary: 'Validates 2Fa for logged user if token is correct' })
+  @ApiOperation({
+    summary: 'Validates 2Fa for logged user if token is correct',
+  })
   @ApiBody({
     type: Verify2FADto,
     examples: {

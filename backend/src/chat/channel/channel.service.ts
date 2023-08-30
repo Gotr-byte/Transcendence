@@ -39,6 +39,7 @@ export class ChannelService {
         },
       },
     });
+    nonPrivateChannels.sort((a, b) => a.title.localeCompare(b.title));
     return ShowChannelsDto.from(nonPrivateChannels);
   }
 
@@ -56,6 +57,7 @@ export class ChannelService {
         return channel;
       }),
     );
+    userChannels.sort((a, b) => a.title.localeCompare(b.title));
     return ShowChannelsDto.from(userChannels);
   }
 

@@ -32,7 +32,10 @@ export class CurrentUserController {
     response.redirect(`/users/` + user.username);
   }
 
-  @ApiOperation({ summary: 'Update logged user profile: username or avatar or both - redirect to users/"LOGGED-USER"' })
+  @ApiOperation({
+    summary:
+      'Update logged user profile: username or avatar or both - redirect to users/"LOGGED-USER"',
+  })
   @ApiBody({
     type: ChangeUserDto,
     examples: {
