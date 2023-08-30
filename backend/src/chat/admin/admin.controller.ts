@@ -67,7 +67,7 @@ export class AdminController {
     @AuthUser() admin: User,
     @Body() createRestrictionDto: CreateRestrictionDto,
   ): Promise<ChannelUserRestriction> {
-    const newRestriction = await this.adminService.restrictUser(
+    const newRestriction = await this.adminService.createOrUpdateRestriction(
       +channelId,
       username,
       admin.id,
@@ -83,7 +83,7 @@ export class AdminController {
     @AuthUser() admin: User,
     @Body() updateRestrictionDto: UpdateRestrictionDto,
   ): Promise<ChannelUserRestriction> {
-    const newRestriction = await this.adminService.updateRestriction(
+    const newRestriction = await this.adminService.createOrUpdateRestriction(
       +channelId,
       username,
       admin.id,

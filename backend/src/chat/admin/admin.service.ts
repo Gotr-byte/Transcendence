@@ -91,60 +91,43 @@ export class AdminService {
     return newMembership;
   }
 
-  async restrictUser(
+  async createOrUpdateRestriction(
     channelId: number,
     username: string,
     adminId: number,
-    createRestrictionDto: CreateRestrictionDto,
+    restrictionDto: CreateRestrictionDto | UpdateRestrictionDto,
   ): Promise<ChannelUserRestriction> {
     const userId = await this.validateAdminAction(channelId, username, adminId);
 
     if (
-      createRestrictionDto.restrictionType ===
-      ChannelUserRestrictionTypes.BANNED
+      restrictionDto.restrictionType === ChannelUserRestrictionTypes.BANNED &&
+      (await this.userIsOnChannel(channelId, userId))
     ) {
       await this.sharedService.deleteUserFromChannel(channelId, userId);
     }
 
-    const newRestriction = await this.createRestriction(
-      channelId,
-      userId,
-      createRestrictionDto,
-    );
-    return newRestriction;
-  }
-
-  async updateRestriction(
-    channelId: number,
-    username: string,
-    adminId: number,
-    updateRestrictionDto: UpdateRestrictionDto,
-  ): Promise<ChannelUserRestriction> {
-    const userId = await this.validateAdminAction(channelId, username, adminId);
-    if (
-      updateRestrictionDto.restrictionType ===
-      ChannelUserRestrictionTypes.BANNED && await this.userIsOnChannel(channelId, userId))
-    {
-      await this.sharedService.deleteUserFromChannel(channelId, userId);
+    if (restrictionDto instanceof CreateRestrictionDto) {
+      const newRestriction = await this.createRestriction(
+        channelId,
+        userId,
+        restrictionDto,
+      );
+      return newRestriction;
+    } else {
+      const updatedRestriction = await this.updateRestriction(
+        channelId,
+        userId,
+        restrictionDto,
+      );
+      return updatedRestriction;
     }
-
-    if (updateRestrictionDto typeof(UpdateRestrictionDto))
-    {}
-    
-    const updatedRestriction = await this.updateRestriction(
-      channelId,
-      userId,
-      updateRestrictionDto,
-    );
-    return updatedRestriction;
   }
 
-  private async userIsOnChannel(channelId: number, userId: number)
-  {
+  private async userIsOnChannel(channelId: number, userId: number) {
     const user = await this.prisma.channelMember.findUnique({
-      where: { userId_channelId: { userId, channelId }}
-    })
-    return !user ? false : true
+      where: { userId_channelId: { userId, channelId } },
+    });
+    return !user ? false : true;
   }
 
   async liberateUser(
@@ -166,18 +149,37 @@ export class AdminService {
   }
 
   private async createRestriction(
-    channelId: number,
-    userId: number,
+    restrictedChannelId: number,
+    restrictedUserId: number,
     createRestrictionDto: CreateRestrictionDto,
   ): Promise<ChannelUserRestriction> {
     const newRestriction = await this.prisma.channelUserRestriction.create({
       data: {
-        restrictedUserId: userId,
-        restrictedChannelId: channelId,
+        restrictedChannelId,
+        restrictedUserId,
         ...createRestrictionDto,
       },
     });
     return newRestriction;
+  }
+
+  private async updateRestriction(
+    restrictedChannelId: number,
+    restrictedUserId: number,
+    updateRestrictionDto: UpdateRestrictionDto,
+  ): Promise<ChannelUserRestriction> {
+    const updatedRestriction = await this.prisma.channelUserRestriction.update({
+      where: {
+        restrictedUserId_restrictedChannelId: {
+          restrictedUserId,
+          restrictedChannelId,
+        },
+      },
+      data: {
+        ...updateRestrictionDto,
+      },
+    });
+    return updatedRestriction;
   }
 
   async kickUser(
