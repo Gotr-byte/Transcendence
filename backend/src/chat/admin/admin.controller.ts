@@ -6,9 +6,10 @@ import {
   Delete,
   UseGuards,
   Get,
+  Patch,
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
-import { ShowUsersRolesRestrictions } from './dto';
+import { CreateRestrictionDto, ShowUsersRolesRestrictions, UpdateRestrictionDto } from './dto';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { ChannelUserRestriction, User } from '@prisma/client';
@@ -30,13 +31,16 @@ export class AdminController {
     return users;
   }
 
-  @Get('id/:channelId/restricted')
-  async getRestrictedUsers(
-    @Param('channelId') channelId: string,
-    @AuthUser() admin: User,  
-  ) {
-    const users = await this.adminService.getRestrictedUsers(+channelId, admin.id)
-  }
+  // @Get('id/:channelId/restricted')
+  // async getMutedUsers(
+  //   @Param('channelId') channelId: string,
+  //   @AuthUser() admin: User,
+  // ) {
+  //   const users = await this.adminService.getRestrictedUsers(
+  //     +channelId,
+  //     admin.id,
+  //   );
+  // }
 
   @Post('id/:channelId/:username/add')
   async addUserToChannel(
@@ -52,32 +56,20 @@ export class AdminController {
     return `${admin.username} added ${username} to channelId: '${channelId}'`;
   }
 
-  @Post('id/:channelId/:username/mute')
-  async muteUser(
+  @Post('id/:channelId/:username/restrict')
+  async restrictUser(
     @Param('channelId') channelId: string,
     @Param('username') username: string,
     @AuthUser() admin: User,
+    @Body() createRestrictionDto: CreateRestrictionDto,
   ): Promise<ChannelUserRestriction> {
-    const newMute = await this.adminService.muteUser(
+    const newRestriction = await this.adminService.restrictUser(
       +channelId,
       username,
       admin.id,
+      createRestrictionDto,
     );
-    return newMute;
-  }
-
-  @Post('id/:channelId/:username/ban')
-  async banUser(
-    @Param('channelId') channelId: string,
-    @Param('username') username: string,
-    @AuthUser() admin: User,
-  ): Promise<ChannelUserRestriction> {
-    const newBan = await this.adminService.banUser(
-      +channelId,
-      username,
-      admin.id,
-    );
-    return newBan
+    return newRestriction;
   }
 
   @Delete('id/:channelId/:username/liberate')
@@ -86,12 +78,8 @@ export class AdminController {
     @Param('username') username: string,
     @AuthUser() admin: User,
   ): Promise<string> {
-    await this.adminService.liberateUser(
-      +channelId,
-      username,
-      admin.id,
-    );
-    return `User '${username}' is no longer restricted this channel (ID:'${channelId}'), he was liberated by '${admin.username}'`
+    await this.adminService.liberateUser(+channelId, username, admin.id);
+    return `User '${username}' is no longer restricted this channel (ID:'${channelId}'), he was liberated by '${admin.username}'`;
   }
 
   @Delete('id/:channelId/:username/kick')

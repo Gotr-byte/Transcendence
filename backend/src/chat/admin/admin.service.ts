@@ -13,7 +13,7 @@ import {
   ChannelUserRestrictionTypes,
   User,
 } from '@prisma/client';
-import { ShowUsersRolesRestrictions } from './dto';
+import { CreateRestrictionDto, ShowUsersRolesRestrictions } from './dto';
 import { extendedChannel } from './types';
 import { UserService } from 'src/user/user.service';
 
@@ -37,7 +37,7 @@ export class AdminService {
 
     const usersProps = await Promise.all(
       channelUsers.map(async (user) => {
-        const channel = await this.getUsersRolesRestrictions(
+        const channel = await this.getUserRoleRestriction(
           channelId,
           user.id,
         );
@@ -48,10 +48,22 @@ export class AdminService {
     return ShowUsersRolesRestrictions.from(usersProps);
   }
 
-  async getRestrictedUsers(channelId: number, adminId: number) {
-    await this.ensureUserIsAdmin(channelId, adminId);
-      
-  }
+//   async getRestrictedUsers(channelId: number, adminId: number) {
+//     await this.ensureUserIsAdmin(channelId, adminId);
+
+//     const allRestrictions = await this.prisma.channelUserRestriction.findMany({
+//       where: { restrictedChannelId: channelId },
+//     });
+
+// // const usersProps = await Promise.all(
+// //   allRestrictions.map(async (restriction) => {
+// //     const user = await this.getRestrictedUserProps(
+// //       restriction.restrictedUserId,
+// //     );
+// //     return { restriction, user };
+// //   }),
+// // );
+// // }
 
   async addUserToChannel(
     channelId: number,
@@ -73,29 +85,26 @@ export class AdminService {
     return newMembership;
   }
 
-  async muteUser(
+  async restrictUser(
     channelId: number,
     username: string,
     adminId: number,
-  ): Promise<ChannelUserRestriction> {
-    const userId = await this.validateAdminAction(channelId, username, adminId);
-    
-    const mute = ChannelUserRestrictionTypes.MUTED;
-    const newRestriction = await this.restrictUser(channelId, userId, mute);
-    return newRestriction;
-  }
-
-  async banUser(
-    channelId: number,
-    username: string,
-    adminId: number,
+    createRestrictionDto: CreateRestrictionDto,
   ): Promise<ChannelUserRestriction> {
     const userId = await this.validateAdminAction(channelId, username, adminId);
 
-    await this.sharedService.deleteUserFromChannel(channelId, userId);
-    const ban = ChannelUserRestrictionTypes.BANNED;
+    if (
+      createRestrictionDto.restrictionType ===
+      ChannelUserRestrictionTypes.BANNED
+    ) {
+      await this.sharedService.deleteUserFromChannel(channelId, userId);
+    }
 
-    const newRestriction = await this.restrictUser(channelId, userId, ban);
+    const newRestriction = await this.createRestriction(
+      channelId,
+      userId,
+      createRestrictionDto,
+    );
     return newRestriction;
   }
 
@@ -108,20 +117,25 @@ export class AdminService {
     const user = await this.userService.getUserByName(username);
 
     this.prisma.channelUserRestriction.delete({
-      where: { restrictedUserId_restrictedChannelId: { restrictedUserId: user.id, restrictedChannelId: channelId} }
-    })
+      where: {
+        restrictedUserId_restrictedChannelId: {
+          restrictedUserId: user.id,
+          restrictedChannelId: channelId,
+        },
+      },
+    });
   }
 
-  private async restrictUser(
+  private async createRestriction(
     channelId: number,
     userId: number,
-    restrictionType: ChannelUserRestrictionTypes
+    createRestrictionDto: CreateRestrictionDto,
   ): Promise<ChannelUserRestriction> {
     const newRestriction = await this.prisma.channelUserRestriction.create({
       data: {
         restrictedUserId: userId,
         restrictedChannelId: channelId,
-        restrictionType,
+        ...createRestrictionDto,
       },
     });
     return newRestriction;
@@ -136,7 +150,6 @@ export class AdminService {
 
     await this.sharedService.deleteUserFromChannel(channelId, userId);
   }
-
 
   private async verifyAccessPermission(
     channelId: number,
@@ -160,7 +173,7 @@ export class AdminService {
   private async validateAdminAction(
     channelId: number,
     username: string,
-    adminId: number
+    adminId: number,
   ): Promise<number> {
     await this.ensureUserIsAdmin(channelId, adminId);
     const user = await this.userService.getUserByName(username);
@@ -168,7 +181,6 @@ export class AdminService {
     await this.ensureUserIsMember(channelId, user.id);
     return user.id;
   }
-  
 
   private async ensureUserIsAdmin(
     channelId: number,
@@ -186,24 +198,33 @@ export class AdminService {
       );
   }
 
-  private async ensureUserIsNotCreator(channelId: number, userId: number): Promise<void> {
+  private async ensureUserIsNotCreator(
+    channelId: number,
+    userId: number,
+  ): Promise<void> {
     const channel = await this.prisma.channel.findUnique({
-      where: { id: channelId, creatorId: userId }
+      where: { id: channelId, creatorId: userId },
     });
     if (channel)
-      throw new BadRequestException(`User with id: '${userId}' the creator of this channel (ID: ${channelId})`)
+      throw new BadRequestException(
+        `User with id: '${userId}' the creator of this channel (ID: ${channelId})`,
+      );
   }
 
-  private async ensureUserIsMember(channelId: number, userId: number): Promise<void> {
+  private async ensureUserIsMember(
+    channelId: number,
+    userId: number,
+  ): Promise<void> {
     const channel = await this.prisma.channel.findUnique({
       where: { id: channelId, channelUsers: { some: { userId } } },
     });
     if (!channel)
-      throw new BadRequestException(`User with id: '${userId}' is not a member of this channel (ID: ${channelId})`)
+      throw new BadRequestException(
+        `User with id: '${userId}' is not a member of this channel (ID: ${channelId})`,
+      );
   }
 
-
-  private async getUsersRolesRestrictions(
+  private async getUserRoleRestriction(
     channelId: number,
     userId: number,
   ): Promise<extendedChannel> {
