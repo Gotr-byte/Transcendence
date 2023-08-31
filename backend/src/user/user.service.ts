@@ -75,4 +75,9 @@ export class UserService {
     });
     return newUser;
   }
+
+  async getUserAchievements(id: number): Promise<string[]> {
+    const user = await this.getUserById(id);
+    return user.achievements;
+  }
 }

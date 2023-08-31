@@ -71,4 +71,13 @@ export class UserController {
     const updatedUser = await this.userService.updateUser(user, dto);
     return updatedUser;
   }
+
+  @Get(':username/achievements')
+  @ApiOperation({ summary: "Get user's achievements" })
+  async getUserAchievements(
+    @Param('username') username: string,
+  ): Promise<string[]> {
+    const user = await this.userService.getUserByName(username);
+    return user.achievements;
+  }
 }
