@@ -20,6 +20,7 @@ interface User {
 export const Navbar = () => {
   const [user, setUser] = useState<User | null>(null); // Note the change here
   const [showUser, setShowUser] = useState(false); // Renamed for clarity
+  // const [avatar, setAvatar] = useState<String | null>('/img/mario.png');
 
   const fetchUserData = () => {
     fetch("http://localhost:4000/profile", {
@@ -33,6 +34,20 @@ export const Navbar = () => {
         setShowUser(true);
       });
   };
+// 
+  // const fetchUserData = () => {
+    // fetch("http://localhost:4000/profile", {
+      // credentials: "include",
+    // })
+      // .then((response) => {
+        // return response.json();
+      // })
+      // .then((data) => {
+        // setUser(data);
+        // setShowUser(true);
+      // });
+  // };
+
 
   useEffect(() => {
     fetchUserData();
@@ -53,13 +68,15 @@ export const Navbar = () => {
         >
           Login
         </button>
-        <Avatar name="mario" src="/img/mario.png" background="purple">
+        {showUser && user?.username && (
+        <Avatar name="mario" src={user.avatar} background="purple">
           <AvatarBadge width="1.3em" bg="teal.500">
             <Text fontSize="xs" color="white">
               10
             </Text>
           </AvatarBadge>
         </Avatar>
+)}
 
         {showUser && user?.username && (
           <Text>{user.username}</Text> // Note the change here
