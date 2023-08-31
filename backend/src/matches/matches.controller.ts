@@ -43,4 +43,18 @@ export class matchesController {
         @Body() dto: CreateMatchDto): Promise<ShowAnyMatchDto> {
         return await this.matchesService.createMatch(dto);
     }
+
+    // Delete a match
+    @Patch('delete/:id')
+    @ApiOperation({ summary: 'Delete a match' })
+    async deleteMatch(@Param('id') id: number): Promise<ShowAnyMatchDto> {
+        return await this.matchesService.deleteMatch(id);
+    }
+
+    // Create a match where one user disconnected
+    @Patch('disconnect/:id')
+    @ApiOperation({ summary: 'Create a match where one user disconnected' })
+    async disconnectMatch(@Body() dto: CreateMatchDto): Promise<ShowAnyMatchDto> {
+        return await this.matchesService.createDisconnectMatch(dto);
+    }
 }
