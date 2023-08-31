@@ -1,12 +1,21 @@
-import { Controller, Get, Patch, Req, Res, UseGuards } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { Response } from 'express';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
+import { ChangeUserDto } from './dto';
 
 @UseGuards(AuthenticatedGuard)
-@ApiTags('User-relations: CurrentUser')
+@ApiTags('Profile: CurrentUser')
 @Controller()
 export class CurrentUserController {
   constructor() {}
@@ -23,10 +32,25 @@ export class CurrentUserController {
     response.redirect(`/users/` + user.username);
   }
 
-  // Redirects the PATCH request of the authenticated user to user.controller.updateUser
+  @ApiOperation({
+    summary:
+      'Update logged user profile: username or avatar or both - redirect to users/"LOGGED-USER"',
+  })
+  @ApiBody({
+    type: ChangeUserDto,
+    examples: {
+      example1: {
+        value: {
+          username: 'newUSername',
+          avatar: 'new avatar Path',
+        },
+      },
+    },
+  })
   @Patch('profile')
   async patchCurrentUser(
     @AuthUser() user: User,
+    @Body() body: ChangeUserDto, // Intentionally not used in this function
     @Res() response: Response,
   ): Promise<void> {
     response.redirect(`/users/` + user.username);

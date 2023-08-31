@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ChannelMember } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
@@ -34,5 +34,15 @@ export class SharedService {
     await this.prisma.channelMember.delete({
       where: { userId_channelId: { userId, channelId } },
     });
+  }
+
+  async ensureUserIsMember(channelId: number, userId: number): Promise<void> {
+    const channel = await this.prisma.channel.findUnique({
+      where: { id: channelId, channelUsers: { some: { userId } } },
+    });
+    if (!channel)
+      throw new BadRequestException(
+        `User with id: '${userId}' is not a member of this channel (ID: ${channelId})`,
+      );
   }
 }

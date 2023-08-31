@@ -49,12 +49,14 @@ export class ShowAnyUserDto {
   username: string;
   avatar: string;
   isOnline: boolean;
+  inGame: boolean;
   achievements: string[];
 
   constructor(user: User) {
     (this.id = user.id), (this.username = user.username);
     this.isOnline = user.isOnline;
     this.avatar = user.avatar;
+    this.inGame = user.inGame;
   }
 
   static from(user: User): ShowAnyUserDto {
@@ -81,6 +83,7 @@ export class ShowLoggedUserDto {
   username: string;
   avatar: string;
   isOnline: boolean;
+  inGame: boolean;
   is2FaActive: boolean;
   achievements: string[];
 
@@ -88,6 +91,7 @@ export class ShowLoggedUserDto {
     (this.id = user.id), (this.username = user.username);
     this.isOnline = user.isOnline;
     this.avatar = user.avatar;
+    this.inGame = user.inGame;
     this.is2FaActive = user.is2FaActive;
     this.achievements = user.achievements;
   }

@@ -4,7 +4,6 @@ import { User } from '@prisma/client';
 import {
   ChangeUserDto,
   ChangeUserPropsDto,
-  ShowAnyUserDto,
   ShowLoggedUserDto,
   ShowUsersDto,
 } from './dto';

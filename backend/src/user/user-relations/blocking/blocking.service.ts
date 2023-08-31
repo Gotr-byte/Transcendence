@@ -3,7 +3,7 @@ import { Blocked, User } from '@prisma/client';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
-import { BlockedWhereInput } from 'src/user/types';
+import { BlockedWhereInput } from './types';
 import { ShowUsersDto } from 'src/user/dto';
 
 @Injectable()

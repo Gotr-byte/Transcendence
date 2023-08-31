@@ -52,7 +52,7 @@ export class ManagementService {
     if (isChannelProtected) {
       await this.validatePasswordPresence(editChannelDto.password);
       editChannelDto.password = await this.hashPassword(
-        editChannelDto.password,
+        editChannelDto.password!,
       );
     }
 
@@ -69,7 +69,9 @@ export class ManagementService {
     await this.sharedService.removeChannel(channelId);
   }
 
-  private async validatePasswordPresence(password: string): Promise<void> {
+  private async validatePasswordPresence(
+    password: string | undefined,
+  ): Promise<void> {
     if (!password)
       throw new BadRequestException(
         'Password is missing for protected channel',

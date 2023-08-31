@@ -3,7 +3,7 @@ import { User } from '@prisma/client';
 
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserService } from 'src/user/user.service';
-import { FriendRequestWhereInput } from 'src/user/types';
+import { FriendRequestWhereInput } from './types';
 import { ShowUsersDto } from 'src/user/dto';
 
 @Injectable()

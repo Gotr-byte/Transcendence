@@ -11,16 +11,16 @@ datasource db {
 }
 
 model User {
-  id          Int      @id @default(autoincrement())
-  username    String   @unique
-  email       String   @unique //@unique
-  avatar      String   @default("https://avatarfiles.alphacoders.com/183/183501.jpg")
-  createdAt   DateTime @default(now())
-  is2FaActive Boolean  @default(false)
-  is2FaValid  Boolean  @default(false)
-  twoFaSecret String   @default("")
-  isOnline    Boolean  @default(false)
-  inGame      Boolean  @default(false) 
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  email        String   @unique
+  avatar       String   @default("https://avatarfiles.alphacoders.com/183/183501.jpg")
+  createdAt    DateTime @default(now())
+  is2FaActive  Boolean  @default(false)
+  is2FaValid   Boolean  @default(false)
+  twoFaSecret  String   @default("")
+  isOnline     Boolean  @default(false)
+  inGame       Boolean  @default(false)
   achievements String[] @default([""])
 
   createdChannels    Channel[]                @relation
@@ -68,7 +68,7 @@ model Channel {
   channelMessages Message[]                @relation
 
   title       String       @unique
-  password        String?
+  password    String?
   channelType ChannelTypes @default(PUBLIC)
   createdAt   DateTime     @default(now())
 }
@@ -97,7 +97,7 @@ model ChannelUserRestriction {
   restrictedChannel   Channel @relation(fields: [restrictedChannelId], references: [id])
   restrictedChannelId Int
 
-  duration  DateTime?
+  duration        DateTime?
   restrictionType ChannelUserRestrictionTypes
 
   @@unique([restrictedUserId, restrictedChannelId])
