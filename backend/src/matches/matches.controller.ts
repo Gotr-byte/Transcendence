@@ -52,9 +52,9 @@ export class matchesController {
     }
 
     // Create a match where one user disconnected
-    @Patch('disconnect/:id')
-    @ApiOperation({ summary: 'Create a match where one user disconnected' })
-    async disconnectMatch(@Body() dto: CreateMatchDto): Promise<ShowAnyMatchDto> {
-        return await this.matchesService.createDisconnectMatch(dto);
-    }
-}
+//     @Patch('disconnect/:id')
+//     @ApiOperation({ summary: 'Create a match where one user disconnected' })
+//     async disconnectMatch(@Body() dto: CreateMatchDto): Promise<ShowAnyMatchDto> {
+//         return await this.matchesService.createDisconnectMatch(dto);
+//     }
+// }
