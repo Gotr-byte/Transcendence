@@ -35,7 +35,7 @@ const Friends: React.FC = () => {
     };
 
     fetchFriends();
-  }, []);  // Empty dependency array ensures this runs only when the component mounts.
+  }, []);
 
   return (
     <div>

@@ -4,16 +4,11 @@ import {
   Route, 
   RouterProvider 
 } from 'react-router-dom'
-// layouts and pages
 import RootLayout from './layouts/RootLayout'
-// import Dashboard, { tasksLoader } from './pages/Dashboard'
-import Create, {createAction} from './pages/Create'
 import Profile from './pages/Profile'
 import Chat from './pages/Chat'
 import Game from './pages/Game'
-// import AuthFetch from './components/AuthFetch'
 
-// router and routes
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<RootLayout />}>

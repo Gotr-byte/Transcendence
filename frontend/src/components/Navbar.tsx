@@ -18,9 +18,8 @@ interface User {
 }
 
 export const Navbar = () => {
-  const [user, setUser] = useState<User | null>(null); // Note the change here
-  const [showUser, setShowUser] = useState(false); // Renamed for clarity
-  // const [avatar, setAvatar] = useState<String | null>('/img/mario.png');
+  const [user, setUser] = useState<User | null>(null);
+  const [showUser, setShowUser] = useState(false);
 
   const fetchUserData = () => {
     fetch("http://localhost:4000/profile", {
@@ -34,24 +33,10 @@ export const Navbar = () => {
         setShowUser(true);
       });
   };
-// 
-  // const fetchUserData = () => {
-    // fetch("http://localhost:4000/profile", {
-      // credentials: "include",
-    // })
-      // .then((response) => {
-        // return response.json();
-      // })
-      // .then((data) => {
-        // setUser(data);
-        // setShowUser(true);
-      // });
-  // };
-
 
   useEffect(() => {
     fetchUserData();
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
+  }, []);
 
   return (
     <Flex as="nav" p="10x" mb="40px" alignItems="center" gap="10px">
@@ -79,7 +64,7 @@ export const Navbar = () => {
 )}
 
         {showUser && user?.username && (
-          <Text>{user.username}</Text> // Note the change here
+          <Text>{user.username}</Text>
         )}
       </HStack>
     </Flex>

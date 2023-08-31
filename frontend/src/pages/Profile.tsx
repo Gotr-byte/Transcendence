@@ -13,11 +13,10 @@ import SentFriendRequests from "../components/SentFriendRequests";
 import ReceivedFriendRequests from "../components/RecievedFriendRequests";
 
 export default function Profile() {
-  // Initialize state to keep track of userId
 
   return (
     <Tabs mt="40px" p="20px" colorScheme="purple" variant="enclosed">
-      <span>Profile</span>
+      <span>Account</span>
       <TabList>
         <Tab _selected={{ color: "white", bg: "purple.400" }}>Settings</Tab>
         <Tab _selected={{ color: "white", bg: "purple.400" }}>Friends</Tab>

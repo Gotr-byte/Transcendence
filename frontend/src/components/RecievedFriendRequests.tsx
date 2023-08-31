@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AcceptButton from './AcceptButton';
 
-// The blueprint of your user
 interface User {
   id: number;
   username: string;
@@ -9,11 +8,9 @@ interface User {
   avatar: string;
 }
 
-// The dojo for "Received Friend Requests"
 const ReceivedFriendRequests: React.FC = () => {
   const [receivedRequests, setReceivedRequests] = useState<User[]>([]);  // Store received friend requests
 
-  // The ancient technique of API summoning
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -22,7 +19,7 @@ const ReceivedFriendRequests: React.FC = () => {
 		  }); 
         if (response.ok) {
           const data = await response.json();
-          setReceivedRequests(data.users);  // Update the state with fetched data
+          setReceivedRequests(data.users);
         } else {
           throw new Error('Failed to fetch data, young padawan');
         }
@@ -31,10 +28,9 @@ const ReceivedFriendRequests: React.FC = () => {
       }
     };
 
-    fetchData();  // Invoke the ancient technique
+    fetchData();
   }, []);
 
-  // Your dojo's banner
   return (
     <div>
       <h1>Received Friend Requests</h1>

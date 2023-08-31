@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const DeleteFriend: React.FC = () => {
-  const [friendName, setFriendName] = useState(''); // State to hold the name of the friend to delete
+  const [friendName, setFriendName] = useState('');
 
   const handleDelete = async () => {
     if (!friendName) {
@@ -10,7 +10,7 @@ const DeleteFriend: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:4000/friends/${friendName}`, { // Note the dynamic URL
+      const response = await fetch(`http://localhost:4000/friends/${friendName}`, {
         method: 'DELETE',
         credentials: 'include'
       });
@@ -20,7 +20,7 @@ const DeleteFriend: React.FC = () => {
       }
 	  window.location.reload();
       console.log(`Friend ${friendName} successfully deleted`);
-      setFriendName(''); // Reset the input field
+      setFriendName('');
     } catch (error) {
       console.error(`There was a problem deleting the friend ${friendName}`, error);
     }
@@ -28,15 +28,12 @@ const DeleteFriend: React.FC = () => {
 
   return (
     <div>
-      {/* Input field for friend's name */}
       <input 
         type="text"
         placeholder="Friend's name"
         value={friendName}
         onChange={e => setFriendName(e.target.value)}
       />
-
-      {/* Delete button */}
       <button onClick={handleDelete}>Delete Friend</button>
     </div>
   );
