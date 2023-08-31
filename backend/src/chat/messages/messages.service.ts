@@ -47,19 +47,19 @@ export class MessagesService {
 
     const receiving = { channelId };
     const messages = await this.getMessages(receiving, userId);
-    
-    return ShowMessagesDto.from(messages)
+
+    return ShowMessagesDto.from(messages);
   }
 
   async getUserMessages(userId: number, username: string) {
-    const receiver = await this.userService.getUserByName(username);  
+    const receiver = await this.userService.getUserByName(username);
 
-    const receiving = { receiverId: receiver.id }
-    const messages = await this.getMessages(receiving, userId)
-    
-    return ShowMessagesDto.from(messages)
+    const receiving = { receiverId: receiver.id };
+    const messages = await this.getMessages(receiving, userId);
+
+    return ShowMessagesDto.from(messages);
   }
-    
+
   private async ensureUserIsNotRestricted(
     restrictedChannelId: number,
     restrictedUserId: number,
@@ -78,24 +78,27 @@ export class MessagesService {
       );
   }
 
-  private async getMessages(receiving: { receiverId: number } | { channelId: number }, userId: number){
-  const messages = await this.prisma.message.findMany({
-    where: {
-      ...receiving,
-      sender: {
-        NOT: {
-          blockedBy: {
-            some: {
-              blockingUserId: userId,
+  private async getMessages(
+    receiving: { receiverId: number } | { channelId: number },
+    userId: number,
+  ) {
+    const messages = await this.prisma.message.findMany({
+      where: {
+        ...receiving,
+        sender: {
+          NOT: {
+            blockedBy: {
+              some: {
+                blockingUserId: userId,
+              },
             },
           },
         },
       },
-    },
-    include: {
-      sender: true
-    }
-  });
-  return messages;
-}
+      include: {
+        sender: true,
+      },
+    });
+    return messages;
+  }
 }

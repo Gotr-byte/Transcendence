@@ -17,7 +17,7 @@ import { Message, User } from '@prisma/client';
 import { ShowMessagesDto } from './dto/show-messages.dto';
 
 @UseGuards(AuthenticatedGuard)
-@ApiTags('Chat: messages || not working, in progress')
+@ApiTags('Chat: messages || needs testing')
 @Controller('messages')
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
@@ -27,7 +27,10 @@ export class MessagesController {
     summary:
       'Send a message to a channel the user is member in and not muted on',
   })
-  @ApiParam({ name: 'channelId', description: 'ID of the channel to send the message to' })
+  @ApiParam({
+    name: 'channelId',
+    description: 'ID of the channel to send the message to',
+  })
   @ApiBody({
     type: CreateMessageDto,
     examples: {
@@ -53,8 +56,11 @@ export class MessagesController {
 
   @Post('user/:username')
   @Post('channel/:username')
-  @ApiOperation({summary: 'Send a message to a user' })
-  @ApiParam({ name: 'channelId', description: 'ID of the channel to send the message to' })
+  @ApiOperation({ summary: 'Send a message to a user' })
+  @ApiParam({
+    name: 'channelId',
+    description: 'ID of the channel to send the message to',
+  })
   @ApiBody({
     type: CreateMessageDto,
     examples: {
@@ -79,8 +85,14 @@ export class MessagesController {
   }
 
   @Get('channel/:channelId')
-  @ApiOperation({summary: 'Get all messages from a channel, where the logged user is member of, includes usernames, excludes messages from blocked users' })
-  @ApiParam({ name: 'channelId', description: 'ID of the channel to get the messages from' })
+  @ApiOperation({
+    summary:
+      'Get all messages from a channel, where the logged user is member of, includes usernames, excludes messages from blocked users',
+  })
+  @ApiParam({
+    name: 'channelId',
+    description: 'ID of the channel to get the messages from',
+  })
   async GetChannelMessages(
     @Param('channelId') channelId: string,
     @AuthUser() user: User,
@@ -93,8 +105,14 @@ export class MessagesController {
   }
 
   @Get('user/:username')
-  @ApiOperation({summary: 'Get all messages from a user to user chat, includes usernames, excludes messages from blocked users' })
-  @ApiParam({ name: 'channelId', description: 'ID of the channel to get the messages from' })
+  @ApiOperation({
+    summary:
+      'Get all messages from a user to user chat, includes usernames, excludes messages from blocked users',
+  })
+  @ApiParam({
+    name: 'channelId',
+    description: 'ID of the channel to get the messages from',
+  })
   async GetUserMessages(
     @Param('username') username: string,
     @AuthUser() user: User,
