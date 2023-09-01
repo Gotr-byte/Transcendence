@@ -55,11 +55,10 @@ export class MessagesController {
   }
 
   @Post('user/:username')
-  @Post('channel/:username')
   @ApiOperation({ summary: 'Send a message to a user' })
   @ApiParam({
-    name: 'channelId',
-    description: 'ID of the channel to send the message to',
+    name: 'username',
+    description: 'Username to send the message to',
   })
   @ApiBody({
     type: CreateMessageDto,
@@ -110,8 +109,8 @@ export class MessagesController {
       'Get all messages from a user to user chat, includes usernames, excludes messages from blocked users',
   })
   @ApiParam({
-    name: 'channelId',
-    description: 'ID of the channel to get the messages from',
+    name: 'username',
+    description: 'Username to get message history',
   })
   async GetUserMessages(
     @Param('username') username: string,
