@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import AcceptButton from './AcceptButton';
+import DeclineButton from './DeclineButton';
+import {Spacer} from '@chakra-ui/react'
+
 
 interface User {
   id: number;
@@ -44,7 +47,9 @@ const ReceivedFriendRequests: React.FC = () => {
               src={user.avatar}
               alt={`${user.username}'s avatar`}
             />
-			<AcceptButton username={user.username} /> 
+			<AcceptButton username={user.username} />
+      <Spacer/>
+      <DeclineButton username={user.username} />
 			</li>
         ))}
       </ul>
