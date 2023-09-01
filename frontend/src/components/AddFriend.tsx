@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 
 const AddFriend: React.FC = () => {
-  // State to keep track of the username input
   const [username, setUsername] = useState<string>('');
 
-  // Function to handle POST request
   const handleAddFriend = async () => {
     try {
       const response = await fetch(`http://localhost:4000/friends/${username}`, {
@@ -12,8 +10,7 @@ const AddFriend: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'include', // Send cookies if needed
-        // body: JSON.stringify(someData), // Uncomment this line if you need to send a payload
+        credentials: 'include',
       });
 
       if (!response.ok) {
@@ -31,15 +28,12 @@ const AddFriend: React.FC = () => {
 
   return (
     <div>
-      {/* Input field to enter the username */}
       <input 
         type="text" 
         placeholder="Enter friend's username" 
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
-
-      {/* Button to trigger POST request */}
       <button onClick={handleAddFriend}>Add Friend </button>
     </div>
   );

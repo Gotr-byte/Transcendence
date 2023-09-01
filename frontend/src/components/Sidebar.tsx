@@ -8,7 +8,7 @@ export const Sidebar = () => {
 	  <ListItem>
 		<NavLink to="/profile">
 		<ListIcon as={AtSignIcon} color="white" />
-		  Profile
+		  Account
 		</NavLink>
 	  </ListItem>
 	  <ListItem>

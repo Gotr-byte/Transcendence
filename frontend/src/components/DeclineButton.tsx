@@ -1,21 +1,21 @@
 import React from 'react';
 
-interface AcceptButtonProps {
+interface DeclineButtonProps {
   username: string; // The username of the user who sent the friend request
 }
 
-const AcceptButton: React.FC<AcceptButtonProps> = ({ username }) => {
-  const acceptRequest = async () => {
+const DeclineButton: React.FC<DeclineButtonProps> = ({ username }) => {
+  const declineRequest = async () => {
     try {
       const response = await fetch(`http://localhost:4000/friends/${username}`, {
-        method: 'PATCH',
+        method: 'DELETE',
         credentials: "include",
     }); 
 
       if (response.ok) {
-        alert('Friend request accepted.');
+        alert('Friend request declined.');
       } else {
-        throw new Error('Failed to accept friend request.');
+        throw new Error('Failed to declined friend request.');
       }
     } catch (error) {
       console.error('An error occurred:', error);
@@ -24,10 +24,10 @@ const AcceptButton: React.FC<AcceptButtonProps> = ({ username }) => {
   };
 
   return (
-    <button onClick={acceptRequest}>
-      Accept
+    <button onClick={declineRequest}>
+      Decline
     </button>
   );
 };
 
-export default AcceptButton;
+export default DeclineButton;

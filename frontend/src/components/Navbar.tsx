@@ -18,8 +18,8 @@ interface User {
 }
 
 export const Navbar = () => {
-  const [user, setUser] = useState<User | null>(null); // Note the change here
-  const [showUser, setShowUser] = useState(false); // Renamed for clarity
+  const [user, setUser] = useState<User | null>(null);
+  const [showUser, setShowUser] = useState(false);
 
   const fetchUserData = () => {
     fetch("http://localhost:4000/profile", {
@@ -36,7 +36,7 @@ export const Navbar = () => {
 
   useEffect(() => {
     fetchUserData();
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
+  }, []);
 
   return (
     <Flex as="nav" p="10x" mb="40px" alignItems="center" gap="10px">
@@ -53,16 +53,18 @@ export const Navbar = () => {
         >
           Login
         </button>
-        <Avatar name="mario" src="/img/mario.png" background="purple">
+        {showUser && user?.username && (
+        <Avatar name="mario" src={user.avatar} background="purple">
           <AvatarBadge width="1.3em" bg="teal.500">
             <Text fontSize="xs" color="white">
               10
             </Text>
           </AvatarBadge>
         </Avatar>
+)}
 
         {showUser && user?.username && (
-          <Text>{user.username}</Text> // Note the change here
+          <Text>{user.username}</Text>
         )}
       </HStack>
     </Flex>

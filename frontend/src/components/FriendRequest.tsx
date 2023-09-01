@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 interface FriendRequest {
   to: string;
   from: string;
-  status: string; // assuming status could be something like 'pending', 'accepted', etc.
+  status: string;
 }
 
 const SentFriendRequests: React.FC = () => {
@@ -17,7 +17,7 @@ const SentFriendRequests: React.FC = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          credentials: 'include', // Send cookies if needed
+          credentials: 'include',
         });
 
         if (!response.ok) {
@@ -25,7 +25,7 @@ const SentFriendRequests: React.FC = () => {
         }
 
         const data = await response.json();
-        setSentRequests(data); // assuming the data is an array of friend requests
+        setSentRequests(data);
 
       } catch (error) {
         console.error('There was a problem fetching sent friend requests:', error);
@@ -33,7 +33,7 @@ const SentFriendRequests: React.FC = () => {
     };
 
     fetchSentRequests();
-  }, []); // Empty dependency array ensures this runs only once when the component mounts
+  }, []);
 
   return (
     <div>
