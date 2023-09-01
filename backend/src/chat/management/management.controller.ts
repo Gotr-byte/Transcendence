@@ -25,7 +25,6 @@ export class ManagementController {
   @ApiOperation({
     summary: 'Create a new Channel, user is set to creator and admin',
   })
-  @ApiParam({ name: 'channelId', description: 'ID of the channel' })
   @ApiBody({
     type: CreateChannelDto,
     examples: {
