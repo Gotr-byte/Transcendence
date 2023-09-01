@@ -8,7 +8,7 @@ interface User {
 }
 
 const SentFriendRequests: React.FC = () => {
-  const [sentRequests, setSentRequests] = useState<User[]>([]); // Store the list of friends
+  const [sentRequests, setSentRequests] = useState<User[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
