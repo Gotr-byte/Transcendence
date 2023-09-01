@@ -3,7 +3,7 @@ import {
   ChannelUserRestrictionTypes,
   User,
 } from '@prisma/client';
-import { UserWithRolesRestrictions, extendedChannel } from '../types/types';
+import { UserWithRoleRestriction, extendedChannel } from '../types/types';
 
 export class ShowUserRolesRestrictions {
   id: number;
@@ -12,7 +12,7 @@ export class ShowUserRolesRestrictions {
   isOnline: boolean;
   role: ChannelMemberRoles;
   restriction?: ChannelUserRestrictionTypes;
-  //   restrictionDuration?: Date;
+  restrictionDuration?: Date | null;
 
   constructor(user: User, channel: extendedChannel) {
     this.id = user.id;
@@ -21,7 +21,7 @@ export class ShowUserRolesRestrictions {
     this.isOnline = user.isOnline;
     this.role = channel.channelUsers[0].role;
     this.restriction = channel.restrictedUsers?.[0]?.restrictionType;
-    // this.restrictionDuration = channel.restrictedUsers?.[0].restrictedUntil;
+    this.restrictionDuration = channel.restrictedUsers?.[0]?.duration;
   }
 
   static from(user: User, channel: extendedChannel): ShowUserRolesRestrictions {
@@ -33,14 +33,14 @@ export class ShowUsersRolesRestrictions {
   usersNo: number;
   users: ShowUserRolesRestrictions[];
 
-  constructor(users: UserWithRolesRestrictions[]) {
+  constructor(users: UserWithRoleRestriction[]) {
     this.usersNo = users.length;
     this.users = users.map((member) =>
       ShowUserRolesRestrictions.from(member.user, member.channel),
     );
   }
 
-  static from(users: UserWithRolesRestrictions[]): ShowUsersRolesRestrictions {
+  static from(users: UserWithRoleRestriction[]): ShowUsersRolesRestrictions {
     return new ShowUsersRolesRestrictions(users);
   }
 }

@@ -4,7 +4,6 @@ import { User } from '@prisma/client';
 import {
   ChangeUserDto,
   ChangeUserPropsDto,
-  ShowAnyUserDto,
   ShowLoggedUserDto,
   ShowUsersDto,
 } from './dto';
@@ -74,5 +73,10 @@ export class UserService {
       data: { ...details },
     });
     return newUser;
+  }
+
+  async getUserAchievements(id: number): Promise<string[]> {
+    const user = await this.getUserById(id);
+    return user.achievements;
   }
 }

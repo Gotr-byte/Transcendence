@@ -8,7 +8,7 @@ export class ShowUserRoles {
   isOnline: boolean;
   role: ChannelMemberRoles;
 
-  constructor(user: any, role: ChannelMemberRoles) {
+  constructor(user: User, role: ChannelMemberRoles) {
     this.id = user.id;
     this.username = user.username;
     this.avatar = user.avatar;

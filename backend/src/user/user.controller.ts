@@ -20,7 +20,7 @@ import { AuthUser } from 'src/auth/auth.decorator';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthenticatedGuard)
-@ApiTags('User')
+@ApiTags('Users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -70,5 +70,14 @@ export class UserController {
       );
     const updatedUser = await this.userService.updateUser(user, dto);
     return updatedUser;
+  }
+
+  @Get(':username/achievements')
+  @ApiOperation({ summary: "Get user's achievements" })
+  async getUserAchievements(
+    @Param('username') username: string,
+  ): Promise<string[]> {
+    const user = await this.userService.getUserByName(username);
+    return user.achievements;
   }
 }
