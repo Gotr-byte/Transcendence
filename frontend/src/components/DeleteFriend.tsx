@@ -30,7 +30,7 @@ const DeleteFriend: React.FC = () => {
     <div>
       <input 
         type="text"
-        placeholder="Friend's name"
+        placeholder="Enter friend's username"
         value={friendName}
         onChange={e => setFriendName(e.target.value)}
       />

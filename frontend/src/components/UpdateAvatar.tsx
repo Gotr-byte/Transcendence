@@ -1,16 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 
-interface UserPayload {
-  username: string;
+interface AvatarPayload {
+  avatar: string;
 }
 
-const UpdateUser: React.FC = () => {
-  const [username, setName] = useState<string>("");
+const UpdateAvatar: React.FC = () => {
+  const [avatar, setAvatar] = useState<string>("");
 
   const handleUpdate = async () => {
     try {
-      const payload: UserPayload = {
-        username,
+      const payload: AvatarPayload = {
+        avatar,
       };
 
       const response = await fetch(`http://localhost:4000/profile`, {
@@ -37,15 +37,15 @@ const UpdateUser: React.FC = () => {
 
   return (
     <div>
-        <input
-          type="text"
-          placeholder="Enter username"
-          value={username}
-          onChange={(e) => setName(e.target.value)}
-        />
-      <button onClick={handleUpdate}>Update username</button>
+      <input
+        type="text"
+        placeholder="Enter avatar URL"
+        value={avatar}
+        onChange={(e) => setAvatar(e.target.value)}
+      />
+      <button onClick={handleUpdate}>Update avatar</button>
     </div>
   );
 };
 
-export default UpdateUser;
+export default UpdateAvatar;

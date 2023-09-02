@@ -11,6 +11,7 @@ import DeleteFriend from "../components/DeleteFriend";
 import AddFriend from "../components/AddFriend"
 import SentFriendRequests from "../components/SentFriendRequests";
 import ReceivedFriendRequests from "../components/RecievedFriendRequests";
+import UpdateAvatar from "../components/UpdateAvatar";
 
 export default function Profile() {
 
@@ -26,6 +27,7 @@ export default function Profile() {
       <TabPanels>
         <TabPanel>  
           <UpdateUser />
+          <UpdateAvatar />
           <AddFriend/>
           <DeleteFriend/>
         </TabPanel>
