@@ -1,4 +1,4 @@
-import React, { useState } from 'react'; // Explicitly imported React and useState
+import { useState } from 'react'; // Explicitly imported React and useState
 import {
   Box,
   Input,
@@ -9,9 +9,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 import ChatUsers from "./ChatUsers";
+import ChannelsMember from './ChannelsMember';
 
 // Separated rooms by membership
-const joinedChatRooms = ['General', 'Tech', 'Random'];
 const availableChatRooms = ['Gaming', 'Movies', 'Sports'];
 
 const ChatUI: React.FC = () => {
@@ -29,11 +29,7 @@ const ChatUI: React.FC = () => {
         >
           <Text fontSize="xl" p="4">Chat Rooms</Text>
           <Text fontSize="md" p="4" fontWeight="bold">Rooms You've Joined</Text>
-          <List spacing={3}>
-            {joinedChatRooms.map((room, index) => (
-              <ListItem key={index}>{room}</ListItem>
-            ))}
-          </List>
+          <ChannelsMember/>
           <Text fontSize="md" p="4" fontWeight="bold">Available Rooms</Text>
           <List spacing={3}>
             {availableChatRooms.map((room, index) => (
