@@ -12,9 +12,6 @@ import ChatUsers from "./ChatUsers";
 import ChannelsMember from './ChannelsMember';
 import ChannelsAvailable from './ChannelsAvailable';
 
-// Separated rooms by membership
-// const availableChatRooms = ['Gaming', 'Movies', 'Sports'];
-
 const ChatUI: React.FC = () => {
   const [message, setMessage] = useState<string>("");
 
