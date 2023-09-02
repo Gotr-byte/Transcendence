@@ -10,9 +10,10 @@ import {
 } from "@chakra-ui/react";
 import ChatUsers from "./ChatUsers";
 import ChannelsMember from './ChannelsMember';
+import ChannelsAvailable from './ChannelsAvailable';
 
 // Separated rooms by membership
-const availableChatRooms = ['Gaming', 'Movies', 'Sports'];
+// const availableChatRooms = ['Gaming', 'Movies', 'Sports'];
 
 const ChatUI: React.FC = () => {
   const [message, setMessage] = useState<string>("");
@@ -31,11 +32,7 @@ const ChatUI: React.FC = () => {
           <Text fontSize="md" p="4" fontWeight="bold">Rooms You've Joined</Text>
           <ChannelsMember/>
           <Text fontSize="md" p="4" fontWeight="bold">Available Rooms</Text>
-          <List spacing={3}>
-            {availableChatRooms.map((room, index) => (
-              <ListItem key={index}>{room}</ListItem>
-            ))}
-          </List>
+          <ChannelsAvailable/>
         </Box>
 
         <Grid templateColumns="3fr 1fr" flex="1" overflowY="hidden">

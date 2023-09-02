@@ -46,13 +46,10 @@ export const Navbar = () => {
       <Spacer />
 
       <HStack spacing="10px">
-        <button
-          onClick={() =>
-            (window.location.href = "http://localhost:4000/auth/42/login")
-          }
-        >
-          Login
-        </button>
+      {showUser && user?.username && (
+   <Text>{user.username}</Text>
+ )}
+       
         {showUser && user?.username && (
         <Avatar name="mario" src={user.avatar} background="purple">
           <AvatarBadge width="1.3em" bg="teal.500">
@@ -63,9 +60,13 @@ export const Navbar = () => {
         </Avatar>
 )}
 
-        {showUser && user?.username && (
-          <Text>{user.username}</Text>
-        )}
+<button
+          onClick={() =>
+            (window.location.href = "http://localhost:4000/auth/42/login")
+          }
+        >
+          Login
+        </button>
       </HStack>
     </Flex>
   );
