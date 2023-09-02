@@ -21,7 +21,7 @@ const ChatUsers: React.FC = () => {
   useEffect(() => {
     const fetchChatUsers = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/chat/admin/id/4/users`, {
+        const response = await fetch(`http://localhost:4000/chat/admin/id/5/restricted`, {
           credentials: 'include',
         });
 
