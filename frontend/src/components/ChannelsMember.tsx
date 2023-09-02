@@ -1,6 +1,6 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-type ChannelType = 'PUBLIC' | 'PROTECTED' | 'PRIVATE'; // Add more roles here
+type ChannelType = 'PUBLIC' | 'PROTECTED' | 'PRIVATE'; 
 
 interface Channel {
   id: number;
@@ -14,8 +14,12 @@ interface Channels {
   channels: Channel[];
 }
 
-const ChannelsMember: React.FC = () => {
-  const [channels, setChannels] = useState<Channels>({ channelsNo: 1, channels: [] });
+interface ChannelsMemberProps {
+  onChangeRoom: (roomId: number) => void;
+}
+
+const ChannelsMember: React.FC<ChannelsMemberProps> = ({ onChangeRoom }) => {
+  const [channels, setChannels] = useState<Channels>({ channelsNo: 0, channels: [] });
 
   useEffect(() => {
     const fetchChannels = async () => {
@@ -25,14 +29,13 @@ const ChannelsMember: React.FC = () => {
         });
 
         if (!response.ok) {
-          throw new Error('Failed to fetch users');
+          throw new Error('Failed to fetch channels');
         }
 
-        const data: Channels = await response.json();  // Corrected from UserData to UsersData
+        const data: Channels = await response.json();
         setChannels(data);
-
       } catch (error) {
-        console.error('Error fetching users:', error);  // Corrected the message
+        console.error('Error fetching channels:', error);
       }
     };
 
@@ -45,7 +48,9 @@ const ChannelsMember: React.FC = () => {
         <ul>
           {channels.channels.map((channel) => (
             <li key={channel.id}>
-              {channel.title}
+              <button onClick={() => onChangeRoom(channel.id)}>
+                {channel.title}
+              </button>
             </li>
           ))}
         </ul>

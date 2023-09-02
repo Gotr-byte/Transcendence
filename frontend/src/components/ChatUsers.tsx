@@ -15,13 +15,21 @@ interface UsersData {
   users: User[];
 }
 
-const ChatUsers: React.FC = () => {
+interface ChatUsersProps {
+  currentRoomId: number | null;  // New prop
+}
+
+const ChatUsers: React.FC<ChatUsersProps> = ({ currentRoomId }) => { // New prop
   const [chatUsers, setChatUsers] = useState<UsersData>({ usersNo: 0, users: [] });
 
   useEffect(() => {
     const fetchChatUsers = async () => {
+      if (!currentRoomId) {  // New check
+        return;
+      }
+
       try {
-        const response = await fetch(`http://localhost:4000/chat/admin/id/4/users`, {
+        const response = await fetch(`http://localhost:4000/chat/admin/id/${currentRoomId}/users`, {  // Dynamic URL
           credentials: 'include',
         });
 
@@ -29,20 +37,20 @@ const ChatUsers: React.FC = () => {
           throw new Error('Failed to fetch users');
         }
 
-        const data: UsersData = await response.json();  // Corrected from UserData to UsersData
+        const data: UsersData = await response.json();
         setChatUsers(data);
 
       } catch (error) {
-        console.error('Error fetching users:', error);  // Corrected the message
+        console.error('Error fetching users:', error);
       }
     };
 
     fetchChatUsers();
-  }, []);
+  }, [currentRoomId]);  // Dependency updated
 
   return (
     <div>
-      <h1>Chat Room Users</h1>
+      <h1>Chat Room Users in Room: {currentRoomId || 'None selected'}</h1>  // Display current room
       {chatUsers.usersNo > 0 ? (
         <ul>
           {chatUsers.users.map((user) => (

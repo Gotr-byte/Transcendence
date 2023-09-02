@@ -1,19 +1,17 @@
-import { useState } from 'react'; // Explicitly imported React and useState
-import {
-  Box,
-  Input,
-  Grid,
-  List,
-  ListItem,
-  Flex,
-  Text,
-} from "@chakra-ui/react";
+import React, { useState } from "react";
+import { Box, Input, Grid, List, ListItem, Flex, Text } from "@chakra-ui/react";
 import ChatUsers from "./ChatUsers";
-import ChannelsMember from './ChannelsMember';
-import ChannelsAvailable from './ChannelsAvailable';
+import ChannelsMember from "./ChannelsMember";
+import ChannelsAvailable from "./ChannelsAvailable";
 
 const ChatUI: React.FC = () => {
   const [message, setMessage] = useState<string>("");
+  const [currentRoomId, setCurrentRoomId] = useState<number | null>(null); // New state
+
+  const handleRoomChange = (roomId: number) => {
+    // New function
+    setCurrentRoomId(roomId);
+  };
 
   return (
     <Flex direction="column" height="100vh" width="100%" overflow="hidden">
@@ -25,11 +23,17 @@ const ChatUI: React.FC = () => {
           overflowY="auto"
           height="calc(100vh - 50px)"
         >
-          <Text fontSize="xl" p="4">Chat Rooms</Text>
-          <Text fontSize="md" p="4" fontWeight="bold">Rooms You've Joined</Text>
-          <ChannelsMember/>
-          <Text fontSize="md" p="4" fontWeight="bold">Available Rooms</Text>
-          <ChannelsAvailable/>
+          <Text fontSize="xl" p="4">
+            Chat Rooms
+          </Text>
+          <Text fontSize="md" p="4" fontWeight="bold">
+            Rooms You've Joined
+          </Text>
+          <ChannelsMember onChangeRoom={handleRoomChange} />
+          <Text fontSize="md" p="4" fontWeight="bold">
+            Available Rooms
+          </Text>
+          <ChannelsAvailable onChangeRoom={handleRoomChange} />
         </Box>
 
         <Grid templateColumns="3fr 1fr" flex="1" overflowY="hidden">
@@ -51,7 +55,7 @@ const ChatUI: React.FC = () => {
             overflowY="scroll"
             height="calc(100vh - 50px)"
           >
-            <ChatUsers />
+            <ChatUsers currentRoomId={currentRoomId} />
           </Box>
         </Grid>
       </Flex>
