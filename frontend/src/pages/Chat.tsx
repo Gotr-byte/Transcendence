@@ -1,5 +1,6 @@
-import {Tab, TabList, TabPanels, TabPanel, Tabs, List, ListItem} from "@chakra-ui/react";
+import {Tab, TabList, TabPanels, TabPanel, Tabs, Spacer} from "@chakra-ui/react";
 import CreateChannel from "../components/CreateChannel";
+import EditChannel from "../components/EditChannel";
 
 export default function Chat() {
   return (
@@ -14,6 +15,8 @@ export default function Chat() {
       <TabPanels>
         <TabPanel>
           <CreateChannel/>
+          <Spacer/>
+          <EditChannel/>
         </TabPanel>
         <TabPanel>
         </TabPanel>
