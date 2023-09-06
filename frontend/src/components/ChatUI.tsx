@@ -9,7 +9,6 @@ const ChatUI: React.FC = () => {
   const [currentRoomId, setCurrentRoomId] = useState<number | null>(null); // New state
 
   const handleRoomChange = (roomId: number) => {
-    // New function
     setCurrentRoomId(roomId);
   };
 
@@ -35,7 +34,6 @@ const ChatUI: React.FC = () => {
           </Text>
           <ChannelsAvailable onChangeRoom={handleRoomChange} />
         </Box>
-
         <Grid templateColumns="3fr 1fr" flex="1" overflowY="hidden">
           <Box
             borderWidth={1}
@@ -66,7 +64,7 @@ const ChatUI: React.FC = () => {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-        <Box as="button" colorScheme="teal">
+        <Box as="button">
           Send
         </Box>
       </Grid>

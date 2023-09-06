@@ -15,11 +15,11 @@ interface UsersData {
   users: User[];
 }
 
-const ChatUsers: React.FC = () => {
-  const [chatUsers, setChatUsers] = useState<UsersData>({ usersNo: 0, users: [] });
+const BannedUsers: React.FC = () => {
+  const [bannedUsers, setBannedUsers] = useState<UsersData>({ usersNo: 0, users: [] });
 
   useEffect(() => {
-    const fetchChatUsers = async () => {
+    const fetchBannedUsers = async () => {
       try {
         const response = await fetch(`http://localhost:4000/chat/admin/id/5/restricted`, {
           credentials: 'include',
@@ -30,22 +30,22 @@ const ChatUsers: React.FC = () => {
         }
 
         const data: UsersData = await response.json();  // Corrected from UserData to UsersData
-        setChatUsers(data);
+        setBannedUsers(data);
 
       } catch (error) {
         console.error('Error fetching users:', error);  // Corrected the message
       }
     };
 
-    fetchChatUsers();
+    fetchBannedUsers();
   }, []);
 
   return (
     <div>
       <h1>Chat Room Users</h1>
-      {chatUsers.usersNo > 0 ? (
+      {bannedUsers.usersNo > 0 ? (
         <ul>
-          {chatUsers.users.map((user) => (
+          {bannedUsers.users.map((user) => (
             <li key={user.id}>
               {user.username} is online: {user.isOnline ? 'Yes' : 'No'}
               <img 
@@ -63,4 +63,4 @@ const ChatUsers: React.FC = () => {
   );
 };
 
-export default ChatUsers;
+export default BannedUsers;

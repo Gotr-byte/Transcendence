@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import LeaveChannelButton from './LeaveChannelButton';
 
 type ChannelType = 'PUBLIC' | 'PROTECTED' | 'PRIVATE'; 
 
@@ -51,6 +52,7 @@ const ChannelsMember: React.FC<ChannelsMemberProps> = ({ onChangeRoom }) => {
               <button onClick={() => onChangeRoom(channel.id)}>
                 {channel.title}
               </button>
+              <LeaveChannelButton channelId={channel.id}/>
             </li>
           ))}
         </ul>

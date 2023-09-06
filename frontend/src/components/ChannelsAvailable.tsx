@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import JoinChannelButton from './JoinChannelButton';
+// import { Spacer } from '@chakra-ui/react';
 
 type ChannelType = 'PUBLIC' | 'PROTECTED' | 'PRIVATE';
 
@@ -51,6 +53,8 @@ const ChannelsAvailable: React.FC<ChannelsAvailableProps> = ({ onChangeRoom }) =
               <button onClick={() => onChangeRoom(channel.id)}>
                 {channel.title}
               </button>
+              <JoinChannelButton channelId={channel.id}/>
+              {/* <Spacer></Spacer> */}
             </li>
           ))}
         </ul>
