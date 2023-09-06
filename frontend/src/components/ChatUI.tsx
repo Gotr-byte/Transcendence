@@ -1,15 +1,65 @@
-import React, { useState } from "react";
-import { Box, Input, Grid, List, ListItem, Flex, Text } from "@chakra-ui/react";
+import React, { useState, KeyboardEvent } from "react";
+import {
+  Box,
+  Input,
+  Grid,
+  List,
+  ListItem,
+  Flex,
+  Text,
+  Button,
+} from "@chakra-ui/react";
 import ChatUsers from "./ChatUsers";
 import ChannelsMember from "./ChannelsMember";
 import ChannelsAvailable from "./ChannelsAvailable";
+import MessageList from "./MessageList";
+import { Tab, TabList, Tabs } from "@chakra-ui/react";
 
 const ChatUI: React.FC = () => {
   const [message, setMessage] = useState<string>("");
-  const [currentRoomId, setCurrentRoomId] = useState<number | null>(null); // New state
+  const [currentRoomId, setCurrentRoomId] = useState<number | null>(null);
 
   const handleRoomChange = (roomId: number) => {
     setCurrentRoomId(roomId);
+  };
+
+  const sendMessage = async () => {
+    if (!message || currentRoomId === null) {
+      return;
+    }
+
+    try {
+      const url = `http://localhost:4000/messages/channel/${currentRoomId}`;
+      const headers: HeadersInit = {
+        Accept: "*/*",
+        "Content-Type": "application/json",
+      };
+      const data = JSON.stringify({
+        content: message,
+      });
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers,
+        body: data,
+        credentials: "include",
+      });
+
+      if (response.ok) {
+        setMessage("");
+        // Add logic to refresh the chat or handle the message in some other way
+      } else {
+        console.error("Failed to send message!", response.status);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  };
+
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      sendMessage();
+    }
   };
 
   return (
@@ -22,6 +72,13 @@ const ChatUI: React.FC = () => {
           overflowY="auto"
           height="calc(100vh - 50px)"
         >
+          <Tabs isFitted variant="enclosed">
+            <TabList mb="1em">
+              <Tab>
+                {currentRoomId ? `Room: ${currentRoomId}` : "No Room Selected"}
+              </Tab>
+            </TabList>
+          </Tabs>
           <Text fontSize="xl" p="4">
             Chat Rooms
           </Text>
@@ -41,12 +98,8 @@ const ChatUI: React.FC = () => {
             overflowY="scroll"
             height="calc(100vh - 50px)"
           >
-            <List spacing={3}>
-              <ListItem>Message 1</ListItem>
-              <ListItem>Message 2</ListItem>
-            </List>
+            <MessageList roomId={currentRoomId} />
           </Box>
-
           <Box
             borderWidth={1}
             borderRadius="0"
@@ -57,16 +110,14 @@ const ChatUI: React.FC = () => {
           </Box>
         </Grid>
       </Flex>
-
       <Grid templateColumns="3fr 1fr" height="50px">
         <Input
           placeholder="Type your message..."
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onKeyPress={handleKeyPress}
         />
-        <Box as="button">
-          Send
-        </Box>
+        <Button onClick={sendMessage}>Send</Button>
       </Grid>
     </Flex>
   );
