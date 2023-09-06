@@ -122,4 +122,13 @@ export class MessagesController {
     );
     return newMessage;
   }
+
+  @Get('chats')
+  @ApiOperation({
+    summary: 'Gets all open user-user chats from the logged in user, newest chat on top',
+  })
+  async GetUserChats(@AuthUser() user: User) {
+    const chats = await this.messagesService.getUserChats(user.id);
+    return chats;
+  }
 }

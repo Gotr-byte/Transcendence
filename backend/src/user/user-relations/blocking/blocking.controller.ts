@@ -47,7 +47,7 @@ export class BlockingController {
     return `User: '${blockUser}' successfully blocked`;
   }
 
-  @Delete(':username')
+  @Delete('user/:username')
   @ApiOperation({ summary: 'Unblock a user by username' })
   @ApiParam({
     name: 'username',

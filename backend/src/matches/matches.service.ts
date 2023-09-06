@@ -27,24 +27,23 @@ export class matchesService {
     return userDtos;
   }
 
-    // Post a match
-    async createMatch( dto: CreateMatchDto): Promise<ShowAnyMatchDto> {
-        const matchBody = CreateMatchDto.toMatch(dto);
-        const result = await this.prisma.match.create({ data: matchBody });
-        return result;
-    }
+  // Post a match
+  async createMatch(dto: CreateMatchDto): Promise<ShowAnyMatchDto> {
+    const matchBody = CreateMatchDto.toMatch(dto);
+    const result = await this.prisma.match.create({ data: matchBody });
+    return result;
+  }
 
-    // Delete a match
-    async deleteMatch(id: number): Promise<ShowAnyMatchDto> {
-        const match = await this.prisma.match.delete({ where: { id } });
-        return match;
-    }
+  // Delete a match
+  async deleteMatch(id: number): Promise<ShowAnyMatchDto> {
+    const match = await this.prisma.match.delete({ where: { id } });
+    return match;
+  }
 
-    // Create a match where one user disconnected
-   // under construction 
-    // async createDisconnectMatch(dto: CreateMatchDto): Promise<ShowAnyMatchDto> {
-    //     const matchBody = CreateMatchDto.toMatch(dto);
-    //     const result = await this.prisma.match.create({ data: matchBody });
-    // }
-    
+  // Create a match where one user disconnected
+  // under construction
+  // async createDisconnectMatch(dto: CreateMatchDto): Promise<ShowAnyMatchDto> {
+  //     const matchBody = CreateMatchDto.toMatch(dto);
+  //     const result = await this.prisma.match.create({ data: matchBody });
+  // }
 }

@@ -106,6 +106,4 @@ export class ChannelController {
     await this.channelService.leaveChannel(+channelId, user.id);
     return `User: '${user.username}' has left channelId: '${channelId}'`;
   }
-
-  
 }

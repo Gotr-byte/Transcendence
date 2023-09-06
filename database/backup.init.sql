@@ -346,9 +346,9 @@ COPY public."Blocked" ("blockedUserId", "blockingUserId") FROM stdin;
 --
 
 COPY public."Channel" (id, "creatorId", title, password, "channelType", "createdAt") FROM stdin;
-1	5	Old Gods Gang	G0ds	PROTECTED	2023-09-05 11:25:45.608
-2	8	Icons	\N	PRIVATE	2023-09-05 11:25:45.608
-3	4	Memes	\N	PUBLIC	2023-09-05 11:25:45.608
+1	5	Old Gods Gang	G0ds	PROTECTED	2023-08-29 15:36:41.306
+2	8	Icons	\N	PRIVATE	2023-08-29 15:36:41.306
+3	4	Memes	\N	PUBLIC	2023-08-29 15:36:41.306
 \.
 
 
@@ -412,16 +412,16 @@ COPY public."FriendRequest" ("senderId", "receiverId", "isAccepted") FROM stdin;
 --
 
 COPY public."Match" (id, started, ended, "homePlayerId", "awayPlayerId", "winnerId", "homeScore", "awayScore") FROM stdin;
-1	2023-09-05 11:25:45.606	2023-09-05 11:25:45.606	4	7	7	15	16
-2	2023-09-05 11:25:45.606	2023-09-05 11:25:45.606	8	3	3	0	9
-3	2023-09-05 11:25:45.606	2023-09-05 11:25:45.606	4	9	9	3	5
-4	2023-09-05 11:25:45.606	2023-09-05 11:25:45.606	10	5	10	17	2
-5	2023-09-05 11:25:45.606	2023-09-05 11:25:45.606	9	8	8	1	12
-6	2023-09-05 11:25:45.606	2023-09-05 11:25:45.606	3	1	3	11	2
-7	2023-09-05 11:25:45.606	2023-09-05 11:25:45.606	9	2	9	14	5
-8	2023-09-05 11:25:45.606	2023-09-05 11:25:45.606	11	2	9	14	5
-9	2023-09-05 11:25:45.606	2023-09-05 11:25:45.606	9	11	9	14	5
-10	2023-09-05 11:25:45.606	2023-09-05 11:25:45.606	11	2	9	14	5
+1	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	4	7	7	15	16
+2	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	8	3	3	0	9
+3	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	4	9	9	3	5
+4	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	10	5	10	17	2
+5	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	9	8	8	1	12
+6	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	3	1	3	11	2
+7	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	9	2	9	14	5
+8	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	11	2	9	14	5
+9	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	9	11	9	14	5
+10	2023-08-29 15:36:41.301	2023-08-29 15:36:41.301	11	2	9	14	5
 \.
 
 
@@ -430,22 +430,6 @@ COPY public."Match" (id, started, ended, "homePlayerId", "awayPlayerId", "winner
 --
 
 COPY public."Message" (id, "senderId", "receiverId", "channelId", content, "createdAt") FROM stdin;
-1	5	\N	1	Hey everyone, how are you doing?	2023-09-05 11:25:45.612
-2	6	\N	1	Did anyone said chips?	2023-09-05 11:25:45.612
-3	3	\N	1	Dont be a funny	2023-09-05 11:25:45.612
-4	7	\N	2	Heeey, the best channel on earth just opened	2023-09-05 11:25:45.612
-5	8	\N	2	Yoyoyooo wahts poppin?	2023-09-05 11:25:45.612
-6	10	\N	2	ROFL	2023-09-05 11:25:45.612
-7	9	\N	2	Helloooo party peeps	2023-09-05 11:25:45.612
-8	1	\N	3	Good evening fellow pong players	2023-09-05 11:25:45.612
-9	2	\N	3	Who is up for a match??	2023-09-05 11:25:45.612
-10	7	\N	3	Lets get this rockin	2023-09-05 11:25:45.612
-11	10	\N	3	Nice weather today, right=?!?!	2023-09-05 11:25:45.612
-12	7	\N	1	Yeeah!	2023-09-05 11:25:45.612
-13	4	\N	3	best channel in town	2023-09-05 11:25:45.612
-14	3	\N	3	Crazy pong game	2023-09-05 11:25:45.612
-15	11	\N	1	GG	2023-09-05 11:25:45.612
-16	11	\N	3	Bye	2023-09-05 11:25:45.612
 \.
 
 
@@ -462,17 +446,17 @@ COPY public."Session" (id, sid, data, "expiresAt") FROM stdin;
 --
 
 COPY public."User" (id, username, email, avatar, "createdAt", "is2FaActive", "is2FaValid", "twoFaSecret", "isOnline", "inGame", achievements) FROM stdin;
-1	John	john@john.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-09-05 11:25:45.599	f	f		f	f	{""}
-2	Arthur	arthur@morgan.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-09-05 11:25:45.599	f	f		f	f	{""}
-3	Morgana	morgana@persona.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-09-05 11:25:45.599	f	f		f	f	{""}
-4	Gladys	gladys@wonder.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-09-05 11:25:45.599	f	f		f	f	{""}
-5	Zardos	zardos@aol.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-09-05 11:25:45.599	f	f		f	f	{""}
-6	Helena	helena@olymp.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-09-05 11:25:45.599	f	f		f	f	{""}
-7	Xena	xena@scream.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-09-05 11:25:45.599	f	f		f	f	{""}
-8	Anakin	anakin@lucasarts.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-09-05 11:25:45.599	f	f		f	f	{""}
-9	RubberDuck	rubrub@rub.ru	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-09-05 11:25:45.599	f	f		f	f	{""}
-10	Asterix	asterix@google.gae	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-09-05 11:25:45.599	f	f		f	f	{""}
-11	LOGGED-IN-USER	iAmLoggedIn@placeholder.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-09-05 11:25:45.599	f	f		f	f	{""}
+1	John	john@john.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+2	Arthur	arthur@morgan.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+3	Morgana	morgana@persona.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+4	Gladys	gladys@wonder.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+5	Zardos	zardos@aol.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+6	Helena	helena@olymp.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+7	Xena	xena@scream.org	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+8	Anakin	anakin@lucasarts.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+9	RubberDuck	rubrub@rub.ru	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+10	Asterix	asterix@google.gae	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
+11	LOGGED-IN-USER	iAmLoggedIn@placeholder.com	https://avatarfiles.alphacoders.com/183/183501.jpg	2023-08-29 15:36:41.292	f	f		f	f	{""}
 \.
 
 
@@ -481,7 +465,7 @@ COPY public."User" (id, username, email, avatar, "createdAt", "is2FaActive", "is
 --
 
 COPY public._prisma_migrations (id, checksum, finished_at, migration_name, logs, rolled_back_at, started_at, applied_steps_count) FROM stdin;
-a6362c81-f2df-4e20-93c9-229aab0ea9ce	49807342ff2ad4ddb7a8eb5dc3cb3019308bb3fd7086b5d406a47f5605a156b6	2023-09-05 11:25:02.558119+00	20230905112502_init	\N	\N	2023-09-05 11:25:02.531948+00	1
+ddadabdf-479b-4056-93a4-cd989b1a963b	49807342ff2ad4ddb7a8eb5dc3cb3019308bb3fd7086b5d406a47f5605a156b6	2023-08-29 15:36:39.004158+00	20230829153638_init	\N	\N	2023-08-29 15:36:38.967088+00	1
 \.
 
 
@@ -503,7 +487,7 @@ SELECT pg_catalog.setval('public."Match_id_seq"', 10, true);
 -- Name: Message_id_seq; Type: SEQUENCE SET; Schema: public; Owner: myuser
 --
 
-SELECT pg_catalog.setval('public."Message_id_seq"', 16, true);
+SELECT pg_catalog.setval('public."Message_id_seq"', 1, false);
 
 
 --

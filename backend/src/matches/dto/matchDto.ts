@@ -1,6 +1,5 @@
 import { Match } from '@prisma/client';
 
-
 // CREATE TABLE public."Match" (
 //     id integer NOT NULL,
 //     started timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -31,24 +30,23 @@ export class ShowAnyMatchDto {
 }
 
 export class CreateMatchDto {
-    started: Date;
-    ended: Date;
-    homePlayerId: number;
-    awayPlayerId: number;
-    winnerId: number;
-    homeScore: number;
-    awayScore: number;
+  started: Date;
+  ended: Date;
+  homePlayerId: number;
+  awayPlayerId: number;
+  winnerId: number;
+  homeScore: number;
+  awayScore: number;
 
-    static toMatch(dto: CreateMatchDto) : Omit<Match, 'id'> {
-        return {
-
-            started: dto.started,
-            ended: dto.ended,
-            homePlayerId: dto.homePlayerId,
-            awayPlayerId: dto.awayPlayerId,
-            winnerId: dto.winnerId,
-            homeScore: dto.homeScore,
-            awayScore: dto.awayScore,
-        };
-    }
+  static toMatch(dto: CreateMatchDto): Omit<Match, 'id'> {
+    return {
+      started: dto.started,
+      ended: dto.ended,
+      homePlayerId: dto.homePlayerId,
+      awayPlayerId: dto.awayPlayerId,
+      winnerId: dto.winnerId,
+      homeScore: dto.homeScore,
+      awayScore: dto.awayScore,
+    };
+  }
 }
