@@ -10,6 +10,7 @@ import CreateChannel from "../components/CreateChannel";
 import { Spacer } from "@chakra-ui/react";
 import EditChannel from "../components/EditChannel";
 import DeleteChannel from "../components/DeleteChannel";
+import BlockUser from "../components/BlockUser";
 
 export default function Profile() {
   return (
@@ -36,6 +37,7 @@ export default function Profile() {
           <EditChannel />
           <Spacer />
           <DeleteChannel />
+          <BlockUser/>
         </TabPanel>
         <TabPanel>
           <Friends />

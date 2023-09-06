@@ -53,7 +53,7 @@ const ChannelsAvailable: React.FC<ChannelsAvailableProps> = ({ onChangeRoom }) =
               <button onClick={() => onChangeRoom(channel.id)}>
                 {channel.title}
               </button>
-              <JoinChannelButton channelId={channel.id}/>
+              <JoinChannelButton channelId={channel.id} channelType={channel.channelType}/>
               {/* <Spacer></Spacer> */}
             </li>
           ))}

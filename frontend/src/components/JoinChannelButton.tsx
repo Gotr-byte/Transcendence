@@ -3,18 +3,28 @@ import { Button } from '@chakra-ui/react';
 
 interface JoinChannelButtonProps {
   channelId: number;
+  channelType: string; // new prop to determine if the channel is protected
 }
 
-const JoinChannelButton: React.FC<JoinChannelButtonProps> = ({ channelId }) => {
+const JoinChannelButton: React.FC<JoinChannelButtonProps> = ({ channelId, channelType }) => {
 
   const joinChannel = async () => {
     try {
-      const password = 'mandatory for PROTECTED channel'; // Replace with the actual password
+      let password: string | null = null;
+      if (channelType === 'PROTECTED') {
+        password = prompt('This channel is protected. Please enter the password:');
+        if (password === null) {
+          // User cancelled the prompt
+          return;
+        }
+      }
+
       const url = `http://localhost:4000/chat/channel/id/${channelId}/join`;
       const headers: HeadersInit = {
         'Accept': '*/*',
         'Content-Type': 'application/json',
       };
+
       const data = JSON.stringify({
         password,
       });
