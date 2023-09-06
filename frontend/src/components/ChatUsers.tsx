@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import AddFriendButton from './AddFriendButton';
 
 type UserRole = 'ADMIN' | 'USER'; // Add more roles here
 
@@ -30,8 +31,6 @@ const ChatUsers: React.FC<ChatUsersProps> = ({ currentRoomId }) => { // New prop
 
       try {
         console.log(currentRoomId);
-        // http://localhost:4000/chat/channel/id/3/users
-        // const response = await fetch(`http://localhost:4000/chat/admin/id/${currentRoomId}/users`, {  // Dynamic URL
         const response = await fetch(`http://localhost:4000/chat/channel/id/${currentRoomId}/users`, {  // Dynamic URL
           credentials: 'include',
         });
@@ -53,7 +52,7 @@ const ChatUsers: React.FC<ChatUsersProps> = ({ currentRoomId }) => { // New prop
 
   return (
     <div>
-      <h1>Chat Room Users in Room: {currentRoomId || 'None selected'}</h1>  // Display current room
+      <h1>Chat Room Users in Room: {currentRoomId || 'None selected'}</h1>
       {chatUsers.usersNo > 0 ? (
         <ul>
           {chatUsers.users.map((user) => (
@@ -64,6 +63,7 @@ const ChatUsers: React.FC<ChatUsersProps> = ({ currentRoomId }) => { // New prop
                 src={user.avatar} 
                 alt={`${user.username}'s avatar`} 
               />
+              <AddFriendButton username={user.username}/>
             </li>
           ))}
         </ul>
