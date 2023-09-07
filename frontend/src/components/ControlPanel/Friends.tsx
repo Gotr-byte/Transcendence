@@ -55,7 +55,7 @@ const Friends: React.FC = () => {
           ))}
         </ul>
       ) : (
-        <p>No friends found.</p>
+        <p>No friends found :(</p>
       )}
     </div>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface AcceptButtonProps {
-  username: string; // The username of the user who sent the friend request
+  username: string;
 }
 
 const AcceptButton: React.FC<AcceptButtonProps> = ({ username }) => {
