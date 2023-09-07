@@ -26,11 +26,20 @@ export const Navbar = () => {
     fetch("http://localhost:4000/profile", {
       credentials: "include",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Not logged in');
+        }
+        return response.json();
+      })
       .then((data) => {
         setUser(data);
         setShowUser(true);
         setIsLoggedIn(true); // Update login status
+      })
+      .catch((error) => {
+        console.error('Fetch error:', error);
+        setIsLoggedIn(false); // Set isLoggedIn to false if the request fails
       });
   };
 
