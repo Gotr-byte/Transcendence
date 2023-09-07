@@ -265,3 +265,26 @@ export const channelMembers = [
   { userId: 11, channelId: 1, role: ChannelMemberRoles.USER },
   { userId: 11, channelId: 3, role: ChannelMemberRoles.ADMIN },
 ];
+
+export const messages = [
+  { senderId: 5, channelId: 1, content: 'Hey everyone, how are you doing?' },
+  { senderId: 6, channelId: 1, content: 'Did anyone said chips?' },
+  { senderId: 3, channelId: 1, content: 'Dont be a funny' },
+  {
+    senderId: 7,
+    channelId: 2,
+    content: 'Heeey, the best channel on earth just opened',
+  },
+  { senderId: 8, channelId: 2, content: 'Yoyoyooo wahts poppin?' },
+  { senderId: 10, channelId: 2, content: 'ROFL' },
+  { senderId: 9, channelId: 2, content: 'Helloooo party peeps' },
+  { senderId: 1, channelId: 3, content: 'Good evening fellow pong players' },
+  { senderId: 2, channelId: 3, content: 'Who is up for a match??' },
+  { senderId: 7, channelId: 3, content: 'Lets get this rockin' },
+  { senderId: 10, channelId: 3, content: 'Nice weather today, right=?!?!' },
+  { senderId: 7, channelId: 1, content: 'Yeeah!' },
+  { senderId: 4, channelId: 3, content: 'best channel in town' },
+  { senderId: 3, channelId: 3, content: 'Crazy pong game' },
+  { senderId: 11, channelId: 1, content: 'GG' },
+  { senderId: 11, channelId: 3, content: 'Bye' },
+];

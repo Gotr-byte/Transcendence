@@ -94,8 +94,8 @@ export class ChannelService {
     userId: number,
     joinChannelDto: JoinChannelDto,
   ): Promise<void> {
+    await this.ensureUserNotMember(channelId, userId);
     const channel = await this.getChannelForJoin(channelId, userId);
-
     await this.verifyJoinChannel(channel, joinChannelDto);
 
     await this.sharedService.addUser({
@@ -196,25 +196,39 @@ export class ChannelService {
     joinChannelDto: JoinChannelDto,
   ): Promise<void> {
     if (channel.channelType === ChannelTypes.PROTECTED) {
-      const channelPassword = joinChannelDto.password ?? '';
+      const channelPassword = channel.password ?? '';
 
       if (!joinChannelDto.password) {
         throw new BadRequestException(
           'No Password provided for Protected Channel',
         );
-      }
-
-      const isValid = await argon.verify(
-        channelPassword,
-        joinChannelDto.password,
-      );
-
-      if (!isValid) {
-        throw new UnauthorizedException('Incorrect password');
+      } else {
+        const isValid = await argon.verify(
+          channelPassword,
+          joinChannelDto.password,
+        );
+        if (!isValid) {
+          throw new UnauthorizedException('Incorrect password');
+        }
       }
     }
     if (channel.channelType === ChannelTypes.PRIVATE) {
       throw new UnauthorizedException('User is trying to Join Private Channel');
     }
+  }
+
+  private async ensureUserNotMember(channelId: number, userId: number) {
+    const isMember = await this.prisma.channelMember.findUnique({
+      where: {
+        userId_channelId: {
+          userId,
+          channelId,
+        },
+      },
+    });
+    if (isMember)
+      throw new BadRequestException(
+        `User with id '${userId}' is already a member of channel (ID:${channelId})`,
+      );
   }
 }

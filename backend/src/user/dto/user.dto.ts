@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  NotContains,
 } from 'class-validator';
 
 export class AddUsersDto {
@@ -18,11 +19,13 @@ export class ChangeUserDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
+  @NotContains(' ')
   username: string;
 
   @IsUrl()
   @IsNotEmpty()
   @IsOptional()
+  @NotContains(' ')
   avatar: string;
 }
 
@@ -41,6 +44,7 @@ export class ChangeUserPropsDto {
 
   @IsString()
   @IsOptional()
+  @NotContains(' ')
   twoFaSecret?: string;
 }
 

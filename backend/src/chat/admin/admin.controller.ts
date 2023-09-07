@@ -14,10 +14,11 @@ import {
   ShowUsersRestrictions,
   ShowUsersRolesRestrictions,
   UpdateRestrictionDto,
+  UpdateRoleDto,
 } from './dto';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { AuthUser } from 'src/auth/auth.decorator';
-import { ChannelUserRestriction, User } from '@prisma/client';
+import { ChannelMember, ChannelUserRestriction, User } from '@prisma/client';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthenticatedGuard)
@@ -137,6 +138,35 @@ export class AdminController {
       username,
       admin.id,
       updateRestrictionDto,
+    );
+    return newRestriction;
+  }
+
+  @Patch('id/:channelId/:username/update-role')
+  @ApiOperation({ summary: 'Update a users role' })
+  @ApiParam({ name: 'channelId', description: 'ID of the channel' })
+  @ApiParam({ name: 'username', description: 'username to restrict' })
+  @ApiBody({
+    type: UpdateRoleDto,
+    examples: {
+      example1: {
+        value: {
+          role: 'MEMBER OR ADMIN',
+        },
+      },
+    },
+  })
+  async updateRole(
+    @Param('channelId') channelId: string,
+    @Param('username') username: string,
+    @AuthUser() admin: User,
+    @Body() updateRole: UpdateRoleDto,
+  ): Promise<ChannelMember> {
+    const newRestriction = await this.adminService.updateRole(
+      +channelId,
+      username,
+      admin.id,
+      updateRole,
     );
     return newRestriction;
   }

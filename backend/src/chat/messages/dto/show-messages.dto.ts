@@ -1,4 +1,3 @@
-import { ChannelMemberRoles, Message } from '@prisma/client';
 import { MessageWithSender } from '../types/types';
 
 export class ShowMessageDto {
@@ -21,10 +20,20 @@ export class ShowMessagesDto {
   messages: ShowMessageDto[];
 
   constructor(messages: MessageWithSender[]) {
-    this.messages = messages.map((message) => ShowMessageDto.from(message));
+    this.messages = messages
+      .sort((a, b) => a.id - b.id)
+      .map((message) => ShowMessageDto.from(message));
   }
 
-  static from(messages: MessageWithSender[]): ShowMessagesDto {
+  static fromChannel(messages: MessageWithSender[]): ShowMessagesDto {
     return new ShowMessagesDto(messages);
+  }
+
+  static fromUser(
+    sentMessages: MessageWithSender[],
+    recievedMessages: MessageWithSender[],
+  ): ShowMessagesDto {
+    const allMessages = [...sentMessages, ...recievedMessages];
+    return new ShowMessagesDto(allMessages);
   }
 }

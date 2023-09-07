@@ -1,13 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { CreateMessageDto } from './dto';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
@@ -121,5 +112,15 @@ export class MessagesController {
       username,
     );
     return newMessage;
+  }
+
+  @Get('chats')
+  @ApiOperation({
+    summary:
+      'Gets all open user-user chats from the logged in user, newest chat on top',
+  })
+  async GetUserChats(@AuthUser() user: User): Promise<string[]> {
+    const chats = await this.messagesService.getUserChats(user.id);
+    return chats;
   }
 }

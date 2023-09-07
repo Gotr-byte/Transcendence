@@ -71,6 +71,8 @@ export class FriendshipsService {
     sendingUser: User,
     invitedName: string,
   ): Promise<void> {
+    if (sendingUser.username === invitedName)
+      throw new BadRequestException('Not possible to befriend yourself');
     const receivingUser = await this.userService.getUserByName(invitedName);
 
     // Check if a friend request already exists between these users

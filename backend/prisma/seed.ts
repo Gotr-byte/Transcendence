@@ -7,6 +7,7 @@ import {
   friendRequests,
   matches,
   users,
+  messages,
 } from './data';
 
 const prisma = new PrismaClient();
@@ -39,6 +40,10 @@ async function main() {
 
     await prisma.channelMember.createMany({
       data: channelMembers,
+    });
+
+    await prisma.message.createMany({
+      data: messages,
     });
 
     console.log('Seed completed.');
