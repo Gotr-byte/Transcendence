@@ -8,7 +8,7 @@ import { Message, User } from '@prisma/client';
 import { ShowMessagesDto } from './dto/show-messages.dto';
 
 @UseGuards(AuthenticatedGuard)
-@ApiTags('Chat: messages || needs testing')
+@ApiTags('Chat: messages')
 @Controller('messages')
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}

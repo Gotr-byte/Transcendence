@@ -16,7 +16,7 @@ import { ChannelDto, ShowChannelDto } from '../shared/dto';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthenticatedGuard)
-@ApiTags('Chat: channel-creator-operations || need more testing')
+@ApiTags('Chat: channel-creator-operations')
 @Controller('chat/management')
 export class ManagementController {
   constructor(private readonly managementService: ManagementService) {}

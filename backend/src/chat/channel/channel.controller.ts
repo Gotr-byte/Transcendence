@@ -16,7 +16,7 @@ import { JoinChannelDto, ShowUsersRoles } from './dto';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthenticatedGuard)
-@ApiTags('Chat: channel-user-operations || need more testing')
+@ApiTags('Chat: channel-user-operations')
 @Controller('chat/channel')
 export class ChannelController {
   constructor(private readonly channelService: ChannelService) {}
