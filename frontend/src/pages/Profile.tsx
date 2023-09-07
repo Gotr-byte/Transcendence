@@ -6,12 +6,13 @@ import AddFriend from "../components/ControlPanel/AddFriend";
 import SentFriendRequests from "../components/ControlPanel/SentFriendRequests";
 import ReceivedFriendRequests from "../components/ControlPanel/RecievedFriendRequests";
 import UpdateAvatar from "../components/ControlPanel/UpdateAvatar";
-import CreateChannel from "../components/CreateChannel";
+import CreateChannel from "../components/ControlPanel/CreateChannel";
 import { Spacer } from "@chakra-ui/react";
 import EditChannel from "../components/ControlPanel/EditChannel";
 import DeleteChannel from "../components/ControlPanel/DeleteChannel";
 import BlockUser from "../components/ControlPanel/BlockUser";
 import PrivateChannelInvitation from "../components/ControlPanel/PrivateChannelInvitation";
+import DesignateAdmin from "../components/ControlPanel/DesignateAdmin";
 
 export default function Profile() {
   return (
@@ -40,6 +41,7 @@ export default function Profile() {
           <DeleteChannel />
           <PrivateChannelInvitation />
           <BlockUser />
+          <DesignateAdmin/>
         </TabPanel>
         <TabPanel>
           <Friends />

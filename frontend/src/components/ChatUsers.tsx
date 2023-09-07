@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import AddFriendButton from './AddFriendButton';
+import UserProfile from './UserProfile';
 
 type UserRole = 'ADMIN' | 'USER'; // Add more roles here
 
@@ -64,6 +65,7 @@ const ChatUsers: React.FC<ChatUsersProps> = ({ currentRoomId }) => { // New prop
                 alt={`${user.username}'s avatar`} 
               />
               <AddFriendButton username={user.username}/>
+              <UserProfile username={user.username}/>
             </li>
           ))}
         </ul>
