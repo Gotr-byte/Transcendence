@@ -1,13 +1,5 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Patch,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { Body, Controller, Get, Patch, Res, UseGuards } from '@nestjs/common';
+import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { Response } from 'express';
 import { AuthUser } from 'src/auth/auth.decorator';
@@ -18,8 +10,6 @@ import { ChangeUserDto } from './dto';
 @ApiTags('Profile: CurrentUser')
 @Controller()
 export class CurrentUserController {
-  constructor() {}
-
   @Get('profile')
   @ApiOperation({
     summary:

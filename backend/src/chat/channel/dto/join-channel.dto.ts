@@ -4,6 +4,6 @@ export class JoinChannelDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  @NotContains(" ")
+  @NotContains(' ')
   password: string;
 }

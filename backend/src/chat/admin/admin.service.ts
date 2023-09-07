@@ -17,6 +17,7 @@ import {
   ShowUsersRestrictions,
   ShowUsersRolesRestrictions,
   UpdateRestrictionDto,
+  UpdateRoleDto,
 } from './dto';
 import { extendedChannel } from './types';
 import { UserService } from 'src/user/user.service';
@@ -123,11 +124,20 @@ export class AdminService {
     }
   }
 
-  private async userIsOnChannel(channelId: number, userId: number) {
-    const user = await this.prisma.channelMember.findUnique({
+  async updateRole(
+    channelId: number,
+    username: string,
+    adminId: number,
+    updateRole: UpdateRoleDto,
+  ): Promise<ChannelMember>{
+    const userId = await this.validateAdminAction(channelId, username, adminId);
+
+    const membership = await this.prisma.channelMember.update({
       where: { userId_channelId: { userId, channelId } },
+      data: { ...updateRole },
     });
-    return !user ? false : true;
+
+    return membership;
   }
 
   async liberateUser(
@@ -146,6 +156,16 @@ export class AdminService {
         },
       },
     });
+  }
+
+  async kickUser(
+    channelId: number,
+    username: string,
+    adminId: number,
+  ): Promise<void> {
+    const userId = await this.validateAdminAction(channelId, username, adminId);
+
+    await this.sharedService.deleteUserFromChannel(channelId, userId);
   }
 
   private async createRestriction(
@@ -180,16 +200,6 @@ export class AdminService {
       },
     });
     return updatedRestriction;
-  }
-
-  async kickUser(
-    channelId: number,
-    username: string,
-    adminId: number,
-  ): Promise<void> {
-    const userId = await this.validateAdminAction(channelId, username, adminId);
-
-    await this.sharedService.deleteUserFromChannel(channelId, userId);
   }
 
   private async verifyAccessPermission(
@@ -269,5 +279,12 @@ export class AdminService {
         'Error when Getting Users Details for Admin',
       );
     return props;
+  }
+
+  private async userIsOnChannel(channelId: number, userId: number) {
+    const user = await this.prisma.channelMember.findUnique({
+      where: { userId_channelId: { userId, channelId } },
+    });
+    return !user ? false : true;
   }
 }

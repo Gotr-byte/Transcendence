@@ -19,13 +19,13 @@ export class ChangeUserDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  @NotContains(" ")
+  @NotContains(' ')
   username: string;
 
   @IsUrl()
   @IsNotEmpty()
   @IsOptional()
-  @NotContains(" ")
+  @NotContains(' ')
   avatar: string;
 }
 
@@ -44,7 +44,7 @@ export class ChangeUserPropsDto {
 
   @IsString()
   @IsOptional()
-  @NotContains(" ")
+  @NotContains(' ')
   twoFaSecret?: string;
 }
 

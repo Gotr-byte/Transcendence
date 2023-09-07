@@ -270,7 +270,11 @@ export const messages = [
   { senderId: 5, channelId: 1, content: 'Hey everyone, how are you doing?' },
   { senderId: 6, channelId: 1, content: 'Did anyone said chips?' },
   { senderId: 3, channelId: 1, content: 'Dont be a funny' },
-  { senderId: 7, channelId: 2, content: 'Heeey, the best channel on earth just opened' },
+  {
+    senderId: 7,
+    channelId: 2,
+    content: 'Heeey, the best channel on earth just opened',
+  },
   { senderId: 8, channelId: 2, content: 'Yoyoyooo wahts poppin?' },
   { senderId: 10, channelId: 2, content: 'ROFL' },
   { senderId: 9, channelId: 2, content: 'Helloooo party peeps' },

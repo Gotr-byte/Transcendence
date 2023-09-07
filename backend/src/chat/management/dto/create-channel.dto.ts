@@ -13,6 +13,6 @@ export class CreateChannelDto {
   @IsNotEmpty()
   @IsString()
   @IsOptional()
-  @NotContains(" ")
+  @NotContains(' ')
   password: string;
 }
