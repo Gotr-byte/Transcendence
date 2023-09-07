@@ -4,7 +4,6 @@ import {
   TabPanels,
   TabPanel,
   Tabs,
-  Spacer,
 } from "@chakra-ui/react";
 import ChatUI from "../components/ChatUI";
 

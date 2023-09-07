@@ -1,16 +1,17 @@
 import { Tab, TabList, TabPanels, TabPanel, Tabs } from "@chakra-ui/react";
-import Friends from "../components/Friends";
-import UpdateUser from "../components/UpdateUser";
-import DeleteFriend from "../components/DeleteFriend";
-import AddFriend from "../components/AddFriend";
-import SentFriendRequests from "../components/SentFriendRequests";
-import ReceivedFriendRequests from "../components/RecievedFriendRequests";
-import UpdateAvatar from "../components/UpdateAvatar";
+import Friends from "../components/ControlPanel/Friends";
+import UpdateUser from "../components/ControlPanel/UpdateUser";
+import DeleteFriend from "../components/ControlPanel/DeleteFriend";
+import AddFriend from "../components/ControlPanel/AddFriend";
+import SentFriendRequests from "../components/ControlPanel/SentFriendRequests";
+import ReceivedFriendRequests from "../components/ControlPanel/RecievedFriendRequests";
+import UpdateAvatar from "../components/ControlPanel/UpdateAvatar";
 import CreateChannel from "../components/CreateChannel";
 import { Spacer } from "@chakra-ui/react";
-import EditChannel from "../components/EditChannel";
-import DeleteChannel from "../components/DeleteChannel";
-import BlockUser from "../components/BlockUser";
+import EditChannel from "../components/ControlPanel/EditChannel";
+import DeleteChannel from "../components/ControlPanel/DeleteChannel";
+import BlockUser from "../components/ControlPanel/BlockUser";
+import PrivateChannelInvitation from "../components/ControlPanel/PrivateChannelInvitation";
 
 export default function Profile() {
   return (
@@ -37,7 +38,8 @@ export default function Profile() {
           <EditChannel />
           <Spacer />
           <DeleteChannel />
-          <BlockUser/>
+          <PrivateChannelInvitation />
+          <BlockUser />
         </TabPanel>
         <TabPanel>
           <Friends />
