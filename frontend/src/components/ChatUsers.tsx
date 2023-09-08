@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import AddFriendButton from './AddFriendButton';
+import UserProfile from './UserProfile';
+import SendDirectMessage from './SendDirectMessage';
 
-type UserRole = 'ADMIN' | 'USER'; // Add more roles here
+type UserRole = 'ADMIN' | 'USER';
 
 interface User {
   id: number;
@@ -17,7 +19,7 @@ interface UsersData {
 }
 
 interface ChatUsersProps {
-  currentRoomId: number | null;  // New prop
+  currentRoomId: number | null;
 }
 
 const ChatUsers: React.FC<ChatUsersProps> = ({ currentRoomId }) => { // New prop
@@ -64,6 +66,8 @@ const ChatUsers: React.FC<ChatUsersProps> = ({ currentRoomId }) => { // New prop
                 alt={`${user.username}'s avatar`} 
               />
               <AddFriendButton username={user.username}/>
+              <UserProfile username={user.username}/>
+              <SendDirectMessage username={user.username}/>
             </li>
           ))}
         </ul>

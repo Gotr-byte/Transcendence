@@ -1,9 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-
-//TODO add guards
-//TODO make pretty
-// Define Channel interface
 interface Channel {
   id: number;  // id is now a number
   title: string;

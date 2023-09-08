@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Avatar,
   Flex,
@@ -66,12 +66,7 @@ export const Navbar = () => {
       <HStack spacing="10px">
         {showUser && user?.username && <Text>{user.username}</Text>}
         {showUser && user?.username && (
-          <Avatar name="mario" src={user.avatar} background="purple">
-            <AvatarBadge width="1.3em" bg="teal.500">
-              <Text fontSize="xs" color="white">
-                10
-              </Text>
-            </AvatarBadge>
+          <Avatar name="avatar" src={user.avatar} background="purple">
           </Avatar>
         )}
         {isLoggedIn ? (
