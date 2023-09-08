@@ -1,34 +1,17 @@
 import { useState, useEffect } from 'react';
+import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton } from "@chakra-ui/react";
+
+interface Message {
+  sender: string;
+  content: string;
+}
 
 export const DirectMessageSenderList = () => {
   const [senders, setSenders] = useState<string[]>([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [messages, setMessages] = useState<Message[]>([]);
 
-  const openChatWindow = (messages: any[]) => {
-    const newWindow = window.open("", "_blank");
-    if (newWindow) {
-      newWindow.document.write(`
-        <div style="font-family: 'Arial, sans-serif'; padding: 16px;">
-          <h2>Chat Window</h2>
-          <div id="messages" style="border: 1px solid #ccc; padding: 16px; height: 200px; overflow-y: scroll;">
-            ${messages.map((msg) => `<p><strong>${msg.sender}:</strong> ${msg.content}</p>`).join('')}
-          </div>
-          <textarea id="messageInput" style="width: 100%; height: 50px; margin-top: 16px;"></textarea>
-          <button id="sendMessageButton" style="margin-top: 8px;">Send</button>
-        </div>
-      `);
-
-      const messageInput = newWindow.document.getElementById('messageInput');
-      const sendMessageButton = newWindow.document.getElementById('sendMessageButton');
-      
-      if (sendMessageButton && messageInput) {
-        sendMessageButton.addEventListener('click', () => {
-          const newMessage = (messageInput as HTMLTextAreaElement).value;
-          console.log('New message:', newMessage);
-          // Here add your function to send the new message to your server
-        });
-      }
-    }
-  };
+  const onClose = () => setIsOpen(false);
 
   const fetchMessages = (sender: string) => {
     fetch(`http://localhost:4000/messages/user/${sender}`, {
@@ -44,9 +27,10 @@ export const DirectMessageSenderList = () => {
         }
         return response.json();
       })
-      .then((data) => {
+      .then((data: { messages: Message[] }) => {
         console.log('Messages from', sender, ':', data.messages);
-        openChatWindow(data.messages);
+        setMessages(data.messages);
+        setIsOpen(true);
       })
       .catch((error) => console.error('Error fetching messages from', sender, ':', error));
   };
@@ -75,6 +59,21 @@ export const DirectMessageSenderList = () => {
           {sender}
         </div>
       ))}
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Chat Window</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <div style={{ border: '1px solid #ccc', padding: '16px', height: '200px', overflowY: 'scroll' }}>
+              {messages.map((msg, index) => (
+                <p key={index}><strong>{msg.sender}:</strong> {msg.content}</p>
+              ))}
+            </div>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </div>
   );
 };
