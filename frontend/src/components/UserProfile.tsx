@@ -38,7 +38,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ username }) => {
 
   return (
     <>
-      <Button onClick={fetchUserProfile}>View Profile</Button>
+      <Button onClick={fetchUserProfile}>P</Button>
 
       {profileData && (
         <Modal isOpen={isOpen} onClose={onClose}>
