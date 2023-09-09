@@ -20,17 +20,14 @@ import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { User } from '@prisma/client';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { ImgurService } from 'src/imgur/imgur.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @UseGuards(AuthenticatedGuard)
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
-  constructor(
-    private readonly userService: UserService,
-    private readonly imgurService: ImgurService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   @Get()
   @ApiOperation({ summary: 'Get all users' })
@@ -80,25 +77,37 @@ export class UserController {
   }
 
   @Patch(':username/upload-avatar')
-  @UseInterceptors(FileInterceptor('image')) // 'image' should match the field name in your form
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: diskStorage({
+        destination: './uploads',
+        filename: (req, file, cb) => {
+          cb(null, `${file.originalname}`);
+        },
+      }),
+    }),
+  )
   async uploadAvatar(
     @Param('username') username: string,
     @AuthUser() user: User,
     @UploadedFile() image: Express.Multer.File, // Access the uploaded file via @UploadedFile()
   ) {
-    if (!image) {
-      return 'No file uploaded';
-    }
-
-    // Your code to handle the uploaded file goes here
-    try {
-      const updatedUser = await this.imgurService.uploadPicture(image, user.id);
-      return updatedUser;
-    } catch (err) {
-      console.error('Error uploading avatar:', err);
-      return 'Error uploading the avatar.';
-    }
+    console.log(image);
+    return 'Success';
   }
+  //   // if (!image) {
+  //   //   return 'No file uploaded';
+  //   // }
+
+  //   // // Your code to handle the uploaded file goes here
+  //   // try {
+  //   //   const updatedUser = await this.imgurService.uploadPicture(image, user.id);
+  //   //   return updatedUser;
+  //   // } catch (err) {
+  //   //   console.error('Error uploading avatar:', err);
+  //   //   return 'Error uploading the avatar.';
+  //   // }
+  // }
 
   @Get(':username/achievements')
   @ApiOperation({ summary: "Get user's achievements" })
