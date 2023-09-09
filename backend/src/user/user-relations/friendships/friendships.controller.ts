@@ -59,7 +59,7 @@ export class FriendshipsController {
     @Param('username') receiver: string,
   ): Promise<string> {
     await this.friendshipsService.sendFriendRequest(user, receiver);
-    return `'${user.username}' sent a friendReqest to '${receiver}' are now friends`;
+    return `'${user.username}' sent a friendReqest to '${receiver}'`;
   }
 
   @Patch(':username')
