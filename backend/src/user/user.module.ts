@@ -6,10 +6,11 @@ import { FriendshipsModule } from './user-relations/friendships/friendships.modu
 import { BlockingModule } from './user-relations/blocking/blocking.module';
 import { CurrentUserController } from './current-user.controller';
 import { AuthModule } from 'src/auth/auth.module';
+import { ImagekitService } from 'src/imagekit/imagekit.service';
 
 @Module({
   imports: [FriendshipsModule, BlockingModule, AuthModule],
-  providers: [UserService],
+  providers: [UserService, ImagekitService],
   controllers: [UserController, CurrentUserController],
 })
 export class UserModule {}

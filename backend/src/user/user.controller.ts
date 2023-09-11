@@ -1,29 +1,18 @@
-import {
-  Body,
-  Controller,
-  ForbiddenException,
-  Get,
-  Param,
-  Patch,
-  UseGuards,
-} from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import {
-  ShowAnyUserDto,
-  ChangeUserDto,
-  ShowLoggedUserDto,
-  ShowUsersDto,
-} from './dto';
+import { ShowAnyUserDto, ShowLoggedUserDto, ShowUsersDto } from './dto';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
-import { User } from '@prisma/client';
-import { AuthUser } from 'src/auth/auth.decorator';
-import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ImagekitService } from 'src/imagekit/imagekit.service';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthenticatedGuard)
 @ApiTags('Users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly imagekit: ImagekitService,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'Get all users' })
@@ -41,35 +30,6 @@ export class UserController {
     return user.username === username
       ? ShowLoggedUserDto.from(user)
       : ShowAnyUserDto.from(user);
-  }
-
-  @Patch(':username')
-  @ApiOperation({ summary: 'Update user profile: username or avatar or both' })
-  @ApiParam({ name: 'username', description: 'Username of the user' })
-  @ApiBody({
-    type: ChangeUserDto,
-    examples: {
-      example1: {
-        value: {
-          username: 'newUSername',
-          avatar: 'new avatar Path',
-        },
-      },
-    },
-  })
-  async updateUser(
-    @Param('username') username: string,
-    @AuthUser() user: User,
-    @Body() dto: ChangeUserDto,
-  ): Promise<ShowLoggedUserDto> {
-    // Validate that the authenticated user is authorized to update the profile
-    console.log(dto);
-    if (user.username != username)
-      throw new ForbiddenException(
-        `User: '${user.username} is not allowed to patch '${username}'`,
-      );
-    const updatedUser = await this.userService.updateUser(user, dto);
-    return updatedUser;
   }
 
   @Get(':username/achievements')

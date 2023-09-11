@@ -129,7 +129,7 @@ export class AdminService {
     username: string,
     adminId: number,
     updateRole: UpdateRoleDto,
-  ): Promise<ChannelMember>{
+  ): Promise<ChannelMember> {
     const userId = await this.validateAdminAction(channelId, username, adminId);
 
     const membership = await this.prisma.channelMember.update({

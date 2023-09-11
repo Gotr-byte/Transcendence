@@ -1,11 +1,11 @@
 import { User } from '@prisma/client';
+import { ApiProperty } from '@nestjs/swagger';
 import {
   IsArray,
   IsBoolean,
   IsNotEmpty,
   IsOptional,
   IsString,
-  IsUrl,
   NotContains,
 } from 'class-validator';
 
@@ -22,11 +22,11 @@ export class ChangeUserDto {
   @NotContains(' ')
   username: string;
 
-  @IsUrl()
-  @IsNotEmpty()
-  @IsOptional()
-  @NotContains(' ')
-  avatar: string;
+  // @IsUrl()
+  // @IsNotEmpty()
+  // @IsOptional()
+  // @NotContains(' ')
+  // avatar: string;
 }
 
 export class ChangeUserPropsDto {
@@ -103,4 +103,9 @@ export class ShowLoggedUserDto {
   static from(user: User): ShowLoggedUserDto {
     return new ShowLoggedUserDto(user);
   }
+}
+
+export class FileUploadDto {
+  @ApiProperty({ type: 'string', format: 'binary' })
+  image: any; // Use 'any' type for binary data
 }

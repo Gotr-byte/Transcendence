@@ -8,6 +8,8 @@ import { PassportModule } from '@nestjs/passport';
 import { TwoFaAuthModule } from './two-fa-auth/two-fa-auth.module';
 import { MatchesModule } from './matches/matches.module';
 import { ChatModule } from './chat/chat.module';
+import { ImagekitService } from './imagekit/imagekit.service';
+import { ImagekitModule } from './imagekit/imagekit.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { ChatModule } from './chat/chat.module';
       isGlobal: true,
     }),
     TwoFaAuthModule,
+    ImagekitModule,
   ],
+  providers: [ImagekitService],
 })
 export class AppModule {}

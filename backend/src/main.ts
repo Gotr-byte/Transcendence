@@ -3,10 +3,10 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './filters/HttpException.filter';
 import { PrismaSessionStore } from '@quixo3/prisma-session-store';
-import * as passport from 'passport';
-import * as session from 'express-session';
 import { PrismaClient } from '@prisma/client';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger/dist';
+import passport from 'passport';
+import session from 'express-session';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
