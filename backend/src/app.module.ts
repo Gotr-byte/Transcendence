@@ -8,7 +8,8 @@ import { PassportModule } from '@nestjs/passport';
 import { TwoFaAuthModule } from './two-fa-auth/two-fa-auth.module';
 import { MatchesModule } from './matches/matches.module';
 import { ChatModule } from './chat/chat.module';
-import { MulterModule } from '@nestjs/platform-express';
+import { ImagekitService } from './imagekit/imagekit.service';
+import { ImagekitModule } from './imagekit/imagekit.module';
 
 @Module({
   imports: [
@@ -16,9 +17,6 @@ import { MulterModule } from '@nestjs/platform-express';
     ChatModule,
     UserModule,
     MatchesModule,
-    MulterModule.register({
-      dest: '../tmp',
-    }),
     PrismaModule,
     PassportModule.register({ session: true }),
     ConfigModule.forRoot({
@@ -26,6 +24,8 @@ import { MulterModule } from '@nestjs/platform-express';
       isGlobal: true,
     }),
     TwoFaAuthModule,
+    ImagekitModule,
   ],
+  providers: [ImagekitService],
 })
 export class AppModule {}

@@ -1,0 +1,14 @@
+paths:
+  /profile/upload-avatar:
+    patch:
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                filename:
+                  type: array
+                  items:
+                    type: string
+                    format: binary

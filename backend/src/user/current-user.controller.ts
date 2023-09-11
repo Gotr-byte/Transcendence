@@ -1,16 +1,34 @@
-import { Body, Controller, Get, Patch, Res, UseGuards } from '@nestjs/common';
-import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  Patch,
+  Res,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { Response } from 'express';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { AuthenticatedGuard } from 'src/auth/guards/Guards';
-import { ChangeUserDto } from './dto';
+import { ChangeUserDto, FileUploadDto, ShowLoggedUserDto } from './dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
+import { ImagekitService } from 'src/imagekit/imagekit.service';
+import { UserService } from './user.service';
 
 @UseGuards(AuthenticatedGuard)
 @ApiTags('Profile: CurrentUser')
-@Controller()
+@Controller('profile')
 export class CurrentUserController {
-  @Get('profile')
+  constructor(
+    private readonly imagekit: ImagekitService,
+    private readonly userService: UserService,
+  ) {}
+
+  @Get()
   @ApiOperation({
     summary:
       'Redirects the authenticated user to their profile page (id, username, isOnline, avatar, is2FaActive)',
@@ -22,27 +40,49 @@ export class CurrentUserController {
     response.redirect(`/users/` + user.username);
   }
 
+  @Patch()
   @ApiOperation({
-    summary:
-      'Update logged user profile: username or avatar or both - redirect to users/"LOGGED-USER"',
+    summary: 'Update logged users username',
   })
   @ApiBody({
     type: ChangeUserDto,
     examples: {
       example1: {
         value: {
-          username: 'newUSername',
-          avatar: 'new avatar Path',
+          username: 'newUsername',
         },
       },
     },
   })
-  @Patch('profile')
-  async patchCurrentUser(
+  async updateUser(
     @AuthUser() user: User,
-    @Body() body: ChangeUserDto, // Intentionally not used in this function
-    @Res() response: Response,
-  ): Promise<void> {
-    response.redirect(`/users/` + user.username);
+    @Body() dto: ChangeUserDto,
+  ): Promise<ShowLoggedUserDto> {
+    const updatedUser = await this.userService.updateUser(user, dto);
+    return updatedUser;
+  }
+
+  @ApiOperation({
+    summary:
+      'Uploads a new avatar profile picture, max size: 10mb, allowed types: jpeg, jpg, bmp and png',
+  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    type: FileUploadDto,
+  })
+  @Patch('upload-avatar')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: memoryStorage(),
+      limits: { fileSize: 1024 * 1024 * 10 },
+    }),
+  )
+  async uploadAvatar(
+    @AuthUser() user: User,
+    @Body() fileUploadDto: FileUploadDto, // Intentionally not used, but implemented to allow uploads through swagger-ui
+    @UploadedFile() image: Express.Multer.File,
+  ): Promise<ShowLoggedUserDto> {
+    const updatedUser = await this.imagekit.uploadAvatar(image, user.id);
+    return ShowLoggedUserDto.from(updatedUser);
   }
 }
