@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 
 const SimpleSwitch: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);

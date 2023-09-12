@@ -53,7 +53,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ username }) => {
                 Avatar: <img src={profileData.avatar} alt="User avatar" width={100} />
               </div>
               <div>In Game: {profileData.inGame ? "Yes" : "No"}</div>
-              {/* Add other fields similarly */}
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="blue" mr={3} onClick={onClose}>
