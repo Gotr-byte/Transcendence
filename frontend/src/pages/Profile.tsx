@@ -13,6 +13,7 @@ import DeleteChannel from "../components/ControlPanel/DeleteChannel";
 import BlockUser from "../components/ControlPanel/BlockUser";
 import PrivateChannelInvitation from "../components/ControlPanel/PrivateChannelInvitation";
 import DesignateAdmin from "../components/ControlPanel/DesignateAdmin";
+import FileUpload from "../components/ControlPanel/FileUpload";
 
 export default function Profile() {
   return (
@@ -32,6 +33,7 @@ export default function Profile() {
         <TabPanel>
           <UpdateUser />
           <UpdateAvatar />
+          <FileUpload/>
           <AddFriend />
           <DeleteFriend />
           <CreateChannel />
