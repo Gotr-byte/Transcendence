@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 
 import { BlockingService } from './blocking.service';
-import { AuthenticatedGuard } from 'src/auth/guards/Guards';
+import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { User } from '@prisma/client';
 import { ShowUsersDto } from 'src/user/dto';

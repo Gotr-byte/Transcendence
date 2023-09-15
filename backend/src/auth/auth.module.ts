@@ -4,7 +4,7 @@ import { AuthController } from './auth.controller';
 import { AuthStrategy } from './strategy/auth.strategy';
 import { SessionSerializer } from './Serializer';
 import { UserService } from 'src/user/user.service';
-import { AuthenticatedGuard, SessionGuard } from './guards/Guards';
+import { AuthenticatedGuard, SessionGuard } from './guards/http-guards';
 
 @Module({
   controllers: [AuthController],

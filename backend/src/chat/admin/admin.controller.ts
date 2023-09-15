@@ -16,7 +16,7 @@ import {
   UpdateRestrictionDto,
   UpdateRoleDto,
 } from './dto';
-import { AuthenticatedGuard } from 'src/auth/guards/Guards';
+import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { ChannelMember, ChannelUserRestriction, User } from '@prisma/client';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
