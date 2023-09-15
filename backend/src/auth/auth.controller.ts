@@ -6,6 +6,7 @@ import { UserService } from 'src/user/user.service';
 import { User } from '@prisma/client';
 import { AuthUser } from './auth.decorator';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ShowLoggedUserDto } from 'src/user/dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -35,13 +36,15 @@ export class AuthController {
   async status(
     @AuthUser() user: User,
     @Res() response: Response,
-  ): Promise<string | void> {
+  ): Promise<string | ShowLoggedUserDto> {
     if (user.is2FaActive && !user.is2FaValid) {
       return `${user.username}'s 2fa is not validated`;
     }
-    await this.userService.updateUser(user, { isOnline: true });
+    const loggedUser = await this.userService.updateUser(user, {
+      isOnline: true,
+    });
     if (process.env.FRONTEND_URL) response.redirect(process.env.FRONTEND_URL);
-    return 'You are Authenticated and your status is set to online!';
+    return loggedUser;
   }
 
   @Get('logout')
