@@ -13,7 +13,7 @@ const PrivateChannelInvitation: React.FC = () => {
 
     try {
       // Make the API call to edit the channel
-      const response = await fetch(`http://localhost:4000/chat/admin/id/${id}/${username}/add`, {
+      const response = await fetch(`${process.env.API_URL}/chat/admin/id/${id}/${username}/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

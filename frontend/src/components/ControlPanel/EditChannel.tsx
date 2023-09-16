@@ -30,7 +30,7 @@ const EditChannel: React.FC = () => {
 
     try {
       // Make the API call to edit the channel
-      const response = await fetch(`http://localhost:4000/chat/management/id/${id}/edit`, {
+      const response = await fetch(`${process.env.API_URL}/chat/management/id/${id}/edit`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

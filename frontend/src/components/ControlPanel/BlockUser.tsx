@@ -5,7 +5,7 @@ const BlockUser: React.FC = () => {
 
   const handleBlockUser = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/block/user/${username}`, {
+      const response = await fetch(`${process.env.API_URL}/block/user/${username}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

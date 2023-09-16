@@ -13,7 +13,7 @@ function MatchesComponent() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('http://localhost:4000/matches/all/user', {
+    fetch(`${process.env.API_URL}/matches/all/user`, {
 		credentials:'include'
 	})
       .then((response) => {

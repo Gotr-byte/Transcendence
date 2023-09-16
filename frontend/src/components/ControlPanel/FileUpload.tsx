@@ -11,7 +11,7 @@ const FileUpload: React.FC = () => {
       formData.append("image", file, file.name);
 
       try {
-        const response = await fetch("http://localhost:4000/profile/upload-avatar", {
+        const response = await fetch(`${process.env.API_URL}/profile/upload-avatar`, {
           method: "PATCH",
           credentials: 'include',
           headers: {

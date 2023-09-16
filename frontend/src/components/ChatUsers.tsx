@@ -33,7 +33,7 @@ const ChatUsers: React.FC<ChatUsersProps> = ({ currentRoomId }) => { // New prop
 
       try {
         console.log(currentRoomId);
-        const response = await fetch(`http://localhost:4000/chat/channel/id/${currentRoomId}/users`, {  // Dynamic URL
+        const response = await fetch(`${process.env.API_URL}/chat/channel/id/${currentRoomId}/users`, {  // Dynamic URL
           credentials: 'include',
         });
 

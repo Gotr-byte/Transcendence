@@ -11,7 +11,7 @@ const DeleteChannel: React.FC = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/chat/management/id/${id}`,
+        `${process.env.API_URL}/chat/management/id/${id}`,
         {
           method: "DELETE",
           credentials: "include",

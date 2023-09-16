@@ -5,7 +5,7 @@ const AddFriend: React.FC = () => {
 
   const handleAddFriend = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/friends/${username}`, {
+      const response = await fetch(`${process.env.API_URL}/friends/${username}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

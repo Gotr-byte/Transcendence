@@ -28,7 +28,7 @@ const ChatUI: React.FC = () => {
     }
 
     try {
-      const url = `http://localhost:4000/messages/channel/${currentRoomId}`;
+      const url = `${process.env.API_URL}/messages/channel/${currentRoomId}`;
       const headers: HeadersInit = {
         Accept: "*/*",
         "Content-Type": "application/json",

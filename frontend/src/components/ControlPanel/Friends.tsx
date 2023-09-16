@@ -18,7 +18,7 @@ const Friends: React.FC = () => {
   useEffect(() => {
     const fetchFriends = async () => {
       try {
-        const response = await fetch('http://localhost:4000/friends', {
+        const response = await fetch(`${process.env.API_URL}/friends`, {
           credentials: 'include',
         });
 

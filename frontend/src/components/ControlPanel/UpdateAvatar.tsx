@@ -13,7 +13,7 @@ const UpdateAvatar: React.FC = () => {
         avatar,
       };
 
-      const response = await fetch(`http://localhost:4000/profile`, {
+      const response = await fetch(`${process.env.API_URL}/profile`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
