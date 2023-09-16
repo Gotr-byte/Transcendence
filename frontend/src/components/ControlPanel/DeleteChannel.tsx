@@ -34,7 +34,6 @@ const DeleteChannel: React.FC = () => {
       <label>ChatIdToDelete=</label>
       <input
         type="number"
-        placeholder="Channel id"
         value={id}
         onChange={(e) => setId(e.target.value)}
       />

@@ -74,7 +74,8 @@ export const Navbar = () => {
         ) : (
           <button
             onClick={() =>
-              (window.location.href = "http://localhost:4000/auth/42/login")
+              // (window.location.href = "http://localhost:4000/auth/42/login")
+              (window.location.href = `${process.env.API_URL}/auth/42/login`)
             }
           >
             Login
