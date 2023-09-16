@@ -13,6 +13,8 @@ import DeleteChannel from "../components/ControlPanel/DeleteChannel";
 import BlockUser from "../components/ControlPanel/BlockUser";
 import PrivateChannelInvitation from "../components/ControlPanel/PrivateChannelInvitation";
 import DesignateAdmin from "../components/ControlPanel/DesignateAdmin";
+import FileUpload from "../components/ControlPanel/FileUpload";
+import MatchesComponent from "../components/ControlPanel/DisplayMatchHistory";
 
 export default function Profile() {
   return (
@@ -27,11 +29,13 @@ export default function Profile() {
         <Tab _selected={{ color: "white", bg: "purple.400" }}>
           Recieved Friend Request
         </Tab>
+        <Tab _selected={{ color: "white", bg: "purple.400" }}>MatchHistory</Tab>
       </TabList>
       <TabPanels>
         <TabPanel>
           <UpdateUser />
           <UpdateAvatar />
+          <FileUpload/>
           <AddFriend />
           <DeleteFriend />
           <CreateChannel />
@@ -51,6 +55,9 @@ export default function Profile() {
         </TabPanel>
         <TabPanel>
           <ReceivedFriendRequests />
+        </TabPanel>
+        <TabPanel>
+          <MatchesComponent/>
         </TabPanel>
       </TabPanels>
     </Tabs>

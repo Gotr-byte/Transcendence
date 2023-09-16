@@ -1,0 +1,41 @@
+import { Button, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { useRef } from "react";
+
+const FileUpload: React.FC = () => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = async () => {
+    if (fileInputRef.current?.files?.length) {
+      const file = fileInputRef.current.files[0];
+      const formData = new FormData();
+      formData.append("image", file, file.name);
+
+      try {
+        const response = await fetch("http://localhost:4000/profile/upload-avatar", {
+          method: "PATCH",
+          credentials: 'include',
+          headers: {
+            accept: "*/*",
+          },
+          body: formData,
+        });
+        const data = await response.json();
+        console.log("File uploaded successfully", data);
+      } catch (error) {
+        console.error("File upload error", error);
+      }
+    }
+  };
+
+  return (
+    <FormControl>
+      <FormLabel>Upload Avatar</FormLabel>
+      <Input type="file" ref={fileInputRef} />
+      <Button mt={4} colorScheme="blue" onClick={handleFileUpload}>
+        Upload
+      </Button>
+    </FormControl>
+  );
+};
+
+export default FileUpload;
