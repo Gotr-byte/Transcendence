@@ -78,15 +78,7 @@ const BanUser: React.FC = () => {
           onChange={(e) => setDuration(e.target.value)}
         />
       </label>
-      
-
-      <Button 
-        colorScheme="teal"
-        variant="solid"
-        onClick={banHandler}
-      >
-        Enable Restriction
-      </Button>
+      <button onClick={banHandler}>EnableRestriction</button>
     </div>
   );
 };
