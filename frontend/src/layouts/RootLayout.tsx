@@ -12,6 +12,9 @@ export default function RootLayout() {
         bg="brand.50"
         minHeight={{lg : '100vh'}}
         p={{ base: '20px', lg: '30px'}}
+        bgImage='url("../../public/bookCover.jpg")'
+        bgSize="100% 100%"  // This will stretch and squish your background image to cover the space
+        bgRepeat="no-repeat" // This will prevent the image from repeating
       >
         <Sidebar />
       </GridItem>
