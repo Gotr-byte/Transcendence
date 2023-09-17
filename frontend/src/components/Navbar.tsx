@@ -63,15 +63,15 @@ export const Navbar = () => {
       </Heading>
       <Spacer />
       <HStack spacing="10px">
-        {showUser && user?.username && <Text>{user.username}</Text>}
+        {showUser && user?.username && <Text color="silver" >{user.username}</Text>}
         {showUser && user?.username && (
           <Avatar name="avatar" src={user.avatar} background="purple">
           </Avatar>
         )}
         {isLoggedIn ? (
-          <button color="silver" onClick={handleLogout}>Logout</button>
+          <button style={{ color: 'silver' }}  onClick={handleLogout}>Logout</button>
         ) : (
-          <button 
+          <button style={{ color: 'silver' }} 
             onClick={() =>
               (window.location.href = `${process.env.API_URL}/auth/42/login`)
             }
