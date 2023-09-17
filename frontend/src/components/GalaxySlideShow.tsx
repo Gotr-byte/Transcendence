@@ -11,7 +11,7 @@ const GalaxySlideShow: React.FC = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 5000,
   };
 
   // Generate URLs from heic1501a.jpg to heic1526a.jpg
