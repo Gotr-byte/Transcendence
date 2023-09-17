@@ -1,5 +1,5 @@
 import { useState } from 'react';
-
+import { Button } from '@chakra-ui/react';
 // {
 //   "restrictionType": "optional-restrictionType BANNED or MUTED",
 //   "duration": "optional-duration for the restriction in JS Date format, if empty: indefinite restriction"
@@ -49,6 +49,7 @@ const BanUser: React.FC = () => {
       <label>
         ChatId=
         <input 
+        style={{ width: '20px' }} 
         type="number"
         placeholder="Enter chat id" 
         value={id}
@@ -69,16 +70,23 @@ const BanUser: React.FC = () => {
         </select>
       </label>
       <label>
-        Duration:YYYY-MM-DDTHH:MM:SS:
+        Duration:
         <input
           type="text"
+          placeholder="YYYY-MM-DDTHH:MM:SS:"
           value={duration}
           onChange={(e) => setDuration(e.target.value)}
         />
       </label>
       
 
-      <button onClick={banHandler}>EnableRestriction</button>
+      <Button 
+        colorScheme="teal"
+        variant="solid"
+        onClick={banHandler}
+      >
+        Enable Restriction
+      </Button>
     </div>
   );
 };
