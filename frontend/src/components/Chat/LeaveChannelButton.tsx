@@ -33,7 +33,7 @@ const LeaveChannelButton: React.FC<LeaveChannelButtonProps> = ({ channelId }) =>
   };
 
   return (
-    <Button colorScheme="teal" onClick={leaveChannel}>
+    <Button size='xs' colorScheme="teal" onClick={leaveChannel}>
       -
     </Button>
   );

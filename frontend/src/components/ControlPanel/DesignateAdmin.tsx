@@ -47,6 +47,7 @@ const DesignateAdmin: React.FC = () => {
       <label>
         ChatId=
         <input 
+        style={{width : '20px' }}
         type="number" 
         placeholder="Enter chat id" 
         value={id}

@@ -48,7 +48,7 @@ const JoinChannelButton: React.FC<JoinChannelButtonProps> = ({ channelId, channe
   };
 
   return (
-    <Button colorScheme="teal" onClick={joinChannel}>
+    <Button size='xs' colorScheme="teal" onClick={joinChannel}>
       +
     </Button>
   );

@@ -28,12 +28,9 @@ const FileUpload: React.FC = () => {
   };
 
   return (
-    <FormControl>
-      <FormLabel>Upload Avatar</FormLabel>
-      <Input type="file" ref={fileInputRef} />
-      <Button mt={4} colorScheme="blue" onClick={handleFileUpload}>
-        Upload
-      </Button>
+    <FormControl display="flex" alignItems="center" gridGap="2">
+      <Input type="file" ref={fileInputRef} size="sm" style={{ maxWidth: '400px', flexGrow: 1 }} />
+      <button onClick={handleFileUpload}>Upload Avatar</button>
     </FormControl>
   );
 };
