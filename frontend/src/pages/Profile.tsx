@@ -15,6 +15,7 @@ import PrivateChannelInvitation from "../components/ControlPanel/PrivateChannelI
 import DesignateAdmin from "../components/ControlPanel/DesignateAdmin";
 import FileUpload from "../components/ControlPanel/FileUpload";
 import MatchesComponent from "../components/ControlPanel/DisplayMatchHistory";
+import BanUser from "../components/ControlPanel/BanUser";
 
 export default function Profile() {
   return (
@@ -46,6 +47,7 @@ export default function Profile() {
           <PrivateChannelInvitation />
           <BlockUser />
           <DesignateAdmin/>
+          <BanUser/>
         </TabPanel>
         <TabPanel>
           <Friends />

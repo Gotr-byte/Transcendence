@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AcceptButton from "./AcceptButton";
-import DeclineButton from "../DeclineButton";
+import DeclineButton from "./DeclineButton";
 import { Spacer } from "@chakra-ui/react";
 
 interface User {

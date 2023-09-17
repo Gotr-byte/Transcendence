@@ -6,7 +6,6 @@ import {
   Heading,
   Spacer,
   HStack,
-  AvatarBadge,
 } from "@chakra-ui/react";
 
 interface User {
@@ -59,7 +58,7 @@ export const Navbar = () => {
 
   return (
     <Flex as="nav" p="10x" mb="40px" alignItems="center" gap="10px">
-      <Heading as="h1" color="black">
+      <Heading as="h1" color="black" style={{ fontFamily: "'IM Fell English SC', serif" }}>
         Transcendence
       </Heading>
       <Spacer />

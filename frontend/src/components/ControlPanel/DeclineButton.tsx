@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface DeclineButtonProps {
-  username: string; // The username of the user who sent the friend request
+  username: string;
 }
 
 const DeclineButton: React.FC<DeclineButtonProps> = ({ username }) => {
@@ -15,7 +15,7 @@ const DeclineButton: React.FC<DeclineButtonProps> = ({ username }) => {
       if (response.ok) {
         alert('Friend request declined.');
       } else {
-        throw new Error('Failed to declined friend request.');
+        throw new Error('Failed to decline a friend request.');
       }
     } catch (error) {
       console.error('An error occurred:', error);
