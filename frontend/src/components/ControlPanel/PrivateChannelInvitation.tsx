@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-
+import React, { useState } from "react";
 
 const PrivateChannelInvitation: React.FC = () => {
   // Initialize state
-  const [id, setId] = useState<number>(0);  // id is now a number
-  const [username, setUsername] = useState<string>('');
+  const [id, setId] = useState<number>(0); // id is now a number
+  const [username, setUsername] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   // Function to handle editing the channel
@@ -13,13 +12,16 @@ const PrivateChannelInvitation: React.FC = () => {
 
     try {
       // Make the API call to edit the channel
-      const response = await fetch(`${process.env.API_URL}/chat/admin/id/${id}/${username}/add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-      });
+      const response = await fetch(
+        `${process.env.API_URL}/chat/admin/id/${id}/${username}/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
 
       // Error handling
       if (!response.ok) {
@@ -28,11 +30,10 @@ const PrivateChannelInvitation: React.FC = () => {
 
       // Log the response
       const data = await response.json();
-      console.log('Channel created:', data);
-
+      console.log("Channel created:", data);
     } catch (error) {
       setError(`There was a problem creating the channel: ${error}`);
-      console.error('There was a problem creating the channel:', error);
+      console.error("There was a problem creating the channel:", error);
     }
   };
 
@@ -41,17 +42,18 @@ const PrivateChannelInvitation: React.FC = () => {
     <div>
       <label>
         ChatId=
-        <input 
-        type="number"  // Input type is now "number"
-        placeholder="Enter chat id" 
-        value={id}
-        onChange={(e) => setId(Number(e.target.value))}  // Convert string to number
-      />
+        <input
+          style={{ width: "20px" }}
+          type="number" // Input type is now "number"
+          placeholder="Enter chat id"
+          value={id}
+          onChange={(e) => setId(Number(e.target.value))} // Convert string to number
+        />
       </label>
-      
-      <input 
-        type="text" 
-        placeholder="Enter username" 
+
+      <input
+        type="text"
+        placeholder="Enter username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />

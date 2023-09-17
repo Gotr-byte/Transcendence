@@ -29,12 +29,13 @@ const FileUpload: React.FC = () => {
 
   return (
     <FormControl>
-      <FormLabel>Upload Avatar</FormLabel>
+
+      <text>Upload Avatar</text>
       <Input type="file" ref={fileInputRef} />
       <Button mt={4} colorScheme="blue" onClick={handleFileUpload}>
         Upload
       </Button>
-    </FormControl>
+     </FormControl>
   );
 };
 

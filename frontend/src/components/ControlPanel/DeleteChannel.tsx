@@ -33,9 +33,10 @@ const DeleteChannel: React.FC = () => {
     <div>
       <label>ChatIdToDelete=</label>
       <input
+        style={{ width: "20px" }}
         type="number"
         value={id}
-        onChange={(e) => setId(e.target.value)}
+        onChange={(e) => setId(Number(e.target.value))}
       />
       <button onClick={handleDelete}>Delete Channel</button>
     </div>

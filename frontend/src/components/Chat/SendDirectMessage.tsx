@@ -49,7 +49,7 @@ const SendDirectMessage: React.FC<SendDirectMessageProps> = ({ username }) => {
 
   return (
     <>
-      <Button onClick={onOpen}>DM</Button>
+      <Button variant="solid" size='xs' onClick={onOpen}>DM</Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
@@ -66,7 +66,7 @@ const SendDirectMessage: React.FC<SendDirectMessageProps> = ({ username }) => {
             <Button colorScheme="blue" mr={3} onClick={sendDirectMessage}>
               Send
             </Button>
-            <Button variant="ghost" onClick={onClose}>Cancel</Button>
+            <Button variant="solid" size='xs' onClick={onClose}>Cancel</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
