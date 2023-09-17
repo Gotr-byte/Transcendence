@@ -2,9 +2,6 @@ import { Box } from "@chakra-ui/react";
 import Slider from "react-slick";
 import '../../node_modules/slick-carousel/slick/slick.css'; 
 import '../../node_modules/slick-carousel/slick/slick-theme.css';
-import '../../styles.css'
-
-
 
 const GalaxySlideShow: React.FC = () => {
   const settings = {
@@ -14,12 +11,19 @@ const GalaxySlideShow: React.FC = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 20000,
+    autoplaySpeed: 2000,
   };
 
   // Generate URLs from heic1501a.jpg to heic1526a.jpg
-  const baseUrls = "https://cdn.spacetelescope.org/archives/images/wallpaper2/heic15";
-  const urls = Array.from({ length: 26 }, (_, i) => `${baseUrls}${i.toString().padStart(2, '0')}a.jpg`);
+  const baseUrls1 = "https://cdn.spacetelescope.org/archives/images/wallpaper2/heic15";
+  const urls1 = Array.from({ length: 26 }, (_, i) => `${baseUrls1}${i.toString().padStart(2, '0')}a.jpg`);
+
+  // Generate URLs from heic2013b.jpg to heic2021b.jpg
+  const baseUrls2 = "https://cdn.spacetelescope.org/archives/images/thumb700x/heic20";
+  const urls2 = Array.from({ length: 9 }, (_, i) => `${baseUrls2}${13 + i}b.jpg`);
+
+  // Combine both sets of URLs
+  const urls = [...urls1, ...urls2];
 
   return (
     <Box 
