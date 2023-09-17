@@ -1,5 +1,5 @@
 import { SunIcon, MoonIcon, TriangleUpIcon } from "@chakra-ui/icons";
-import { List, ListItem, ListIcon, Box } from "@chakra-ui/react"
+import { List, ListItem, ListIcon, Box, Spacer } from "@chakra-ui/react"
 import { NavLink } from 'react-router-dom';
 
 export const Sidebar = () => {

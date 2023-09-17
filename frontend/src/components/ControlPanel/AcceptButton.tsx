@@ -1,3 +1,6 @@
+import { Button } from "@chakra-ui/react";
+
+
 interface AcceptButtonProps {
   username: string;
 }
@@ -22,9 +25,7 @@ const AcceptButton: React.FC<AcceptButtonProps> = ({ username }) => {
   };
 
   return (
-    <button onClick={acceptRequest}>
-      Accept
-    </button>
+    <Button onClick={acceptRequest} size='xs'>Accept</Button>
   );
 };
 

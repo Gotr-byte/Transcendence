@@ -47,7 +47,6 @@ const ReceivedFriendRequests: React.FC = () => {
               alt={`${user.username}'s avatar`}
             />
             <AcceptButton username={user.username} />
-            <Spacer />
             <DeclineButton username={user.username} />
           </li>
         ))}

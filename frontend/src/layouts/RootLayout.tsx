@@ -2,6 +2,7 @@ import { Grid, GridItem, Box } from "@chakra-ui/react";
 import { Outlet } from "react-router-dom";
 import { Navbar } from "../components/Navbar";
 import { Sidebar } from "../components/Sidebar";
+import GalaxySlideShow from "../components/GalaxySlideShow"
 import "../../styles.css";
 
 export default function RootLayout() {
@@ -25,18 +26,7 @@ export default function RootLayout() {
     p="40px"
     position="relative"
   >
-    <Box
-      position="absolute"
-      top="0"
-      left="0"
-      w="100%"
-      h="100%"
-      bgImage="../../public/galaxy.jpg"
-      bgSize="cover"
-      bgPosition="center"
-      animation="floaty 30s infinite linear"
-      zIndex="-1"
-    />
+    <GalaxySlideShow></GalaxySlideShow>
     <Navbar />
     <Outlet />
   </GridItem>

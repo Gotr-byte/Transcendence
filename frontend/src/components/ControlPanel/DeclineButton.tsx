@@ -1,3 +1,4 @@
+import { Button } from '@chakra-ui/react';
 import React from 'react';
 
 interface DeclineButtonProps {
@@ -24,9 +25,7 @@ const DeclineButton: React.FC<DeclineButtonProps> = ({ username }) => {
   };
 
   return (
-    <button onClick={declineRequest}>
-      Decline
-    </button>
+    <Button onClick={declineRequest} size='xs'>Decline</Button>
   );
 };
 
