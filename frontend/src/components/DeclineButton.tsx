@@ -7,7 +7,7 @@ interface DeclineButtonProps {
 const DeclineButton: React.FC<DeclineButtonProps> = ({ username }) => {
   const declineRequest = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/friends/${username}`, {
+      const response = await fetch(`${process.env.API_URL}/friends/${username}`, {
         method: 'DELETE',
         credentials: "include",
     }); 

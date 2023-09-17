@@ -21,7 +21,7 @@ const BannedUsers: React.FC = () => {
   useEffect(() => {
     const fetchBannedUsers = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/chat/admin/id/5/restricted`, {
+        const response = await fetch(`${process.env.API_URL}/chat/admin/id/5/restricted`, {
           credentials: 'include',
         });
 

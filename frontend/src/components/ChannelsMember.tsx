@@ -25,7 +25,7 @@ const ChannelsMember: React.FC<ChannelsMemberProps> = ({ onChangeRoom }) => {
   useEffect(() => {
     const fetchChannels = async () => {
       try {
-        const response = await fetch('http://localhost:4000/chat/channel/memberships', {
+        const response = await fetch(`${process.env.API_URL}/chat/channel/memberships`, {
           credentials: 'include',
         });
 

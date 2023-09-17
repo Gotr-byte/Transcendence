@@ -20,7 +20,7 @@ const DesignateAdmin: React.FC = () => {
     const roleData: Role = { role };
     
     try {
-      const response = await fetch(`http://localhost:4000/chat/admin/id/${id}/${username}/update-role`, {
+      const response = await fetch(`${process.env.API_URL}/chat/admin/id/${id}/${username}/update-role`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',

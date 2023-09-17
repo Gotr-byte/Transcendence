@@ -29,7 +29,7 @@ const SendDirectMessage: React.FC<SendDirectMessageProps> = ({ username }) => {
       const message: MessageBody = {
         content,
       };
-      const response = await fetch(`http://localhost:4000/messages/user/${username}`, {
+      const response = await fetch(`${process.env.API_URL}/messages/user/${username}`, {
         method: 'POST',
         credentials: "include",
         headers: {

@@ -26,7 +26,7 @@ const ChannelsAvailable: React.FC<ChannelsAvailableProps> = ({ onChangeRoom }) =
   useEffect(() => {
     const fetchChannels = async () => {
       try {
-        const response = await fetch('http://localhost:4000/chat/channel/visible', {
+        const response = await fetch(`${process.env.API_URL}/chat/channel/visible`, {
           credentials: 'include',
         });
 

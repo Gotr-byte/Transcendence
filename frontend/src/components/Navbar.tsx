@@ -23,7 +23,7 @@ export const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // New state variable
 
   const fetchUserData = () => {
-    fetch("http://localhost:4000/profile", {
+    fetch(`${process.env.API_URL}/profile`, {
       credentials: "include",
     })
       .then((response) => {
@@ -45,7 +45,7 @@ export const Navbar = () => {
 
   // Log out function
   const handleLogout = () => {
-    fetch('http://localhost:4000/auth/logout', {
+    fetch(`${process.env.API_URL}/auth/logout`, {
   credentials: "include",
 })
   .then((response) => response.json())
@@ -74,7 +74,7 @@ export const Navbar = () => {
         ) : (
           <button
             onClick={() =>
-              (window.location.href = "http://localhost:4000/auth/42/login")
+              (window.location.href = `${process.env.API_URL}/auth/42/login`)
             }
           >
             Login

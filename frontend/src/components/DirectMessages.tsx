@@ -14,7 +14,7 @@ export const DirectMessageSenderList = () => {
   const onClose = () => setIsOpen(false);
 
   const fetchMessages = (sender: string) => {
-    fetch(`http://localhost:4000/messages/user/${sender}`, {
+    fetch(`${process.env.API_URL}/messages/user/${sender}`, {
       method: 'GET',
       credentials: 'include',
       headers: {
@@ -36,7 +36,7 @@ export const DirectMessageSenderList = () => {
   };
   
   useEffect(() => {
-    fetch(`http://localhost:4000/messages/chats`, {
+    fetch(`${process.env.API_URL}/messages/chats`, {
       credentials: 'include',
     })
       .then((response) => {

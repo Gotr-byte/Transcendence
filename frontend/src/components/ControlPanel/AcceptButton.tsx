@@ -5,7 +5,7 @@ interface AcceptButtonProps {
 const AcceptButton: React.FC<AcceptButtonProps> = ({ username }) => {
   const acceptRequest = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/friends/${username}`, {
+      const response = await fetch(`${process.env.API_URL}/friends/${username}`, {
         method: 'PATCH',
         credentials: "include",
     }); 
