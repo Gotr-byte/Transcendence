@@ -19,7 +19,10 @@ import BanUser from "../components/ControlPanel/BanUser";
 
 export default function Profile() {
   return (
-    <Tabs mt="40px" p="20px" colorScheme="purple" variant="enclosed">
+    <Tabs mt="40px" p="20px" colorScheme="purple" variant="enclosed" bgImage='url("../../public/paper.jpg")'
+    bgSize="100% 100%"  // This will stretch and squish your backgroun
+    bgRepeat="no-repeat" // This will prevent the image from repeating
+    >
       <span>Account</span>
       <TabList>
         <Tab _selected={{ color: "white", bg: "purple.400" }}>Settings</Tab>
