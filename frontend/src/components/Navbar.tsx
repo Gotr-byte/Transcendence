@@ -6,7 +6,6 @@ import {
   Heading,
   Spacer,
   HStack,
-  AvatarBadge,
 } from "@chakra-ui/react";
 
 interface User {

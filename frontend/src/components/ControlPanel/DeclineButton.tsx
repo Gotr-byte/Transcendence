@@ -15,7 +15,7 @@ const DeclineButton: React.FC<DeclineButtonProps> = ({ username }) => {
       if (response.ok) {
         alert('Friend request declined.');
       } else {
-        throw new Error('Failed to declined friend request.');
+        throw new Error('Failed to decline a friend request.');
       }
     } catch (error) {
       console.error('An error occurred:', error);
