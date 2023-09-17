@@ -21,7 +21,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ username }) => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/users/${username}`,{
+      const response = await fetch(`${process.env.API_URL}/users/${username}`,{
       method: 'GET',
       credentials: 'include'
       });
