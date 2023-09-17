@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface DeclineButtonProps {
-  username: string; // The username of the user who sent the friend request
+  username: string;
 }
 
 const DeclineButton: React.FC<DeclineButtonProps> = ({ username }) => {
