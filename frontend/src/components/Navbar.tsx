@@ -58,7 +58,7 @@ export const Navbar = () => {
 
   return (
     <Flex as="nav" p="10x" mb="40px" alignItems="center" gap="10px">
-      <Heading as="h1" color="black" style={{ fontFamily: "'IM Fell English SC', serif" }}>
+      <Heading as="h1" color="silver" style={{ fontFamily: "'IM Fell English SC', serif" }}>
         Transcendence
       </Heading>
       <Spacer />
@@ -69,9 +69,9 @@ export const Navbar = () => {
           </Avatar>
         )}
         {isLoggedIn ? (
-          <button onClick={handleLogout}>Logout</button>
+          <button color="silver" onClick={handleLogout}>Logout</button>
         ) : (
-          <button
+          <button 
             onClick={() =>
               (window.location.href = `${process.env.API_URL}/auth/42/login`)
             }
