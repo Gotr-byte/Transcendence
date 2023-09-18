@@ -7,7 +7,7 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { ManagementService } from './management.service';
+import { ManagementService } from '../../management.service';
 import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { User } from '@prisma/client';

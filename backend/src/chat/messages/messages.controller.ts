@@ -1,11 +1,12 @@
 import { Controller, Get, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { MessagesService } from './messages.service';
-import { CreateMessageDto } from './dto';
+import { CreateChannelMessageDto } from './dto';
 import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { Message, User } from '@prisma/client';
 import { ShowMessagesDto } from './dto/show-messages.dto';
+import { UsernameId } from './types/types';
 
 @UseGuards(AuthenticatedGuard)
 @ApiTags('Chat: messages')
@@ -13,66 +14,66 @@ import { ShowMessagesDto } from './dto/show-messages.dto';
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
 
-  @Post('channel/:channelId')
-  @ApiOperation({
-    summary:
-      'Send a message to a channel the user is member in and not muted on',
-  })
-  @ApiParam({
-    name: 'channelId',
-    description: 'ID of the channel to send the message to',
-  })
-  @ApiBody({
-    type: CreateMessageDto,
-    examples: {
-      example1: {
-        value: {
-          content: 'Text of the Message',
-        },
-      },
-    },
-  })
-  async createChannelMessage(
-    @Param('channelId') channelId: string,
-    @Body() createMessageDto: CreateMessageDto,
-    @AuthUser() user: User,
-  ): Promise<Message> {
-    const newMessage = await this.messagesService.createChannelMessage(
-      user.id,
-      +channelId,
-      createMessageDto,
-    );
-    return newMessage;
-  }
+  // @Post('channel/:channelId')
+  // @ApiOperation({
+  //   summary:
+  //     'Send a message to a channel the user is member in and not muted on',
+  // })
+  // @ApiParam({
+  //   name: 'channelId',
+  //   description: 'ID of the channel to send the message to',
+  // })
+  // @ApiBody({
+  //   type: CreateMessageDto,
+  //   examples: {
+  //     example1: {
+  //       value: {
+  //         content: 'Text of the Message',
+  //       },
+  //     },
+  //   },
+  // })
+  // async createChannelMessage(
+  //   @Param('channelId') channelId: string,
+  //   @Body() createMessageDto: CreateMessageDto,
+  //   @AuthUser() user: User,
+  // ): Promise<Message> {
+  //   const newMessage = await this.messagesService.createChannelMessage(
+  //     user.id,
+  //     +channelId,
+  //     createMessageDto,
+  //   );
+  //   return newMessage;
+  // }
 
-  @Post('user/:username')
-  @ApiOperation({ summary: 'Send a message to a user' })
-  @ApiParam({
-    name: 'username',
-    description: 'Username to send the message to',
-  })
-  @ApiBody({
-    type: CreateMessageDto,
-    examples: {
-      example1: {
-        value: {
-          content: 'Text of the Message',
-        },
-      },
-    },
-  })
-  async createUserMessage(
-    @Param('username') username: string,
-    @Body() createMessageDto: CreateMessageDto,
-    @AuthUser() user: User,
-  ) {
-    const newMessage = await this.messagesService.createUserMessage(
-      user.id,
-      username,
-      createMessageDto,
-    );
-    return newMessage;
-  }
+  // @Post('user/:username')
+  // @ApiOperation({ summary: 'Send a message to a user' })
+  // @ApiParam({
+  //   name: 'username',
+  //   description: 'Username to send the message to',
+  // })
+  // @ApiBody({
+  //   type: CreateMessageDto,
+  //   examples: {
+  //     example1: {
+  //       value: {
+  //         content: 'Text of the Message',
+  //       },
+  //     },
+  //   },
+  // })
+  // async createUserMessage(
+  //   @Param('username') username: string,
+  //   @Body() createMessageDto: CreateMessageDto,
+  //   @AuthUser() user: User,
+  // ) {
+  //   const newMessage = await this.messagesService.createUserMessage(
+  //     user.id,
+  //     username,
+  //     createMessageDto,
+  //   );
+  //   return newMessage;
+  // }
 
   @Get('channel/:channelId')
   @ApiOperation({
@@ -119,7 +120,7 @@ export class MessagesController {
     summary:
       'Gets all open user-user chats from the logged in user, newest chat on top',
   })
-  async GetUserChats(@AuthUser() user: User): Promise<string[]> {
+  async GetUserChats(@AuthUser() user: User): Promise<UsernameId[]> {
     const chats = await this.messagesService.getUserChats(user.id);
     return chats;
   }

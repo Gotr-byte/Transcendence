@@ -3,7 +3,9 @@ import { ManagementModule } from './management/management.module';
 import { AdminModule } from './admin/admin.module';
 import { ChannelModule } from './channel/channel.module';
 import { MessagesModule } from './messages/messages.module';
-import { SharedModule } from './shared/shared.module';
+import { ChatSharedModule } from './shared/chat-shared.module';
+import { ChatGateway } from './chat.gateway';
+import { SocketModule } from 'src/socket/socket.module';
 
 @Module({
   imports: [
@@ -11,7 +13,9 @@ import { SharedModule } from './shared/shared.module';
     AdminModule,
     ChannelModule,
     MessagesModule,
-    SharedModule,
+    ChatSharedModule,
+    SocketModule,
   ],
+  providers: [ChatGateway],
 })
 export class ChatModule {}

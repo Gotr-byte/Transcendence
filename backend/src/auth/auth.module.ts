@@ -3,17 +3,18 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { AuthStrategy } from './strategy/auth.strategy';
 import { SessionSerializer } from './Serializer';
-import { UserService } from 'src/user/user.service';
 import { AuthenticatedGuard, SessionGuard } from './guards/http-guards';
+import { UserModule } from 'src/user/user.module';
+import { SharedModule } from 'src/shared/shared.module';
 
 @Module({
+  imports: [SharedModule],
   controllers: [AuthController],
   providers: [
     AuthStrategy,
     AuthenticatedGuard,
     SessionGuard,
     SessionSerializer,
-    UserService,
     {
       provide: 'AUTH_SERVICE',
       useClass: AuthService,

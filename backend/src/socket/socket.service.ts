@@ -32,7 +32,24 @@ export class SocketService {
     console.log(this.userSocketMap);
   }
 
-  getUserId(socketId: string): number | undefined {
-    return this.userSocketMap.get(socketId);
+  getUserId(socketId: string): number {
+    console.log(this.userSocketMap);
+    const userId = this.userSocketMap.get(socketId);
+    if (!userId)
+      throw new InternalServerErrorException(
+        'userId is not found in socket map',
+      );
+    return userId;
+  }
+
+  getSocketIds(userId: number): string[] {
+    const socketIds: string[] = [];
+
+    for (const [key, value] of this.userSocketMap.entries()) {
+      if (value === userId) {
+        socketIds.push(key);
+      }
+    }
+    return socketIds;
   }
 }
