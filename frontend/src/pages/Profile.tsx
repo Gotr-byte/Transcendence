@@ -16,6 +16,7 @@ import DesignateAdmin from "../components/ControlPanel/DesignateAdmin";
 import FileUpload from "../components/ControlPanel/FileUpload";
 import MatchesComponent from "../components/ControlPanel/DisplayMatchHistory";
 import BanUser from "../components/ControlPanel/BanUser";
+import TwoFactorAuthSetup from "../components/ControlPanel/TwoFactorAuthSetup";
 
 export default function Profile() {
   return (
@@ -51,6 +52,7 @@ export default function Profile() {
           <BlockUser />
           <DesignateAdmin/>
           <BanUser/>
+          <TwoFactorAuthSetup/>
         </TabPanel>
         <TabPanel>
           <Friends />
