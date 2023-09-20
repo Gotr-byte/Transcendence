@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Patch,
+  Req,
   Res,
   UploadedFile,
   UseGuards,
@@ -11,13 +12,15 @@ import {
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { AuthUser } from 'src/auth/auth.decorator';
-import { AuthenticatedGuard, SessionGuard } from 'src/auth/guards/http-guards';
 import { ChangeUserDto, FileUploadDto, ShowLoggedUserDto } from './dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { ImagekitService } from 'src/imagekit/imagekit.service';
 import { UserService } from './user.service';
+import { Request, Response } from 'express';
+import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
 
+@UseGuards(AuthenticatedGuard)
 @ApiTags('Profile: CurrentUser')
 @Controller('profile')
 export class CurrentUserController {
@@ -26,18 +29,18 @@ export class CurrentUserController {
     private readonly userService: UserService,
   ) {}
 
-  @UseGuards(SessionGuard)
   @Get()
   @ApiOperation({
     summary:
       'Redirects the authenticated user to their profile page (id, username, isOnline, avatar, is2FaActive)',
   })
-  async getCurrentUser(@AuthUser() user: User): Promise<ShowLoggedUserDto> {
-    const currentUser = await this.userService.getUserByName(user.username);
-    return ShowLoggedUserDto.from(currentUser);
+  async getCurrentUser(
+    @AuthUser() user: User,
+    @Res() response: Response,
+  ): Promise<void> {
+    response.redirect('/users/' + user.username);
   }
 
-  @UseGuards(AuthenticatedGuard)
   @Patch()
   @ApiOperation({
     summary: 'Update logged users username',
@@ -55,12 +58,13 @@ export class CurrentUserController {
   async updateUser(
     @AuthUser() user: User,
     @Body() dto: ChangeUserDto,
+    @Req() request: Request,
   ): Promise<ShowLoggedUserDto> {
     const updatedUser = await this.userService.updateUser(user, dto);
+    (request.session as any).passport.user.username = dto.username;
     return updatedUser;
   }
 
-  @UseGuards(AuthenticatedGuard)
   @Patch('upload-avatar')
   @ApiOperation({
     summary:
@@ -78,10 +82,12 @@ export class CurrentUserController {
   )
   async uploadAvatar(
     @AuthUser() user: User,
+    @Req() request: Request,
     @Body() fileUploadDto: FileUploadDto, // Intentionally not used, but implemented to allow uploads through swagger-ui
     @UploadedFile() image: Express.Multer.File,
   ): Promise<ShowLoggedUserDto> {
     const updatedUser = await this.imagekit.uploadAvatar(image, user.id);
+    (request.session as any).passport.user.avatar = updatedUser.avatar;
     return ShowLoggedUserDto.from(updatedUser);
   }
 }
