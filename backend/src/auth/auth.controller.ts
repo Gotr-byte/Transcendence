@@ -36,15 +36,9 @@ export class AuthController {
   async status(
     @AuthUser() user: User,
     @Res() response: Response,
-  ): Promise<string | ShowLoggedUserDto> {
-    if (user.is2FaActive && !user.is2FaValid) {
-      return `${user.username}'s 2fa is not validated`;
-    }
-    const loggedUser = await this.userService.updateUser(user, {
-      isOnline: true,
-    });
+  ): Promise<void | ShowLoggedUserDto> {
     if (process.env.FRONTEND_URL) response.redirect(process.env.FRONTEND_URL);
-    return loggedUser;
+    return ShowLoggedUserDto.from(user);
   }
 
   @Get('logout')
