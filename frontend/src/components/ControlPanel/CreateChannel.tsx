@@ -22,7 +22,7 @@ const CreateChannel: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:4000/chat/management/create`, {
+      const response = await fetch(`${process.env.API_URL}/chat/management/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

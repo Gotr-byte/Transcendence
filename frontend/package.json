@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.0",
-    "@chakra-ui/react": "^2.8.0",
+    "@chakra-ui/react": "^2.8.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@types/node": "^20.5.1",
@@ -18,7 +18,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.6.1",
-    "socket.io-client": "^4.7.2",
+    "react-slick": "^0.29.0",
+    "slick-carousel": "^1.8.1",
     "typescript": "^5.1.6"
   },
   "devDependencies": {

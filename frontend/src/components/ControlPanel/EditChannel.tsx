@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 interface Channel {
-  id: number;  // id is now a number
+  id: number; // id is now a number
   title: string;
   channelType: string;
   password?: string;
@@ -9,10 +9,10 @@ interface Channel {
 
 const EditChannel: React.FC = () => {
   // Initialize state
-  const [id, setId] = useState<number>(0);  // id is now a number
-  const [title, setTitle] = useState<string>('');
-  const [channelType, setChannelType] = useState<string>('PUBLIC');
-  const [password, setPassword] = useState<string>('');
+  const [id, setId] = useState<number>(0); // id is now a number
+  const [title, setTitle] = useState<string>("");
+  const [channelType, setChannelType] = useState<string>("PUBLIC");
+  const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   // Function to handle editing the channel
@@ -24,20 +24,23 @@ const EditChannel: React.FC = () => {
       channelType,
     };
 
-    if (channelType === 'PROTECTED') {
+    if (channelType === "PROTECTED") {
       channelData.password = password;
     }
 
     try {
       // Make the API call to edit the channel
-      const response = await fetch(`http://localhost:4000/chat/management/id/${id}/edit`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(channelData),
-      });
+      const response = await fetch(
+        `${process.env.API_URL}/chat/management/id/${id}/edit`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify(channelData),
+        }
+      );
 
       // Error handling
       if (!response.ok) {
@@ -46,11 +49,10 @@ const EditChannel: React.FC = () => {
 
       // Log the response
       const data = await response.json();
-      console.log('Channel created:', data);
-
+      console.log("Channel created:", data);
     } catch (error) {
       setError(`There was a problem creating the channel: ${error}`);
-      console.error('There was a problem creating the channel:', error);
+      console.error("There was a problem creating the channel:", error);
     }
   };
 
@@ -59,24 +61,28 @@ const EditChannel: React.FC = () => {
     <div>
       <label>
         ChatIdToEdit=
-        <input 
-        type="number"  // Input type is now "number"
-        placeholder="Enter chat id" 
-        value={id}
-        onChange={(e) => setId(Number(e.target.value))}  // Convert string to number
-      />
+        <input
+          style={{ width: "20px" }}
+          type="number" // Input type is now "number"
+          placeholder="Enter chat id"
+          value={id}
+          onChange={(e) => setId(Number(e.target.value))} // Convert string to number
+        />
       </label>
-      
-      <input 
-        type="text" 
-        placeholder="Enter chat title" 
+
+      <input
+        type="text"
+        placeholder="Enter chat title"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
 
       <label>
         Edit Channel Type:
-        <select value={channelType} onChange={(e) => setChannelType(e.target.value)}>
+        <select
+          value={channelType}
+          onChange={(e) => setChannelType(e.target.value)}
+        >
           <option value="PUBLIC">Public</option>
           <option value="PRIVATE">Private</option>
           <option value="PROTECTED">Protected</option>

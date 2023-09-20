@@ -21,7 +21,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ username }) => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/users/${username}`,{
+      const response = await fetch(`${process.env.API_URL}/users/${username}`,{
       method: 'GET',
       credentials: 'include'
       });
@@ -38,7 +38,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ username }) => {
 
   return (
     <>
-      <Button onClick={fetchUserProfile}>P</Button>
+      <Button onClick={fetchUserProfile} size='xs'>P</Button>
 
       {profileData && (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -53,7 +53,6 @@ const UserProfile: React.FC<UserProfileProps> = ({ username }) => {
                 Avatar: <img src={profileData.avatar} alt="User avatar" width={100} />
               </div>
               <div>In Game: {profileData.inGame ? "Yes" : "No"}</div>
-              {/* Add other fields similarly */}
             </ModalBody>
             <ModalFooter>
               <Button colorScheme="blue" mr={3} onClick={onClose}>

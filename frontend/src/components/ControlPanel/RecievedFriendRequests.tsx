@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AcceptButton from "./AcceptButton";
-import DeclineButton from "../DeclineButton";
+import DeclineButton from "./DeclineButton";
 import { Spacer } from "@chakra-ui/react";
 
 interface User {
@@ -16,7 +16,7 @@ const ReceivedFriendRequests: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:4000/friends/received", {
+        const response = await fetch(`${process.env.API_URL}/friends/received`, {
           credentials: "include",
         });
         if (response.ok) {
@@ -47,7 +47,6 @@ const ReceivedFriendRequests: React.FC = () => {
               alt={`${user.username}'s avatar`}
             />
             <AcceptButton username={user.username} />
-            <Spacer />
             <DeclineButton username={user.username} />
           </li>
         ))}

@@ -9,27 +9,27 @@ all: up
 
 up:	
 	@echo $(GREEN) Starting Containers ... $(EOC);
-	@BUILD_TARGET=prod docker-compose -f ./docker-compose.yml up --build
+	@BUILD_TARGET=prod docker compose -f ./docker-compose.yml up --build
 
 dev:	
 	@echo $(GREEN) Starting Containers ... $(EOC);
-	@BUILD_TARGET=dev docker-compose -f ./docker-compose.yml up --build
+	@BUILD_TARGET=dev docker compose -f ./docker-compose.yml up --build
 
 silent:
 	@echo $(GREEN) Starting Containers silently ... $(EOC);
-	@BUILD_TARGET=prod docker-compose -f ./docker-compose.yml up -d --build
+	@BUILD_TARGET=prod docker compose -f ./docker-compose.yml up -d --build
 
 down:
-	@docker-compose -f ./docker-compose.yml down
+	@docker compose -f ./docker-compose.yml down --remove-orphans
 	@echo $(YELLOW) Containers Removed $(EOC);
 
-clean:
-	@docker-compose -f ./docker-compose.yml down --rmi all
+clean: down
+	@docker compose -f ./docker-compose.yml down --rmi all
 	@docker volume prune
 	@echo $(RED) Containers, Images and Volumes Removed $(EOC);
 
-fclean:
-	@docker-compose -f ./docker-compose.yml down --rmi all
+fclean: down
+	@docker compose -f ./docker-compose.yml down --rmi all
 	@docker volume prune
 	@docker system prune -a
 	@echo $(RED) Containers, Images, Volumes and Build Cache Removed $(EOC);

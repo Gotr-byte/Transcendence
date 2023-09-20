@@ -13,10 +13,17 @@ import DeleteChannel from "../components/ControlPanel/DeleteChannel";
 import BlockUser from "../components/ControlPanel/BlockUser";
 import PrivateChannelInvitation from "../components/ControlPanel/PrivateChannelInvitation";
 import DesignateAdmin from "../components/ControlPanel/DesignateAdmin";
+import FileUpload from "../components/ControlPanel/FileUpload";
+import MatchesComponent from "../components/ControlPanel/DisplayMatchHistory";
+import BanUser from "../components/ControlPanel/BanUser";
+import TwoFactorAuthSetup from "../components/ControlPanel/TwoFactorAuthSetup";
 
 export default function Profile() {
   return (
-    <Tabs mt="40px" p="20px" colorScheme="purple" variant="enclosed">
+    <Tabs mt="40px" p="20px" colorScheme="purple" variant="enclosed" bgImage='url("../../public/paper.jpg")'
+    bgSize="100% 100%"  // This will stretch and squish your backgroun
+    bgRepeat="no-repeat" // This will prevent the image from repeating
+    >
       <span>Account</span>
       <TabList>
         <Tab _selected={{ color: "white", bg: "purple.400" }}>Settings</Tab>
@@ -27,11 +34,13 @@ export default function Profile() {
         <Tab _selected={{ color: "white", bg: "purple.400" }}>
           Recieved Friend Request
         </Tab>
+        <Tab _selected={{ color: "white", bg: "purple.400" }}>MatchHistory</Tab>
       </TabList>
       <TabPanels>
         <TabPanel>
           <UpdateUser />
           <UpdateAvatar />
+          <FileUpload/>
           <AddFriend />
           <DeleteFriend />
           <CreateChannel />
@@ -42,6 +51,8 @@ export default function Profile() {
           <PrivateChannelInvitation />
           <BlockUser />
           <DesignateAdmin/>
+          <BanUser/>
+          <TwoFactorAuthSetup/>
         </TabPanel>
         <TabPanel>
           <Friends />
@@ -51,6 +62,9 @@ export default function Profile() {
         </TabPanel>
         <TabPanel>
           <ReceivedFriendRequests />
+        </TabPanel>
+        <TabPanel>
+          <MatchesComponent/>
         </TabPanel>
       </TabPanels>
     </Tabs>

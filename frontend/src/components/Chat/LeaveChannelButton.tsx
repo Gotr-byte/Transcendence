@@ -9,7 +9,7 @@ const LeaveChannelButton: React.FC<LeaveChannelButtonProps> = ({ channelId }) =>
 
   const leaveChannel = async () => {
     try {
-      const url = `http://localhost:4000/chat/channel/id/${channelId}/leave`;
+      const url = `${process.env.API_URL}/chat/channel/id/${channelId}/leave`;
       const headers: HeadersInit = {
         'Accept': '*/*',
         'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ const LeaveChannelButton: React.FC<LeaveChannelButtonProps> = ({ channelId }) =>
   };
 
   return (
-    <Button colorScheme="teal" onClick={leaveChannel}>
+    <Button size='xs' colorScheme="teal" onClick={leaveChannel}>
       -
     </Button>
   );

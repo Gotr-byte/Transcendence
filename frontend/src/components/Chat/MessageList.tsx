@@ -21,7 +21,7 @@ const MessageList: React.FC<MessageListProps> = ({ roomId }) => {
       }
 
       try {
-        const url = `http://localhost:4000/messages/channel/${roomId}`;
+        const url = `${process.env.API_URL}/messages/channel/${roomId}`;
         const response = await fetch(url, {
           method: 'GET',
 		  credentials: "include",

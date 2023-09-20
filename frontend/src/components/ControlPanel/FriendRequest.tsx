@@ -12,7 +12,7 @@ const SentFriendRequests: React.FC = () => {
   useEffect(() => {
     const fetchSentRequests = async () => {
       try {
-        const response = await fetch('http://localhost:4000/friends/sent', {
+        const response = await fetch(`${process.env.API_URL}/friends/sent`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

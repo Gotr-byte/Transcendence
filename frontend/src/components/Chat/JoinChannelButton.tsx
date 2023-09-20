@@ -19,7 +19,7 @@ const JoinChannelButton: React.FC<JoinChannelButtonProps> = ({ channelId, channe
         }
       }
 
-      const url = `http://localhost:4000/chat/channel/id/${channelId}/join`;
+      const url = `${process.env.API_URL}/chat/channel/id/${channelId}/join`;
       const headers: HeadersInit = {
         'Accept': '*/*',
         'Content-Type': 'application/json',
@@ -48,7 +48,7 @@ const JoinChannelButton: React.FC<JoinChannelButtonProps> = ({ channelId, channe
   };
 
   return (
-    <Button colorScheme="teal" onClick={joinChannel}>
+    <Button size='xs' colorScheme="teal" onClick={joinChannel}>
       +
     </Button>
   );

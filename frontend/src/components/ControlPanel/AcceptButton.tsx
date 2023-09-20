@@ -1,3 +1,6 @@
+import { Button } from "@chakra-ui/react";
+
+
 interface AcceptButtonProps {
   username: string;
 }
@@ -5,7 +8,7 @@ interface AcceptButtonProps {
 const AcceptButton: React.FC<AcceptButtonProps> = ({ username }) => {
   const acceptRequest = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/friends/${username}`, {
+      const response = await fetch(`${process.env.API_URL}/friends/${username}`, {
         method: 'PATCH',
         credentials: "include",
     }); 
@@ -22,9 +25,7 @@ const AcceptButton: React.FC<AcceptButtonProps> = ({ username }) => {
   };
 
   return (
-    <button onClick={acceptRequest}>
-      Accept
-    </button>
+    <Button onClick={acceptRequest} size='xs'>Accept</Button>
   );
 };
 

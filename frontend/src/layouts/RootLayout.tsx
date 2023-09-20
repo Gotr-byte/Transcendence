@@ -1,28 +1,35 @@
-import { Grid, GridItem} from "@chakra-ui/react"
-import { Outlet } from "react-router-dom"
-import { Navbar } from "../components/Navbar"
-import { Sidebar } from "../components/Sidebar"
+import { Grid, GridItem, Box } from "@chakra-ui/react";
+import { Outlet } from "react-router-dom";
+import { Navbar } from "../components/Navbar";
+import { Sidebar } from "../components/Sidebar";
+import GalaxySlideShow from "../components/GalaxySlideShow"
+import "../../styles.css";
 
 export default function RootLayout() {
   return (
-    <Grid templateColumns="repeat(6, 1fr)" bg="gray.50">
+    <Grid templateColumns="repeat(6, 1fr)" overflow="hidden">
       <GridItem
         as="aside"
-        colSpan={{ base: 6, lg: 2, xl: 1}}
-        bg="brand.50"
-        minHeight={{lg : '100vh'}}
-        p={{ base: '20px', lg: '30px'}}
+        colSpan={{ base: 6, lg: 2, xl: 1 }}
+        // bg="brand.50"
+        minHeight={{ lg: "100vh" }}
+        p={{ base: "20px", lg: "30px" }}
+        bgImage='url("../../public/bookCover.jpg")'
+        bgSize="100% 100%" 
+        bgRepeat="no-repeat" 
       >
         <Sidebar />
       </GridItem>
       <GridItem
-        as="main"
-        colSpan={{ base: 6, lg: 4, xl: 5}}
-        p="40px"
-      >
-        <Navbar />
-        <Outlet />
-      </GridItem>
+    as="main"
+    colSpan={{ base: 6, lg: 4, xl: 5 }}
+    p="40px"
+    position="relative"
+  >
+    <GalaxySlideShow></GalaxySlideShow>
+    <Navbar />
+    <Outlet />
+  </GridItem>
     </Grid>
-  )
+  );
 }

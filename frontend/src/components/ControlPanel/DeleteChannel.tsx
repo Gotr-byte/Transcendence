@@ -11,7 +11,7 @@ const DeleteChannel: React.FC = () => {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/chat/management/id/${id}`,
+        `${process.env.API_URL}/chat/management/id/${id}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -33,10 +33,10 @@ const DeleteChannel: React.FC = () => {
     <div>
       <label>ChatIdToDelete=</label>
       <input
+        style={{ width: "20px" }}
         type="number"
-        placeholder="Channel id"
         value={id}
-        onChange={(e) => setId(e.target.value)}
+        onChange={(e) => setId(Number(e.target.value))}
       />
       <button onClick={handleDelete}>Delete Channel</button>
     </div>

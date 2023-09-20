@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import JoinChannelButton from './JoinChannelButton';
-// import { Spacer } from '@chakra-ui/react';
+import LeaveChannelButton from './LeaveChannelButton';
 
-type ChannelType = 'PUBLIC' | 'PROTECTED' | 'PRIVATE';
+type ChannelType = 'PUBLIC' | 'PROTECTED' | 'PRIVATE'; 
 
 interface Channel {
   id: number;
@@ -16,17 +15,17 @@ interface Channels {
   channels: Channel[];
 }
 
-interface ChannelsAvailableProps {
+interface ChannelsMemberProps {
   onChangeRoom: (roomId: number) => void;
 }
 
-const ChannelsAvailable: React.FC<ChannelsAvailableProps> = ({ onChangeRoom }) => {
+const ChannelsMember: React.FC<ChannelsMemberProps> = ({ onChangeRoom }) => {
   const [channels, setChannels] = useState<Channels>({ channelsNo: 0, channels: [] });
 
   useEffect(() => {
     const fetchChannels = async () => {
       try {
-        const response = await fetch('http://localhost:4000/chat/channel/visible', {
+        const response = await fetch(`${process.env.API_URL}/chat/channel/memberships`, {
           credentials: 'include',
         });
 
@@ -53,8 +52,7 @@ const ChannelsAvailable: React.FC<ChannelsAvailableProps> = ({ onChangeRoom }) =
               <button onClick={() => onChangeRoom(channel.id)}>
                 {channel.title}
               </button>
-              <JoinChannelButton channelId={channel.id} channelType={channel.channelType}/>
-              {/* <Spacer></Spacer> */}
+              <LeaveChannelButton channelId={channel.id}/>
             </li>
           ))}
         </ul>
@@ -65,4 +63,4 @@ const ChannelsAvailable: React.FC<ChannelsAvailableProps> = ({ onChangeRoom }) =
   );
 };
 
-export default ChannelsAvailable;
+export default ChannelsMember;

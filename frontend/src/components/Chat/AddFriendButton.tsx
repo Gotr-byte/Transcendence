@@ -1,3 +1,4 @@
+import { Button } from '@chakra-ui/react';
 import React from 'react';
 
 interface AcceptButtonProps {
@@ -7,15 +8,15 @@ interface AcceptButtonProps {
 const AddFriendButton: React.FC<AcceptButtonProps> = ({ username }) => {
   const acceptRequest = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/friends/${username}`, {
+      const response = await fetch(`${process.env.API_URL}/friends/${username}`, {
         method: 'POST',
         credentials: "include",
     }); 
 
       if (response.ok) {
-        alert('Friend request accepted.');
+        alert('Friend request sent.');
       } else {
-        throw new Error('Failed to accept friend request.');
+        throw new Error('Failed to send friend request.');
       }
     } catch (error) {
       console.error('An error occurred:', error);
@@ -24,9 +25,7 @@ const AddFriendButton: React.FC<AcceptButtonProps> = ({ username }) => {
   };
 
   return (
-    <button onClick={acceptRequest}>
-      +
-    </button>
+    <Button onClick={acceptRequest} size='xs'>+</Button>
   );
 };
 

@@ -10,7 +10,7 @@ const DeleteFriend: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:4000/friends/${friendName}`, {
+      const response = await fetch(`${process.env.API_URL}/friends/${friendName}`, {
         method: 'DELETE',
         credentials: 'include'
       });

@@ -7,12 +7,12 @@ import {
   Text,
   Button,
 } from "@chakra-ui/react";
-import ChatUsers from "./ChatUsers";
-import ChannelsMember from "./ChannelsMember";
-import ChannelsAvailable from "./ChannelsAvailable";
-import MessageList from "./MessageList";
+import ChatUsers from "./Chat/ChatUsers";
+import ChannelsMember from "./Chat/ChannelsMember";
+import ChannelsAvailable from "./Chat/ChannelsAvailable";
+import MessageList from "./Chat/MessageList";
 import { Tab, TabList, Tabs } from "@chakra-ui/react";
-import { DirectMessageSenderList } from "./DirectMessages";
+import { DirectMessageSenderList } from "./Chat/DirectMessages";
 
 const ChatUI: React.FC = () => {
   const [message, setMessage] = useState<string>("");
@@ -28,7 +28,7 @@ const ChatUI: React.FC = () => {
     }
 
     try {
-      const url = `http://localhost:4000/messages/channel/${currentRoomId}`;
+      const url = `${process.env.API_URL}/messages/channel/${currentRoomId}`;
       const headers: HeadersInit = {
         Accept: "*/*",
         "Content-Type": "application/json",

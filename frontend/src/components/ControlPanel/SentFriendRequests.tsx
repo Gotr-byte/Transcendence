@@ -13,14 +13,14 @@ const SentFriendRequests: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:4000/friends/sent", {
+        const response = await fetch(`${process.env.API_URL}/friends/sent`, {
           credentials: "include",
         });
         if (response.ok) {
           const data = await response.json();
           setSentRequests(data.users);
         } else {
-          throw new Error("Failed to fetch the data, young warrior");
+          throw new Error("Failed to fetch the data");
         }
       } catch (error) {
         console.error("An error occurred:", error);

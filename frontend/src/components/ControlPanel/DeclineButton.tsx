@@ -1,13 +1,14 @@
+import { Button } from '@chakra-ui/react';
 import React from 'react';
 
 interface DeclineButtonProps {
-  username: string; // The username of the user who sent the friend request
+  username: string;
 }
 
 const DeclineButton: React.FC<DeclineButtonProps> = ({ username }) => {
   const declineRequest = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/friends/${username}`, {
+      const response = await fetch(`${process.env.API_URL}/friends/${username}`, {
         method: 'DELETE',
         credentials: "include",
     }); 
@@ -15,7 +16,7 @@ const DeclineButton: React.FC<DeclineButtonProps> = ({ username }) => {
       if (response.ok) {
         alert('Friend request declined.');
       } else {
-        throw new Error('Failed to declined friend request.');
+        throw new Error('Failed to decline a friend request.');
       }
     } catch (error) {
       console.error('An error occurred:', error);
@@ -24,9 +25,7 @@ const DeclineButton: React.FC<DeclineButtonProps> = ({ username }) => {
   };
 
   return (
-    <button onClick={declineRequest}>
-      Decline
-    </button>
+    <Button onClick={declineRequest} size='xs'>Decline</Button>
   );
 };
 
