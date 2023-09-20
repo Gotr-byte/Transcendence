@@ -7,10 +7,10 @@ const TwoFactorAuthSetup: React.FC = () => {
     async function fetchQrCode() {
       try {
         // const response = await fetch(`${process.env.API_URL}/2fa/activate`, {
-        const response = await fetch(`http://localhost:4000/2fa/activate`, {
+        const response = await fetch(`${process.env.API_URL}/2fa/activate`, {
           headers: {
             'Access-Control-Allow-Credentials': 'true',
-            'Access-Control-Allow-Origin': 'http://localhost:5173',
+            'Access-Control-Allow-Origin': `${process.env.URL}`,
           },
           credentials: 'include',
         });
