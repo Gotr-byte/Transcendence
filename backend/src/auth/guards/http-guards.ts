@@ -43,7 +43,6 @@ export class AuthenticatedGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.session.passport?.user;
 
-    console.log(user);
     if (user && user.is2FaActive && !user.is2FaValid) {
       throw new UnauthorizedException(`${user.username} 2fa is not validated`);
     }
