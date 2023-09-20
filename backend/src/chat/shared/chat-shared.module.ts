@@ -3,5 +3,6 @@ import { SharedService } from './shared.service';
 
 @Module({
   providers: [SharedService],
+  exports: [SharedService],
 })
-export class SharedModule {}
+export class ChatSharedModule {}

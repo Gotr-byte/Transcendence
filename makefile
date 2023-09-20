@@ -31,7 +31,7 @@ clean: down
 fclean: down
 	@docker compose -f ./docker-compose.yml down --rmi all
 	@docker volume prune
-	@docker system prune
+	@docker system prune -a
 	@echo $(RED) Containers, Images, Volumes and Build Cache Removed $(EOC);
 
 re: clean all

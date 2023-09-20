@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { MessagesController } from './messages.controller';
 import { AuthModule } from 'src/auth/auth.module';
-import { SharedService } from '../shared/shared.service';
-import { UserService } from 'src/user/user.service';
+import { ChatSharedModule } from '../shared/chat-shared.module';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
-  imports: [AuthModule],
+  imports: [AuthModule, MessagesModule, ChatSharedModule, UserModule],
   controllers: [MessagesController],
-  providers: [MessagesService, SharedService, UserService],
+  providers: [MessagesService],
+  exports: [MessagesService],
 })
 export class MessagesModule {}

@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { matchesService } from './matches.service';
 import { CreateMatchDto, ShowAnyMatchDto } from './dto/matchDto';
-import { AuthenticatedGuard } from 'src/auth/guards/Guards';
+import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
 import { User } from '@prisma/client';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';

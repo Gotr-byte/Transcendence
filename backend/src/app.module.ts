@@ -10,11 +10,13 @@ import { MatchesModule } from './matches/matches.module';
 import { ChatModule } from './chat/chat.module';
 import { ImagekitService } from './imagekit/imagekit.service';
 import { ImagekitModule } from './imagekit/imagekit.module';
+import { SocketModule } from './socket/socket.module';
 
 @Module({
   imports: [
     AuthModule,
     ChatModule,
+    SocketModule,
     UserModule,
     MatchesModule,
     PrismaModule,
