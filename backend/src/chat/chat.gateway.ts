@@ -12,12 +12,11 @@ import { MessagesService } from './messages/messages.service';
 import { SocketService } from 'src/socket/socket.service';
 import { ChannelService } from './channel/channel.service';
 import { BlockingService } from 'src/user/user-relations/blocking/blocking.service';
-import {
-  BadRequestException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+// import { UseGuards } from '@nestjs/common';
+// import { SocketSessionGuard } from 'src/auth/guards/socket-guards';
 
 @WebSocketGateway()
+// @UseGuards(SocketSessionGuard)
 export class ChatGateway implements OnGatewayConnection {
   @WebSocketServer() server: Server;
 
@@ -27,7 +26,6 @@ export class ChatGateway implements OnGatewayConnection {
     private readonly socketService: SocketService,
     private readonly blockingService: BlockingService,
   ) {}
-  // ... other methods and properties
 
   async handleConnection(@ConnectedSocket() client: Socket) {
     const userId = client.handshake.query.userId as string;
@@ -100,5 +98,23 @@ export class ChatGateway implements OnGatewayConnection {
 
     if (!this.blockingService.isBlockedBy(userId, userMessageDto.receiverId))
       client.to(roomName).emit('new-user-message', savedMessage);
+  }
+
+  @SubscribeMessage('get-my-channels')
+  async handleGetMyChannels(@ConnectedSocket() client: Socket): Promise<void> {
+    const userId = await this.socketService.getUserId(client.id);
+    const userChannels = await this.channelService.getUserChannels(userId);
+    client.emit('my-channels', userChannels);
+  }
+
+  @SubscribeMessage('get-visible-channels')
+  async handleGetVisibleChannels(
+    @ConnectedSocket() client: Socket,
+  ): Promise<void> {
+    const userId = await this.socketService.getUserId(client.id);
+    const nonMemberChannels = await this.channelService.getNonMemberChannels(
+      userId,
+    );
+    client.emit('visible-channels', nonMemberChannels);
   }
 }

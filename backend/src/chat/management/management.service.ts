@@ -5,9 +5,9 @@ import {
 } from '@nestjs/common';
 import { Channel, ChannelMemberRoles, ChannelTypes } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { SharedService } from './chat/shared/shared.service';
-import { CreateChannelDto, UpdateChannelDto } from './chat/management/dto';
-import { ChannelDto, ShowChannelDto } from './chat/shared/dto';
+import { SharedService } from '../shared/shared.service';
+import { CreateChannelDto, UpdateChannelDto } from './dto';
+import { ChannelDto, ShowChannelDto } from '../shared/dto';
 import * as argon from 'argon2';
 
 @Injectable()
@@ -52,6 +52,7 @@ export class ManagementService {
     if (isChannelProtected) {
       await this.validatePasswordPresence(editChannelDto.password);
       editChannelDto.password = await this.hashPassword(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         editChannelDto.password!,
       );
     }

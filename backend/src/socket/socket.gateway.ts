@@ -7,19 +7,15 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from './socket.service';
+import { SocketSessionGuard } from 'src/auth/guards/socket-guards';
+import { UseGuards } from '@nestjs/common';
 
-@WebSocketGateway({
-  cors: {
-    origin: process.env.FRONTEND_URL,
-    methods: 'GET, POST, PATCH, DELETE',
-    credentials: true,
-  },
-})
+@UseGuards(SocketSessionGuard)
+@WebSocketGateway({ cors: { origin: process.env.FRONTEND_URL } })
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
   constructor(private readonly socketService: SocketService) {}
 
-  // @UseGuards(SocketSessionGuard)
   async handleConnection(@ConnectedSocket() client: Socket) {
     const userId = client.handshake.query.userId as string;
     this.socketService.registerOnlineUser(+userId, client.id);

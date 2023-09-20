@@ -1,10 +1,4 @@
-import {
-  CanActivate,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 
 // @Injectable()
 // // Customizes canActivate method to log in user after successful 42 authentication
@@ -23,11 +17,25 @@ import { AuthGuard } from '@nestjs/passport';
 export class SocketSessionGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const client = context.switchToWs().getClient();
-    const sessionId = client.handshake;
-    console.log(sessionId);
-    return true;
+    const request = client.request;
+    return request.isAuthenticated();
   }
 }
+
+// @Injectable()
+// export class SessionGuard implements CanActivate {
+//   // Checks if the user is authenticated
+//   async canActivate(context: ExecutionContext): Promise<boolean> {
+//     const request = context.switchToHttp().getRequest();
+//     const user = request.session.passport?.user;
+
+//     if (!user) {
+//       throw new UnauthorizedException('Not logged in');
+//     }
+
+//     return request.isAuthenticated();
+//   }
+// }
 
 // @Injectable()
 // export class SocketAuthGuard implements CanActivate {

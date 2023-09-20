@@ -10,16 +10,14 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
-import { Response } from 'express';
 import { AuthUser } from 'src/auth/auth.decorator';
-import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
+import { AuthenticatedGuard, SessionGuard } from 'src/auth/guards/http-guards';
 import { ChangeUserDto, FileUploadDto, ShowLoggedUserDto } from './dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { ImagekitService } from 'src/imagekit/imagekit.service';
 import { UserService } from './user.service';
 
-@UseGuards(AuthenticatedGuard)
 @ApiTags('Profile: CurrentUser')
 @Controller('profile')
 export class CurrentUserController {
@@ -28,18 +26,18 @@ export class CurrentUserController {
     private readonly userService: UserService,
   ) {}
 
+  @UseGuards(SessionGuard)
   @Get()
   @ApiOperation({
     summary:
       'Redirects the authenticated user to their profile page (id, username, isOnline, avatar, is2FaActive)',
   })
-  async getCurrentUser(
-    @AuthUser() user: User,
-    @Res() response: Response,
-  ): Promise<void> {
-    response.redirect(`/users/` + user.username);
+  async getCurrentUser(@AuthUser() user: User): Promise<ShowLoggedUserDto> {
+    const currentUser = await this.userService.getUserByName(user.username);
+    return ShowLoggedUserDto.from(currentUser);
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Patch()
   @ApiOperation({
     summary: 'Update logged users username',
@@ -62,6 +60,8 @@ export class CurrentUserController {
     return updatedUser;
   }
 
+  @UseGuards(AuthenticatedGuard)
+  @Patch('upload-avatar')
   @ApiOperation({
     summary:
       'Uploads a new avatar profile picture, max size: 10mb, allowed types: jpeg, jpg, bmp and png',
@@ -70,7 +70,6 @@ export class CurrentUserController {
   @ApiBody({
     type: FileUploadDto,
   })
-  @Patch('upload-avatar')
   @UseInterceptors(
     FileInterceptor('image', {
       storage: memoryStorage(),
