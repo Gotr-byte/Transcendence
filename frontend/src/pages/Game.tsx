@@ -33,10 +33,15 @@ const SimpleSwitch: React.FC = () => {
     }
   }, [isOn]);
 
+  const handle2FASuccess = () => {
+    console.log('2FA verified successfully.');
+    // Redirect the user to the main page or reload the current page
+    // window.location.href = '/main-page-url'; 
+  };
   return (
     <div>
       <canvas ref={canvasRef} width={200} height={200} onClick={toggleSwitch}></canvas>
-      <TwoFAComponent></TwoFAComponent>
+      <TwoFAComponent onVerify={handle2FASuccess}></TwoFAComponent>
     </div>
   );
 };
