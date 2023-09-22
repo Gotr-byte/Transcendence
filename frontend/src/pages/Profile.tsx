@@ -16,6 +16,7 @@ import DesignateAdmin from "../components/ControlPanel/DesignateAdmin";
 import FileUpload from "../components/ControlPanel/FileUpload";
 import MatchesComponent from "../components/ControlPanel/DisplayMatchHistory";
 import BanUser from "../components/ControlPanel/BanUser";
+// import { isLoggedIn } from "../layouts/RootLayout";
 
 export default function Profile() {
   return (

@@ -25,7 +25,6 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => 
   const [user, setUser] = useState<User | null>(null);
   const [showUser, setShowUser] = useState(false);
 
-
   const fetchUserData = () => {
     fetch(`${process.env.API_URL}/profile`, {
       credentials: "include",

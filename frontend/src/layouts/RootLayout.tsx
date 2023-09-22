@@ -6,6 +6,7 @@ import GalaxySlideShow from "../components/GalaxySlideShow"
 import "../../styles.css";
 import { useState } from "react";
 
+
 export default function RootLayout() {
   const [isLoggedIn, setIsLoggedIn] = useState(false); // New state variable
   return (
@@ -31,7 +32,7 @@ export default function RootLayout() {
   >
     <GalaxySlideShow></GalaxySlideShow>
     <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-    <Outlet />
+    { isLoggedIn && <Outlet /> }
   </GridItem>
     </Grid>
   );
