@@ -16,10 +16,15 @@ interface User {
   is2FaActive: boolean;
 }
 
-export const Navbar = () => {
+interface NavbarProps {
+  isLoggedIn: boolean;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => {
   const [user, setUser] = useState<User | null>(null);
   const [showUser, setShowUser] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // New state variable
+
 
   const fetchUserData = () => {
     fetch(`${process.env.API_URL}/profile`, {
