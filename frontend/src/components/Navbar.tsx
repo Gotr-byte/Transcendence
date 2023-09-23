@@ -66,16 +66,17 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => 
         Transcendence
       </Heading>
       <Spacer />
-      <HStack spacing="10px">
-        {showUser && user?.username && <Text color="silver" >{user.username}</Text>}
+      {/* <HStack spacing="10px" width="100px" height="100px"> */}
+      <HStack spacing="10px" height="120px">
+        {showUser && user?.username && <Text color="silver" fontSize={'30px'}>{user.username}</Text>}
         {showUser && user?.username && (
           <Avatar name="avatar" src={user.avatar} background="purple">
           </Avatar>
         )}
         {isLoggedIn ? (
-          <button style={{ color: 'silver' }}  onClick={handleLogout}>Logout</button>
+          <button style={{ color: 'silver' , fontSize:'30px'}}  onClick={handleLogout}>Logout</button>
         ) : (
-          <button style={{ color: 'silver' }} 
+          <button style={{ color: 'silver', fontSize:'30px', alignItems:"right"}} 
             onClick={() =>
               (window.location.href = `${process.env.API_URL}/auth/42/login`)
             }

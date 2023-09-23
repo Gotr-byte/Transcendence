@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalCloseButton } from "@chakra-ui/react";
 
+
 interface Message {
   sender: string;
   content: string;
