@@ -66,7 +66,6 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => 
         Transcendence
       </Heading>
       <Spacer />
-      {/* <HStack spacing="10px" width="100px" height="100px"> */}
       <HStack spacing="10px" height="120px">
         {showUser && user?.username && <Text color="silver" fontSize={'30px'}>{user.username}</Text>}
         {showUser && user?.username && (
