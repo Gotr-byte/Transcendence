@@ -11,7 +11,7 @@ export default defineConfig({
     alias: {
     'react-slick': path.resolve(__dirname, 'node_modules/react-slick'),
     'slick-carousel': path.resolve(__dirname, 'node_modules/slick-carousel'),
-    'socket.io-client': path.resolve(__dirname,'node_modules/socket.io-client')
+    // 'socket.io-client': path.resolve(__dirname,'node_modules/socket.io-client')
 
       
     }
