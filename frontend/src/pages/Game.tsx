@@ -41,7 +41,7 @@ const SimpleSwitch: React.FC = () => {
   return (
     <div>
       <canvas ref={canvasRef} width={200} height={200} onClick={toggleSwitch}></canvas>
-      <TwoFAComponent onVerify={handle2FASuccess}></TwoFAComponent>
+      {/* <TwoFAComponent onVerify={handle2FASuccess}></TwoFAComponent> */}
     </div>
   );
 };
