@@ -88,7 +88,7 @@ export const Navbar = () => {
       {/* {isLoggedIn && user?.is2FaActive && !(user?.is2FaValid) &&(
         <TwoFAComponent onVerify={handle2FASuccess} />
     )} */}
-        {isLoggedIn && (<TwoFAComponent onVerify={handle2FASuccess}/>)}
+        {/* {isLoggedIn && (<TwoFAComponent onVerify={handle2FASuccess}/>)} */}
 
     </Flex>
   );

@@ -17,6 +17,7 @@ import FileUpload from "../components/ControlPanel/FileUpload";
 import MatchesComponent from "../components/ControlPanel/DisplayMatchHistory";
 import BanUser from "../components/ControlPanel/BanUser";
 import TwoFactorAuthSetup from "../components/ControlPanel/TwoFactorAuthSetup";
+import { Websocket } from "../components/Websocket";
 
 export default function Profile() {
   return (
@@ -52,7 +53,8 @@ export default function Profile() {
           <BlockUser />
           <DesignateAdmin/>
           <BanUser/>
-          <TwoFactorAuthSetup/>
+          {/* <TwoFactorAuthSetup/> */}
+          <Websocket/>
         </TabPanel>
         <TabPanel>
           <Friends />
