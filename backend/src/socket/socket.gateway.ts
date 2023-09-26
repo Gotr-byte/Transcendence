@@ -14,7 +14,7 @@ import { OnModuleInit } from '@nestjs/common';
 // import { UseGuards } from '@nestjs/common';
 
 // @UseGuards(SocketSessionGuard)
-@WebSocketGateway(/*{ cors: { origin: process.env.FRONTEND_URL } }*/)
+@WebSocketGateway({ cors: { origin: process.env.FRONTEND_URL } })
 // export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 // @WebSocketServer() server: Server;
 //   constructor(private readonly socketService: SocketService) {}
@@ -33,7 +33,7 @@ import { OnModuleInit } from '@nestjs/common';
 export class SocketGateway implements OnModuleInit {
   @WebSocketServer() server: Server;
   onModuleInit() {
-    this.server.on('connection', (socket) => {
+    this.server.on('connect', (socket) => {
       console.log(socket.id);
       console.log('Connected');
     });
