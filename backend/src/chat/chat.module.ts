@@ -4,7 +4,7 @@ import { AdminModule } from './admin/admin.module';
 import { ChannelModule } from './channel/channel.module';
 import { MessagesModule } from './messages/messages.module';
 import { ChatSharedModule } from './shared/chat-shared.module';
-// import { ChatGateway } from './chat.gateway';
+import { ChatGateway } from './chat.gateway';
 import { SocketModule } from 'src/socket/socket.module';
 import { BlockingModule } from 'src/user/user-relations/blocking/blocking.module';
 
@@ -18,6 +18,6 @@ import { BlockingModule } from 'src/user/user-relations/blocking/blocking.module
     SocketModule,
     BlockingModule,
   ],
-  // providers: [ChatGateway],
+  providers: [ChatGateway],
 })
 export class ChatModule {}
