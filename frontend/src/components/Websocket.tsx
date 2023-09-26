@@ -3,11 +3,11 @@ import { WebsocketContext } from './Context/WebsocketContexts';
 
 type MessagePayload = {
   content: string;
-  recieverId: number;
+  receiverId: number;
 };
 
 export const Websocket = () => {
-  const [sentMessage, setSentMessage] = useState<MessagePayload>({ content: '', recieverId: 2 });
+  const [sentMessage, setSentMessage] = useState<MessagePayload>({ content: '', receiverId: 2 });
   const socket = useContext(WebsocketContext);
 
   useEffect(() => {
@@ -28,10 +28,10 @@ export const Websocket = () => {
     }
 
     // Convert the sentMessage object to a JSON string
-    const sentMessageJSON = JSON.stringify(sentMessage);
+    const sentMessageJSON = sentMessage;
 
     // Log the message content
-    console.log(sentMessage.content);
+    console.log(sentMessage);
 
     // Send the JSON string to the server
     socket.emit('send-user-message', sentMessageJSON);
