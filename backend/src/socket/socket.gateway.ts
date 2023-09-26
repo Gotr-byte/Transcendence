@@ -11,7 +11,7 @@ import { SocketSessionGuard } from 'src/auth/guards/socket-guards';
 import { UseGuards } from '@nestjs/common';
 
 @UseGuards(SocketSessionGuard)
-@WebSocketGateway({ cors: { origin: process.env.FRONTEND_URL } })
+@WebSocketGateway(/*{ cors: { origin: process.env.FRONTEND_URL } }*/)
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
   constructor(private readonly socketService: SocketService) {}
