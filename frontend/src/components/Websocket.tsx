@@ -1,35 +1,43 @@
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { WebsocketContext } from './Context/WebsocketContexts';
 
 type MessagePayload = {
   content: string;
-  msg: string;
+  recieverId: number;
 };
 
 export const Websocket = () => {
-  const [value, setValue] = useState('');
-  const [messages, setMessages] = useState<MessagePayload[]>([]);
+  const [sentMessage, setSentMessage] = useState<MessagePayload>({ content: '', recieverId: 2 });
   const socket = useContext(WebsocketContext);
 
   useEffect(() => {
     socket.on('connect', () => {
       console.log('Connected!');
     });
-    socket.on('onMessage', (newMessage: MessagePayload) => {
-      console.log('onMessage event received!');
-      console.log(newMessage);
-      setMessages((prev) => [...prev, newMessage]);
-    });
     return () => {
       console.log('Unregistering Events...');
       socket.off('connect');
-      socket.off('onMessage');
     };
-  }, []);
+  }, [socket]);
 
   const onSubmit = () => {
-    socket.emit('newMessage', value);
-    setValue('');
+    // Check if the content is empty before sending the message
+    if (sentMessage.content.trim() === '') {
+      console.log('Message content is empty. Please enter a message.');
+      return;
+    }
+
+    // Convert the sentMessage object to a JSON string
+    const sentMessageJSON = JSON.stringify(sentMessage);
+
+    // Log the message content
+    console.log(sentMessage.content);
+
+    // Send the JSON string to the server
+    socket.emit('send-user-message', sentMessageJSON);
+
+    // Clear the input field
+    setSentMessage({ ...sentMessage, content: '' });
   };
 
   return (
@@ -37,23 +45,10 @@ export const Websocket = () => {
       <div>
         <h1>Websocket Component</h1>
         <div>
-          {messages.length === 0 ? (
-            <div>No Messages</div>
-          ) : (
-            <div>
-              {messages.map((msg) => (
-                <div>
-                  <p>{msg.content}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-        <div>
           <input
             type="text"
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
+            value={sentMessage.content}
+            onChange={(e) => setSentMessage({ ...sentMessage, content: e.target.value })}
           />
           <button onClick={onSubmit}>Submit</button>
         </div>
