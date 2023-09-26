@@ -30,7 +30,7 @@ import { OnModuleInit } from '@nestjs/common';
 //     console.info(`Client disconnected with ID: ${client.id}`);
 //   }
 // }
-export class MyGateway implements OnModuleInit {
+export class SocketGateway implements OnModuleInit {
   @WebSocketServer() server: Server;
   onModuleInit() {
     this.server.on('connection', (socket) => {
