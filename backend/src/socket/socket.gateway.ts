@@ -21,6 +21,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   async handleConnection(@ConnectedSocket() client: Socket) {
     const userId = client.handshake.query.userId as string;
+    console.log('UserID: ' + userId);
     this.socketService.registerOnlineUser(+userId, client.id);
     console.info(`Client connected with ID: ${client.id}`);
   }
