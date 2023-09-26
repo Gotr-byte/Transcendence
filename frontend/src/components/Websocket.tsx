@@ -7,7 +7,7 @@ type MessagePayload = {
 };
 
 export const Websocket = () => {
-  const [sentMessage, setSentMessage] = useState<MessagePayload>({ content: '', receiverId: 2 });
+  const [sentMessage, setSentMessage] = useState<MessagePayload>({ content: '', receiverId: 3 });
   const socket = useContext(WebsocketContext);
 
   useEffect(() => {
