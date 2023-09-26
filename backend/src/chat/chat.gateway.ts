@@ -15,7 +15,7 @@ import { BlockingService } from 'src/user/user-relations/blocking/blocking.servi
 // import { UseGuards } from '@nestjs/common';
 // import { SocketSessionGuard } from 'src/auth/guards/socket-guards';
 
-@WebSocketGateway()
+@WebSocketGateway({ cors: { origin: process.env.FRONTEND_URL } })
 // @UseGuards(SocketSessionGuard)
 export class ChatGateway implements OnGatewayConnection {
   @WebSocketServer() server: Server;
