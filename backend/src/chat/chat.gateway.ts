@@ -104,6 +104,7 @@ export class ChatGateway implements OnGatewayConnection {
     if (!isBlocked) {
       client.to(roomName).emit('new-user-message', savedMessage);
     }
+    client.emit('new-user-message', savedMessage);
   }
 
   @SubscribeMessage('get-my-channels')
