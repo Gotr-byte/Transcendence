@@ -3,7 +3,7 @@ import { ChannelMember } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
-export class SharedService {
+export class ChatSharedService {
   constructor(private prisma: PrismaService) {}
 
   async addUser(channelMember: ChannelMember): Promise<ChannelMember> {
@@ -44,5 +44,17 @@ export class SharedService {
       throw new BadRequestException(
         `User with id: '${userId}' is not a member of this channel (ID: ${channelId})`,
       );
+  }
+
+  async removeExpiredChannelRestrictions(userId: number) {
+    const currentTime = new Date();
+    await this.prisma.channelUserRestriction.deleteMany({
+      where: {
+        restrictedUserId: userId,
+        duration: {
+          lt: currentTime,
+        },
+      },
+    });
   }
 }

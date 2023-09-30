@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { JoinChannelDto, ShowUsersRoles } from './dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { SharedService } from '../shared/shared.service';
+import { ChatSharedService } from '../shared/chat-shared.service';
 import {
   Channel,
   ChannelMemberRoles,
@@ -19,7 +19,7 @@ import * as argon from 'argon2';
 export class ChannelService {
   constructor(
     private prisma: PrismaService,
-    private readonly sharedService: SharedService,
+    private readonly chatSharedService: ChatSharedService,
   ) {}
 
   async getNonMemberChannels(userId: number): Promise<ShowChannelsDto> {
@@ -98,7 +98,7 @@ export class ChannelService {
     const channel = await this.getChannelForJoin(channelId, userId);
     await this.verifyJoinChannel(channel, joinChannelDto);
 
-    await this.sharedService.addUser({
+    await this.chatSharedService.addUser({
       channelId: channel.id,
       userId: userId,
       role: ChannelMemberRoles.USER,
@@ -106,12 +106,12 @@ export class ChannelService {
   }
 
   async leaveChannel(channelId: number, userId: number): Promise<void> {
-    await this.sharedService.deleteUserFromChannel(channelId, userId);
+    await this.chatSharedService.deleteUserFromChannel(channelId, userId);
     const usersNo = await this.countChannelMembers(channelId);
     if (!usersNo) {
-      await this.sharedService.deleteAllChannelRestrictions(channelId);
-      await this.sharedService.deleteAllChannelMessages(channelId);
-      await this.sharedService.removeChannel(channelId);
+      await this.chatSharedService.deleteAllChannelRestrictions(channelId);
+      await this.chatSharedService.deleteAllChannelMessages(channelId);
+      await this.chatSharedService.removeChannel(channelId);
     }
   }
 

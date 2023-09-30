@@ -12,6 +12,7 @@ import { MessagesService } from './messages/messages.service';
 import { SocketService } from 'src/socket/socket.service';
 import { ChannelService } from './channel/channel.service';
 import { BlockingService } from 'src/user/user-relations/blocking/blocking.service';
+import { ChatSharedService } from './shared/chat-shared.service';
 // import { UseGuards } from '@nestjs/common';
 // import { SocketSessionGuard } from 'src/auth/guards/socket-guards';
 
@@ -25,6 +26,7 @@ export class ChatGateway implements OnGatewayConnection {
     private readonly messagesService: MessagesService,
     private readonly socketService: SocketService,
     private readonly blockingService: BlockingService,
+    private readonly chatSharedService: ChatSharedService,
   ) {}
 
   async handleConnection(@ConnectedSocket() client: Socket) {
@@ -38,6 +40,7 @@ export class ChatGateway implements OnGatewayConnection {
       const roomName = [userId, user.id].sort().join('_');
       client.join(roomName);
     });
+    await this.chatSharedService.removeExpiredChannelRestrictions(+userId);
   }
 
   @SubscribeMessage('send-channel-message')

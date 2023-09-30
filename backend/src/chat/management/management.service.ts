@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Channel, ChannelMemberRoles, ChannelTypes } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { SharedService } from '../shared/shared.service';
+import { ChatSharedService } from '../shared/chat-shared.service';
 import { CreateChannelDto, UpdateChannelDto } from './dto';
 import { ChannelDto, ShowChannelDto } from '../shared/dto';
 import * as argon from 'argon2';
@@ -14,7 +14,7 @@ import * as argon from 'argon2';
 export class ManagementService {
   constructor(
     private prisma: PrismaService,
-    private readonly sharedService: SharedService,
+    private readonly chatSharedService: ChatSharedService,
   ) {}
 
   async createChannel(
@@ -64,10 +64,10 @@ export class ManagementService {
 
   async deleteChannel(channelId: number, userId: number): Promise<void> {
     await this.verifyCreator(channelId, userId);
-    await this.sharedService.deleteAllChannelRestrictions(channelId);
-    await this.sharedService.deleteAllChannelMessages(channelId);
+    await this.chatSharedService.deleteAllChannelRestrictions(channelId);
+    await this.chatSharedService.deleteAllChannelMessages(channelId);
     await this.kickAllUsers(channelId);
-    await this.sharedService.removeChannel(channelId);
+    await this.chatSharedService.removeChannel(channelId);
   }
 
   private async validatePasswordPresence(
@@ -84,7 +84,7 @@ export class ManagementService {
   }
 
   private async addAdminUser(userId: number, channelId: number): Promise<void> {
-    await this.sharedService.addUser({
+    await this.chatSharedService.addUser({
       channelId,
       userId,
       role: ChannelMemberRoles.ADMIN,

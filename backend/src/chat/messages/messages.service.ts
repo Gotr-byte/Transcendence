@@ -8,7 +8,7 @@ import {
   CreateUserMessageDto,
 } from './dto/create-message.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { SharedService } from '../shared/shared.service';
+import { ChatSharedService } from '../shared/chat-shared.service';
 import { UserService } from 'src/user/user.service';
 import { Message } from '@prisma/client';
 import { ShowMessagesDto } from './dto/show-messages.dto';
@@ -18,7 +18,7 @@ import { UsernameId } from './types/types';
 export class MessagesService {
   constructor(
     private prisma: PrismaService,
-    private readonly sharedService: SharedService,
+    private readonly chatSharedService: ChatSharedService,
     private readonly userService: UserService,
   ) {}
 
@@ -30,7 +30,7 @@ export class MessagesService {
       createChannelMessageDto.channelId,
       userId,
     );
-    await this.sharedService.ensureUserIsMember(
+    await this.chatSharedService.ensureUserIsMember(
       createChannelMessageDto.channelId,
       userId,
     );
@@ -58,7 +58,7 @@ export class MessagesService {
     channelId: number,
   ): Promise<ShowMessagesDto> {
     await this.ensureUserIsNotRestricted(channelId, userId);
-    await this.sharedService.ensureUserIsMember(channelId, userId);
+    await this.chatSharedService.ensureUserIsMember(channelId, userId);
 
     const messages = await this.getVisibleChannelMessages(channelId, userId);
 
