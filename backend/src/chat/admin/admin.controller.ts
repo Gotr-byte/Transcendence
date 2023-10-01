@@ -122,7 +122,7 @@ export class AdminController {
         value: {
           restrictionType: 'optional-restrictionType BANNED or MUTED',
           duration:
-            'optional-duration for the restriction in JS Date format, if empty: indefinite restriction',
+            'optional-duration for the restriction in JS Date format (2023-09-30T10:07:07.000Z), if empty: indefinite restriction',
         },
       },
     },

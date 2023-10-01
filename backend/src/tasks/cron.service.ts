@@ -23,7 +23,7 @@ export class CronService implements OnModuleInit {
   }
 
   private async startCronJobs() {
-    cron.schedule('*/10 * * * *', async () => {
+    cron.schedule('*/10 * * * * *', async () => {
       await this.checkOnlineUsersAndRemoveRestrictions();
     });
   }
