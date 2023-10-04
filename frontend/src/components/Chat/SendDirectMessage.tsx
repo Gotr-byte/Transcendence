@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import {
   Button,
   Modal,
@@ -12,85 +11,95 @@ import {
   Input,
 } from "@chakra-ui/react";
 
+import { useContext, useEffect, useState } from "react";
+import { WebsocketContext } from "../Context/WebsocketContexts";
+
+type MessagePayload = {
+  content: string;
+  receiverId: number;
+};
+
+type ReceivedMessagePayload = {
+  content: string;
+};
+
 interface SendDirectMessageProps {
   username: string;
 }
 
-interface MessageBody {
-  content: string;
-}
-
-interface Message {
-  sender: string;
-  content: string;
-}
-
-export const SendDirectMessage: React.FC<SendDirectMessageProps> = ({ username }) => {
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [content, setContent] = useState('');
+export const SendDirectMessage: React.FC<SendDirectMessageProps> = ({
+  username,
+}) => {
+  const [sentMessage, setSentMessage] = useState<MessagePayload>({
+    content: "",
+    receiverId: 3,
+  });
+  const [receivedMessages, setReceivedMessages] = useState<
+    ReceivedMessagePayload[]
+  >([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const fetchMessages = () => {
-    fetch(`${process.env.API_URL}/messages/user/${username}`, {
-      method: 'GET',
-      credentials: 'include',
-      headers: {
-        'Accept': '*/*',
-      },
-    })
-      .then(response => response.json())
-      .then(data => setMessages(data.messages))
-      .catch(error => console.error('Error fetching messages:', error));
-  };
-
-  const sendDirectMessage = async () => {
-    try {
-      const message: MessageBody = { content };
-      const response = await fetch(`${process.env.API_URL}/messages/user/${username}`, {
-        method: 'POST',
-        credentials: "include",
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(message),
-      });
-      
-      if (response.ok) {
-        fetchMessages();
-        setContent('');
-      } else {
-        throw new Error('Failed to send direct message');
-      }
-    } catch (error) {
-      console.error('An error occurred:', error);
-    }
-  };
-
+  const socket = useContext(WebsocketContext);
   useEffect(() => {
-    if (isOpen) {
-      fetchMessages();
+    socket.on("connect", () => {
+      console.log("Connected!");
+    });
+    socket.on("new-user-message", (newMessage: ReceivedMessagePayload) => {
+      setReceivedMessages((prev) => [...prev, newMessage]);
+    });
+    return () => {
+      console.log("Unregistering Events...");
+      socket.off("connect");
+      socket.off("new-user-message");
+    };
+  }, [socket]);
+  const onSubmit = () => {
+    if (sentMessage.content.trim() === "") {
+      alert("Message content is empty. Please enter a message.");
+      return;
     }
-  }, [isOpen]);
+    const sentMessageJSON = sentMessage;
+    socket.emit("send-user-message", sentMessageJSON);
+    setSentMessage({ ...sentMessage, content: "" });
+  };
 
   return (
     <>
-      <Button variant="solid" size='xs' onClick={onOpen}>DM</Button>
+      <Button variant="solid" size="xs" onClick={onOpen}>
+        DM
+      </Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Send a message to {username}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <div style={{ border: '1px solid #ccc', padding: '16px', height: '200px', overflowY: 'scroll' }}>
-              {messages.map((msg, index) => (
-                <p key={index}><strong>{msg.sender}:</strong> {msg.content}</p>
+            <div
+              style={{
+                border: "1px solid #ccc",
+                padding: "16px",
+                height: "200px",
+                overflowY: "scroll",
+              }}
+            >
+              {receivedMessages.map((msg, index) => (
+                <div key={index}>
+                  <p>{msg.content}</p>
+                </div>
               ))}
             </div>
-            <Input value={content} placeholder="Type your message here" onChange={e => setContent(e.target.value)} />
+            <Input
+              value={sentMessage.content}
+              placeholder="Type your message here"
+              onChange={(e) =>
+                setSentMessage({ ...sentMessage, content: e.target.value })
+              }
+            />
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={sendDirectMessage}>
+            <Button colorScheme="blue" mr={3} onClick={onSubmit}>
               Send
             </Button>
-            <Button variant="solid" size='xs' onClick={onClose}>Cancel</Button>
+            {/* <Button variant="solid" size='xs' onClick={onSubmit}>Cancel</Button> */}
           </ModalFooter>
         </ModalContent>
       </Modal>
