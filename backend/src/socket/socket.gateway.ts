@@ -1,12 +1,15 @@
 import {
   ConnectedSocket,
+  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from './socket.service';
+import { OnModuleInit } from '@nestjs/common';
 import { SocketSessionGuard } from 'src/auth/guards/socket-guards';
 import { UseGuards } from '@nestjs/common';
 
@@ -27,3 +30,21 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     console.info(`Client disconnected with ID: ${client.id}`);
   }
 }
+// export class SocketGateway implements OnModuleInit {
+//   @WebSocketServer() server: Server;
+//   onModuleInit() {
+//     this.server.on('connect', (socket) => {
+//       console.log(socket.id);
+//       console.log('Connected');
+//     });
+//   }
+
+//   @SubscribeMessage('newMessage')
+//   onNewMessage(@MessageBody() body: any) {
+//     console.log(body);
+//     this.server.emit('onMessage', {
+//       msg: 'new Message',
+//       content: body,
+//     });
+//   }
+// }

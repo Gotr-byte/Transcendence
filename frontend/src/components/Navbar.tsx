@@ -97,7 +97,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => 
       {/* {isLoggedIn && user?.is2FaActive && !(user?.is2FaValid) &&(
         <TwoFAComponent onVerify={handle2FASuccess} />
     )} */}
-        {isLoggedIn && (<TwoFAComponent onVerify={handle2FASuccess}/>)}
+        {/* {isLoggedIn && (<TwoFAComponent onVerify={handle2FASuccess}/>)} */}
 
     </Flex>
   );
