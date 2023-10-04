@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { TwoFAComponent } from '../components/TwoFAComponent'
+import GameOfLife from '../components/GameOfLife/GameOfLife'
 const SimpleSwitch: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isOn, setIsOn] = useState(false);
@@ -41,6 +42,7 @@ const SimpleSwitch: React.FC = () => {
   return (
     <div>
       <canvas ref={canvasRef} width={200} height={200} onClick={toggleSwitch}></canvas>
+      <GameOfLife></GameOfLife>
       {/* <TwoFAComponent onVerify={handle2FASuccess}></TwoFAComponent> */}
     </div>
   );
