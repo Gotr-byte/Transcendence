@@ -96,8 +96,15 @@ export class ChatGateway implements OnGatewayConnection {
       }
     });
 
-    if (!this.blockingService.isBlockedBy(userId, userMessageDto.receiverId))
+    const isBlocked = await this.blockingService.isBlockedBy(
+      userId,
+      userMessageDto.receiverId,
+    );
+
+    if (!isBlocked) {
       client.to(roomName).emit('new-user-message', savedMessage);
+    }
+    client.emit('new-user-message', savedMessage);
   }
 
   @SubscribeMessage('get-my-channels')
