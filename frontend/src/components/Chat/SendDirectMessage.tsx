@@ -25,14 +25,16 @@ type ReceivedMessagePayload = {
 
 interface SendDirectMessageProps {
   username: string;
+  id: number;
 }
 
 export const SendDirectMessage: React.FC<SendDirectMessageProps> = ({
   username,
+  id,
 }) => {
   const [sentMessage, setSentMessage] = useState<MessagePayload>({
     content: "",
-    receiverId: 3,
+    receiverId: id,
   });
   const [receivedMessages, setReceivedMessages] = useState<
     ReceivedMessagePayload[]

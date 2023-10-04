@@ -1,3 +1,5 @@
+//This is an example component
+
 import { useContext, useEffect, useState } from 'react';
 import { WebsocketContext } from './Context/WebsocketContexts';
 

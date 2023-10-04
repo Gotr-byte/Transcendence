@@ -54,7 +54,7 @@ export default function Profile() {
           <DesignateAdmin/>
           <BanUser/>
           {/* <TwoFactorAuthSetup/> */}
-          <Websocket/>
+          {/* <Websocket/> */}
         </TabPanel>
         <TabPanel>
           <Friends />

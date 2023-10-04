@@ -67,7 +67,7 @@ const ChatUsers: React.FC<ChatUsersProps> = ({ currentRoomId }) => { // New prop
               />
               <AddFriendButton username={user.username}/>
               <UserProfile username={user.username}/>
-              <SendDirectMessage username={user.username}/>
+              <SendDirectMessage username={user.username} id={user.id}/>
             </li>
           ))}
         </ul>
