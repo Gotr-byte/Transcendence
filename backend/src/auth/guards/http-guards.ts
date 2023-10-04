@@ -46,7 +46,6 @@ export class AuthenticatedGuard implements CanActivate {
     if (user && user.is2FaActive && !user.is2FaValid) {
       throw new UnauthorizedException(`${user.username} 2fa is not validated`);
     }
-
     return isSessionValid;
   }
 }

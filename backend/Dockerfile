@@ -1,4 +1,4 @@
-FROM node:18.7-alpine as dev
+FROM node:20.6.1 as dev
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ RUN npm install
 CMD ["npm", "run", "dev:watch"]
 
 
-FROM node:20.5.0 as prod
+FROM node:20.6.1 as prod
 
 WORKDIR /app
 

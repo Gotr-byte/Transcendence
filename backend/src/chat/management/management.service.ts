@@ -52,6 +52,7 @@ export class ManagementService {
     if (isChannelProtected) {
       await this.validatePasswordPresence(editChannelDto.password);
       editChannelDto.password = await this.hashPassword(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         editChannelDto.password!,
       );
     }

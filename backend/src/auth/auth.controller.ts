@@ -1,11 +1,12 @@
 import { Controller, Get, Inject, Req, Res, UseGuards } from '@nestjs/common';
-import { AuthGuard42, SessionGuard } from './guards/Guards';
+import { AuthGuard42, SessionGuard } from './guards/http-guards';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { UserService } from 'src/user/user.service';
 import { User } from '@prisma/client';
 import { AuthUser } from './auth.decorator';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ShowLoggedUserDto } from 'src/user/dto';
 
 @ApiTags('Authentication')
 @Controller('auth')
@@ -35,13 +36,9 @@ export class AuthController {
   async status(
     @AuthUser() user: User,
     @Res() response: Response,
-  ): Promise<string | void> {
-    if (user.is2FaActive && !user.is2FaValid) {
-      return `${user.username}'s 2fa is not validated`;
-    }
-    await this.userService.updateUser(user, { isOnline: true });
+  ): Promise<void | ShowLoggedUserDto> {
     if (process.env.FRONTEND_URL) response.redirect(process.env.FRONTEND_URL);
-    return 'You are Authenticated and your status is set to online!';
+    return ShowLoggedUserDto.from(user);
   }
 
   @Get('logout')

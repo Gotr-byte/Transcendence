@@ -13,10 +13,9 @@ import {
   ChannelUserRestrictionTypes,
 } from '@prisma/client';
 import {
-  CreateRestrictionDto,
+  RestrictionDto,
   ShowUsersRestrictions,
   ShowUsersRolesRestrictions,
-  UpdateRestrictionDto,
   UpdateRoleDto,
 } from './dto';
 import { extendedChannel } from './types';
@@ -96,10 +95,9 @@ export class AdminService {
     channelId: number,
     username: string,
     adminId: number,
-    restrictionDto: CreateRestrictionDto | UpdateRestrictionDto,
+    restrictionDto: RestrictionDto,
   ): Promise<ChannelUserRestriction> {
     const userId = await this.validateAdminAction(channelId, username, adminId);
-
     if (
       restrictionDto.restrictionType === ChannelUserRestrictionTypes.BANNED &&
       (await this.userIsOnChannel(channelId, userId))
@@ -107,21 +105,25 @@ export class AdminService {
       await this.sharedService.deleteUserFromChannel(channelId, userId);
     }
 
-    if (restrictionDto instanceof CreateRestrictionDto) {
-      const newRestriction = await this.createRestriction(
+    let restriction: ChannelUserRestriction;
+    if (restrictionDto.actionType === 'create') {
+      restriction = await this.createRestriction(
         channelId,
         userId,
         restrictionDto,
       );
-      return newRestriction;
+    } else if (restrictionDto.actionType === 'update') {
+      restriction = await this.updateRestriction(
+        channelId,
+        userId,
+        restrictionDto,
+      );
     } else {
-      const updatedRestriction = await this.updateRestriction(
-        channelId,
-        userId,
-        restrictionDto,
+      throw new InternalServerErrorException(
+        'Error while creating/updating user restriction',
       );
-      return updatedRestriction;
     }
+    return restriction;
   }
 
   async updateRole(
@@ -171,13 +173,14 @@ export class AdminService {
   private async createRestriction(
     restrictedChannelId: number,
     restrictedUserId: number,
-    createRestrictionDto: CreateRestrictionDto,
+    createRestrictionDto: RestrictionDto,
   ): Promise<ChannelUserRestriction> {
     const newRestriction = await this.prisma.channelUserRestriction.create({
       data: {
         restrictedChannelId,
         restrictedUserId,
-        ...createRestrictionDto,
+        restrictionType: createRestrictionDto.restrictionType,
+        duration: createRestrictionDto.duration,
       },
     });
     return newRestriction;
@@ -186,7 +189,7 @@ export class AdminService {
   private async updateRestriction(
     restrictedChannelId: number,
     restrictedUserId: number,
-    updateRestrictionDto: UpdateRestrictionDto,
+    updateRestrictionDto: RestrictionDto,
   ): Promise<ChannelUserRestriction> {
     const updatedRestriction = await this.prisma.channelUserRestriction.update({
       where: {
@@ -196,7 +199,8 @@ export class AdminService {
         },
       },
       data: {
-        ...updateRestrictionDto,
+        restrictionType: updateRestrictionDto.restrictionType,
+        duration: updateRestrictionDto.duration,
       },
     });
     return updatedRestriction;

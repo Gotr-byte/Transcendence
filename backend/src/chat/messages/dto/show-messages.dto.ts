@@ -2,6 +2,8 @@ import { MessageWithSender } from '../types/types';
 
 export class ShowMessageDto {
   sender: string;
+  // receivingUserId?: string;
+  // receivingChannelId?: number;
   content: string;
   createdAt: Date;
 

@@ -1,10 +1,18 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { CreateMessageDto } from './dto/create-message.dto';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import {
+  CreateChannelMessageDto,
+  CreateUserMessageDto,
+} from './dto/create-message.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { SharedService } from '../shared/shared.service';
 import { UserService } from 'src/user/user.service';
 import { Message } from '@prisma/client';
 import { ShowMessagesDto } from './dto/show-messages.dto';
+import { UsernameId } from './types/types';
 
 @Injectable()
 export class MessagesService {
@@ -16,27 +24,31 @@ export class MessagesService {
 
   async createChannelMessage(
     userId: number,
-    channelId: number,
-    createMessageDto: CreateMessageDto,
+    createChannelMessageDto: CreateChannelMessageDto,
   ): Promise<Message> {
-    await this.ensureUserIsNotRestricted(channelId, userId);
-    await this.sharedService.ensureUserIsMember(channelId, userId);
+    await this.ensureUserIsNotRestricted(
+      createChannelMessageDto.channelId,
+      userId,
+    );
+    await this.sharedService.ensureUserIsMember(
+      createChannelMessageDto.channelId,
+      userId,
+    );
 
     const newMessage = await this.prisma.message.create({
-      data: { senderId: userId, channelId, ...createMessageDto },
+      data: { senderId: userId, ...createChannelMessageDto },
     });
     return newMessage;
   }
 
   async createUserMessage(
     senderId: number,
-    receivingName: string,
-    createMessageDto: CreateMessageDto,
+    createUserMessageDto: CreateUserMessageDto,
   ): Promise<Message> {
-    const receiver = await this.userService.getUserByName(receivingName);
-
+    if (senderId === createUserMessageDto.receiverId)
+      throw new BadRequestException('Cannot send message  to yourself');
     const newMessage = await this.prisma.message.create({
-      data: { senderId, receiverId: receiver.id, ...createMessageDto },
+      data: { senderId, ...createUserMessageDto },
     });
     return newMessage;
   }
@@ -64,7 +76,7 @@ export class MessagesService {
     return messages;
   }
 
-  async getUserChats(userId: number): Promise<string[]> {
+  async getUserChats(userId: number): Promise<UsernameId[]> {
     const messages = await this.prisma.message.findMany({
       where: {
         OR: [
@@ -79,11 +91,13 @@ export class MessagesService {
       include: {
         sender: {
           select: {
+            id: true,
             username: true,
           },
         },
         receiver: {
           select: {
+            id: true,
             username: true,
           },
         },
@@ -93,14 +107,14 @@ export class MessagesService {
       },
     });
 
-    const uniqueUsernames = new Set<string>();
+    const uniqueUsernames = new Set<UsernameId>();
 
     messages.forEach((message) => {
       if (message.senderId !== userId) {
-        uniqueUsernames.add(message.sender.username);
+        uniqueUsernames.add(message.sender);
       }
       if (message.receiverId !== userId && message.receiver) {
-        uniqueUsernames.add(message.receiver.username);
+        uniqueUsernames.add(message.receiver);
       }
     });
 

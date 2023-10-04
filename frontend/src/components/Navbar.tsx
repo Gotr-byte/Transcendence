@@ -7,13 +7,15 @@ import {
   Spacer,
   HStack,
 } from "@chakra-ui/react";
+import { TwoFAComponent } from './TwoFAComponent';  // Import the TwoFAComponent
 
 interface User {
   id: string;
   username: string;
   isOnline: boolean;
   avatar: string;
-  is2FaActive: boolean;
+  is2FaActive: boolean;  // Assuming the API returns this field
+  is2FaValid?: boolean;
 }
 
 interface NavbarProps {
@@ -38,22 +40,28 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => 
       .then((data) => {
         setUser(data);
         setShowUser(true);
-        setIsLoggedIn(true); // Update login status
+        setIsLoggedIn(true);
       })
       .catch((error) => {
         console.error('Fetch error:', error);
-        setIsLoggedIn(false); // Set isLoggedIn to false if the request fails
+        setIsLoggedIn(false);
       });
   };
 
-  // Log out function
   const handleLogout = () => {
     fetch(`${process.env.API_URL}/auth/logout`, {
-  credentials: "include",
-})
-  .then((response) => response.json())
+      credentials: "include",
+    })
+    .then((response) => response.json());
     setShowUser(false);
-    setIsLoggedIn(false); // Update login status
+    setIsLoggedIn(false);
+  };
+
+  // Function to handle successful 2FA verification
+  const handle2FASuccess = () => {
+    console.log('2FA verified successfully.');
+    // Redirect the user to the main page or reload the current page
+    // window.location.href = '/main-page-url'; 
   };
 
   useEffect(() => {
@@ -84,6 +92,13 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => 
           </button>
         )}
       </HStack>
+
+      {/* Conditionally render the TwoFAComponent if 2FA is active for the logged-in user */}
+      {/* {isLoggedIn && user?.is2FaActive && !(user?.is2FaValid) &&(
+        <TwoFAComponent onVerify={handle2FASuccess} />
+    )} */}
+        {isLoggedIn && (<TwoFAComponent onVerify={handle2FASuccess}/>)}
+
     </Flex>
   );
 };

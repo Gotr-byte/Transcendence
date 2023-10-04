@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 
 import { FriendshipsService } from './friendships.service';
-import { AuthenticatedGuard } from 'src/auth/guards/Guards';
+import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
 import { User } from '@prisma/client';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { ShowUsersDto } from 'src/user/dto';

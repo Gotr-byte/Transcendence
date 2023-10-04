@@ -2,15 +2,15 @@ import { Module } from '@nestjs/common';
 
 import { UserService } from './user.service';
 import { UserController } from './user.controller';
-import { FriendshipsModule } from './user-relations/friendships/friendships.module';
-import { BlockingModule } from './user-relations/blocking/blocking.module';
 import { CurrentUserController } from './current-user.controller';
+import { ImagekitModule } from 'src/imagekit/imagekit.module';
 import { AuthModule } from 'src/auth/auth.module';
-import { ImagekitService } from 'src/imagekit/imagekit.service';
+import { SharedModule } from 'src/shared/shared.module';
 
 @Module({
-  imports: [FriendshipsModule, BlockingModule, AuthModule],
-  providers: [UserService, ImagekitService],
+  imports: [ImagekitModule, SharedModule],
+  providers: [UserService],
   controllers: [UserController, CurrentUserController],
+  exports: [UserService],
 })
 export class UserModule {}

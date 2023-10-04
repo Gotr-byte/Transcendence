@@ -1,7 +1,7 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ShowAnyUserDto, ShowLoggedUserDto, ShowUsersDto } from './dto';
-import { AuthenticatedGuard } from 'src/auth/guards/Guards';
+import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
 import { ImagekitService } from 'src/imagekit/imagekit.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 

@@ -209,7 +209,8 @@ export const channels = [
   {
     creatorId: 5,
     title: 'Old Gods Gang',
-    password: 'G0ds',
+    password:
+      '$argon2id$v=19$m=65536,t=3,p=4$1ge85167o5lm5CQxcTADzg$jUlaRLvKVjewPuCeF2uk5NqzKBrOFjLAgGighfKB7GQ',
     channelType: ChannelTypes.PROTECTED,
   },
   {

@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Patch,
+  Req,
   Res,
   UploadedFile,
   UseGuards,
@@ -10,14 +11,14 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
-import { Response } from 'express';
 import { AuthUser } from 'src/auth/auth.decorator';
-import { AuthenticatedGuard } from 'src/auth/guards/Guards';
+import { AuthenticatedGuard, SessionGuard } from 'src/auth/guards/http-guards';
 import { ChangeUserDto, FileUploadDto, ShowLoggedUserDto } from './dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { ImagekitService } from 'src/imagekit/imagekit.service';
 import { UserService } from './user.service';
+import { Request, Response } from 'express';
 
 @UseGuards(AuthenticatedGuard)
 @ApiTags('Profile: CurrentUser')
@@ -37,7 +38,7 @@ export class CurrentUserController {
     @AuthUser() user: User,
     @Res() response: Response,
   ): Promise<void> {
-    response.redirect(`/users/` + user.username);
+    response.redirect('/users/' + user.username);
   }
 
   @Patch()
@@ -57,11 +58,14 @@ export class CurrentUserController {
   async updateUser(
     @AuthUser() user: User,
     @Body() dto: ChangeUserDto,
+    @Req() request: Request,
   ): Promise<ShowLoggedUserDto> {
     const updatedUser = await this.userService.updateUser(user, dto);
+    (request.session as any).passport.user.username = dto.username;
     return updatedUser;
   }
 
+  @Patch('upload-avatar')
   @ApiOperation({
     summary:
       'Uploads a new avatar profile picture, max size: 10mb, allowed types: jpeg, jpg, bmp and png',
@@ -70,7 +74,6 @@ export class CurrentUserController {
   @ApiBody({
     type: FileUploadDto,
   })
-  @Patch('upload-avatar')
   @UseInterceptors(
     FileInterceptor('image', {
       storage: memoryStorage(),
@@ -79,10 +82,12 @@ export class CurrentUserController {
   )
   async uploadAvatar(
     @AuthUser() user: User,
+    @Req() request: Request,
     @Body() fileUploadDto: FileUploadDto, // Intentionally not used, but implemented to allow uploads through swagger-ui
     @UploadedFile() image: Express.Multer.File,
   ): Promise<ShowLoggedUserDto> {
     const updatedUser = await this.imagekit.uploadAvatar(image, user.id);
+    (request.session as any).passport.user.avatar = updatedUser.avatar;
     return ShowLoggedUserDto.from(updatedUser);
   }
 }

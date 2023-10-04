@@ -10,16 +10,15 @@ import {
 } from '@nestjs/common';
 import { AdminService } from './admin.service';
 import {
-  CreateRestrictionDto,
   ShowUsersRestrictions,
   ShowUsersRolesRestrictions,
-  UpdateRestrictionDto,
   UpdateRoleDto,
+  RestrictionDto,
 } from './dto';
-import { AuthenticatedGuard } from 'src/auth/guards/Guards';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { ChannelMember, ChannelUserRestriction, User } from '@prisma/client';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
 
 @UseGuards(AuthenticatedGuard)
 @ApiTags('Chat: channel-admin-operations')
@@ -85,7 +84,7 @@ export class AdminController {
   @ApiParam({ name: 'channelId', description: 'ID of the channel' })
   @ApiParam({ name: 'username', description: 'username to restrict' })
   @ApiBody({
-    type: CreateRestrictionDto,
+    type: RestrictionDto,
     examples: {
       example1: {
         value: {
@@ -100,8 +99,9 @@ export class AdminController {
     @Param('channelId') channelId: string,
     @Param('username') username: string,
     @AuthUser() admin: User,
-    @Body() createRestrictionDto: CreateRestrictionDto,
+    @Body() createRestrictionDto: RestrictionDto,
   ): Promise<ChannelUserRestriction> {
+    createRestrictionDto.actionType = 'create';
     const newRestriction = await this.adminService.createOrUpdateRestriction(
       +channelId,
       username,
@@ -116,7 +116,7 @@ export class AdminController {
   @ApiParam({ name: 'channelId', description: 'ID of the channel' })
   @ApiParam({ name: 'username', description: 'username to restrict' })
   @ApiBody({
-    type: CreateRestrictionDto,
+    type: RestrictionDto,
     examples: {
       example1: {
         value: {
@@ -131,8 +131,9 @@ export class AdminController {
     @Param('channelId') channelId: string,
     @Param('username') username: string,
     @AuthUser() admin: User,
-    @Body() updateRestrictionDto: UpdateRestrictionDto,
+    @Body() updateRestrictionDto: RestrictionDto,
   ): Promise<ChannelUserRestriction> {
+    updateRestrictionDto.actionType = 'update';
     const newRestriction = await this.adminService.createOrUpdateRestriction(
       +channelId,
       username,

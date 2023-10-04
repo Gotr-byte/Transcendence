@@ -86,4 +86,16 @@ export class BlockingService {
       },
     });
   }
+
+  async isBlockedBy(userId: number, memberId: number): Promise<boolean> {
+    const isBlocked = await this.prisma.blocked.findUnique({
+      where: {
+        blockingUserId_blockedUserId: {
+          blockingUserId: userId,
+          blockedUserId: memberId,
+        },
+      },
+    });
+    return isBlocked ? true : false;
+  }
 }

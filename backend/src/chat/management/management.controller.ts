@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ManagementService } from './management.service';
-import { AuthenticatedGuard } from 'src/auth/guards/Guards';
+import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { User } from '@prisma/client';
 import { CreateChannelDto, UpdateChannelDto } from './dto';

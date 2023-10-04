@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ManagementService } from './management.service';
 import { ManagementController } from './management.controller';
-import { SharedService } from '../shared/shared.service';
 import { AuthModule } from 'src/auth/auth.module';
+import { ChatSharedModule } from '../shared/chat-shared.module';
 
 @Module({
-  imports: [AuthModule],
+  imports: [AuthModule, ChatSharedModule],
   controllers: [ManagementController],
-  providers: [ManagementService, SharedService],
+  providers: [ManagementService],
+  exports: [ManagementService],
 })
 export class ManagementModule {}
