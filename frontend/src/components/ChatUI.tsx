@@ -62,7 +62,7 @@ const ChatUI: React.FC = () => {
   };
 
   return (
-    <Flex direction="column" height="100vh" width="100%" overflow="hidden">
+    <Flex direction="column" height="calc(100vh - 400px)" width="100%" overflow="hidden">
       <Flex flex="1" overflowY="hidden">
         <Box
           borderWidth={1}

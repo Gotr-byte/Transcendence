@@ -111,7 +111,7 @@ const GameOfLife: FC = () => {
     }, 1000);
   }}
 >
-  {running ? ">" : "||"}
+  {running ? "||" : ">"}
 </Button>
 <Spacer/>
 <Button
