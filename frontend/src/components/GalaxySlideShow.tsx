@@ -16,7 +16,7 @@ const GalaxySlideShow: React.FC = () => {
 
   // Generate URLs from heic1501a.jpg to heic1526a.jpg
   const baseUrls1 = "https://cdn.spacetelescope.org/archives/images/wallpaper2/heic15";
-  const urls1 = Array.from({ length: 26 }, (_, i) => `${baseUrls1}${i.toString().padStart(2, '0')}a.jpg`);
+  const urls1 = Array.from({ length: 25 }, (_, i) => `${baseUrls1}${(i + 1).toString().padStart(2, '0')}a.jpg`);
 
   // Generate URLs from heic2013b.jpg to heic2021b.jpg
   const baseUrls2 = "https://cdn.spacetelescope.org/archives/images/thumb700x/heic20";
