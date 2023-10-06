@@ -12,6 +12,7 @@ import { ImagekitService } from './imagekit/imagekit.service';
 import { ImagekitModule } from './imagekit/imagekit.module';
 import { SocketModule } from './socket/socket.module';
 import { TasksModule } from './tasks/tasks.module';
+import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { TasksModule } from './tasks/tasks.module';
     }),
     TwoFaAuthModule,
     ImagekitModule,
+    GameModule,
   ],
   providers: [ImagekitService],
 })
