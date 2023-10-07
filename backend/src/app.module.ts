@@ -11,6 +11,8 @@ import { ChatModule } from './chat/chat.module';
 import { ImagekitService } from './imagekit/imagekit.service';
 import { ImagekitModule } from './imagekit/imagekit.module';
 import { SocketModule } from './socket/socket.module';
+import { TasksModule } from './tasks/tasks.module';
+import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -19,6 +21,7 @@ import { SocketModule } from './socket/socket.module';
     SocketModule,
     UserModule,
     MatchesModule,
+    TasksModule,
     PrismaModule,
     PassportModule.register({ session: true }),
     ConfigModule.forRoot({
@@ -27,6 +30,7 @@ import { SocketModule } from './socket/socket.module';
     }),
     TwoFaAuthModule,
     ImagekitModule,
+    GameModule,
   ],
   providers: [ImagekitService],
 })

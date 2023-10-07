@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { SharedService } from './shared.service';
+import { ChatSharedService } from './chat-shared.service';
 
 @Module({
-  providers: [SharedService],
-  exports: [SharedService],
+  providers: [ChatSharedService],
+  exports: [ChatSharedService],
 })
 export class ChatSharedModule {}

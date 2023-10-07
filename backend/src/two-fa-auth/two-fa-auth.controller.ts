@@ -18,6 +18,8 @@ import { Verify2FADto } from './dto/two-fa-auth.dto.';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
+//localhost:4000/2fa/verify
+
 @ApiTags('Two Factor Authentication')
 @Controller('2fa')
 export class TwoFaAuthController {

@@ -5,7 +5,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { SharedService } from '../shared/shared.service';
+import { ChatSharedService } from '../shared/chat-shared.service';
 import {
   ChannelMember,
   ChannelMemberRoles,
@@ -25,7 +25,7 @@ import { UserService } from 'src/user/user.service';
 export class AdminService {
   constructor(
     private prisma: PrismaService,
-    private readonly sharedService: SharedService,
+    private readonly chatSharedService: ChatSharedService,
     private readonly userService: UserService,
   ) {}
 
@@ -87,7 +87,7 @@ export class AdminService {
       role: ChannelMemberRoles.USER,
     };
 
-    const newMembership = await this.sharedService.addUser(addUser);
+    const newMembership = await this.chatSharedService.addUser(addUser);
     return newMembership;
   }
 
@@ -102,7 +102,7 @@ export class AdminService {
       restrictionDto.restrictionType === ChannelUserRestrictionTypes.BANNED &&
       (await this.userIsOnChannel(channelId, userId))
     ) {
-      await this.sharedService.deleteUserFromChannel(channelId, userId);
+      await this.chatSharedService.deleteUserFromChannel(channelId, userId);
     }
 
     let restriction: ChannelUserRestriction;
@@ -167,7 +167,7 @@ export class AdminService {
   ): Promise<void> {
     const userId = await this.validateAdminAction(channelId, username, adminId);
 
-    await this.sharedService.deleteUserFromChannel(channelId, userId);
+    await this.chatSharedService.deleteUserFromChannel(channelId, userId);
   }
 
   private async createRestriction(
@@ -233,7 +233,7 @@ export class AdminService {
     await this.ensureUserIsAdmin(channelId, adminId);
     const user = await this.userService.getUserByName(username);
     await this.ensureUserIsNotCreator(channelId, user.id);
-    await this.sharedService.ensureUserIsMember(channelId, user.id);
+    await this.chatSharedService.ensureUserIsMember(channelId, user.id);
     return user.id;
   }
 

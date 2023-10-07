@@ -8,7 +8,7 @@ type MessagePayload = {
   receiverId: number;
 };
 
-type ReceivedMessagePayload= {
+type ReceivedMessagePayload = {
   content: string;
 }
 
