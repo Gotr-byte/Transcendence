@@ -19,6 +19,7 @@ import {
   ShowUsersDto,
 } from 'src/user/dto';
 import { UserDetails } from 'src/user/types';
+import { InviteUserDto } from './dto/InviteUserDto';
 
 @WebSocketGateway({ cors: { origin: process.env.FRONTEND_URL } })
 export class GameGateway implements OnGatewayDisconnect {
@@ -79,7 +80,7 @@ export class GameGateway implements OnGatewayDisconnect {
 
   @SubscribeMessage('matchThisUser')
   async handleMatchThisSpecificUser(
-    @MessageBody() name: string,
+    @MessageBody() name: InviteUserDto,
     @ConnectedSocket() client: Socket
     ): Promise<void>
   {
