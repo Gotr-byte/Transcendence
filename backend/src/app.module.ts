@@ -13,6 +13,8 @@ import { ImagekitModule } from './imagekit/imagekit.module';
 import { SocketModule } from './socket/socket.module';
 import { TasksModule } from './tasks/tasks.module';
 import { GameModule } from './game/game.module';
+import { FriendshipsModule } from './user/user-relations/friendships/friendships.module';
+import { BlockingModule } from './user/user-relations/blocking/blocking.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { GameModule } from './game/game.module';
     ChatModule,
     SocketModule,
     UserModule,
+    FriendshipsModule,
+    BlockingModule,
     MatchesModule,
     TasksModule,
     PrismaModule,
