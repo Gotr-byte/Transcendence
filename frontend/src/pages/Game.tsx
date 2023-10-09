@@ -1,5 +1,6 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useContext } from 'react';
 import {Button} from '@chakra-ui/react';
+import { WebsocketContext } from "../components/Context/WebsocketContexts";
 // import musicBavaria from '../Assets/Music_Meanwhile_in_Bavaria.mp3';
 
 const Game: React.FC = () =>
@@ -1416,12 +1417,17 @@ const Game: React.FC = () =>
 		requestAnimationFrame(renderGameScreen);
 	}, []);
 
+	const socket = useContext(WebsocketContext);
 	const handleMatchmaking = () => {
 		console.log("matchmaking");
-	}
+		socket.on("matchmaking");
+		socket.emit("find-match");
+	}	
+	// socket.off("matchmaking");
+
 	return (
 		<div>
-    		<canvas ref={canvasRef} tabIndex= {0} width={canvasWidth} height={canvasHeight}></canvas>
+    		{/* <canvas ref={canvasRef} tabIndex= {0} width={canvasWidth} height={canvasHeight}></canvas> */}
 			<Button onClick={handleMatchmaking}>Matchmaking</Button>
 		</div>
 	);

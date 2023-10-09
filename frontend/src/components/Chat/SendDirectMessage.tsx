@@ -42,12 +42,12 @@ export const SendDirectMessage: React.FC<SendDirectMessageProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const socket = useContext(WebsocketContext);
   useEffect(() => {
-    socket.on("new-user-message", (newMessage: ReceivedMessagePayload) => {
+    socket.on("user-msg-1", (newMessage: ReceivedMessagePayload) => {
       setReceivedMessages((prev) => [...prev, newMessage]);
     });
     return () => {
       console.log("Unregistering Events...");
-      socket.off("new-user-message");
+      socket.off("user-msg-1");
     };
   }, [socket]);
   const onSubmit = () => {

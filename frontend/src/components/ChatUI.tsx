@@ -92,7 +92,6 @@ const ChatUI: React.FC = () => {
 					<Text fontSize="md" p="4" fontWeight="bold">
 						Direct Messages
 					</Text>
-					{/* <DirectMessageSenderList /> */}
 				</Box>
 				<Grid templateColumns="3fr 1fr" flex="1" overflowY="hidden">
 					<Box
