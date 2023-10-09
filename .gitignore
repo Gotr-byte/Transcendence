@@ -2,3 +2,5 @@
 out.txt
 .DS_Store
 /node_modules
+coverLetter
+test.env

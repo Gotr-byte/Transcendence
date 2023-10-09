@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import {Button} from '@chakra-ui/react';
 // import musicBavaria from '../Assets/Music_Meanwhile_in_Bavaria.mp3';
 
 const Game: React.FC = () =>
@@ -1415,9 +1416,13 @@ const Game: React.FC = () =>
 		requestAnimationFrame(renderGameScreen);
 	}, []);
 
+	const handleMatchmaking = () => {
+		console.log("matchmaking");
+	}
 	return (
 		<div>
     		<canvas ref={canvasRef} tabIndex= {0} width={canvasWidth} height={canvasHeight}></canvas>
+			<Button onClick={handleMatchmaking}>Matchmaking</Button>
 		</div>
 	);
 };

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext} from "react";
 import {
   Avatar,
   Flex,
@@ -8,6 +8,8 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { TwoFAComponent } from './TwoFAComponent';  // Import the TwoFAComponent
+import { WebsocketContext } from './Context/WebsocketContexts';
+
 
 
 
@@ -28,6 +30,8 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => {
   const [user, setUser] = useState<User | null>(null);
   const [showUser, setShowUser] = useState(false);
+  const socket = useContext(WebsocketContext);
+
 
   const fetchUserData = () => {
     fetch(`${import.meta.env.VITE_API_URL}/profile`, {
@@ -57,6 +61,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => 
     .then((response) => response.json());
     setShowUser(false);
     setIsLoggedIn(false);
+    socket.off('connect');
   };
 
   // Function to handle successful 2FA verification
@@ -69,6 +74,14 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => 
   useEffect(() => {
     fetchUserData();
   }, []);
+
+  let handleLogin = () => {
+    (window.location.href = `${import.meta.env.VITE_API_URL}/auth/42/login`);
+    socket.on("connect", () => {
+      console.log("Connected!");
+    });
+
+  }
 
   return (
     <Flex as="nav" p="10x" mb="40px" alignItems="center" gap="10px">
@@ -86,9 +99,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => 
           <button style={{ color: 'silver' , fontSize:'30px'}}  onClick={handleLogout}>Logout</button>
         ) : (
           <button style={{ color: 'silver', fontSize:'30px', alignItems:"right"}} 
-            onClick={() =>
-              (window.location.href = `${import.meta.env.VITE_API_URL}/auth/42/login`)
-            }
+            onClick={ handleLogin } 
           >
             Login
           </button>
