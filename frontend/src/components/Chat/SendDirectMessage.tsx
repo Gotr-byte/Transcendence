@@ -11,7 +11,7 @@ import {
   Input,
 } from "@chakra-ui/react";
 
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState} from "react";
 import { WebsocketContext } from "../Context/WebsocketContexts";
 
 type MessagePayload = {
@@ -42,15 +42,11 @@ export const SendDirectMessage: React.FC<SendDirectMessageProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const socket = useContext(WebsocketContext);
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Connected!");
-    });
     socket.on("new-user-message", (newMessage: ReceivedMessagePayload) => {
       setReceivedMessages((prev) => [...prev, newMessage]);
     });
     return () => {
       console.log("Unregistering Events...");
-      socket.off("connect");
       socket.off("new-user-message");
     };
   }, [socket]);
