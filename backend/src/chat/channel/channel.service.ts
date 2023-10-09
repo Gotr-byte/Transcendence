@@ -85,7 +85,6 @@ export class ChannelService {
       where: { channelId },
       include: { user: true },
     });
-
     return ShowUsersRoles.from(channelUsers);
   }
 

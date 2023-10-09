@@ -57,31 +57,38 @@ export class ChatGateway implements OnGatewayConnection {
     );
 
     const channelMembers = await this.channelService.getChannelUsers(
-      userId,
       channelMessageDto.channelId,
+      userId,
     );
-
     const channel = await this.channelService.getChannel(
       channelMessageDto.channelId,
       userId,
     );
 
+    console.log(channelMembers);
+
     for (const member of channelMembers.users) {
       if (
         member.isOnline &&
-        !this.blockingService.isBlockedBy(userId, member.id)
+        !(await this.blockingService.isBlockedBy(userId, member.id))
       ) {
-        const memberSocket = this.socketService.getSocketIds(member.id);
-        client
-          .to(memberSocket)
-          .emit(`channel-msg-${channelMessageDto.channelId}`, savedMessage);
-        if (userId != member.id)
+        if (userId == member.id) {
+          client.emit(
+            `channel-msg-${channelMessageDto.channelId}`,
+            savedMessage,
+          );
+        } else {
+          const memberSocket = this.socketService.getSocketIds(member.id);
+          client
+            .to(memberSocket)
+            .emit(`channel-msg-${channelMessageDto.channelId}`, savedMessage);
           client.to(memberSocket).emit('chat-notifications', {
             type: 'channel-message',
             message: `New Message in Channel ${channel.channel.title}`,
             channelId: `${channelMessageDto.channelId}`,
             event: `channel-msg-${channelMessageDto.channelId}`,
           });
+        }
       }
     }
   }
