@@ -7,6 +7,7 @@ import { ChatSharedModule } from './shared/chat-shared.module';
 import { ChatGateway } from './chat.gateway';
 import { SocketModule } from 'src/socket/socket.module';
 import { BlockingModule } from 'src/user/user-relations/blocking/blocking.module';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { BlockingModule } from 'src/user/user-relations/blocking/blocking.module
     ChatSharedModule,
     SocketModule,
     BlockingModule,
+    UserModule,
   ],
   providers: [ChatGateway],
 })

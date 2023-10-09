@@ -13,6 +13,7 @@ import { SocketService } from 'src/socket/socket.service';
 import { ChannelService } from './channel/channel.service';
 import { BlockingService } from 'src/user/user-relations/blocking/blocking.service';
 import { ChatSharedService } from './shared/chat-shared.service';
+import { UserService } from 'src/user/user.service';
 // import { UseGuards } from '@nestjs/common';
 // import { SocketSessionGuard } from 'src/auth/guards/socket-guards';
 
@@ -27,6 +28,7 @@ export class ChatGateway implements OnGatewayConnection {
     private readonly socketService: SocketService,
     private readonly blockingService: BlockingService,
     private readonly chatSharedService: ChatSharedService,
+    private readonly userService: UserService,
   ) {}
 
   async handleConnection(@ConnectedSocket() client: Socket) {
@@ -59,13 +61,27 @@ export class ChatGateway implements OnGatewayConnection {
       channelMessageDto.channelId,
     );
 
+    const channel = await this.channelService.getChannel(
+      channelMessageDto.channelId,
+      userId,
+    );
+
     for (const member of channelMembers.users) {
       if (
         member.isOnline &&
         !this.blockingService.isBlockedBy(userId, member.id)
       ) {
         const memberSocket = this.socketService.getSocketIds(member.id);
-        client.to(memberSocket).emit('new-channel-message', savedMessage);
+        client
+          .to(memberSocket)
+          .emit(`channel-msg-${channelMessageDto.channelId}`, savedMessage);
+        if (userId != member.id)
+          client.to(memberSocket).emit('chat-notifications', {
+            type: 'channel-message',
+            message: `New Message in Channel ${channel.channel.title}`,
+            channelId: `${channelMessageDto.channelId}`,
+            event: `channel-msg-${channelMessageDto.channelId}`,
+          });
       }
     }
   }
@@ -104,12 +120,18 @@ export class ChatGateway implements OnGatewayConnection {
       userId,
     );
 
-    console.log(isBlocked);
+    const user = await this.userService.getUserById(userId);
 
     if (!isBlocked) {
-      client.to(roomName).emit('new-user-message', savedMessage);
+      client.to(roomName).emit('chat-notifications', {
+        type: 'user-message',
+        message: `New Message from ${user.username}`,
+        userId: `${userId}`,
+        event: `user-msg-${userId}`,
+      });
+      client.to(roomName).emit(`user-msg-${userId}`, savedMessage);
     }
-    client.emit('new-user-message', savedMessage);
+    client.emit(`user-msg-${userMessageDto.receiverId}`, savedMessage);
   }
 
   @SubscribeMessage('get-my-channels')
