@@ -100,9 +100,11 @@ export class ChatGateway implements OnGatewayConnection {
     });
 
     const isBlocked = await this.blockingService.isBlockedBy(
-      userId,
       userMessageDto.receiverId,
+      userId,
     );
+
+    console.log(isBlocked);
 
     if (!isBlocked) {
       client.to(roomName).emit('new-user-message', savedMessage);

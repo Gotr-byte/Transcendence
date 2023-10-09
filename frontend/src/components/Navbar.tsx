@@ -30,7 +30,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => 
   const [showUser, setShowUser] = useState(false);
 
   const fetchUserData = () => {
-    fetch(`${process.env.API_URL}/profile`, {
+    fetch(`${import.meta.env.VITE_API_URL}/profile`, {
       credentials: "include",
     })
       .then((response) => {
@@ -51,7 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => 
   };
 
   const handleLogout = () => {
-    fetch(`${process.env.API_URL}/auth/logout`, {
+    fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
       credentials: "include",
     })
     .then((response) => response.json());
@@ -87,7 +87,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => 
         ) : (
           <button style={{ color: 'silver', fontSize:'30px', alignItems:"right"}} 
             onClick={() =>
-              (window.location.href = `${process.env.API_URL}/auth/42/login`)
+              (window.location.href = `${import.meta.env.VITE_API_URL}/auth/42/login`)
             }
           >
             Login

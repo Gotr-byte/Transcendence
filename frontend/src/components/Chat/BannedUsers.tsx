@@ -1,66 +1,71 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-type UserRole = 'ADMIN' | 'USER'; // Add more roles here
+type UserRole = "ADMIN" | "USER"; // Add more roles here
 
 interface User {
-  id: number;
-  username: string;
-  avatar: string;
-  isOnline: boolean;
-  role: UserRole;
+	id: number;
+	username: string;
+	avatar: string;
+	isOnline: boolean;
+	role: UserRole;
 }
 
 interface UsersData {
-  usersNo: number;
-  users: User[];
+	usersNo: number;
+	users: User[];
 }
 
 const BannedUsers: React.FC = () => {
-  const [bannedUsers, setBannedUsers] = useState<UsersData>({ usersNo: 0, users: [] });
+	const [bannedUsers, setBannedUsers] = useState<UsersData>({
+		usersNo: 0,
+		users: [],
+	});
 
-  useEffect(() => {
-    const fetchBannedUsers = async () => {
-      try {
-        const response = await fetch(`${process.env.API_URL}/chat/admin/id/5/restricted`, {
-          credentials: 'include',
-        });
+	useEffect(() => {
+		const fetchBannedUsers = async () => {
+			try {
+				const response = await fetch(
+					`${import.meta.env.VITE_API_URL}/chat/admin/id/5/restricted`,
+					{
+						credentials: "include",
+					}
+				);
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch users');
-        }
+				if (!response.ok) {
+					throw new Error("Failed to fetch users");
+				}
 
-        const data: UsersData = await response.json();  // Corrected from UserData to UsersData
-        setBannedUsers(data);
+				const data: UsersData = await response.json(); // Corrected from UserData to UsersData
+				setBannedUsers(data);
+			} catch (error) {
+				console.error("Error fetching users:", error); // Corrected the message
+			}
+		};
 
-      } catch (error) {
-        console.error('Error fetching users:', error);  // Corrected the message
-      }
-    };
+		fetchBannedUsers();
+	}, []);
 
-    fetchBannedUsers();
-  }, []);
-
-  return (
-    <div>
-      <h1>Chat Room Users</h1>
-      {bannedUsers.usersNo > 0 ? (
-        <ul>
-          {bannedUsers.users.map((user) => (
-            <li key={user.id}>
-              {user.username} is online: {user.isOnline ? 'Yes' : 'No'}
-              <img 
-                style={{ width: '50px', height: '50px', borderRadius: '50%' }} 
-                src={user.avatar} 
-                alt={`${user.username}'s avatar`} 
-              />
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No users found :</p>
-      )}
-    </div>
-  );
+	return (
+		<div>
+			<h1>Chat Room Users</h1>
+			{bannedUsers.usersNo > 0 ? (
+				<ul>
+					{bannedUsers.users.map((user) => (
+						<li key={user.id}>
+							{user.username} is online: {user.isOnline ? "Yes" : "No"}
+							<img
+								style={{ width: "50px", height: "50px", borderRadius: "50%" }}
+								src={user.avatar}
+								alt={`${user.username}'s avatar`}
+							/>
+						</li>
+					))}
+				</ul>
+			) : (
+				<p>No users found :</p>
+			)}
+		</div>
+	);
 };
 
 export default BannedUsers;

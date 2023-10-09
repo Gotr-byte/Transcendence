@@ -1,42 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 const DeleteFriend: React.FC = () => {
-  const [friendName, setFriendName] = useState('');
+	const [friendName, setFriendName] = useState("");
 
-  const handleDelete = async () => {
-    if (!friendName) {
-      console.error("Friend name cannot be empty");
-      return;
-    }
+	const handleDelete = async () => {
+		if (!friendName) {
+			console.error("Friend name cannot be empty");
+			return;
+		}
 
-    try {
-      const response = await fetch(`${process.env.API_URL}/friends/${friendName}`, {
-        method: 'DELETE',
-        credentials: 'include'
-      });
+		try {
+			const response = await fetch(
+				`${import.meta.env.VITE_API_URL}/friends/${friendName}`,
+				{
+					method: "DELETE",
+					credentials: "include",
+				}
+			);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-	  window.location.reload();
-      console.log(`Friend ${friendName} successfully deleted`);
-      setFriendName('');
-    } catch (error) {
-      console.error(`There was a problem deleting the friend ${friendName}`, error);
-    }
-  };
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			window.location.reload();
+			console.log(`Friend ${friendName} successfully deleted`);
+			setFriendName("");
+		} catch (error) {
+			console.error(
+				`There was a problem deleting the friend ${friendName}`,
+				error
+			);
+		}
+	};
 
-  return (
-    <div>
-      <input 
-        type="text"
-        placeholder="Enter friend's username"
-        value={friendName}
-        onChange={e => setFriendName(e.target.value)}
-      />
-      <button onClick={handleDelete}>Delete Friend</button>
-    </div>
-  );
+	return (
+		<div>
+			<input
+				type="text"
+				placeholder="Enter friend's username"
+				value={friendName}
+				onChange={(e) => setFriendName(e.target.value)}
+			/>
+			<button onClick={handleDelete}>Delete Friend</button>
+		</div>
+	);
 };
 
 export default DeleteFriend;

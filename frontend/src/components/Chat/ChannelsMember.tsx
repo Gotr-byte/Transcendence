@@ -1,66 +1,72 @@
-import React, { useEffect, useState } from 'react';
-import LeaveChannelButton from './LeaveChannelButton';
+import React, { useEffect, useState } from "react";
+import LeaveChannelButton from "./LeaveChannelButton";
 
-type ChannelType = 'PUBLIC' | 'PROTECTED' | 'PRIVATE'; 
+type ChannelType = "PUBLIC" | "PROTECTED" | "PRIVATE";
 
 interface Channel {
-  id: number;
-  title: string;
-  creatorId: number;
-  channelType: ChannelType;
+	id: number;
+	title: string;
+	creatorId: number;
+	channelType: ChannelType;
 }
 
 interface Channels {
-  channelsNo: number;
-  channels: Channel[];
+	channelsNo: number;
+	channels: Channel[];
 }
 
 interface ChannelsMemberProps {
-  onChangeRoom: (roomId: number) => void;
+	onChangeRoom: (roomId: number) => void;
 }
 
 const ChannelsMember: React.FC<ChannelsMemberProps> = ({ onChangeRoom }) => {
-  const [channels, setChannels] = useState<Channels>({ channelsNo: 0, channels: [] });
+	const [channels, setChannels] = useState<Channels>({
+		channelsNo: 0,
+		channels: [],
+	});
 
-  useEffect(() => {
-    const fetchChannels = async () => {
-      try {
-        const response = await fetch(`${process.env.API_URL}/chat/channel/memberships`, {
-          credentials: 'include',
-        });
+	useEffect(() => {
+		const fetchChannels = async () => {
+			try {
+				const response = await fetch(
+					`${import.meta.env.VITE_API_URL}/chat/channel/memberships`,
+					{
+						credentials: "include",
+					}
+				);
 
-        if (!response.ok) {
-          throw new Error('Failed to fetch channels');
-        }
+				if (!response.ok) {
+					throw new Error("Failed to fetch channels");
+				}
 
-        const data: Channels = await response.json();
-        setChannels(data);
-      } catch (error) {
-        console.error('Error fetching channels:', error);
-      }
-    };
+				const data: Channels = await response.json();
+				setChannels(data);
+			} catch (error) {
+				console.error("Error fetching channels:", error);
+			}
+		};
 
-    fetchChannels();
-  }, []);
+		fetchChannels();
+	}, []);
 
-  return (
-    <div>
-      {channels.channelsNo > 0 ? (
-        <ul>
-          {channels.channels.map((channel) => (
-            <li key={channel.id}>
-              <button onClick={() => onChangeRoom(channel.id)}>
-                {channel.title}
-              </button>
-              <LeaveChannelButton channelId={channel.id}/>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No channels found</p>
-      )}
-    </div>
-  );
+	return (
+		<div>
+			{channels.channelsNo > 0 ? (
+				<ul>
+					{channels.channels.map((channel) => (
+						<li key={channel.id}>
+							<button onClick={() => onChangeRoom(channel.id)}>
+								{channel.title}
+							</button>
+							<LeaveChannelButton channelId={channel.id} />
+						</li>
+					))}
+				</ul>
+			) : (
+				<p>No channels found</p>
+			)}
+		</div>
+	);
 };
 
 export default ChannelsMember;
