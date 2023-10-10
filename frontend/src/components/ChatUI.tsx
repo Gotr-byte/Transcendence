@@ -23,6 +23,9 @@ const ChatUI: React.FC = () => {
       content: "",
       channelId: currentRoomId
     });
+	const [receivedMessages, setReceivedMessages] = useState<
+    ReceivedMessagePayload[]
+  >([]);
 	const socket = useContext(WebsocketContext);
 
 	const handleRoomChange = (roomId: number) => {
@@ -32,6 +35,15 @@ const ChatUI: React.FC = () => {
 			channelId: roomId, // Set the channelId to the roomId
 		  });
 	};
+	useEffect(() => {
+		socket.on("channel-msg-3", (newMessage: ReceivedMessagePayload) => {
+			setReceivedMessages((prev) => [...prev, newMessage]);
+		});
+		return () => {
+		  console.log("Unregistering Events...");
+		  socket.off("channel-msg-3");
+		};
+	  }, [socket]);
 	    const onSubmit = () => {
 		if (sentMessage.content.trim() === "") {
 		  alert("Message content is empty. Please enter a message.");
@@ -85,7 +97,12 @@ const ChatUI: React.FC = () => {
 						overflowY="scroll"
 						height="calc(100vh - 50px)"
 					>
-						<MessageList roomId={currentRoomId} />
+					{receivedMessages.map((msg, index) => (
+                      <div key={index}>
+                      <p>{msg.content}</p>
+                      </div>
+                    ))}
+						{/* <MessageList roomId={currentRoomId} /> */}
 					</Box>
 					<Box
 						borderWidth={1}
