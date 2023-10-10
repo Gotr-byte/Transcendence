@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext} from "react";
+import { io, Socket } from "socket.io-client";
 import {
   Avatar,
   Flex,
@@ -11,7 +12,7 @@ import { TwoFAComponent } from './TwoFAComponent';  // Import the TwoFAComponent
 import { WebsocketContext } from './Context/WebsocketContexts';
 
 
-
+var i: number = 1;
 
 interface User {
   id: string;
@@ -30,8 +31,14 @@ interface NavbarProps {
 export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => {
   const [user, setUser] = useState<User | null>(null);
   const [showUser, setShowUser] = useState(false);
-  const socket = useContext(WebsocketContext);
+  const [socket, setSocket] = useState<Socket | null>(null);
 
+  const setupSocketConnection = (userId: string) => {
+    const newSocket = io(`${import.meta.env.VITE_API_URL}/?userId=${userId}`, { autoConnect: false });
+    setSocket(newSocket);
+    newSocket.open();
+    console.log('Socket Connection Established');
+  };
 
   const fetchUserData = () => {
     fetch(`${import.meta.env.VITE_API_URL}/profile`, {
@@ -47,6 +54,7 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => 
         setUser(data);
         setShowUser(true);
         setIsLoggedIn(true);
+        setupSocketConnection(data.id);
       })
       .catch((error) => {
         console.error('Fetch error:', error);
@@ -61,7 +69,9 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => 
     .then((response) => response.json());
     setShowUser(false);
     setIsLoggedIn(false);
-    socket.off('connect');
+    socket?.close();
+    console.log('Socket Connection Closed');
+    setSocket(null);
   };
 
   // Function to handle successful 2FA verification
@@ -72,15 +82,12 @@ export const Navbar: React.FC<NavbarProps> = ({ isLoggedIn, setIsLoggedIn }) => 
   };
 
   useEffect(() => {
+    console.log(i++);
     fetchUserData();
   }, []);
 
   let handleLogin = () => {
     (window.location.href = `${import.meta.env.VITE_API_URL}/auth/42/login`);
-    socket.on("connect", () => {
-      console.log("Connected!");
-    });
-
   }
 
   return (

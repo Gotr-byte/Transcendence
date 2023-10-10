@@ -65,8 +65,6 @@ export class ChatGateway implements OnGatewayConnection {
       userId,
     );
 
-    console.log(channelMembers);
-
     for (const member of channelMembers.users) {
       if (
         member.isOnline &&

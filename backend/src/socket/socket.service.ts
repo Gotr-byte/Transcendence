@@ -11,15 +11,14 @@ export class SocketService {
     if (!userId) {
       throw new InternalServerErrorException(`Query param 'userId' is missing`);
     }
-    console.log(this.userSocketMap);
+
     this.userSocketMap.set(socketId, userId);
     const user = await this.userService.getUserById(+userId);
     await this.userService.updateUser(user, { isOnline: true });
-    console.log(this.userSocketMap);
+    console.log(this.userSocketMap); //debug
   }
 
   async disconnectUser(socketId: string): Promise<void> {
-    console.log(this.userSocketMap);
     const userId = this.getUserId(socketId);
     if (!userId) {
       throw new InternalServerErrorException(
@@ -29,11 +28,10 @@ export class SocketService {
     const user = await this.userService.getUserById(userId);
     await this.userService.updateUser(user, { isOnline: false });
     this.userSocketMap.delete(socketId);
-    console.log(this.userSocketMap);
+    console.log(this.userSocketMap); // debug
   }
 
   getUserId(socketId: string): number {
-    console.log(this.userSocketMap);
     const userId = this.userSocketMap.get(socketId);
     if (!userId)
       throw new InternalServerErrorException(

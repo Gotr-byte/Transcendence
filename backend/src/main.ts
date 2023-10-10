@@ -26,7 +26,11 @@ async function bootstrap() {
       secret: process.env.SESSIONS_SECRET + '1896',
       saveUninitialized: false,
       resave: false,
-      cookie: { maxAge: 4320000 },
+      cookie: {
+        maxAge: 4320000,
+        httpOnly: true,
+        sameSite: 'strict',
+      },
       store: new PrismaSessionStore(new PrismaClient(), {
         checkPeriod: 2 * 60 * 1000,
         dbRecordIdIsSessionId: true,
