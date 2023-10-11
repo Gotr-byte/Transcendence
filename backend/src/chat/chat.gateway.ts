@@ -24,7 +24,7 @@ export class ChatGateway implements OnGatewayConnection {
   ) {}
 
   async handleConnection(@ConnectedSocket() client: Socket): Promise<void> {
-    let userId = (client.request as any)?.session.passport.user.id;
+    let userId = (client.request as any)?.session?.passport?.user?.id;
     if (!userId) {
       userId = client.handshake.query.userId as string;
     }

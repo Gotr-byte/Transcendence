@@ -21,7 +21,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private readonly socketService: SocketService) {}
 
   async handleConnection(@ConnectedSocket() client: Socket) {
-    let userId = (client.request as any)?.session.passport.user.id;
+    let userId = (client.request as any)?.session?.passport?.user?.id;
     if (!userId) {
       userId = client.handshake.query.userId as string;
     }
