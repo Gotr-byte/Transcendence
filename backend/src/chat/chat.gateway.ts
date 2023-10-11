@@ -13,8 +13,9 @@ import { UsePipes } from '@nestjs/common';
 import { WSValidationPipe } from 'src/filters/ws-validation-pipe';
 
 @UsePipes(new WSValidationPipe())
-@WebSocketGateway({ cors: { origin: process.env.FRONTEND_URL } })
-// @UseGuards(SocketSessionGuard)
+@WebSocketGateway({
+  cors: { origin: process.env.FRONTEND_URL, credentials: true },
+})
 export class ChatGateway implements OnGatewayConnection {
   @WebSocketServer() server: Server;
 
@@ -23,7 +24,10 @@ export class ChatGateway implements OnGatewayConnection {
   ) {}
 
   async handleConnection(@ConnectedSocket() client: Socket): Promise<void> {
-    const userId = client.handshake.query.userId as string;
+    let userId = (client.request as any)?.session.passport.user.id;
+    if (!userId) {
+      userId = client.handshake.query.userId as string;
+    }
     const { channels, rooms } = await this.chatService.handleUserConnection(
       +userId,
     );

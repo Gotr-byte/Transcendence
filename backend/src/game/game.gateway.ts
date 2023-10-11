@@ -8,7 +8,9 @@ import { GameService } from './game.service';
 import { Socket } from 'socket.io';
 import { SocketService } from 'src/socket/socket.service';
 
-@WebSocketGateway({ cors: { origin: process.env.FRONTEND_URL } })
+@WebSocketGateway({
+  cors: { origin: process.env.FRONTEND_URL },
+})
 export class GameGateway implements OnGatewayDisconnect {
   constructor(
     private readonly gameService: GameService,

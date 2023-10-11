@@ -4,7 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger/dist';
 import passport from 'passport';
-import { CustomWsAdapter } from './socket/custom-ws-adapter';
+import { CustomWsAdapter } from './middleware/custom-ws-adapter';
 import { sessionMiddleware } from './middleware/session.middleware';
 
 async function bootstrap() {

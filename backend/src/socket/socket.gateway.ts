@@ -11,16 +11,21 @@ import { SocketService } from './socket.service';
 
 // @UseGuards(SocketSessionGuard)
 @WebSocketGateway({
-  cors: { origin: process.env.FRONTEND_URL },
+  cors: {
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  },
 })
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
   constructor(private readonly socketService: SocketService) {}
 
   async handleConnection(@ConnectedSocket() client: Socket) {
-    const userId = client.handshake.query.userId as string;
+    let userId = (client.request as any)?.session.passport.user.id;
+    if (!userId) {
+      userId = client.handshake.query.userId as string;
+    }
     this.socketService.registerOnlineUser(+userId, client.id);
-    console.log(client.handshake);
     console.info(`Client connected with ID: ${client.id}`);
   }
 
