@@ -42,7 +42,7 @@ export class TwoFaAuthController {
   }
 
   @UseGuards(SessionGuard)
-  @Get('is2FaActive')
+  @Get('is2faactive')
   @ApiOperation({
     summary: 'Returns a boolean if 2fa is active or not',
   })
