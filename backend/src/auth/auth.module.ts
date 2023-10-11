@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { AuthStrategy } from './strategy/auth.strategy';
-import { SessionSerializer } from './Serializer';
+import { SessionSerializer } from './serializer';
 import { AuthenticatedGuard, SessionGuard } from './guards/http-guards';
 import { SocketSessionGuard } from './guards/socket-guards';
 import { SharedModule } from 'src/shared/shared.module';

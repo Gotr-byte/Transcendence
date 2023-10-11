@@ -1,12 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { HttpExceptionFilter } from './filters/HttpException.filter';
-import { PrismaSessionStore } from '@quixo3/prisma-session-store';
-import { PrismaClient } from '@prisma/client';
+import { HttpExceptionFilter } from './filters/http-exception.filter';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger/dist';
 import passport from 'passport';
-import session from 'express-session';
+import { CustomWsAdapter } from './socket/custom-ws-adapter';
+import { sessionMiddleware } from './middleware/session.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,21 +20,10 @@ async function bootstrap() {
     methods: 'GET, POST, PATCH, DELETE',
     credentials: true,
   });
-  app.use(
-    session({
-      secret: process.env.SESSIONS_SECRET + '1896',
-      saveUninitialized: false,
-      resave: false,
-      cookie: { maxAge: 4320000 },
-      store: new PrismaSessionStore(new PrismaClient(), {
-        checkPeriod: 2 * 60 * 1000,
-        dbRecordIdIsSessionId: true,
-        dbRecordIdFunction: undefined,
-      }),
-    }),
-  );
+  app.use(sessionMiddleware);
   app.use(passport.initialize());
   app.use(passport.session());
+  app.useWebSocketAdapter(new CustomWsAdapter(sessionMiddleware, app));
   // Swagger configuration
   const config = new DocumentBuilder()
     .setTitle('Transcendence API Testing Ground')

@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { UserService } from 'src/user/user.service';
-import { Verify2FADto } from './dto/two-fa-auth.dto.';
+import { Verify2FADto } from './dto/two-fa-auth.dto';
 import * as speakeasy from 'speakeasy';
 import * as qrcode from 'qrcode';
 

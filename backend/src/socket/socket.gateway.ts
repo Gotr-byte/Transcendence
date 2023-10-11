@@ -1,20 +1,18 @@
 import {
   ConnectedSocket,
-  MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
-  SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from './socket.service';
-import { OnModuleInit } from '@nestjs/common';
-import { SocketSessionGuard } from 'src/auth/guards/socket-guards';
-import { UseGuards } from '@nestjs/common';
+// import { UseGuards } from '@nestjs/common';
 
-@UseGuards(SocketSessionGuard)
-@WebSocketGateway({ cors: { origin: process.env.FRONTEND_URL } })
+// @UseGuards(SocketSessionGuard)
+@WebSocketGateway({
+  cors: { origin: process.env.FRONTEND_URL },
+})
 export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: Server;
   constructor(private readonly socketService: SocketService) {}
@@ -23,6 +21,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const userId = client.handshake.query.userId as string;
     console.log('UserID: ' + userId);
     this.socketService.registerOnlineUser(+userId, client.id);
+    console.log(client.handshake);
     console.info(`Client connected with ID: ${client.id}`);
   }
 

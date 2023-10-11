@@ -14,7 +14,7 @@ import { TwoFaAuthService } from './two-fa-auth.service';
 import { AuthenticatedGuard, SessionGuard } from 'src/auth/guards/http-guards';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { User } from '@prisma/client';
-import { Verify2FADto } from './dto/two-fa-auth.dto.';
+import { Verify2FADto } from './dto/two-fa-auth.dto';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 

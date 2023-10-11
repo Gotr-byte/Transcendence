@@ -1,4 +1,11 @@
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+
+import { Server, Socket } from 'socket.io';
 
 // @Injectable()
 // // Customizes canActivate method to log in user after successful 42 authentication
@@ -22,20 +29,20 @@ export class SocketSessionGuard implements CanActivate {
   }
 }
 
-// @Injectable()
-// export class SessionGuard implements CanActivate {
-//   // Checks if the user is authenticated
-//   async canActivate(context: ExecutionContext): Promise<boolean> {
-//     const request = context.switchToHttp().getRequest();
-//     const user = request.session.passport?.user;
+@Injectable()
+export class SessionGuard implements CanActivate {
+  // Checks if the user is authenticated
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const user = request.session.passport?.user;
 
-//     if (!user) {
-//       throw new UnauthorizedException('Not logged in');
-//     }
+    if (!user) {
+      throw new UnauthorizedException('Not logged in');
+    }
 
-//     return request.isAuthenticated();
-//   }
-// }
+    return request.isAuthenticated();
+  }
+}
 
 // @Injectable()
 // export class SocketAuthGuard implements CanActivate {
@@ -51,5 +58,21 @@ export class SocketSessionGuard implements CanActivate {
 //     }
 
 //     return isSessionValid;
+//   }
+// }
+
+// @Injectable()
+// export class WsSessionGuard implements CanActivate {
+//   async canActivate(context: ExecutionContext): Promise<boolean> {
+//     const client = context.switchToWs().getClient<Socket>();
+//     const user = client.handshake.session?.passport?.user;
+
+//     if (!user) {
+//       throw new UnauthorizedException('Not logged in');
+//     }
+
+//     // This assumes you are using the @nestjs/socket.io package which integrates with express sessions.
+//     // If not, you might need to adapt the way you access the session.
+//     return !!user; // Just an example, you can further elaborate on this based on your requirements.
 //   }
 // }

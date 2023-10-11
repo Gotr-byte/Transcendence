@@ -8,6 +8,7 @@ import { ChatGateway } from './chat.gateway';
 import { SocketModule } from 'src/socket/socket.module';
 import { BlockingModule } from 'src/user/user-relations/blocking/blocking.module';
 import { UserModule } from 'src/user/user.module';
+import { ChatService } from './chat.service';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { UserModule } from 'src/user/user.module';
     BlockingModule,
     UserModule,
   ],
-  providers: [ChatGateway],
+  providers: [ChatGateway, ChatService],
 })
 export class ChatModule {}
