@@ -4,6 +4,7 @@ import {
   ConflictException,
   Controller,
   Get,
+  InternalServerErrorException,
   Patch,
   Post,
   Req,
@@ -17,8 +18,6 @@ import { User } from '@prisma/client';
 import { Verify2FADto } from './dto/two-fa-auth.dto';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-
-//localhost:4000/2fa/verify
 
 @ApiTags('Two Factor Authentication')
 @Controller('2fa')
@@ -40,6 +39,15 @@ export class TwoFaAuthController {
     return `<h2>Two-Factor Authentication Setup</h2>
 		<p>Scan the QR code using a 2FA app:</p>
 		<img src="${qrCode}" alt="QR Code">`;
+  }
+
+  @UseGuards(SessionGuard)
+  @Get('is2FaActive')
+  @ApiOperation({
+    summary: 'Returns a boolean if 2fa is active or not',
+  })
+  async is2FaActive(@AuthUser() user: User): Promise<boolean> {
+    return user.is2FaActive;
   }
 
   @UseGuards(SessionGuard)
@@ -68,6 +76,13 @@ export class TwoFaAuthController {
         throw new BadRequestException(`${user.username} is already verified`);
       await this.twoFaService.verifyToken(user, dto);
       (request.session as any).passport.user.is2FaValid = true;
+      request.session.regenerate((err) => {
+        if (err) {
+          throw new InternalServerErrorException(
+            'Error while regenerating token',
+          );
+        }
+      });
     }
     return response.redirect('/auth/status');
   }
