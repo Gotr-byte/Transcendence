@@ -4,7 +4,7 @@ import { AuthController } from './auth.controller';
 import { AuthStrategy } from './strategy/auth.strategy';
 import { SessionSerializer } from './serializer';
 import { AuthenticatedGuard, SessionGuard } from './guards/http-guards';
-import { SocketSessionGuard } from './guards/socket-guards';
+import { WsAuthGuard } from './guards/socket-guards';
 import { SharedModule } from 'src/shared/shared.module';
 
 @Module({
@@ -14,13 +14,13 @@ import { SharedModule } from 'src/shared/shared.module';
     AuthStrategy,
     AuthenticatedGuard,
     SessionGuard,
-    SocketSessionGuard,
+    WsAuthGuard,
     SessionSerializer,
     {
       provide: 'AUTH_SERVICE',
       useClass: AuthService,
     },
   ],
-  exports: [AuthenticatedGuard, SessionGuard, SocketSessionGuard],
+  exports: [AuthenticatedGuard, SessionGuard, WsAuthGuard],
 })
 export class AuthModule {}

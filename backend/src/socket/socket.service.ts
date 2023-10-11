@@ -1,4 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { User } from '@prisma/client';
+import { Socket } from 'socket.io';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
@@ -29,6 +31,29 @@ export class SocketService {
     await this.userService.updateUser(user, { isOnline: false });
     this.userSocketMap.delete(socketId);
     console.log(this.userSocketMap); // debug
+  }
+
+  isValidUser(client: Socket): User | null {
+    const user = (client.request as any)?.session?.passport?.user;
+
+    if (!user) {
+      return null;
+    }
+
+    const { is2FaActive, is2FaValid } = user;
+
+    if (!is2FaActive) {
+      return user;
+    }
+
+    if (is2FaActive && is2FaValid) {
+      return user;
+    }
+
+    if (is2FaActive && !is2FaValid) {
+      return null;
+    }
+    throw new InternalServerErrorException('Internal validation socket error');
   }
 
   getUserId(socketId: string): number {
