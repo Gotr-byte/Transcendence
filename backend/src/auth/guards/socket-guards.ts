@@ -1,4 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class WsAuthGuard implements CanActivate {
@@ -9,8 +10,10 @@ export class WsAuthGuard implements CanActivate {
     const user = request.session.passport?.user;
 
     if (!isAuthenticated || (user && user.is2FaActive && !user.is2FaValid)) {
-      client.emit('error', 'Not Authenticated');
-      client.disconnect();
+      throw new WsException({
+        error: 'Not Authenticated',
+        type: 'AUTH_EXCEPTION',
+      });
     }
     return isAuthenticated;
   }

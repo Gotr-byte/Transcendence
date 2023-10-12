@@ -7,9 +7,11 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from './socket.service';
-import { UseGuards } from '@nestjs/common';
+import { UseFilters, UseGuards } from '@nestjs/common';
 import { WsAuthGuard } from 'src/auth/guards/socket-guards';
+import { WsExceptionFilter } from 'src/filters/ws-exception-filter';
 
+@UseFilters(new WsExceptionFilter())
 // @UseGuards(WsAuthGuard)
 @WebSocketGateway({
   cors: {

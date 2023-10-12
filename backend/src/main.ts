@@ -9,7 +9,6 @@ import { sessionMiddleware } from './middleware/session.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -35,6 +34,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
+  app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(process.env.BACKEND_PORT || 4000);
 }
 bootstrap();

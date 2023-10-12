@@ -9,12 +9,14 @@ import {
 import { Server, Socket } from 'socket.io';
 import { CreateChannelMessageDto, CreateUserMessageDto } from './messages/dto';
 import { ChatService } from './chat.service';
-import { UseGuards, UsePipes } from '@nestjs/common';
+import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
 import { WSValidationPipe } from 'src/filters/ws-validation-pipe';
 import { WsAuthGuard } from 'src/auth/guards/socket-guards';
 import { SocketService } from 'src/socket/socket.service';
+import { WsExceptionFilter } from 'src/filters/ws-exception-filter';
 
 // @UseGuards(WsAuthGuard)
+@UseFilters(new WsExceptionFilter())
 @UsePipes(new WSValidationPipe())
 @WebSocketGateway({
   cors: { origin: process.env.FRONTEND_URL, credentials: true },
@@ -32,7 +34,6 @@ export class ChatGateway implements OnGatewayConnection {
     if (!userId) {
       userId = client.handshake.query.userId as string;
     }
-    
 
     // THIS IS THE VALIDATION CHECK FOR THE ACCESSING USER
     // const validUser = this.socketService.getValidUser(client);
