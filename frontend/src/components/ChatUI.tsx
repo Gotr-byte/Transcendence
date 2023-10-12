@@ -3,7 +3,6 @@ import { Box, Input, Grid, Flex, Text, Button } from "@chakra-ui/react";
 import ChatUsers from "./Chat/ChatUsers";
 import ChannelsMember from "./Chat/ChannelsMember";
 import ChannelsAvailable from "./Chat/ChannelsAvailable";
-import MessageList from "./Chat/MessageList";
 import { Tab, TabList, Tabs } from "@chakra-ui/react";
 
 import { WebsocketContext } from "./Context/WebsocketContexts";
