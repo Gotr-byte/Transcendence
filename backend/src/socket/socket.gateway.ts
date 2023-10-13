@@ -7,9 +7,12 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from './socket.service';
-// import { UseGuards } from '@nestjs/common';
+import { UseFilters, UseGuards } from '@nestjs/common';
+import { WsAuthGuard } from 'src/auth/guards/socket-guards';
+import { WsExceptionFilter } from 'src/filters/ws-exception-filter';
 
-// @UseGuards(SocketSessionGuard)
+@UseFilters(new WsExceptionFilter())
+// @UseGuards(WsAuthGuard)
 @WebSocketGateway({
   cors: {
     origin: process.env.FRONTEND_URL,
@@ -25,6 +28,17 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (!userId) {
       userId = client.handshake.query.userId as string;
     }
+
+    // THIS IS THE VALIDATION CHECK FOR THE ACCESSING USER
+    // const validUser = this.socketService.getValidUser(client);
+
+    // if (!validUser) {
+    //   console.log('Emitting error and disconnecting'); // Check if this block is executed
+    //   client.emit('error', 'Not authenticated');
+    //   client.disconnect();
+    //   return;
+    // }
+
     this.socketService.registerOnlineUser(+userId, client.id);
     console.info(`Client connected with ID: ${client.id}`);
   }

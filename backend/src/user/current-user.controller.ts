@@ -12,7 +12,7 @@ import {
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { AuthUser } from 'src/auth/auth.decorator';
-import { AuthenticatedGuard, SessionGuard } from 'src/auth/guards/http-guards';
+import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
 import { ChangeUserDto, FileUploadDto, ShowLoggedUserDto } from './dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';

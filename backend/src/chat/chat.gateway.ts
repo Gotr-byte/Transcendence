@@ -9,9 +9,14 @@ import {
 import { Server, Socket } from 'socket.io';
 import { CreateChannelMessageDto, CreateUserMessageDto } from './messages/dto';
 import { ChatService } from './chat.service';
-import { UsePipes } from '@nestjs/common';
+import { UseFilters, UseGuards, UsePipes } from '@nestjs/common';
 import { WSValidationPipe } from 'src/filters/ws-validation-pipe';
+import { WsAuthGuard } from 'src/auth/guards/socket-guards';
+import { SocketService } from 'src/socket/socket.service';
+import { WsExceptionFilter } from 'src/filters/ws-exception-filter';
 
+// @UseGuards(WsAuthGuard)
+@UseFilters(new WsExceptionFilter())
 @UsePipes(new WSValidationPipe())
 @WebSocketGateway({
   cors: { origin: process.env.FRONTEND_URL, credentials: true },
@@ -21,6 +26,7 @@ export class ChatGateway implements OnGatewayConnection {
 
   constructor(
     private readonly chatService: ChatService, // ... Other services
+    private readonly socketService: SocketService, // ... Other services
   ) {}
 
   async handleConnection(@ConnectedSocket() client: Socket): Promise<void> {
@@ -28,10 +34,18 @@ export class ChatGateway implements OnGatewayConnection {
     if (!userId) {
       userId = client.handshake.query.userId as string;
     }
-    const { channels, rooms } = await this.chatService.handleUserConnection(
-      +userId,
-    );
-    channels.forEach((channel) => client.join(channel));
+
+    // THIS IS THE VALIDATION CHECK FOR THE ACCESSING USER
+    // const validUser = this.socketService.getValidUser(client);
+
+    // if (!validUser) {
+    //   console.log('Emitting error and disconnecting'); // Check if this block is executed
+    //   client.emit('error', 'Not authenticated');
+    //   client.disconnect();
+    //   return;
+    // }
+
+    const rooms = await this.chatService.handleUserConnection(+userId);
     rooms.forEach((room) => client.join(room));
   }
 
@@ -81,7 +95,6 @@ export class ChatGateway implements OnGatewayConnection {
 
     const privateChatId = [userId, userMessageDto.receiverId].sort().join('_');
     if (!client.rooms.has(privateChatId)) client.join(privateChatId);
-
     const receivingSockets = await this.chatService.getSocketIdsFromUserId(
       userMessageDto.receiverId,
     );

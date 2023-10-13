@@ -24,13 +24,14 @@ export class SessionGuard implements CanActivate {
   // Checks if the user is authenticated
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const user = request.session.passport?.user;
 
-    if (!user) {
+    const isAuthenticated = request.isAuthenticated();
+
+    if (!isAuthenticated) {
       throw new UnauthorizedException('Not logged in');
     }
 
-    return request.isAuthenticated();
+    return isAuthenticated;
   }
 }
 

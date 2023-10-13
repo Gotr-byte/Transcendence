@@ -1,4 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
+import { User } from '@prisma/client';
+import { Socket } from 'socket.io';
 import { UserService } from 'src/user/user.service';
 
 @Injectable()
@@ -8,10 +11,6 @@ export class SocketService {
   constructor(private readonly userService: UserService) {}
 
   async registerOnlineUser(userId: number, socketId: string): Promise<void> {
-    if (!userId) {
-      throw new InternalServerErrorException(`Query param 'userId' is missing`);
-    }
-
     this.userSocketMap.set(socketId, userId);
     const user = await this.userService.getUserById(+userId);
     await this.userService.updateUser(user, { isOnline: true });
@@ -21,9 +20,7 @@ export class SocketService {
   async disconnectUser(socketId: string): Promise<void> {
     const userId = this.getUserId(socketId);
     if (!userId) {
-      throw new InternalServerErrorException(
-        'userId is not found in socket map',
-      );
+      throw new WsException('userId is not found in socket map');
     }
     const user = await this.userService.getUserById(userId);
     await this.userService.updateUser(user, { isOnline: false });
@@ -31,12 +28,32 @@ export class SocketService {
     console.log(this.userSocketMap); // debug
   }
 
+  isValidUser(client: Socket): User | null {
+    const user = (client.request as any)?.session?.passport?.user;
+
+    if (!user) {
+      return null;
+    }
+
+    const { is2FaActive, is2FaValid } = user;
+
+    if (!is2FaActive) {
+      return user;
+    }
+
+    if (is2FaActive && is2FaValid) {
+      return user;
+    }
+
+    if (is2FaActive && !is2FaValid) {
+      return null;
+    }
+    throw new WsException('Internal validation socket error');
+  }
+
   getUserId(socketId: string): number {
     const userId = this.userSocketMap.get(socketId);
-    if (!userId)
-      throw new InternalServerErrorException(
-        'userId is not found in socket map',
-      );
+    if (!userId) throw new WsException('userId is not found in socket map');
     return userId;
   }
 

@@ -6,11 +6,14 @@ export class WSValidationPipe extends ValidationPipe {
   createExceptionFactory() {
     return (validationErrors = []) => {
       if (this.isDetailedOutputDisabled) {
-        return new WsException('Bad request');
+        return new WsException({
+          error: 'Bad request',
+          type: 'VALIDATION_EXCEPTION',
+        });
       }
       const errors = this.flattenValidationErrors(validationErrors);
 
-      return new WsException(errors);
+      return new WsException({ error: errors, type: 'VALIDATION_EXCEPTION' });
     };
   }
 }
