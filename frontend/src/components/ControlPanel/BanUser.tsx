@@ -14,13 +14,11 @@ const BanUser: React.FC = () => {
 	const [id, setId] = useState<number>(0); // id is now a number
 	const [username, setUsername] = useState<string>("");
 	const [restrictionType, setRestrictionType] = useState<string>("BANNED");
-	// const [duration, setDuration] = useState<string>("");
 
 	const [error, setError] = useState<string | null>(null);
 
 	const decreeData: Decree = {
 		restrictionType,
-		// duration,
 	};
 	const banHandler = async () => {
 		try {
