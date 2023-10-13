@@ -7,20 +7,20 @@ import { Button } from "@chakra-ui/react";
 
 interface Decree {
 	restrictionType: string;
-	duration: string;
+	// duration: string;
 }
 
 const BanUser: React.FC = () => {
 	const [id, setId] = useState<number>(0); // id is now a number
 	const [username, setUsername] = useState<string>("");
 	const [restrictionType, setRestrictionType] = useState<string>("BANNED");
-	const [duration, setDuration] = useState<string>("");
+	// const [duration, setDuration] = useState<string>("");
 
 	const [error, setError] = useState<string | null>(null);
 
 	const decreeData: Decree = {
 		restrictionType,
-		duration,
+		// duration,
 	};
 	const banHandler = async () => {
 		try {
@@ -72,19 +72,19 @@ const BanUser: React.FC = () => {
 					value={restrictionType}
 					onChange={(e) => setRestrictionType(e.target.value)}
 				>
-					<option value="BANNES">BANNED</option>
+					<option value="BANNED">BANNED</option>
 					<option value="MUTED">MUTED</option>
 				</select>
 			</label>
-			<label>
-				Duration:
-				<input
-					type="text"
-					placeholder="YYYY-MM-DDTHH:MM:SS:"
-					value={duration}
-					onChange={(e) => setDuration(e.target.value)}
-				/>
-			</label>
+			{/* <label> */}
+				{/* Duration: */}
+				{/* <input */}
+					 {/* type="text" */}
+					 {/* placeholder="YYYY-MM-DDTHH:MM:SS:" */}
+					 {/* value={duration} */}
+					 {/* onChange={(e) => setDuration(e.target.value)} */}
+				{/* /> */}
+			{/* </label> */}
 			<button onClick={banHandler}>EnableRestriction</button>
 		</div>
 	);
