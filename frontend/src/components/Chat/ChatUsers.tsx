@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import AddFriendButton from "./AddFriendButton";
 import UserProfile from "./UserProfile";
 import SendDirectMessage from "./SendDirectMessage";
+import JoinGameButton from "./JoinGameButton";
 
 type UserRole = "ADMIN" | "USER";
 
@@ -78,6 +79,7 @@ const ChatUsers: React.FC<ChatUsersProps> = ({ currentRoomId }) => {
 							<AddFriendButton username={user.username} />
 							<UserProfile username={user.username} />
 							<SendDirectMessage username={user.username} id={user.id} />
+							<JoinGameButton/>
 						</li>
 					))}
 				</ul>
