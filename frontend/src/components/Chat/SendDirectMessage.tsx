@@ -42,14 +42,16 @@ export const SendDirectMessage: React.FC<SendDirectMessageProps> = ({
   const { isOpen, onOpen, onClose } = useDisclosure();
   const socket = useContext(WebsocketContext);
   useEffect(() => {
-    socket.on("user-msg-1", (newMessage: ReceivedMessagePayload) => {
+    if (id === null) return;
+    const eventName = `user-msg-${id}`
+    socket.on(eventName, (newMessage: ReceivedMessagePayload) => {
       setReceivedMessages((prev) => [...prev, newMessage]);
     });
     return () => {
       console.log("Unregistering Events...");
-      socket.off("user-msg-1");
+      socket.off(eventName);
     };
-  }, [socket]);
+  }, [socket, id]);
   const onSubmit = () => {
     if (sentMessage.content.trim() === "") {
       alert("Message content is empty. Please enter a message.");
@@ -97,7 +99,6 @@ export const SendDirectMessage: React.FC<SendDirectMessageProps> = ({
             <Button colorScheme="blue" mr={3} onClick={onSubmit}>
               Send
             </Button>
-            {/* <Button variant="solid" size='xs' onClick={onSubmit}>Cancel</Button> */}
           </ModalFooter>
         </ModalContent>
       </Modal>

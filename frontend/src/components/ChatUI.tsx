@@ -57,7 +57,7 @@ const ChatUI: React.FC = () => {
 			};
 	}, [socket, currentRoomId]); 
 
-	    const onSubmit = () => {
+	  const onSubmit = () => {
 		if (sentMessage.content.trim() === "") {
 		  alert("Message content is empty. Please enter a message.");
 		  return;
