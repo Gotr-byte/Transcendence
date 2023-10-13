@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateChannelMessageDto, CreateUserMessageDto } from './messages/dto';
+import {
+  CreateChannelMessageDto,
+  CreateUserMessageDto,
+  ShowMessageDto,
+} from './messages/dto';
 import { MessagesService } from './messages/messages.service';
 import { ChannelService } from './channel/channel.service';
 import { BlockingService } from 'src/user/user-relations/blocking/blocking.service';
@@ -7,7 +11,6 @@ import { ChatSharedService } from './shared/chat-shared.service';
 import { UserService } from 'src/user/user.service';
 import { SocketService } from 'src/socket/socket.service';
 import { ChatEvent } from './types';
-import { Message } from '@prisma/client';
 
 @Injectable()
 export class ChatService {
@@ -21,11 +24,6 @@ export class ChatService {
   ) {}
 
   async handleUserConnection(userId: number) {
-    const memberships = await this.channelService.getUserChannels(userId);
-    const channels = memberships.channels.map((channel) =>
-      channel.id.toString(),
-    );
-
     const userChats = await this.messagesService.getUserChats(userId);
     const rooms = userChats.map((user) => {
       return [userId, user.id].sort().join('_');
@@ -33,7 +31,7 @@ export class ChatService {
 
     await this.chatSharedService.removeExpiredChannelRestrictions(userId);
 
-    return { channels, rooms };
+    return rooms;
   }
 
   async handleChannelMessage(
@@ -44,24 +42,27 @@ export class ChatService {
       userId,
       channelMessageDto,
     );
-    const chatEvents = await this.prepChannelEvents(savedMessage);
+    const chatEvents = await this.prepChannelEvents(userId, savedMessage);
     return chatEvents;
   }
 
   async saveChannelMessage(
     userId: number,
     channelMessageDto: CreateChannelMessageDto,
-  ): Promise<Message> {
+  ): Promise<ShowMessageDto> {
     return await this.messagesService.createChannelMessage(
       userId,
       channelMessageDto,
     );
   }
 
-  async prepChannelEvents(savedMessage: Message): Promise<ChatEvent[]> {
-    const channelId = savedMessage.channelId;
+  async prepChannelEvents(
+    userId: number,
+    savedMessage: ShowMessageDto,
+  ): Promise<ChatEvent[]> {
+    console.log(savedMessage);
+    const channelId = savedMessage.receivingChannelId;
     if (!channelId) throw new Error('Channel Id is Missing');
-    const userId: number = savedMessage.senderId;
     // Fetch the channel members excluding the message sender
     const channelMembers = await this.channelService.getChannelUsers(
       channelId,
@@ -103,31 +104,34 @@ export class ChatService {
     userMessageDto: CreateUserMessageDto,
   ): Promise<ChatEvent> {
     const savedMessage = await this.saveUserMessage(userId, userMessageDto);
-    const chatEvents = await this.prepUserEvents(savedMessage);
+    const chatEvents = await this.prepUserEvents(userId, savedMessage);
     return chatEvents;
   }
 
   async saveUserMessage(
     userId: number,
     userMessageDto: CreateUserMessageDto,
-  ): Promise<Message> {
+  ): Promise<ShowMessageDto> {
     return await this.messagesService.createUserMessage(userId, userMessageDto);
   }
 
-  async prepUserEvents(savedMessage: Message): Promise<ChatEvent> {
-    const user = await this.userService.getUserById(savedMessage.senderId);
-    const receiverId = savedMessage.receiverId;
+  async prepUserEvents(
+    userId: number,
+    savedMessage: ShowMessageDto,
+  ): Promise<ChatEvent> {
+    console.log(savedMessage);
+    const receiverId = savedMessage.receivingUserId;
     if (!receiverId) throw new Error('ReceiverId is missing');
 
     const chatEvent: ChatEvent = {
-      receiverId,
-      event: `user-msg-${user.id}`,
+      receiverId: +receiverId,
+      event: `user-msg-${userId}`,
       message: savedMessage,
       notification: {
         type: 'user-message',
-        message: `New Message from ${user.username}`,
-        userId: `${user.id}`,
-        event: `user-msg-${user.id}`,
+        message: `New Message from ${savedMessage.sender}`,
+        userId: `${userId}`,
+        event: `user-msg-${userId}`,
       },
     };
     return chatEvent;

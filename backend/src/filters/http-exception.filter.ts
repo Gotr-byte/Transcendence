@@ -10,8 +10,10 @@ import {
   PrismaClientUnknownRequestError,
 } from '@prisma/client/runtime/library';
 import { Response } from 'express';
+import { CustomError } from 'src/shared/shared.errors';
 
 @Catch(
+  CustomError,
   HttpException,
   PrismaClientKnownRequestError,
   PrismaClientUnknownRequestError,
@@ -19,6 +21,7 @@ import { Response } from 'express';
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(
     exception:
+      | CustomError
       | HttpException
       | PrismaClientKnownRequestError
       | PrismaClientUnknownRequestError,
@@ -49,6 +52,20 @@ export class HttpExceptionFilter implements ExceptionFilter {
         error: 'Internal Server Error',
         statusCode: 500,
       });
+    } else if (exception instanceof CustomError) {
+      if (exception.type === 'UNKNOWN_CHANNEL_ERROR') {
+        response.status(HttpStatus.BAD_REQUEST).json({
+          message: exception.message,
+          error: 'Bad Request Error',
+          statusCode: 400,
+        });
+      } else if (exception.type === 'RESTRICTED_USER') {
+        response.status(HttpStatus.UNAUTHORIZED).json({
+          message: exception.message,
+          error: 'Unauthorized Error',
+          statusCode: 401,
+        });
+      }
     } else {
       response.status(exception.getStatus()).json(exception.getResponse());
     }

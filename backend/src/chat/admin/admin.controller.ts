@@ -191,7 +191,7 @@ export class AdminController {
       'Kick any user (excluding the channel creator), if logged user is admin',
   })
   @ApiParam({ name: 'channelId', description: 'ID of the channel' })
-  @ApiParam({ name: 'username', description: 'username to liberate' })
+  @ApiParam({ name: 'username', description: 'username to kick' })
   async kickUser(
     @Param('channelId') channelId: string,
     @Param('username') username: string,

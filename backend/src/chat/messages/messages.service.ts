@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import {
   CreateChannelMessageDto,
   CreateUserMessageDto,
@@ -10,9 +6,9 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatSharedService } from '../shared/chat-shared.service';
 import { UserService } from 'src/user/user.service';
-import { Message } from '@prisma/client';
-import { ShowMessagesDto } from './dto/show-messages.dto';
+import { ShowMessageDto, ShowMessagesDto } from './dto/show-messages.dto';
 import { UsernameId } from './types/types';
+import { CustomError } from 'src/shared/shared.errors';
 
 @Injectable()
 export class MessagesService {
@@ -25,7 +21,7 @@ export class MessagesService {
   async createChannelMessage(
     userId: number,
     createChannelMessageDto: CreateChannelMessageDto,
-  ): Promise<Message> {
+  ): Promise<ShowMessageDto> {
     await this.ensureUserIsNotRestricted(
       createChannelMessageDto.channelId,
       userId,
@@ -37,20 +33,22 @@ export class MessagesService {
 
     const newMessage = await this.prisma.message.create({
       data: { senderId: userId, ...createChannelMessageDto },
+      include: { sender: true },
     });
-    return newMessage;
+    return ShowMessageDto.from(newMessage);
   }
 
   async createUserMessage(
     senderId: number,
     createUserMessageDto: CreateUserMessageDto,
-  ): Promise<Message> {
+  ): Promise<ShowMessageDto> {
     if (senderId === createUserMessageDto.receiverId)
-      throw new BadRequestException('Cannot send message  to yourself');
+      throw new CustomError('Cannot send message  to yourself', 'SELF_MESSAGE');
     const newMessage = await this.prisma.message.create({
       data: { senderId, ...createUserMessageDto },
+      include: { sender: true },
     });
-    return newMessage;
+    return ShowMessageDto.from(newMessage);
   }
 
   async getChannelMessages(
@@ -135,10 +133,13 @@ export class MessagesService {
         },
       },
     });
-    if (restriction)
-      throw new UnauthorizedException(
-        `User with id '${restrictedUserId}' is not creator of channel (ID:${restrictedChannelId})`,
+    if (restriction) {
+      const errorMessage = `User with id '${restrictedUserId}' is ${restriction.restrictionType} on channel: (ID:${restrictedChannelId})`;
+      throw new CustomError(
+        errorMessage,
+        `USER_${restriction.restrictionType}`,
       );
+    }
   }
 
   private async getVisibleChannelMessages(

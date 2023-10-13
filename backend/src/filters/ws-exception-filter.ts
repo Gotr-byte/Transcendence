@@ -5,8 +5,10 @@ import {
   PrismaClientUnknownRequestError,
 } from '@prisma/client/runtime/library';
 import { Socket } from 'socket.io';
+import { CustomError } from 'src/shared/shared.errors';
 
 @Catch(
+  CustomError,
   WsException,
   PrismaClientKnownRequestError,
   PrismaClientUnknownRequestError,
@@ -14,6 +16,7 @@ import { Socket } from 'socket.io';
 export class WsExceptionFilter implements ExceptionFilter {
   catch(
     exception:
+      | CustomError
       | WsException
       | PrismaClientKnownRequestError
       | PrismaClientUnknownRequestError,
@@ -48,6 +51,8 @@ export class WsExceptionFilter implements ExceptionFilter {
       } else {
         client.emit('error', 'An unknown error occurred');
       }
+    } else if (exception instanceof CustomError) {
+      client.emit('error', { msg: exception.message, type: exception.type });
     }
   }
 }

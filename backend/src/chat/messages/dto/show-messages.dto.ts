@@ -2,13 +2,16 @@ import { MessageWithSender } from '../types/types';
 
 export class ShowMessageDto {
   sender: string;
-  // receivingUserId?: string;
-  // receivingChannelId?: number;
+  receivingUserId?: number;
+  receivingChannelId?: number;
   content: string;
   createdAt: Date;
 
   constructor(message: MessageWithSender) {
     this.sender = message.sender.username;
+    if (message.receiverId) this.receivingUserId = message.receiverId;
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    else this.receivingChannelId = message.channelId!;
     this.content = message.content;
     this.createdAt = message.createdAt;
   }

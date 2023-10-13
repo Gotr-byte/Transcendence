@@ -1,6 +1,7 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ChannelMember } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CustomError } from 'src/shared/shared.errors';
 
 @Injectable()
 export class ChatSharedService {
@@ -40,10 +41,10 @@ export class ChatSharedService {
     const channel = await this.prisma.channel.findUnique({
       where: { id: channelId, channelUsers: { some: { userId } } },
     });
-    if (!channel)
-      throw new BadRequestException(
-        `User with id: '${userId}' is not a member of this channel (ID: ${channelId})`,
-      );
+    if (!channel) {
+      const errorMessage = `Channel: (ID:${channelId}) doesn't exist, is invisible, or user '${userId}' is not a member`;
+      throw new CustomError(errorMessage, 'UNKNOWN_CHANNEL_ERROR');
+    }
   }
 
   async removeExpiredChannelRestrictions(userId: number) {

@@ -45,10 +45,7 @@ export class ChatGateway implements OnGatewayConnection {
     //   return;
     // }
 
-    const { channels, rooms } = await this.chatService.handleUserConnection(
-      +userId,
-    );
-    channels.forEach((channel) => client.join(channel));
+    const rooms = await this.chatService.handleUserConnection(+userId);
     rooms.forEach((room) => client.join(room));
   }
 
@@ -98,7 +95,6 @@ export class ChatGateway implements OnGatewayConnection {
 
     const privateChatId = [userId, userMessageDto.receiverId].sort().join('_');
     if (!client.rooms.has(privateChatId)) client.join(privateChatId);
-
     const receivingSockets = await this.chatService.getSocketIdsFromUserId(
       userMessageDto.receiverId,
     );
