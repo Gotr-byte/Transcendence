@@ -150,7 +150,7 @@ export class AdminService {
     await this.ensureUserIsAdmin(channelId, adminId);
     const user = await this.userService.getUserByName(username);
 
-    this.prisma.channelUserRestriction.delete({
+    await this.prisma.channelUserRestriction.delete({
       where: {
         restrictedUserId_restrictedChannelId: {
           restrictedUserId: user.id,

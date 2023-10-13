@@ -1,4 +1,5 @@
 import { ChannelUserRestrictionTypes } from '@prisma/client';
+import { Transform } from 'class-transformer';
 import { IsDate, IsOptional, IsString } from 'class-validator';
 
 export class RestrictionDto {
@@ -7,6 +8,7 @@ export class RestrictionDto {
 
   @IsDate()
   @IsOptional()
+  @Transform(({ value }) => new Date(value))
   duration: Date;
 
   @IsOptional()
