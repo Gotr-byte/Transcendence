@@ -14,9 +14,11 @@ type MessagePayload = {
 
 type ReceivedMessagePayload = {
   content: string;
+	sender:string;
 };
 
 const ChatUI: React.FC = () => {
+	const username = "MyUsername";
 	const [currentRoomId, setCurrentRoomId] = useState<number | null>(null);
     const [sentMessage, setSentMessage] = useState<MessagePayload>({
       content: "",
@@ -44,8 +46,13 @@ const ChatUI: React.FC = () => {
 			
 			// Event handler function
 			const handleNewMessage = (newMessage: ReceivedMessagePayload) => {
-					setReceivedMessages((prev) => [...prev, newMessage]);
-			};
+				const modifiedMessage = {
+						...newMessage,
+						content: newMessage.sender + ": " + newMessage.content,
+				};
+				setReceivedMessages((prev) => [...prev, modifiedMessage]);
+		};
+		
 	
 			// Register the event listener
 			socket.on(eventName, handleNewMessage);
@@ -62,6 +69,8 @@ const ChatUI: React.FC = () => {
 		  alert("Message content is empty. Please enter a message.");
 		  return;
 		}
+		// const contentWithUsername = username + ": " + sentMessage.content;
+		// const sentMessageJSON = { ...sentMessage, content: contentWithUsername };
 		const sentMessageJSON = sentMessage;
 		socket.emit("send-channel-message", sentMessageJSON);
 		setSentMessage({ ...sentMessage, content: "" });
