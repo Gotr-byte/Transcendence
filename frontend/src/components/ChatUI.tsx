@@ -30,19 +30,33 @@ const ChatUI: React.FC = () => {
 	const handleRoomChange = (roomId: number) => {
 		setCurrentRoomId(roomId);
 		setSentMessage({
-			...sentMessage,
+		  content: "",
 			channelId: roomId, // Set the channelId to the roomId
 		  });
+			setReceivedMessages([]);
 	};
-	useEffect(() => {
-		socket.on("channel-msg-3", (newMessage: ReceivedMessagePayload) => {
-			setReceivedMessages((prev) => [...prev, newMessage]);
-		});
-		return () => {
-		  console.log("Unregistering Events...");
-		  socket.off("channel-msg-3");
-		};
-	  }, [socket]);
+		useEffect(() => {
+			// Ensure a room is selected before registering event listeners
+			if (currentRoomId === null) return;
+	
+			// Dynamic event name based on `currentRoomId`
+			const eventName = `channel-msg-${currentRoomId}`;
+			
+			// Event handler function
+			const handleNewMessage = (newMessage: ReceivedMessagePayload) => {
+					setReceivedMessages((prev) => [...prev, newMessage]);
+			};
+	
+			// Register the event listener
+			socket.on(eventName, handleNewMessage);
+			
+			return () => {
+					// Unregister the event listener on cleanup
+					console.log("Unregistering Events...");
+					socket.off(eventName, handleNewMessage);
+			};
+	}, [socket, currentRoomId]); 
+
 	    const onSubmit = () => {
 		if (sentMessage.content.trim() === "") {
 		  alert("Message content is empty. Please enter a message.");
