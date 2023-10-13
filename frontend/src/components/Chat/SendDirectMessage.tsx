@@ -21,6 +21,7 @@ type MessagePayload = {
 
 type ReceivedMessagePayload = {
   content: string;
+  sender: string;
 };
 
 interface SendDirectMessageProps {
@@ -45,7 +46,11 @@ export const SendDirectMessage: React.FC<SendDirectMessageProps> = ({
     if (id === null) return;
     const eventName = `user-msg-${id}`
     socket.on(eventName, (newMessage: ReceivedMessagePayload) => {
-      setReceivedMessages((prev) => [...prev, newMessage]);
+				const taggedMessage = {
+						...newMessage,
+						content: newMessage.sender + ": " + newMessage.content,
+        };
+      setReceivedMessages((prev) => [...prev, taggedMessage]);
     });
     return () => {
       console.log("Unregistering Events...");

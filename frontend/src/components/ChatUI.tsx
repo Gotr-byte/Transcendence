@@ -46,11 +46,11 @@ const ChatUI: React.FC = () => {
 			
 			// Event handler function
 			const handleNewMessage = (newMessage: ReceivedMessagePayload) => {
-				const modifiedMessage = {
+				const taggedMessage = {
 						...newMessage,
 						content: newMessage.sender + ": " + newMessage.content,
 				};
-				setReceivedMessages((prev) => [...prev, modifiedMessage]);
+				setReceivedMessages((prev) => [...prev, taggedMessage]);
 		};
 		
 	
