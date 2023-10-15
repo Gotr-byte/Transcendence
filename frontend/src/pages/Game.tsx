@@ -1,5 +1,36 @@
 import React, { useRef, useEffect, useState } from 'react';
-// import musicBavaria from '../Assets/Music_Meanwhile_in_Bavaria.mp3';
+import musicBavariaSrc from '../../public/assets/Music_Meanwhile_in_Bavaria.mp3';
+import musicMushroomKingdomSrc from '../../public/assets/Music_Mushroom_Kingdom.mp3';
+import musicNumberOneSrc from '../../public/assets/Music_We_Are_Number_One.mp3';
+import musicStubbSrc from '../../public/assets/Music_Stubb_a_Dubb.mp3';
+
+import videoMcrolldSrc from '../../public/assets/Video_Mcrolld.mp4';
+import videoMcrolldReverseSrc from '../../public/assets/Video_Mcrolld_reverse.mp4';
+
+import audioGnomeSrc from '../../public/assets/SoundEffect_Gnome.mp3';
+import imageGnomeSrc from '../../public/assets/Image_Gnome.png';
+
+import audioHarkinianOahSrc from '../../public/assets/SoundEffect_Harkinian_Oah.mp3';
+import audioHarkinianHitSrc from '../../public/assets/SoundEffect_Harkinian_Hit.mp3';
+import videoHarkinianHitSrc from '../../public/assets/Video_Harkinian_Hit.mp4';
+
+import imageFoxBadSrc from '../../public/assets/Image_Fox_bad.png';
+import imageFoxGoodSrc from '../../public/assets/Image_Fox_good.png';
+import imageFoxEnragedSrc from '../../public/assets/Image_Fox_enraged_ORIGINAL.png';
+import audioFoxEnrageSrc from '../../public/assets/SoundEffect_Fox_Enrage.mp3';
+
+import audioFoxMeowSrc from '../../public/assets/SoundEffect_Fox_Meow.mp3';
+import audioFoxWoofSrc from '../../public/assets/SoundEffect_Fox_Woof.mp3';
+import audioFoxQuackSrc from '../../public/assets/SoundEffect_Fox_Quack.mp3';
+import audioFoxChickenSrc from '../../public/assets/SoundEffect_Fox_Chicken.mp3';
+import audioFoxGoatSrc from '../../public/assets/SoundEffect_Fox_Goat.mp3';
+import audioFoxPigSrc from '../../public/assets/SoundEffect_Fox_Pig.mp3';
+import audioFoxTweetSrc from '../../public/assets/SoundEffect_Fox_Tweet.mp3';
+import audioFoxAheeSrc from '../../public/assets/SoundEffect_Fox_Ahee.mp3';
+import audioFoxChaSrc from '../../public/assets/SoundEffect_Fox_Cha.mp3';
+import audioFoxKakaSrc from '../../public/assets/SoundEffect_Fox_Kaka.mp3';
+import audioFoxPapaSrc from '../../public/assets/SoundEffect_Fox_Papa.mp3';
+import audioFoxYokSrc from '../../public/assets/SoundEffect_Fox_Yok.mp3';
 
 const Game: React.FC = () =>
 {
@@ -150,53 +181,99 @@ const Game: React.FC = () =>
 	// Assets
 	
 	// Music
-	const musicBavaria = new Audio('../Assets/Music_Meanwhile_in_Bavaria.mp3');
-	const musicMushroomKingdom: HTMLAudioElement = new Audio('../Assets/Music_Mushroom_Kingdom.mp3');
-	const musicNumberOne: HTMLAudioElement = new Audio('../Assets/Music_We_Are_Number_One.mp3');
-	const musicStubb: HTMLAudioElement = new Audio('../Assets/Music_Stubb_a_Dubb.mp3');
+	const musicBavaria = useRef<HTMLAudioElement>(new Audio());
+	musicBavaria.current.src = musicBavariaSrc;
+	const musicMushroomKingdom = useRef<HTMLAudioElement>(new Audio());
+	musicMushroomKingdom.current.src = musicMushroomKingdomSrc;
+	const musicNumberOne = useRef<HTMLAudioElement>(new Audio());
+	musicNumberOne.current.src = musicNumberOneSrc;
+	const musicStubb = useRef<HTMLAudioElement>(new Audio());
+	musicStubb.current.src = musicStubbSrc;
 	
 	// Video
+	const videoMcrolld = useRef<HTMLVideoElement | null>(null);
+	const videoMcrolldReverse = useRef<HTMLVideoElement | null>(null);
 	var mcrolldQueued: boolean = true;
-	const videoMcrolld: HTMLVideoElement = document.createElement('video');
-	videoMcrolld.src = '../Assets/Video_Mcrolld.mp4';
 	var mcrolldReverseQueued: boolean = false;
-	const videoMcrolldReverse: HTMLVideoElement = document.createElement('video');
-	videoMcrolldReverse.src = '../Assets/Video_Mcrolld_reverse.mp4';
 	var videoToDraw: HTMLVideoElement = videoMcrolld;
+
+	// Set the video source when the component has rendered
+	useEffect(() =>
+	{
+		if (videoMcrolld.current)
+		{
+		  	videoMcrolld.current.src = videoMcrolldSrc;
+		}
+		if (videoMcrolldReverse.current)
+		{
+		  	videoMcrolldReverse.current.src = videoMcrolldReverseSrc;
+		}
+	}, []);
 	
 	// Gnome
-	const imageGnome: HTMLImageElement = new Image(161, 178);
-	imageGnome.src = "../Assets/Image_Gnome.png";
-	const audioGnome: HTMLAudioElement = new Audio('../Assets/SoundEffect_Gnome.mp3');
+	const imageGnome = useRef<HTMLImageElement>(new Image());
+	imageGnome.current.src = imageGnomeSrc;
+	imageGnome.current.width = 168;
+	imageGnome.current.height = 171;
+	const audioGnome = useRef<HTMLAudioElement>(new Audio());
+	audioGnome.current.src = audioGnomeSrc;
 	
 	// King Harkinian
-	const videoHarkinianHit: HTMLVideoElement = document.createElement('video');
-	videoHarkinianHit.src = '../Assets/Video_Harkinian_Hit.mp4';
-	const audioHarkinianHit: HTMLAudioElement = new Audio('../Assets/SoundEffect_Harkinian_Hit.mp3');
-	const audioHarkinianOah: HTMLAudioElement = new Audio('../Assets/SoundEffect_Harkinian_Oah.mp3');
+	const audioHarkinianOah = useRef<HTMLAudioElement>(new Audio());
+	audioHarkinianOah.current.src = audioHarkinianOahSrc;
+	const audioHarkinianHit = useRef<HTMLAudioElement>(new Audio());
+	audioHarkinianHit.current.src = audioHarkinianHitSrc;
+	const videoHarkinianHit = useRef<HTMLVideoElement | null>(null);
+
+	useEffect(() =>
+	{
+		if (videoHarkinianHit.current)
+		{
+			videoHarkinianHit.current.src = videoHarkinianHitSrc;
+		}
+	}, []);
 
 	// Fox
-	const imageFoxBad: HTMLImageElement = new Image(50, 49);
-	imageFoxBad.src = "../Assets/Image_Fox_bad.png";
-	const imageFoxGood: HTMLImageElement = new Image(50, 49);
-	imageFoxGood.src = "../Assets/Image_Fox_good.png";
-	const imageFoxEnraged: HTMLImageElement = new Image(50, 49);
-	imageFoxEnraged.src = "../Assets/Image_Fox_enraged_ORIGINAL.png";
-	const audioFoxEnrage: HTMLAudioElement = new Audio('../Assets/SoundEffect_Fox_Enrage.mp3');
+	const imageFoxBad = useRef<HTMLImageElement>(new Image());
+	imageFoxBad.current.src = imageFoxBadSrc;
+	imageFoxBad.current.width = 50;
+	imageFoxBad.current.height = 49;
+	const imageFoxGood = useRef<HTMLImageElement>(new Image());
+	imageFoxGood.current.src = imageFoxGoodSrc;
+	imageFoxGood.current.width = 50;
+	imageFoxGood.current.height = 49;
+	const imageFoxEnraged = useRef<HTMLImageElement>(new Image());
+	imageFoxEnraged.current.src = imageFoxEnragedSrc;
+	imageFoxEnraged.current.width = 153;
+	imageFoxEnraged.current.height = 149;
+	const audioFoxEnrage = useRef<HTMLAudioElement>(new Audio());
+	audioFoxEnrage.current.src = audioFoxEnrageSrc;
 	// Good sounds
-	const audioFoxMeow: HTMLAudioElement = new Audio('../Assets/SoundEffect_Fox_Meow.mp3');
-	const audioFoxWoof: HTMLAudioElement = new Audio('../Assets/SoundEffect_Fox_Woof.mp3');
-	const audioFoxQuack: HTMLAudioElement = new Audio('../Assets/SoundEffect_Fox_Quack.mp3');
-	const audioFoxChicken: HTMLAudioElement = new Audio('../Assets/SoundEffect_Fox_Chicken.mp3');
-	const audioFoxGoat: HTMLAudioElement = new Audio('../Assets/SoundEffect_Fox_Goat.mp3');
-	const audioFoxPig: HTMLAudioElement = new Audio('../Assets/SoundEffect_Fox_Pig.mp3');
-	const audioFoxTweet: HTMLAudioElement = new Audio('../Assets/SoundEffect_Fox_Tweet.mp3');
+	const audioFoxMeow = useRef<HTMLAudioElement>(new Audio());
+	audioFoxMeow.current.src = audioFoxMeowSrc;
+	const audioFoxWoof = useRef<HTMLAudioElement>(new Audio());
+	audioFoxWoof.current.src = audioFoxWoofSrc;
+	const audioFoxQuack = useRef<HTMLAudioElement>(new Audio());
+	audioFoxQuack.current.src = audioFoxQuackSrc;
+	const audioFoxChicken = useRef<HTMLAudioElement>(new Audio());
+	audioFoxChicken.current.src = audioFoxChickenSrc;
+	const audioFoxGoat = useRef<HTMLAudioElement>(new Audio());
+	audioFoxGoat.current.src = audioFoxGoatSrc;
+	const audioFoxPig = useRef<HTMLAudioElement>(new Audio());
+	audioFoxPig.current.src = audioFoxPigSrc;
+	const audioFoxTweet = useRef<HTMLAudioElement>(new Audio());
+	audioFoxTweet.current.src = audioFoxTweetSrc;
 	// Evil sounds
-	const audioFoxAhee: HTMLAudioElement = new Audio('../Assets/SoundEffect_Fox_Ahee.mp3');
-	const audioFoxCha: HTMLAudioElement = new Audio('../Assets/SoundEffect_Fox_Cha.mp3');
-	const audioFoxKaka: HTMLAudioElement = new Audio('../Assets/SoundEffect_Fox_Kaka.mp3');
-	const audioFoxPapa: HTMLAudioElement = new Audio('../Assets/SoundEffect_Fox_Papa.mp3');
-	const audioFoxYok: HTMLAudioElement = new Audio('../Assets/SoundEffect_Fox_Yok.mp3');
+	const audioFoxAhee = useRef<HTMLAudioElement>(new Audio());
+	audioFoxAhee.current.src = audioFoxAheeSrc;
+	const audioFoxCha = useRef<HTMLAudioElement>(new Audio());
+	audioFoxCha.current.src = audioFoxChaSrc;
+	const audioFoxKaka = useRef<HTMLAudioElement>(new Audio());
+	audioFoxKaka.current.src = audioFoxKakaSrc;
+	const audioFoxPapa = useRef<HTMLAudioElement>(new Audio());
+	audioFoxPapa.current.src = audioFoxPapaSrc;
+	const audioFoxYok = useRef<HTMLAudioElement>(new Audio());
+	audioFoxYok.current.src = audioFoxYokSrc;
 
 	function randomizeColors(): void
 	{
@@ -274,20 +351,20 @@ const Game: React.FC = () =>
 				{
 					gnomeStartTime = timestamp;
 					gnomeIsActive = true;
-					audioGnome.play();
+					audioGnome.current.play();
 					gnome_swap();
 				}
 			}
 			else if (timestamp - gnomeStartTime <= 200)
 			{
-				ctx.drawImage(imageGnome, ball1X - 80, ball1Y - 90);
+				ctx.drawImage(imageGnome.current, ball1X - 80, ball1Y - 90);
 				if (isUnlockedSecondBall)
 				{
-					ctx.drawImage(imageGnome, ball2X - 80, ball2Y - 90);
+					ctx.drawImage(imageGnome.current, ball2X - 80, ball2Y - 90);
 				}
 				if (isUnlockedFox)
 				{
-					ctx.drawImage(imageGnome, foxPosX - 80, foxPosY - 90);
+					ctx.drawImage(imageGnome.current, foxPosX - 80, foxPosY - 90);
 				}
 			}
 			else
@@ -306,15 +383,15 @@ const Game: React.FC = () =>
 				if (Math.floor(Math.random()*1000) === 666)
 				{
 					harkinianIsActive = true;
-					videoHarkinianHit.play();
-					audioHarkinianOah.play();
-					audioHarkinianHit.play();
+					videoHarkinianHit.current.play();
+					audioHarkinianOah.current.play();
+					audioHarkinianHit.current.play();
 					harkinian_hit(Math.floor(Math.random() * 100));
 				}
 			}
-			else if (videoHarkinianHit.paused === false)
+			else if (videoHarkinianHit.current.paused === false)
 			{
-				ctx.drawImage(videoHarkinianHit, harkinianX, harkinianY, harkinianWidth, harkinianHeight);
+				ctx.drawImage(videoHarkinianHit.current, harkinianX, harkinianY, harkinianWidth, harkinianHeight);
 			}
 			else
 			{
@@ -329,15 +406,15 @@ const Game: React.FC = () =>
 		{
 			if (foxIsEnraged)
 			{
-				ctx.drawImage(imageFoxEnraged, foxPosX, foxPosY);
+				ctx.drawImage(imageFoxEnraged.current, foxPosX, foxPosY);
 			}
 			else if (foxIsEvil)
 			{
-				ctx.drawImage(imageFoxBad, foxPosX, foxPosY);
+				ctx.drawImage(imageFoxBad.current, foxPosX, foxPosY);
 			}
 			else
 			{
-				ctx.drawImage(imageFoxGood, foxPosX, foxPosY);
+				ctx.drawImage(imageFoxGood.current, foxPosX, foxPosY);
 			}
 		}
 	}
@@ -704,7 +781,7 @@ const Game: React.FC = () =>
 				}
 				if (foxIsAttacking === false && timestamp - foxTimestampLastAppeased >= foxTimeTillEnraged)
 				{
-					audioFoxEnrage.play();
+					audioFoxEnrage.current.play();
 					foxIsEnraged = true;
 					foxIsEvil = true;
 					foxSpeed = 5;
@@ -734,7 +811,7 @@ const Game: React.FC = () =>
 				}
 				if (foxIsAttacking === false && timestamp - foxTimestampLastAppeased >= foxTimeTillEnraged)
 				{
-					audioFoxEnrage.play();
+					audioFoxEnrage.current.play();
 					foxIsEnraged = true;
 					foxIsEvil = true;
 					foxSpeed++;
@@ -774,31 +851,31 @@ const Game: React.FC = () =>
 		
 		if (selector === 0)
 		{
-			audioFoxChicken.play();
+			audioFoxChicken.current.play();
 		}
 		else if (selector === 1)
 		{
-			audioFoxGoat.play();
+			audioFoxGoat.current.play();
 		}
 		else if (selector === 2)
 		{
-			audioFoxMeow.play();
+			audioFoxMeow.current.play();
 		}
 		else if (selector === 3)
 		{
-			audioFoxPig.play();
+			audioFoxPig.current.play();
 		}
 		else if (selector === 4)
 		{
-			audioFoxQuack.play();
+			audioFoxQuack.current.play();
 		}
 		else if (selector === 5)
 		{
-			audioFoxTweet.play();
+			audioFoxTweet.current.play();
 		}
 		else if (selector === 6)
 		{
-			audioFoxWoof.play();
+			audioFoxWoof.current.play();
 		}
 	}
 	
@@ -808,23 +885,23 @@ const Game: React.FC = () =>
 		
 		if (selector === 0)
 		{
-			audioFoxAhee.play();
+			audioFoxAhee.current.play();
 		}
 		else if (selector === 1)
 		{
-			audioFoxCha.play();
+			audioFoxCha.current.play();
 		}
 		else if (selector === 2)
 		{
-			audioFoxKaka.play();
+			audioFoxKaka.current.play();
 		}
 		else if (selector === 3)
 		{
-			audioFoxPapa.play();
+			audioFoxPapa.current.play();
 		}
 		else if (selector === 4)
 		{
-			audioFoxYok.play();
+			audioFoxYok.current.play();
 		}
 	}
 	
@@ -925,38 +1002,38 @@ const Game: React.FC = () =>
 	{
 		if (difficultyScore < 5)
 		{
-			if (musicBavaria.paused || musicBavaria.ended)
+			if (musicBavaria.current.paused || musicBavaria.current.ended)
 			{
-				musicBavaria.play();
+				musicBavaria.current.play();
 			}
 		}
 		else if (difficultyScore < 10)
 		{
-			musicBavaria.pause();
-			if (musicMushroomKingdom.paused || musicMushroomKingdom.ended)
+			musicBavaria.current.pause();
+			if (musicMushroomKingdom.current.paused || musicMushroomKingdom.current.ended)
 			{
-				musicMushroomKingdom.play();
+				musicMushroomKingdom.current.play();
 			}
 		}
 		else if (difficultyScore < 15)
 		{
-			musicMushroomKingdom.pause();
-			if (musicNumberOne.paused || musicNumberOne.ended)
+			musicMushroomKingdom.current.pause();
+			if (musicNumberOne.current.paused || musicNumberOne.current.ended)
 			{
-				musicNumberOne.play();
+				musicNumberOne.current.play();
 			}
 		}
 		else if (difficultyScore < 30)
 		{
-			musicNumberOne.pause();
-			if (musicStubb.paused || musicStubb.ended)
+			musicNumberOne.current.pause();
+			if (musicStubb.current.paused || musicStubb.current.ended)
 			{
-				musicStubb.play();
+				musicStubb.current.play();
 			}
 		}
 		else
 		{
-			musicStubb.pause()
+			musicStubb.current.pause()
 		}
 	}
 	
@@ -1080,17 +1157,17 @@ const Game: React.FC = () =>
 	{
 		if (isUnlockedVideo)
 		{
-			if (mcrolldReverseQueued && (videoMcrolld.paused || videoMcrolld.ended))
+			if (mcrolldReverseQueued && (videoMcrolld.current.paused || videoMcrolld.current.ended))
 			{
-				videoToDraw = videoMcrolldReverse;
-				videoMcrolldReverse.play()
+				videoToDraw = videoMcrolldReverse.current;
+				videoMcrolldReverse.current.play();
 				mcrolldReverseQueued = false;
 				mcrolldQueued = true;
 			}
-			else if (mcrolldQueued && videoMcrolldReverse.paused || videoMcrolldReverse.ended)
+			else if (mcrolldQueued && (videoMcrolldReverse.current.paused || videoMcrolldReverse.current.ended))
 			{
-				videoToDraw = videoMcrolld;
-				videoMcrolld.play()
+				videoToDraw = videoMcrolld.current;
+				videoMcrolld.current.play();
 				mcrolldQueued = false;
 				mcrolldReverseQueued = true;
 			}
@@ -1417,7 +1494,16 @@ const Game: React.FC = () =>
 
 	return (
 		<div>
-    		<canvas ref={canvasRef} tabIndex= {0} width={canvasWidth} height={canvasHeight}></canvas>
+			<canvas ref={canvasRef} tabIndex={0} width={canvasWidth} height={canvasHeight}></canvas>
+			<video ref={videoMcrolld} style={{ display: 'none' }}>
+        		<source src={videoMcrolldSrc} type="video/mp4"/>
+      		</video>
+			  <video ref={videoMcrolldReverse} style={{ display: 'none' }}>
+        		<source src={videoMcrolldReverseSrc} type="video/mp4"/>
+      		</video>
+			<video ref={videoHarkinianHit} style={{ display: 'none' }}>
+        		<source src={videoHarkinianHitSrc} type="video/mp4"/>
+      		</video>
 		</div>
 	);
 };
