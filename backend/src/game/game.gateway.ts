@@ -4,24 +4,18 @@ import {
   OnGatewayDisconnect,
   SubscribeMessage,
   WebSocketGateway,
+  WebSocketServer,
 } from '@nestjs/websockets';
+import { Server, Socket } from 'socket.io';
 import { GameService } from './game.service';
-import { Socket } from 'socket.io';
 import { SocketService } from 'src/socket/socket.service';
 import { GameConfig } from './game.config';
 import { UserService } from 'src/user/user.service'
 import { User } from '@prisma/client';
-import {
-  ChangeUserDto,
-  ChangeUserPropsDto,
-  ShowAnyUserDto,
-  ShowLoggedUserDto,
-  ShowUsersDto,
-} from 'src/user/dto';
-import { UserDetails } from 'src/user/types';
 
 @WebSocketGateway({ cors: { origin: process.env.FRONTEND_URL } })
 export class GameGateway implements OnGatewayDisconnect {
+  @WebSocketServer() server: Server;
   constructor(
     private readonly gameService: GameService,
     private readonly socketService: SocketService,
@@ -30,7 +24,6 @@ export class GameGateway implements OnGatewayDisconnect {
 
   private waitingUser: Socket | null;
   private timestamp: number | null;
-  private user: User;
 
   @SubscribeMessage('match-random')
   async handleStartRandomMatchmaking(@ConnectedSocket() client: Socket,): Promise<void> 
@@ -49,7 +42,7 @@ export class GameGateway implements OnGatewayDisconnect {
     else
     {
       this.timestamp = Date.now();
-      client.emit('matchmaking', 'waiting for opponent...' + GameConfig.matchTimeout);
+      client.emit('matchmaking', 'waiting for opponent...');
       this.waitingUser = client;
     }
   }
@@ -83,7 +76,8 @@ export class GameGateway implements OnGatewayDisconnect {
     @ConnectedSocket() client: Socket
     ): Promise<void>
   {
-    var user:User;
+    let user:User;
+    let sender:User;
 
     if (name == null || name.length == 0)
     {
@@ -105,9 +99,26 @@ export class GameGateway implements OnGatewayDisconnect {
       return;
     }
     const tstamp = Date.now();
-    //wait for configured amount of time until match confirms
-    //set both inGame to true and start the game
-    client.emit('matchmaking', 'Success: matched with ' + name);
+    const receivingSockIds = this.socketService.getSocketIds(
+      user.id,
+    );
+    const receivingSocket = this.server.sockets.sockets.get(receivingSockIds[0]);
+    if (!receivingSocket)
+    {
+      client.emit('matchmaking', 'error: not online');
+      return;
+    }
+    sender = await this.userService.getUserById(this.socketService.getUserId(client.id));
+    receivingSocket.emit("GameRequest", 
+      {
+        "playerOneId": sender.id,
+        "playeroneName": sender.username,
+        "playerTwoId": user.id,
+        "playerTwoName": user.username,
+        "timeStamp": tstamp
+      });
+
+    client.emit('matchmaking', 'Success: game request pending');
   }
 
   handleDisconnect(@ConnectedSocket() client: Socket) {
