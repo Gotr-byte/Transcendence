@@ -38,6 +38,10 @@ const Game: React.FC = () =>
 	const canvasWidth: number = 1366;
 	const canvasHeight: number = 768;
 
+	const [frameRate, setFrameRate] = useState(60);
+	const thenRef = useRef<number | null>(null);
+	const startTimeRef = useRef<number | null>(null);
+
 	// Game modes
 			
 	var classicMode: boolean = false;
@@ -62,7 +66,7 @@ const Game: React.FC = () =>
 	// Balls and Fox
 
 	var ballGlobalRadius: number = 15;
-	var ballGlobalSpeedDefault: number = 1;
+	var ballGlobalSpeedDefault: number = 3;
 	var ballGlobalSpeedAddedPerma: number = 0;
 	var ballGlobalSpeedAddedTemp: number = 0;
 
@@ -80,24 +84,6 @@ const Game: React.FC = () =>
 	var ball2SpeedX: number = 1;
 	var ball2SpeedY: number = 1;
 	
-	// if (Math.floor(Math.random()*100) % 2 === 0)
-	// {
-	// 	ball1DirY = -1;
-	// }
-	// else
-	// {
-	// 	ball1DirY = 1;
-	// }
-	
-	// if (Math.floor(Math.random()*100) % 2 === 0)
-	// {
-	// 	foxDirY = -1;
-	// }
-	// else
-	// {
-	// 	foxDirY = 1;
-	// }
-	
 	
 	
 	// Paddles
@@ -105,7 +91,7 @@ const Game: React.FC = () =>
 	var paddleGlobalHeight: number = 10;
 	var paddleGlobalWidth: number = 75;
 	var paddleGlobalReduction: number = 0;
-	var paddleGlobalSpeed: number = 5;
+	var paddleGlobalSpeed: number = 10;
 	
 	var paddleP1X: number = (canvasWidth - paddleGlobalWidth) / 2;
 	var paddleP1SpeedMod: number = 0;
@@ -158,8 +144,8 @@ const Game: React.FC = () =>
 	var foxPosY: number = canvasHeight / 2;
 	var foxDirX: number = 1;
 	var foxDirY: number = 1;
-	var foxSpeedDefault: number = 1;
-	var foxSpeed: number = 1;
+	var foxSpeedDefault: number = 3;
+	var foxSpeed: number = 3;
 	var foxIsEvil: boolean = false;
 	var foxIsEnraged: boolean = false;
 	var foxIsAttacking: boolean = false;
@@ -426,8 +412,8 @@ const Game: React.FC = () =>
 		// Paddle 1
 		if (ballFutureY >= canvasHeight - ballGlobalRadius)
 		{
-			if (ballFutureX >= paddleP1X &&
-				ballFutureX <= paddleP1X + paddleGlobalWidth - paddleGlobalReduction)
+			if (ballFutureX + ballGlobalRadius / 2 >= paddleP1X &&
+				ballFutureX - ballGlobalRadius / 2 <= paddleP1X + paddleGlobalWidth - paddleGlobalReduction)
 			{
 				collision = 1;
 			}
@@ -435,8 +421,8 @@ const Game: React.FC = () =>
 		// Paddle 2
 		else if (ballFutureY <= 0 + ballGlobalRadius)
 		{
-			if (ballFutureX >= paddleP2X &&
-				ballFutureX <= paddleP2X + paddleGlobalWidth - paddleGlobalReduction)
+			if (ballFutureX + ballGlobalRadius / 2 >= paddleP2X &&
+				ballFutureX - ballGlobalRadius / 2 <= paddleP2X + paddleGlobalWidth - paddleGlobalReduction)
 			{
 				collision = 2;
 			}
@@ -475,30 +461,30 @@ const Game: React.FC = () =>
 	{
 		let collision = "";
 		
-		// Check "up" (with 2 pixels error margin)
+		// Check "up" (with 3 pixels error margin)
 		if (ballX >= foxPosX && ballX <= foxPosX + foxWidth &&
-			ballY >= foxPosY - 2 && ballY <= foxPosY + 2)
+			ballY >= foxPosY - 3 && ballY <= foxPosY + 10)
 			//ballY >= foxPosY - 3 && ballY <= foxPosY + 3)
 		{
 			collision = "up";
 		}
-		// Check "down" (with 2 pixels error margin)
+		// Check "down" (with 3 pixels error margin)
 		else if (ballX >= foxPosX && ballX <= foxPosX + foxWidth &&
-				 ballY >= foxPosY + foxHeight && ballY - 2 <= foxPosY + foxHeight + 2)
+				 ballY >= foxPosY + foxHeight - 10 && ballY <= foxPosY + foxHeight + 3)
 				 //ballY >= foxPosY + imageFoxBad.height - 3 && ballY <= foxPosY + imageFoxBad.height + 3)
 		{
 			collision = "down";
 		}
-		// Check "left" (with 2 pixels error margin)
+		// Check "left" (with 3 pixels error margin)
 		else if (ballY >= foxPosY && ballY <= foxPosY + foxHeight &&
-				 ballX >= foxPosX - 2 && ballX <= foxPosX + 2)
+				 ballX >= foxPosX - 3 && ballX <= foxPosX + 10)
 				 //ballX >= foxPosX - 3 && ballX <= foxPosX + 3)
 		{
 			collision = "left";
 		}
-		// Check "right" (with 2 pixels error margin)
+		// Check "right" (with 3 pixels error margin)
 		else if (ballY >= foxPosY && ballY <= foxPosY + foxHeight &&
-				 ballX >= foxPosX + foxWidth - 2 && ballX <= foxPosX + foxWidth + 2)
+				 ballX >= foxPosX + foxWidth - 10 && ballX <= foxPosX + foxWidth + 3)
 				 //ballX >= foxPosX + imageFoxBad.width - 3 && ballX <= foxPosX + imageFoxBad.width + 3)
 		{
 			collision = "right";
@@ -784,7 +770,7 @@ const Game: React.FC = () =>
 					audioFoxEnrage.current.play();
 					foxIsEnraged = true;
 					foxIsEvil = true;
-					foxSpeed = 5;
+					foxSpeed = 10;
 				}
 			}
 			else
@@ -1343,12 +1329,7 @@ const Game: React.FC = () =>
 			ballPaddleBounces++;
 		}
 		
-		ballGlobalSpeedAddedTemp = ballPaddleBounces * 0.1;
-		//if (ballPaddleBounces >= 10)
-		//{
-		//	ballGlobalSpeedAddedTemp++;
-		//	ballPaddleBounces = ballPaddleBounces % 10;
-		//}
+		ballGlobalSpeedAddedTemp = ballPaddleBounces * 0.3;
 	
 		if (difficultyScore % 5 === 0 &&
 			difficultyScore > 0 &&
@@ -1356,7 +1337,7 @@ const Game: React.FC = () =>
 		{
 			if (Math.floor(Math.random() * 100) % 2 === 0 || paddleGlobalWidth - paddleGlobalReduction === 35)
 			{
-				ballGlobalSpeedAddedPerma = ballGlobalSpeedAddedPerma + 0.2;
+				ballGlobalSpeedAddedPerma = ballGlobalSpeedAddedPerma + 0.5;
 				foxSpeed = foxSpeedDefault + ballGlobalSpeedAddedPerma;
 			}
 			else
@@ -1365,39 +1346,6 @@ const Game: React.FC = () =>
 			}
 			difficultyBallAndPaddle++;
 		}
-	}
-	
-	function draw(ctx: CanvasRenderingContext2D, timestamp: number): void
-	{
-		ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-	
-		drawBackground(ctx);
-
-		mcrolld(ctx);
-
-		drawBalls(ctx);
-		drawPaddles(ctx);
-
-		drawFox(ctx);
-		drawGnome(ctx, timestamp);
-		drawHarkinian(ctx);
-		drawScore(ctx);
-
-		updateVariables();
-
-		collisionCheck();
-		control_music();
-		control_RGB();
-
-		movePaddles();
-		moveBalls();
-		moveFox(timestamp);
-
-		popup_trap(); // Works, but needs more research
-
-		updateVariables();
-		updateScores();
-		difficultyHandler();
 	}
 	
 	useEffect(() => {
@@ -1473,24 +1421,87 @@ const Game: React.FC = () =>
 	
 	}, []);
 
-	const renderGameScreen = (timestamp: number) =>
-	{
-		const canvas = canvasRef.current;
-		if (canvas)
-		{ 
-    		const context = canvas.getContext('2d');
-    		if (context)
-			{
-    			draw(context, timestamp);
-   		 	}
-			requestAnimationFrame(renderGameScreen);
-		}
-	};
-
 	useEffect(() =>
 	{
-		requestAnimationFrame(renderGameScreen);
-	}, []);
+		let frameCount: number = 0;
+	
+		if (canvasRef.current)
+		{
+			const context = canvasRef.current.getContext('2d');
+
+			const draw = (timestamp: number) =>
+			{
+				if (!thenRef.current)
+				{
+			  		thenRef.current = timestamp;
+			  		startTimeRef.current = timestamp;
+				}
+
+				const elapsed: number = timestamp - thenRef.current;
+				const interval: number = 1000 / frameRate;
+
+				if (elapsed > interval)
+				{
+					thenRef.current = timestamp - (elapsed % interval);
+
+					context.clearRect(0, 0, canvasWidth, canvasHeight);
+	
+					drawBackground(context);
+			
+					mcrolld(context);
+			
+					drawBalls(context);
+					drawPaddles(context);
+			
+					drawFox(context);
+					drawGnome(context, timestamp);
+					drawHarkinian(context);
+					drawScore(context);
+			
+					updateVariables();
+			
+					collisionCheck();
+					control_music();
+					control_RGB();
+			
+					movePaddles();
+					moveBalls();
+					moveFox(timestamp);
+			
+					popup_trap(); // Works, but needs more research
+			
+					updateVariables();
+					updateScores();
+					difficultyHandler();
+
+					frameCount++;
+				}
+
+				requestAnimationFrame(draw);
+		  	};
+
+			const calculateFrameRate = () =>
+			{
+				const now: number = performance.now();
+				const elapsed: number = now - startTimeRef.current!;
+
+				if (elapsed >= 1000)
+				{
+					const fps: number = (frameCount / elapsed) * 1000;
+					console.log(`Frame rate: ${fps.toFixed(2)} FPS`);
+
+					frameCount = 0; // Reset frameCount
+
+					startTimeRef.current = now;
+				}
+
+				requestAnimationFrame(calculateFrameRate);
+			};
+
+			calculateFrameRate();
+			requestAnimationFrame(draw);
+		}
+	}, [frameRate]);
 
 	return (
 		<div>
