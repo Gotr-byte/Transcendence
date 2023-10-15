@@ -770,7 +770,7 @@ const Game: React.FC = () =>
 					audioFoxEnrage.current.play();
 					foxIsEnraged = true;
 					foxIsEvil = true;
-					foxSpeed = 10;
+					foxSpeed = 15;
 				}
 			}
 			else
@@ -800,7 +800,7 @@ const Game: React.FC = () =>
 					audioFoxEnrage.current.play();
 					foxIsEnraged = true;
 					foxIsEvil = true;
-					foxSpeed++;
+					foxSpeed = 15;
 				}
 			}
 			
