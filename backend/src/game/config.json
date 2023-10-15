@@ -13,5 +13,6 @@
 	"ball": {
 		"velocity": 17,
 		"radius": 30
-	}
+	},
+    "win": 10
 }
