@@ -15,6 +15,16 @@ export class GameInstance
 		this.timestamp = Date.now();
 	}
 
+	public getScore1(): number
+	{
+		return this.player1Score;
+	}
+
+	public getScore2(): number
+	{
+		return this.player2Score;
+	}
+
 	public getRound(): number
 	{
 		return this.round;

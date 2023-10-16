@@ -46,24 +46,28 @@ export class GameService
 
 	public startGame(player1: Socket, player2: Socket): void
 	{
-		 let gameState = this.getGameState(player1, player2);
-		 if (!gameState)
-		 	return;
-			setInterval( () => {
-				gameState?.calcNewPosition();
-				player1.emit('GameLoop', 
-				{
-					'paddle1': gameState?.paddle1.position,
-					'paddle2': gameState?.paddle2.position,
-					'ball': gameState?.ball.position,
-				});
-				player2.emit('GameLoop', 
-				{
-					'paddle1': gameState?.paddle1.position,
-					'paddle2': gameState?.paddle2.position,
-					'ball': gameState?.ball.position,
-				});
-				}, 1000 / config.fps);
+		let gameState = this.getGameState(player1, player2);
+		if (!gameState)
+			return;
+		setInterval( () => {
+			gameState?.calcNewPosition();
+			player1.emit('GameLoop', 
+			{
+				'paddle1': gameState?.paddle1.position,
+				'paddle2': gameState?.paddle2.position,
+				'ball': gameState?.ball.position,
+				'score1': gameState?.getGameInstance().getScore1(),
+				'score2': gameState?.getGameInstance().getScore2()
+			});
+			player2.emit('GameLoop', 
+			{
+				'paddle1': gameState?.paddle1.position,
+				'paddle2': gameState?.paddle2.position,
+				'ball': gameState?.ball.position,
+				'score1': gameState?.getGameInstance().getScore1(),
+				'score2': gameState?.getGameInstance().getScore2()
+			});
+		}, 1000 / config.fps);
 	}
 }
 	
