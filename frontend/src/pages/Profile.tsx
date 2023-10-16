@@ -18,6 +18,8 @@ import MatchesComponent from "../components/ControlPanel/DisplayMatchHistory";
 import BanUser from "../components/ControlPanel/BanUser";
 import BanUserTemp from "../components/ControlPanel/BanUserTemp";
 import TwoFactorAuthSetup from "../components/ControlPanel/TwoFactorAuthSetup";
+import LiftRestrictions from "../components/ControlPanel/LiftRestrictions";
+
 
 export default function Profile() {
   return (
@@ -54,6 +56,7 @@ export default function Profile() {
           <DesignateAdmin/>
           <BanUser/>
           <BanUserTemp/> 
+          <LiftRestrictions/>
           {/* <TwoFactorAuthSetup/> */}
         </TabPanel>
         <TabPanel>
