@@ -20,7 +20,6 @@ const theme = extendTheme({
   styles: {
     global: {
       "body": {
-        bgImage: 'url("/home/piotr/transcendence-4/frontend/public/paper.jpg")',
         bgSize: "cover",
         bgPosition: "center",
         bgRepeat: "no-repeat",

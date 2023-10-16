@@ -19,6 +19,8 @@ import BanUser from "../components/ControlPanel/BanUser";
 import BanUserTemp from "../components/ControlPanel/BanUserTemp";
 import TwoFactorAuthSetup from "../components/ControlPanel/TwoFactorAuthSetup";
 import LiftRestrictions from "../components/ControlPanel/LiftRestrictions";
+import UnblockUser from "../components/ControlPanel/UnblockUser";
+import KickUser from "../components/ControlPanel/KickUser";
 
 
 export default function Profile() {
@@ -53,10 +55,12 @@ export default function Profile() {
           <DeleteChannel />
           <PrivateChannelInvitation />
           <BlockUser />
+          <UnblockUser />
           <DesignateAdmin/>
           <BanUser/>
           <BanUserTemp/> 
           <LiftRestrictions/>
+          <KickUser />
           {/* <TwoFactorAuthSetup/> */}
         </TabPanel>
         <TabPanel>
