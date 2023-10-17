@@ -1429,7 +1429,47 @@ const Game: React.FC = () =>
 		{
 			const context = canvasRef.current.getContext('2d');
 
-			const draw = (timestamp: number) =>
+			const drawClassic = (timestamp: number) =>
+			{
+				if (!thenRef.current)
+				{
+			  		thenRef.current = timestamp;
+			  		startTimeRef.current = timestamp;
+				}
+
+				const elapsed: number = timestamp - thenRef.current;
+				const interval: number = 1000 / frameRate;
+
+				if (elapsed > interval)
+				{
+					thenRef.current = timestamp - (elapsed % interval);
+
+					context.clearRect(0, 0, canvasWidth, canvasHeight);
+	
+					drawBackground(context);
+			
+					drawBalls(context);
+					drawPaddles(context);
+			
+					drawScore(context);
+			
+					updateVariables();
+			
+					collisionCheck();
+			
+					movePaddles();
+					moveBalls();
+			
+					updateVariables();
+					updateScores();
+
+					frameCount++;
+				}
+
+				requestAnimationFrame(drawClassic);
+		  	};
+
+			const drawEnhanced = (timestamp: number) =>
 			{
 				if (!thenRef.current)
 				{
@@ -1477,8 +1517,8 @@ const Game: React.FC = () =>
 					frameCount++;
 				}
 
-				requestAnimationFrame(draw);
-		  	};
+				requestAnimationFrame(drawEnhanced);
+			};
 
 			const calculateFrameRate = () =>
 			{
@@ -1499,7 +1539,13 @@ const Game: React.FC = () =>
 			};
 
 			calculateFrameRate();
-			requestAnimationFrame(draw);
+			if (classicMode === true)
+			{
+				ballGlobalSpeedDefault = 7;
+				requestAnimationFrame(drawClassic);
+			}
+			else
+				requestAnimationFrame(drawEnhanced);
 		}
 	}, [frameRate]);
 
