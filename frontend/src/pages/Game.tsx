@@ -31,6 +31,8 @@ import audioFoxChaSrc from '../../public/assets/SoundEffect_Fox_Cha.mp3';
 import audioFoxKakaSrc from '../../public/assets/SoundEffect_Fox_Kaka.mp3';
 import audioFoxPapaSrc from '../../public/assets/SoundEffect_Fox_Papa.mp3';
 import audioFoxYokSrc from '../../public/assets/SoundEffect_Fox_Yok.mp3';
+import JoinRandom from '../components/Game/JoinRandom';
+import ReceivedGameData from '../components/Game/ReceiveGameData';
 
 const Game: React.FC = () =>
 {
@@ -1505,16 +1507,18 @@ const Game: React.FC = () =>
 
 	return (
 		<div>
-			<canvas ref={canvasRef} tabIndex={0} width={canvasWidth} height={canvasHeight}></canvas>
-			<video ref={videoMcrolld} style={{ display: 'none' }}>
-        		<source src={videoMcrolldSrc} type="video/mp4"/>
-      		</video>
-			  <video ref={videoMcrolldReverse} style={{ display: 'none' }}>
-        		<source src={videoMcrolldReverseSrc} type="video/mp4"/>
-      		</video>
-			<video ref={videoHarkinianHit} style={{ display: 'none' }}>
-        		<source src={videoHarkinianHitSrc} type="video/mp4"/>
-      		</video>
+			{/* <canvas ref={canvasRef} tabIndex={0} width={canvasWidth} height={canvasHeight}></canvas> */}
+			{/* <video ref={videoMcrolld} style={{ display: 'none' }}> */}
+        		{/* <source src={videoMcrolldSrc} type="video/mp4"/> */}
+      		{/* </video> */}
+			  {/* <video ref={videoMcrolldReverse} style={{ display: 'none' }}> */}
+        		{/* <source src={videoMcrolldReverseSrc} type="video/mp4"/> */}
+      		{/* </video> */}
+			{/* <video ref={videoHarkinianHit} style={{ display: 'none' }}> */}
+        		{/* <source src={videoHarkinianHitSrc} type="video/mp4"/> */}
+      		{/* </video> */}
+			<JoinRandom />
+			<ReceivedGameData />
 		</div>
 	);
 };
