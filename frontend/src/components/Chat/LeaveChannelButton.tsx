@@ -33,6 +33,7 @@ const LeaveChannelButton: React.FC<LeaveChannelButtonProps> = ({
 		} catch (error) {
 			console.error("An error occurred:", error);
 		}
+		window.location.reload(true);
 	};
 
 	return (

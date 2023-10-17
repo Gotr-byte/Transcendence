@@ -3,7 +3,7 @@ import { Button } from "@chakra-ui/react";
 
 interface JoinChannelButtonProps {
 	channelId: number;
-	channelType: string; // new prop to determine if the channel is protected
+	channelType: string;
 }
 
 const JoinChannelButton: React.FC<JoinChannelButtonProps> = ({
@@ -51,6 +51,7 @@ const JoinChannelButton: React.FC<JoinChannelButtonProps> = ({
 		} catch (error) {
 			console.error("An error occurred:", error);
 		}
+		window.location.reload(true);
 	};
 
 	return (

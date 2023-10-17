@@ -52,20 +52,24 @@ const ChannelsAvailable: React.FC<ChannelsAvailableProps> = ({
 		fetchChannels();
 	}, []);
 
+
+	const changeRoom = (id: number) => {
+		onChangeRoom(id);
+};
+
 	return (
 		<div>
 			{channels.channelsNo > 0 ? (
 				<ul>
 					{channels.channels.map((channel) => (
 						<li key={channel.id}>
-							<button onClick={() => onChangeRoom(channel.id)}>
+							<button onClick={() => changeRoom(channel.id)}>
 								{channel.title}
 							</button>
 							<JoinChannelButton
 								channelId={channel.id}
 								channelType={channel.channelType}
 							/>
-							{/* <Spacer></Spacer> */}
 						</li>
 					))}
 				</ul>
