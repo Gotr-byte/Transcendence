@@ -68,6 +68,7 @@ export class GameService
 				'score2': gameState?.getGameInstance().getScore2()
 			});
 		}, 1000 / config.fps);
+
 	}
 }
 	
