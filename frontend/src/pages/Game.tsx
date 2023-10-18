@@ -1,4 +1,8 @@
 import React, { useRef, useEffect, useState } from 'react';
+
+import JoinRandom from '../components/Game/JoinRandom';
+import ReceivedGameData from '../components/Game/ReceiveGameData';
+
 import musicBavariaSrc from '../../public/assets/Music_Meanwhile_in_Bavaria.mp3';
 import musicMushroomKingdomSrc from '../../public/assets/Music_Mushroom_Kingdom.mp3';
 import musicNumberOneSrc from '../../public/assets/Music_We_Are_Number_One.mp3';
@@ -44,7 +48,7 @@ const Game: React.FC = () =>
 
 	// Game modes
 			
-	var classicMode: boolean = true;
+	var classicMode: boolean = false;
 			
 			
 			
@@ -1561,6 +1565,8 @@ const Game: React.FC = () =>
 			<video ref={videoHarkinianHit} style={{ display: 'none' }}>
         		<source src={videoHarkinianHitSrc} type="video/mp4"/>
       		</video>
+			<JoinRandom />
+			<ReceivedGameData />
 		</div>
 	);
 };
