@@ -98,6 +98,15 @@ export class TwoFaAuthController {
       throw new ConflictException('2FA is already deactivated');
     await this.twoFaService.deactivate2Fa(user);
     (request.session as any).passport.user.is2FaActive = false;
+    (request.session as any).passport.user.is2FaValid = false;
+    (request.session as any).passport.user.token = '';
+    request.session.regenerate((err) => {
+      if (err) {
+        throw new InternalServerErrorException(
+          'Error while regenerating token',
+        );
+      }
+    });
     return '2Fa was deactivated';
   }
 }

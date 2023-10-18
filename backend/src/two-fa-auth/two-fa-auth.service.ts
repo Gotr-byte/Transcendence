@@ -57,6 +57,7 @@ export class TwoFaAuthService {
     await this.userService.updateUser(user, {
       twoFaSecret: '',
       is2FaValid: false,
+      is2FaActive: false,
     });
   }
 }
