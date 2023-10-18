@@ -99,7 +99,7 @@ export class TwoFaAuthController {
     await this.twoFaService.deactivate2Fa(user);
     (request.session as any).passport.user.is2FaActive = false;
     (request.session as any).passport.user.is2FaValid = false;
-    (request.session as any).passport.user.token = '';
+    (request.session as any).passport.user.twoFaSecret = '';
     request.session.regenerate((err) => {
       if (err) {
         throw new InternalServerErrorException(
