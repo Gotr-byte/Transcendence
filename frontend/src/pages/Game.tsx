@@ -31,8 +31,6 @@ import audioFoxChaSrc from '../../public/assets/SoundEffect_Fox_Cha.mp3';
 import audioFoxKakaSrc from '../../public/assets/SoundEffect_Fox_Kaka.mp3';
 import audioFoxPapaSrc from '../../public/assets/SoundEffect_Fox_Papa.mp3';
 import audioFoxYokSrc from '../../public/assets/SoundEffect_Fox_Yok.mp3';
-import JoinRandom from '../components/Game/JoinRandom';
-import ReceivedGameData from '../components/Game/ReceiveGameData';
 
 const Game: React.FC = () =>
 {
@@ -46,7 +44,7 @@ const Game: React.FC = () =>
 
 	// Game modes
 			
-	var classicMode: boolean = false;
+	var classicMode: boolean = true;
 			
 			
 			
@@ -1431,7 +1429,47 @@ const Game: React.FC = () =>
 		{
 			const context = canvasRef.current.getContext('2d');
 
-			const draw = (timestamp: number) =>
+			const drawClassic = (timestamp: number) =>
+			{
+				if (!thenRef.current)
+				{
+			  		thenRef.current = timestamp;
+			  		startTimeRef.current = timestamp;
+				}
+
+				const elapsed: number = timestamp - thenRef.current;
+				const interval: number = 1000 / frameRate;
+
+				if (elapsed > interval)
+				{
+					thenRef.current = timestamp - (elapsed % interval);
+
+					context.clearRect(0, 0, canvasWidth, canvasHeight);
+	
+					drawBackground(context);
+			
+					drawBalls(context);
+					drawPaddles(context);
+			
+					drawScore(context);
+			
+					updateVariables();
+			
+					collisionCheck();
+			
+					movePaddles();
+					moveBalls();
+			
+					updateVariables();
+					updateScores();
+
+					frameCount++;
+				}
+
+				requestAnimationFrame(drawClassic);
+		  	};
+
+			const drawEnhanced = (timestamp: number) =>
 			{
 				if (!thenRef.current)
 				{
@@ -1479,8 +1517,8 @@ const Game: React.FC = () =>
 					frameCount++;
 				}
 
-				requestAnimationFrame(draw);
-		  	};
+				requestAnimationFrame(drawEnhanced);
+			};
 
 			const calculateFrameRate = () =>
 			{
@@ -1501,24 +1539,28 @@ const Game: React.FC = () =>
 			};
 
 			calculateFrameRate();
-			requestAnimationFrame(draw);
+			if (classicMode === true)
+			{
+				ballGlobalSpeedDefault = 7;
+				requestAnimationFrame(drawClassic);
+			}
+			else
+				requestAnimationFrame(drawEnhanced);
 		}
 	}, [frameRate]);
 
 	return (
 		<div>
-			{/* <canvas ref={canvasRef} tabIndex={0} width={canvasWidth} height={canvasHeight}></canvas> */}
-			{/* <video ref={videoMcrolld} style={{ display: 'none' }}> */}
-        		{/* <source src={videoMcrolldSrc} type="video/mp4"/> */}
-      		{/* </video> */}
-			  {/* <video ref={videoMcrolldReverse} style={{ display: 'none' }}> */}
-        		{/* <source src={videoMcrolldReverseSrc} type="video/mp4"/> */}
-      		{/* </video> */}
-			{/* <video ref={videoHarkinianHit} style={{ display: 'none' }}> */}
-        		{/* <source src={videoHarkinianHitSrc} type="video/mp4"/> */}
-      		{/* </video> */}
-			<JoinRandom />
-			<ReceivedGameData />
+			<canvas ref={canvasRef} tabIndex={0} width={canvasWidth} height={canvasHeight}></canvas>
+			<video ref={videoMcrolld} style={{ display: 'none' }}>
+        		<source src={videoMcrolldSrc} type="video/mp4"/>
+      		</video>
+			  <video ref={videoMcrolldReverse} style={{ display: 'none' }}>
+        		<source src={videoMcrolldReverseSrc} type="video/mp4"/>
+      		</video>
+			<video ref={videoHarkinianHit} style={{ display: 'none' }}>
+        		<source src={videoHarkinianHitSrc} type="video/mp4"/>
+      		</video>
 		</div>
 	);
 };
