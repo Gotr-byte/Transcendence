@@ -18,7 +18,6 @@ type ReceivedMessagePayload = {
 };
 
 const ChatUI: React.FC = () => {
-	const username = "MyUsername";
 	const [currentRoomId, setCurrentRoomId] = useState<number | null>(null);
     const [sentMessage, setSentMessage] = useState<MessagePayload>({
       content: "",
