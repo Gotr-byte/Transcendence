@@ -10,12 +10,11 @@ export class TwoFaAuthService {
   constructor(private readonly userService: UserService) {}
 
   async getQrCode(user: User) {
-    if (!user.is2FaActive) {
+    if (!user.is2FaActive && !user.twoFaSecret) {
       const secret = await this.generateSecret();
       user.twoFaSecret = secret;
       await this.userService.updateUser(user, {
         twoFaSecret: secret,
-        is2FaActive: true,
       });
     }
     const qrCode = await this.generateQrCode(user.twoFaSecret);

@@ -9,7 +9,7 @@ export const sessionMiddleware = session({
   cookie: { maxAge: 4320000 },
   store: new PrismaSessionStore(new PrismaClient(), {
     checkPeriod: 2 * 60 * 1000,
-    dbRecordIdIsSessionId: true,
+    dbRecordIdIsSessionId: false,
     dbRecordIdFunction: undefined,
   }),
 });

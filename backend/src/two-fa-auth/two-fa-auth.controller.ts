@@ -25,27 +25,55 @@ export class TwoFaAuthController {
   constructor(private readonly twoFaService: TwoFaAuthService) {}
 
   @UseGuards(AuthenticatedGuard)
-  @Get('activate')
+  @Get('qrcode')
   @ApiOperation({
     summary:
-      'Activates 2Fa for logged user and returns a qr code to register to authenticator app, if executed again qr code will be shown again',
+      'Generate qr code to register to authenticator app, if executed again qr code will be shown again',
   })
   async getQrCode(
     @AuthUser() user: User,
     @Req() request: Request,
   ): Promise<string> {
     const qrCode = await this.twoFaService.getQrCode(user);
-    (request.session as any).passport.user.is2FaActive = true;
-    request.session.regenerate((err) => {
-      if (err) {
-        throw new InternalServerErrorException(
-          'Error while regenerating token',
-        );
-      }
-    });
     return `<h2>Two-Factor Authentication Setup</h2>
 		<p>Scan the QR code using a 2FA app:</p>
 		<img src="${qrCode}" alt="QR Code">`;
+  }
+
+  @UseGuards(AuthenticatedGuard)
+  @Post('activate')
+  @ApiOperation({
+    summary: 'Post the 2fa token after succes, 2fa is enabled',
+  })
+  @ApiBody({
+    type: Verify2FADto,
+    examples: {
+      example1: {
+        value: {
+          token: '2FA token from Authenticator app',
+        },
+      },
+    },
+  })
+  async activate2fa(
+    @AuthUser() user: User,
+    @Body() dto: Verify2FADto,
+    @Req() request: Request,
+  ): Promise<void> {
+    if (user) {
+      if (user.is2FaValid)
+        throw new BadRequestException(`${user.username} is already verified`);
+      await this.twoFaService.verifyToken(user, dto);
+      (request.session as any).passport.user.is2FaActive = true;
+      (request.session as any).passport.user.is2FaValid = true;
+      // request.session.regenerate((err) => {
+      //   if (err) {
+      //     throw new InternalServerErrorException(
+      //       'Error while regenerating token',
+      //     );
+      //   }
+      // });
+    }
   }
 
   @UseGuards(SessionGuard)
@@ -92,13 +120,13 @@ export class TwoFaAuthController {
         throw new BadRequestException(`${user.username} is already verified`);
       await this.twoFaService.verifyToken(user, dto);
       (request.session as any).passport.user.is2FaValid = true;
-      request.session.regenerate((err) => {
-        if (err) {
-          throw new InternalServerErrorException(
-            'Error while regenerating token',
-          );
-        }
-      });
+      // request.session.regenerate((err) => {
+      //   if (err) {
+      //     throw new InternalServerErrorException(
+      //       'Error while regenerating token',
+      //     );
+      //   }
+      // });
     }
     return response.redirect('/auth/status');
   }
@@ -116,13 +144,13 @@ export class TwoFaAuthController {
     (request.session as any).passport.user.is2FaActive = false;
     (request.session as any).passport.user.is2FaValid = false;
     (request.session as any).passport.user.twoFaSecret = '';
-    request.session.regenerate((err) => {
-      if (err) {
-        throw new InternalServerErrorException(
-          'Error while regenerating token',
-        );
-      }
-    });
+    // request.session.regenerate((err) => {
+    //   if (err) {
+    //     throw new InternalServerErrorException(
+    //       'Error while regenerating token',
+    //     );
+    //   }
+    // });
     return '2Fa was deactivated';
   }
 }
