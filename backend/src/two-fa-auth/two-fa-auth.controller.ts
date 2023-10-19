@@ -36,6 +36,13 @@ export class TwoFaAuthController {
   ): Promise<string> {
     const qrCode = await this.twoFaService.getQrCode(user);
     (request.session as any).passport.user.is2FaActive = true;
+    request.session.regenerate((err) => {
+      if (err) {
+        throw new InternalServerErrorException(
+          'Error while regenerating token',
+        );
+      }
+    });
     return `<h2>Two-Factor Authentication Setup</h2>
 		<p>Scan the QR code using a 2FA app:</p>
 		<img src="${qrCode}" alt="QR Code">`;

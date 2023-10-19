@@ -3,16 +3,32 @@ import { Switch } from '@chakra-ui/react';
 import { TwoFAComponent } from '../TwoFAComponent';
 
 const TwoFactorAuthSetup: React.FC = () => {
-    const initialSwitchState =  fetch(`http://localhost:4000/2fa/is2faactive`, {
-  headers: {
-    'Access-Control-Allow-Credentials': 'true',
-    'Access-Control-Allow-Origin': 'http://localhost:5173',
-  },
-  credentials: 'include',
-});
-
   const [qrCodeSrc, setQrCodeSrc] = useState<string | null>(null);
-  const [isSwitchedOn, setIsSwitchedOn] = useState<boolean>(initialSwitchState);
+  const [isSwitchedOn, setIsSwitchedOn] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true); // New loading state
+
+  // Fetch initial switch state
+  useEffect(() => {
+    async function fetchInitialSwitchState() {
+      try {
+        const response = await fetch(`http://localhost:4000/2fa/is2faactive`, {
+          headers: {
+            'Access-Control-Allow-Credentials': 'true',
+            'Access-Control-Allow-Origin': 'http://localhost:5173',
+          },
+          credentials: 'include',
+        });
+        const switchState = await response.json(); // Assuming response is in JSON format
+        setIsSwitchedOn(switchState);
+      } catch (error) {
+        console.error('Failed to fetch initial switch state:', error);
+      } finally {
+        setIsLoading(false); // Finish loading after fetching
+      }
+    }
+
+    fetchInitialSwitchState();
+  }, []);
 
   useEffect(() => {
     if (!isSwitchedOn) {
@@ -62,6 +78,7 @@ async function handleFetchToggle2FAuthOff() {
       );
       if (response.ok) {
         alert("2Fauth deactivated successfully");
+        window.location.reload();
       } else {
         throw new Error("Failed to deactivate 2Fauth.");
       }
