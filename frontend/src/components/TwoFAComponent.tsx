@@ -37,6 +37,8 @@ export const TwoFAComponent = ({ onVerify }: TwoFAComponentProps) => {
 			if (!response.ok) {
 				throw new Error("Network response was not ok " + response.statusText);
 			}
+			window.location.reload()
+			
 
 			const data = await response.json();
 			console.log("Success:", data);

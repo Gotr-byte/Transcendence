@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from "react";
-import { io, Socket } from "socket.io-client";
 import { Avatar, Flex, Text, Heading, Spacer, HStack } from "@chakra-ui/react";
 import { TwoFAComponent } from "./TwoFAComponent"; // Import the TwoFAComponent
 import { WebsocketContext } from "./Context/WebsocketContexts";
@@ -164,7 +163,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 					</button>
 				)}
 			</HStack>
-
+					<TwoFAComponent/>
 			{/* Conditionally render the TwoFAComponent if 2FA is active for the logged-in user */}
 			 {/* {user?.is2FaActive && !(user?.is2FaValid) &&( */}
         {/* <TwoFAComponent onVerify={handle2FASuccess} /> */}
