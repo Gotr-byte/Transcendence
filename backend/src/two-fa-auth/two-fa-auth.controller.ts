@@ -51,6 +51,15 @@ export class TwoFaAuthController {
   }
 
   @UseGuards(SessionGuard)
+  @Get('is2favalid')
+  @ApiOperation({
+    summary: 'Returns a boolean if 2fa is validated or not',
+  })
+  async is2FaValid(@AuthUser() user: User): Promise<boolean> {
+    return user.is2FaValid;
+  }
+
+  @UseGuards(SessionGuard)
   @Post('verify')
   @ApiOperation({
     summary: 'Validates 2Fa for logged user if token is correct',
