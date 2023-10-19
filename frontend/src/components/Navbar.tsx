@@ -53,7 +53,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 			fetchUserData();
 		} else {
 			// request 2fa Token until 2fa is active
-			// fetchUserData();
+			fetchUserData();
 		}
 	};
 
@@ -79,12 +79,36 @@ export const Navbar: React.FC<NavbarProps> = ({
 			});
 	};
 
+	async function handleFetchToggle2FAuthOff() {
+    try {
+      const response = await fetch(
+        `http://localhost:4000/2fa/deactivate`,
+        {
+          method: "PATCH",
+          credentials: "include",
+          // 'Access-Control-Allow-Credentials': 'true',
+          // 'Access-Control-Allow-Origin': 'http://localhost:5173',
+        }
+      );
+      if (response.ok) {
+        alert("2Fauth deactivated successfully");
+      } else {
+        throw new Error("Failed to deactivate 2Fauth.");
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+    // window.location.reload();
+  }
+
+
 	const handleLogout = () => {
 		fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
 			credentials: "include",
 		}).then((response) => response.json());
 		setShowUser(false);
 		setIsLoggedIn(false);
+		
 		socket.close();
 		console.log("Socket Connection Closed");
 	};

@@ -42,7 +42,7 @@ const TwoFactorAuthSetup: React.FC = () => {
     fetchQrCode();
   }, [isSwitchedOn]);
 
-  async function handleFetchToggle2FAuthOff() {
+async function handleFetchToggle2FAuthOff() {
     try {
       const response = await fetch(
         `http://localhost:4000/2fa/deactivate`,
