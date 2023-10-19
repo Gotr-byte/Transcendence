@@ -3,14 +3,21 @@ import { Switch } from '@chakra-ui/react';
 import { TwoFAComponent } from '../TwoFAComponent';
 
 const TwoFactorAuthSetup: React.FC = () => {
+    const initialSwitchState =  fetch(`http://localhost:4000/2fa/is2faactive`, {
+  headers: {
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Allow-Origin': 'http://localhost:5173',
+  },
+  credentials: 'include',
+});
+
   const [qrCodeSrc, setQrCodeSrc] = useState<string | null>(null);
-  const [isSwitchedOn, setIsSwitchedOn] = useState<boolean>(false);
+  const [isSwitchedOn, setIsSwitchedOn] = useState<boolean>(initialSwitchState);
 
   useEffect(() => {
     if (!isSwitchedOn) {
       return; // Don't fetch if the switch is off
     }
-
     async function fetchQrCode() {
       try {
         const response = await fetch(`http://localhost:4000/2fa/activate`, {
