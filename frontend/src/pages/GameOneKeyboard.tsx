@@ -1,5 +1,4 @@
-import React, { useRef, useEffect, useState, useContext } from 'react';
-import { WebsocketContext } from "../components/Context/WebsocketContexts";
+import React, { useRef, useEffect, useState } from 'react';
 
 import JoinRandom from '../components/Game/JoinRandom';
 import ReceivedGameData from '../components/Game/ReceiveGameData';
@@ -36,19 +35,6 @@ import audioFoxChaSrc from '../../public/assets/SoundEffect_Fox_Cha.mp3';
 import audioFoxKakaSrc from '../../public/assets/SoundEffect_Fox_Kaka.mp3';
 import audioFoxPapaSrc from '../../public/assets/SoundEffect_Fox_Papa.mp3';
 import audioFoxYokSrc from '../../public/assets/SoundEffect_Fox_Yok.mp3';
-
-interface Coordinates {
-    x: number;
-    y: number;
-}
-
-interface GameState {
-    paddle1: Coordinates;
-    paddle2: Coordinates;
-    ball: Coordinates;
-    score1: number;
-    score2: number;
-}
 
 const Game: React.FC = () =>
 {
@@ -1509,7 +1495,6 @@ const Game: React.FC = () =>
 					mcrolld(context);
 			
 					drawBalls(context);
-					drawBallFromBackend(context);
 					drawPaddles(context);
 			
 					drawFox(context);
@@ -1567,46 +1552,6 @@ const Game: React.FC = () =>
 				requestAnimationFrame(drawEnhanced);
 		}
 	}, [frameRate]);
-
-	// START Data from backend START
-	const [receivedFrame, setReceivedFrame] = useState<GameState>({
-        paddle1: { x: 0, y: 0 },
-        paddle2: { x: 0, y: 0 },
-        ball: { x: 0, y: 0 },
-        score1: 0,
-        score2: 0,
-    });
-
-    const socket = useContext(WebsocketContext);
-
-    useEffect(() => {
-        const eventName = `GameLoop`;
-        socket.on(eventName, (newFrame: GameState) => {
-            setReceivedFrame(newFrame);
-			// console.log("newFrame: " + newFrame.ball.x + ", " + newFrame.ball.y);
-			canvasRef.current.getContext('2d').beginPath();
-			console.log("newFrame: " + receivedFrame.ball.x + ", " + receivedFrame.ball.y);
-			canvasRef.current.getContext('2d').arc(receivedFrame.ball.x, receivedFrame.ball.y, ballGlobalRadius, 0, Math.PI * 2);
-			canvasRef.current.getContext('2d').fillStyle = "#FF0000";
-			canvasRef.current.getContext('2d').fill();
-			canvasRef.current.getContext('2d').closePath();
-        });
-        return () => {
-            console.log("Unregistering Events...");
-            socket.off(eventName);
-        };
-    }, [socket, canvasRef]);
-	// END Data from backend END
-
-	function drawBallFromBackend(ctx: CanvasRenderingContext2D): void
-	{
-		ctx.beginPath();
-		console.log("newFrame: " + receivedFrame.ball.x + ", " + receivedFrame.ball.y);
-		ctx.arc(receivedFrame.ball.x, receivedFrame.ball.y, ballGlobalRadius, 0, Math.PI * 2);
-		ctx.fillStyle = "#FF0000";
-		ctx.fill();
-		ctx.closePath();
-	}
 
 	return (
 		<div>
