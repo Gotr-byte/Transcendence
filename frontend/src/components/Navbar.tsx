@@ -113,15 +113,20 @@ export const Navbar: React.FC<NavbarProps> = ({
 	};
 
 	// Function to handle successful 2FA verification
-	const handle2FASuccess = () => {
-		console.log("2FA verified successfully.");
+	// const handle2FASuccess = () => {
+		// console.log("2FA verified successfully.");
 		// Redirect the user to the main page or reload the current page
 		// window.location.href = '/main-page-url';
-	};
+	// };
 
 	useEffect(() => {
-		console.log(i++);
-		validateUser();
+		// const is2FaActive = await check2FAStatus();
+		// if(is2FaActive && !isLoggedIn)
+		// {
+// 
+		// }
+		fetchUserData();
+		// validateUser();
 	}, []);
 
 	let handleLogin = () => {
@@ -163,12 +168,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 					</button>
 				)}
 			</HStack>
-					<TwoFAComponent/>
-			{/* Conditionally render the TwoFAComponent if 2FA is active for the logged-in user */}
-			 {/* {user?.is2FaActive && !(user?.is2FaValid) &&( */}
-        {/* <TwoFAComponent onVerify={handle2FASuccess} /> */}
-    {/* )}  */}
-			{/* {isLoggedIn && (<TwoFAComponent onVerify={handle2FASuccess}/>)}  */}
+			{(!isLoggedIn) && (<TwoFAComponent/>)} 
 		</Flex>
 	);
 };
