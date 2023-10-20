@@ -66,13 +66,6 @@ export class TwoFaAuthController {
       await this.twoFaService.verifyToken(user, dto);
       (request.session as any).passport.user.is2FaActive = true;
       (request.session as any).passport.user.is2FaValid = true;
-      // request.session.regenerate((err) => {
-      //   if (err) {
-      //     throw new InternalServerErrorException(
-      //       'Error while regenerating token',
-      //     );
-      //   }
-      // });
     }
   }
 
@@ -120,13 +113,6 @@ export class TwoFaAuthController {
         throw new BadRequestException(`${user.username} is already verified`);
       await this.twoFaService.verifyToken(user, dto);
       (request.session as any).passport.user.is2FaValid = true;
-      // request.session.regenerate((err) => {
-      //   if (err) {
-      //     throw new InternalServerErrorException(
-      //       'Error while regenerating token',
-      //     );
-      //   }
-      // });
     }
     return response.redirect('/auth/status');
   }
@@ -144,13 +130,6 @@ export class TwoFaAuthController {
     (request.session as any).passport.user.is2FaActive = false;
     (request.session as any).passport.user.is2FaValid = false;
     (request.session as any).passport.user.twoFaSecret = '';
-    // request.session.regenerate((err) => {
-    //   if (err) {
-    //     throw new InternalServerErrorException(
-    //       'Error while regenerating token',
-    //     );
-    //   }
-    // });
     return '2Fa was deactivated';
   }
 }
