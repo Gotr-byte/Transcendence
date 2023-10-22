@@ -4,3 +4,4 @@ out.txt
 /node_modules
 coverLetter
 test.env
+.envOld

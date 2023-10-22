@@ -55,7 +55,7 @@ const Game: React.FC = () => {
   return (
     <div>
       		<JoinRandom />
-          <canvas ref={canvasRef} width="2000" height="2000" style={{ border: '1px solid black' }}></canvas>
+          <canvas ref={canvasRef} width="1200" height="720" style={{ border: '1px solid black' }}></canvas>
     </div>
   );
 }
