@@ -8,11 +8,11 @@ interface Coordinates {
 }
 
 interface GameState {
-  paddle1: Coordinates;
-  paddle2: Coordinates;
+  paddleOne: Coordinates;
+  paddleTwo: Coordinates;
   ball: Coordinates;
-  score1: number;
-  score2: number;
+  scoreOne: number;
+  scoreTwo: number;
 }
 
 const Game: React.FC = () => {
