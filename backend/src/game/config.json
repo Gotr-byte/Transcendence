@@ -9,9 +9,9 @@
 		"velocity": 30,
 		"height": 240
 	},
-	"fps": 25,
+	"fps": 60,
 	"ball": {
-		"velocity": 17,
+		"velocity": 3,
 		"radius": 30
 	},
     "win": 10

@@ -51,6 +51,7 @@ export class GameService
 			return;
 		setInterval( () => {
 			gameState?.calcNewPosition();
+			// console.log("ball from BACKEND: " + gameState?.ball.position.x + ", " + gameState?.ball.position.y);
 			player1.emit('GameLoop', 
 			{
 				'paddle1': gameState?.paddle1.position,

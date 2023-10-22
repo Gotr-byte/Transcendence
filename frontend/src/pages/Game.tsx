@@ -1439,9 +1439,36 @@ const Game: React.FC = () =>
 	
 	}, []);
 
+	const [receivedFrame, setReceivedFrame] = useState<GameState>({
+        paddle1: { x: 0, y: 0 },
+        paddle2: { x: 0, y: 0 },
+        ball: { x: 0, y: 0 },
+        score1: 0,
+        score2: 0,
+    });
+
+	var ballFromBackendX: number = canvasWidth / 2;
+	var ballFromBackendY: number = canvasHeight / 2;
+
+	const socket = useContext(WebsocketContext);
+
 	useEffect(() =>
 	{
 		let frameCount: number = 0;
+
+		const eventName = `GameLoop`;
+        socket.on(eventName, (newFrame: GameState) => {
+            setReceivedFrame(newFrame);
+			// console.log("newFrame: " + newFrame.ball.x + ", " + newFrame.ball.y);
+			// console.log("ball from useEffect() FRONTEND: " + newFrame.ball.x + ", " + newFrame.ball.y);
+			// canvasRef.current.getContext('2d').beginPath();
+			// canvasRef.current.getContext('2d').arc(newFrame.ball.x, newFrame.ball.y, ballGlobalRadius, 0, Math.PI * 2);
+			// canvasRef.current.getContext('2d').fillStyle = "#FF0000";
+			// canvasRef.current.getContext('2d').fill();
+			// canvasRef.current.getContext('2d').closePath();
+			ballFromBackendX = newFrame.ball.x;
+			ballFromBackendY = newFrame.ball.y;
+        });
 	
 		if (canvasRef.current)
 		{
@@ -1509,7 +1536,7 @@ const Game: React.FC = () =>
 					mcrolld(context);
 			
 					drawBalls(context);
-					drawBallFromBackend(context);
+					drawBallFromBackend(context, receivedFrame);
 					drawPaddles(context);
 			
 					drawFox(context);
@@ -1547,7 +1574,7 @@ const Game: React.FC = () =>
 				if (elapsed >= 1000)
 				{
 					const fps: number = (frameCount / elapsed) * 1000;
-					console.log(`Frame rate: ${fps.toFixed(2)} FPS`);
+					// console.log(`Frame rate: ${fps.toFixed(2)} FPS`);
 
 					frameCount = 0; // Reset frameCount
 
@@ -1566,43 +1593,50 @@ const Game: React.FC = () =>
 			else
 				requestAnimationFrame(drawEnhanced);
 		}
-	}, [frameRate]);
 
-	// START Data from backend START
-	const [receivedFrame, setReceivedFrame] = useState<GameState>({
-        paddle1: { x: 0, y: 0 },
-        paddle2: { x: 0, y: 0 },
-        ball: { x: 0, y: 0 },
-        score1: 0,
-        score2: 0,
-    });
-
-    const socket = useContext(WebsocketContext);
-
-    useEffect(() => {
-        const eventName = `GameLoop`;
-        socket.on(eventName, (newFrame: GameState) => {
-            setReceivedFrame(newFrame);
-			// console.log("newFrame: " + newFrame.ball.x + ", " + newFrame.ball.y);
-			canvasRef.current.getContext('2d').beginPath();
-			console.log("newFrame: " + receivedFrame.ball.x + ", " + receivedFrame.ball.y);
-			canvasRef.current.getContext('2d').arc(receivedFrame.ball.x, receivedFrame.ball.y, ballGlobalRadius, 0, Math.PI * 2);
-			canvasRef.current.getContext('2d').fillStyle = "#FF0000";
-			canvasRef.current.getContext('2d').fill();
-			canvasRef.current.getContext('2d').closePath();
-        });
-        return () => {
+		return () => {
             console.log("Unregistering Events...");
             socket.off(eventName);
         };
-    }, [socket, canvasRef]);
+	}, [frameRate]);
+
+	// START Data from backend START
+	// const [receivedFrame, setReceivedFrame] = useState<GameState>({
+    //     paddle1: { x: 0, y: 0 },
+    //     paddle2: { x: 0, y: 0 },
+    //     ball: { x: 0, y: 0 },
+    //     score1: 0,
+    //     score2: 0,
+    // });
+
+    // const socket = useContext(WebsocketContext);
+
+    // useEffect(() => {
+    //     const eventName = `GameLoop`;
+    //     socket.on(eventName, (newFrame: GameState) => {
+    //         setReceivedFrame(newFrame);
+	// 		// console.log("newFrame: " + newFrame.ball.x + ", " + newFrame.ball.y);
+	// 		console.log("ball from useEffect() FRONTEND: " + newFrame.ball.x + ", " + newFrame.ball.y);
+	// 		canvasRef.current.getContext('2d').beginPath();
+	// 		canvasRef.current.getContext('2d').arc(newFrame.ball.x, newFrame.ball.y, ballGlobalRadius, 0, Math.PI * 2);
+	// 		canvasRef.current.getContext('2d').fillStyle = "#FF0000";
+	// 		canvasRef.current.getContext('2d').fill();
+	// 		canvasRef.current.getContext('2d').closePath();
+    //     });
+    //     return () => {
+    //         console.log("Unregistering Events...");
+    //         socket.off(eventName);
+    //     };
+    // }, [socket, canvasRef]);
 	// END Data from backend END
 
-	function drawBallFromBackend(ctx: CanvasRenderingContext2D): void
+	function drawBallFromBackend(ctx: CanvasRenderingContext2D, backendFrame: GameState): void
 	{
 		ctx.beginPath();
-		console.log("newFrame: " + receivedFrame.ball.x + ", " + receivedFrame.ball.y);
-		ctx.arc(receivedFrame.ball.x, receivedFrame.ball.y, ballGlobalRadius, 0, Math.PI * 2);
+		console.log("backendFrame.ball: " + backendFrame.ball.x + ", " + backendFrame.ball.y);
+		console.log("ballFromBackend X and Y: " + ballFromBackendX + ", " + ballFromBackendY);
+		// ctx.arc(backendFrame.ball.x, backendFrame.ball.y, ballGlobalRadius, 0, Math.PI * 2);
+		ctx.arc(ballFromBackendX, ballFromBackendY, ballGlobalRadius, 0, Math.PI * 2);
 		ctx.fillStyle = "#FF0000";
 		ctx.fill();
 		ctx.closePath();
@@ -1621,7 +1655,7 @@ const Game: React.FC = () =>
         		<source src={videoHarkinianHitSrc} type="video/mp4"/>
       		</video>
 			<JoinRandom />
-			<ReceivedGameData />
+			{/* <ReceivedGameData /> */}
 		</div>
 	);
 };
