@@ -1,4 +1,13 @@
-import { Controller, Get, Inject, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Req,
+  Res,
+  Session,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard42, SessionGuard } from './guards/http-guards';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
@@ -27,18 +36,32 @@ export class AuthController {
   @ApiOperation({ summary: 'Handle successful 42 authentication callback' })
   @UseGuards(AuthGuard42)
   async handleRedirect(@Res() response: Response): Promise<void> {
-    response.redirect('/auth/status');
+    response.redirect(process.env.FRONTEND_URL || 'https://localhost:5173');
   }
 
   @Get('status')
   @ApiOperation({ summary: 'Check user authentication status' })
-  @UseGuards(SessionGuard)
-  async status(
-    @AuthUser() user: User,
-    @Res() response: Response,
-  ): Promise<void | ShowLoggedUserDto> {
-    if (process.env.FRONTEND_URL) response.redirect(process.env.FRONTEND_URL);
-    return ShowLoggedUserDto.from(user);
+  async status(@Session() session: Record<string, any>): Promise<string> {
+    const user = session?.passport?.user;
+    console.log(user);
+    if (!user) return 'Session not authenticated';
+    if (user.is2FaActive) {
+      if (user.is2FaValid) {
+        return 'User Authenticated';
+      }
+      return '2Fa not validated';
+    }
+    return 'User Authenticated';
+  }
+
+  @Get('session-status')
+  @ApiOperation({ summary: 'Check if session is authenticated status' })
+  async sessionStatus(
+    @Session() session: Record<string, any>,
+  ): Promise<string> {
+    const user = session?.passport?.user;
+    if (!user) return 'Session Invalid';
+    return 'Session Valid';
   }
 
   @Get('logout')
@@ -46,14 +69,13 @@ export class AuthController {
   @UseGuards(SessionGuard)
   async logout(
     @Req() request: Request,
-    @Res() response: Response,
     @AuthUser() user: User,
-  ): Promise<void> {
+  ): Promise<boolean> {
     await this.userService.updateUser(user, {
       isOnline: false,
       is2FaValid: false,
     });
     await this.authService.deleteSession(request.sessionID);
-    response.redirect('/auth/status');
+    return true;
   }
 }

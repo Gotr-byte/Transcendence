@@ -34,13 +34,15 @@ export const TwoFAComponent = ({ onVerify }: TwoFAComponentProps) => {
 				}
 			);
 
-			if (!response.ok) {
-				alert("Token is invalid");
+			const message = await response.text();
+
+			if (response.ok) {
+				alert("Token is valid");
+				onVerify(); // Call onVerify on successful 2FA verification
+			} else if (response.status === 401) {
+				alert("Token is Invalid");
+				window.location.reload();
 			}
-			const data = await response.json();
-			alert("Token is valid");
-			onVerify(); // Call onVerify on successful 2FA verification
-			window.location.reload()
 		} catch (error) {
 			console.error("Error:", error);
 		}

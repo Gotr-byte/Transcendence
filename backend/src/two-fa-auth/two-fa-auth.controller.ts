@@ -106,7 +106,6 @@ export class TwoFaAuthController {
     @AuthUser() user: User,
     @Body() dto: Verify2FADto,
     @Req() request: Request,
-    @Res() response: Response,
   ): Promise<void> {
     if (user) {
       if (user.is2FaValid)
@@ -114,7 +113,6 @@ export class TwoFaAuthController {
       await this.twoFaService.verifyToken(user, dto);
       (request.session as any).passport.user.is2FaValid = true;
     }
-    return response.redirect('/auth/status');
   }
 
   @UseGuards(AuthenticatedGuard)
