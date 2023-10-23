@@ -39,9 +39,10 @@ export const TwoFAComponent = ({ onVerify }: TwoFAComponentProps) => {
 			if (response.ok) {
 				alert("Token is valid");
 				onVerify(); // Call onVerify on successful 2FA verification
-			} else if (response.status === 401) {
+			} else if (response.status === 403) {
+				console.log(response);
 				alert("Token is Invalid");
-				window.location.reload();
+				setToken("");
 			}
 		} catch (error) {
 			console.error("Error:", error);

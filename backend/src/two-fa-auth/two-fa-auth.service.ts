@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { UserService } from 'src/user/user.service';
 import { Verify2FADto } from './dto/two-fa-auth.dto';
@@ -44,7 +44,7 @@ export class TwoFaAuthService {
       token: dto.token,
     });
     if (verified === false) {
-      throw new UnauthorizedException('Invalid 2FA code');
+      throw new ForbiddenException('Invalid 2FA code');
     }
     await this.userService.updateUser(user, {
       is2FaValid: true,
