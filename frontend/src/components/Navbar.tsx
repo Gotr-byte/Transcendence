@@ -26,34 +26,36 @@ export const Navbar: React.FC<NavbarProps> = ({
 	const [user, setUser] = useState<User | null>(null);
 	const [showUser, setShowUser] = useState(false);
 	const socket = useContext(WebsocketContext);
+	const [show2FAComponent, setShow2FAComponent] = useState<boolean>(false);
 
 	const setupSocketConnection = (userId: string) => {
 		socket.open();
 		console.log("Socket Connection Established");
 	};
 
-	const check2FAStatus = async () => {
+	const check2FAActive = async () => {
 		const response = await fetch(
 			`${import.meta.env.VITE_API_URL}/2fa/is2faactive`,
 			{
 				credentials: "include",
 			}
 		);
-	
 		const isActive = await response.json();
-	
-		return isActive;
-	}
 
-	const validateUser = async () => {
-		const is2FaActive = await check2FAStatus(); // Notice the await keyword here
-	
-		if (!is2FaActive) {
-			fetchUserData();
-		} else {
-			// request 2fa Token until 2fa is active
-			fetchUserData();
-		}
+		return isActive;
+	};
+
+	const check2FAValid = async () => {
+		const response = await fetch(
+			`${import.meta.env.VITE_API_URL}/2fa/is2favalid`,
+			{
+				credentials: "include",
+			}
+		);
+
+		const isValid = await response.json();
+
+		return isValid;
 	};
 
 	const fetchUserData = () => {
@@ -78,28 +80,40 @@ export const Navbar: React.FC<NavbarProps> = ({
 			});
 	};
 
-	async function handleFetchToggle2FAuthOff() {
-    try {
-      const response = await fetch(
-        `http://localhost:4000/2fa/deactivate`,
-        {
-          method: "PATCH",
-          credentials: "include",
-          // 'Access-Control-Allow-Credentials': 'true',
-          // 'Access-Control-Allow-Origin': 'http://localhost:5173',
-        }
-      );
-      if (response.ok) {
-        alert("2Fauth deactivated successfully");
-      } else {
-        throw new Error("Failed to deactivate 2Fauth.");
-      }
-    } catch (error) {
-      console.error("An error occurred:", error);
-    }
-    // window.location.reload();
-  }
+	const validateUser = async () => {
+		const is2FaActive = await check2FAActive();
+		const is2FaValid = await check2FAValid();
 
+		if (is2FaActive && !is2FaValid) {
+			setShow2FAComponent(true);
+		} else {
+			fetchUserData();
+		}
+	};
+
+	useEffect(() => {
+		console.log(i++);
+		validateUser();
+	}, []);
+
+	async function handleFetchToggle2FAuthOff() {
+		try {
+			const response = await fetch(`http://localhost:4000/2fa/deactivate`, {
+				method: "PATCH",
+				credentials: "include",
+				// 'Access-Control-Allow-Credentials': 'true',
+				// 'Access-Control-Allow-Origin': 'http://localhost:5173',
+			});
+			if (response.ok) {
+				alert("2Fauth deactivated successfully");
+			} else {
+				throw new Error("Failed to deactivate 2Fauth.");
+			}
+		} catch (error) {
+			console.error("An error occurred:", error);
+		}
+		// window.location.reload();
+	}
 
 	const handleLogout = () => {
 		fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
@@ -107,27 +121,17 @@ export const Navbar: React.FC<NavbarProps> = ({
 		}).then((response) => response.json());
 		setShowUser(false);
 		setIsLoggedIn(false);
-		
+
 		socket.close();
 		console.log("Socket Connection Closed");
 	};
 
 	// Function to handle successful 2FA verification
-	// const handle2FASuccess = () => {
-		// console.log("2FA verified successfully.");
+	const handle2FASuccess = () => {
+		console.log("2FA verified successfully.");
 		// Redirect the user to the main page or reload the current page
 		// window.location.href = '/main-page-url';
-	// };
-
-	useEffect(() => {
-		// const is2FaActive = await check2FAStatus();
-		// if(is2FaActive && !isLoggedIn)
-		// {
-// 
-		// }
-		fetchUserData();
-		// validateUser();
-	}, []);
+	};
 
 	let handleLogin = () => {
 		window.location.href = `${import.meta.env.VITE_API_URL}/auth/42/login`;
@@ -168,7 +172,14 @@ export const Navbar: React.FC<NavbarProps> = ({
 					</button>
 				)}
 			</HStack>
-			{(!isLoggedIn) && (<TwoFAComponent/>)} 
+			{show2FAComponent && (
+				<TwoFAComponent
+					onVerify={() => {
+						setShow2FAComponent(false);
+						fetchUserData(); // Fetch the user data after successfully verifying 2FA
+					}}
+				/>
+			)}
 		</Flex>
 	);
 };

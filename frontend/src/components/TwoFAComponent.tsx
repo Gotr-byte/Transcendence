@@ -35,13 +35,12 @@ export const TwoFAComponent = ({ onVerify }: TwoFAComponentProps) => {
 			);
 
 			if (!response.ok) {
-				throw new Error("Network response was not ok " + response.statusText);
+				alert("Token is invalid");
 			}
-			window.location.reload()
-
 			const data = await response.json();
-			console.log("Success:", data);
+			alert("Token is valid");
 			onVerify(); // Call onVerify on successful 2FA verification
+			window.location.reload()
 		} catch (error) {
 			console.error("Error:", error);
 		}
