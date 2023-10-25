@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Inject,
+  Post,
   Req,
   Res,
   Session,
@@ -55,7 +56,9 @@ export class AuthController {
   }
 
   @Get('session-status')
-  @ApiOperation({ summary: 'Check if session is authenticated status' })
+  @ApiOperation({
+    summary: 'Check if session exists, so if the user is authenticated via 42',
+  })
   async sessionStatus(
     @Session() session: Record<string, any>,
   ): Promise<string> {
@@ -63,6 +66,30 @@ export class AuthController {
     if (!user) return 'Session Invalid';
     return 'Session Valid';
   }
+
+  @Post('check-existing-sessions')
+  @ApiOperation({
+    summary:
+      'Checks if a session for that user exist, if a session from another device already exists i will be checked if that user is online on that session, if yes returns false, if no session exists or user is offline on that other session returns false and removes the old session',
+  })
+  @UseGuards(SessionGuard)
+  async checkExistingSessions(@AuthUser() user: User, @Res() response: Response): Promise<void> {
+    const sessions = await this.authService.getUserSessions(user.id);
+
+    if (sessions.length < 2) {
+      response.send({ removeThisSession: false });
+      return;
+  }
+  if (!user.isOnline) {
+      await this.authService.deleteSession(sessions[0].sid);
+      response.send({ removeThisSession: false });
+      return;
+  }
+  await this.authService.deleteSession(sessions[1].sid);
+  response.cookie('connect.sid', '', { expires: new Date(0), httpOnly: true });
+  response.send({ removeThisSession: true });
+  return;
+}
 
   @Get('logout')
   @ApiOperation({ summary: 'Handle user logout' })

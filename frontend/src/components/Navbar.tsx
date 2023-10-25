@@ -81,6 +81,28 @@ export const Navbar: React.FC<NavbarProps> = ({
 			});
 	};
 
+	async function checkExistingSessions() {
+		try {
+		const response = await fetch(
+			`${import.meta.env.VITE_API_URL}/auth/check-existing-sessions`,
+			{
+				method: "POST",
+				credentials: "include",
+			}
+		);
+
+		if (!response.ok) {
+			throw new Error("Server returned an error");
+		}
+
+		const result = await response.json();
+		return result.removeThisSession;
+		} catch (error) {
+			console.error('Network or fetch error:', error);
+			return false;
+		}
+	}
+
 	const validateUser = async () => {
 		const is2FaActive = await check2FAActive();
 		const is2FaValid = await check2FAValid();
@@ -100,20 +122,31 @@ export const Navbar: React.FC<NavbarProps> = ({
 			}
 		);
 		const message = await response.text();
-		return message === 'Session Valid'
+		return message === "Session Valid";
 	};
+
+	async function checkForMultipleSessions(): Promise<boolean> {
+		const removeThisSession = await checkExistingSessions()
+
+		if (removeThisSession) {
+			alert('Yo are not able to login, you have already an open active session')
+			return true;
+		}
+		return false;
+	}
 
 	useEffect(() => {
 		const checkLoginStatus = async () => {
 			// This can be a request to your backend to check if the user is logged in
 			// or any other mechanism you use to determine logged-in status.
-			const sessionValid = await checkSession();
-
-			if (sessionValid && !isLoggedIn)
-				await validateUser();
-			else if (sessionValid && isLoggedIn) {
-				fetchUserData();
+			if (!isLoggedIn) {
+				const sessionValid = await checkSession();
+				const multipleSessions = await checkForMultipleSessions();
+				if (sessionValid && !multipleSessions) {
+					await validateUser();
+				}
 			}
+			else fetchUserData();
 		};
 
 		checkLoginStatus();
@@ -173,7 +206,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 				<TwoFAComponent
 					onVerify={() => {
 						setShow2FAComponent(false);
-						fetchUserData();
+						validateUser();
 					}}
 				/>
 			)}
