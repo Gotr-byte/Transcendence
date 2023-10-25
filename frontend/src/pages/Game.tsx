@@ -185,14 +185,10 @@ const Game: React.FC = () =>
 	// Assets
 	
 	// Music
-	const musicBavaria = useRef<HTMLAudioElement>(new Audio());
-	musicBavaria.current.src = musicBavariaSrc;
-	const musicMushroomKingdom = useRef<HTMLAudioElement>(new Audio());
-	musicMushroomKingdom.current.src = musicMushroomKingdomSrc;
-	const musicNumberOne = useRef<HTMLAudioElement>(new Audio());
-	musicNumberOne.current.src = musicNumberOneSrc;
-	const musicStubb = useRef<HTMLAudioElement>(new Audio());
-	musicStubb.current.src = musicStubbSrc;
+	const musicBavaria = useRef<HTMLAudioElement | null>(null);
+	const musicMushroomKingdom = useRef<HTMLAudioElement | null>(null);
+	const musicNumberOne = useRef<HTMLAudioElement | null>(null);
+	const musicStubb = useRef<HTMLAudioElement | null>(null);
 	
 	// Video
 	const videoMcrolld = useRef<HTMLVideoElement | null>(null);
@@ -201,42 +197,18 @@ const Game: React.FC = () =>
 	var mcrolldReverseQueued: boolean = false;
 	var videoToDraw: HTMLVideoElement = videoMcrolld;
 
-	// Set the video source when the component has rendered
-	useEffect(() =>
-	{
-		if (videoMcrolld.current)
-		{
-		  	videoMcrolld.current.src = videoMcrolldSrc;
-		}
-		if (videoMcrolldReverse.current)
-		{
-		  	videoMcrolldReverse.current.src = videoMcrolldReverseSrc;
-		}
-	}, []);
-	
 	// Gnome
 	const imageGnome = useRef<HTMLImageElement>(new Image());
 	imageGnome.current.src = imageGnomeSrc;
 	imageGnome.current.width = 168;
 	imageGnome.current.height = 171;
-	const audioGnome = useRef<HTMLAudioElement>(new Audio());
-	audioGnome.current.src = audioGnomeSrc;
+	const audioGnome = useRef<HTMLAudioElement | null>(null);
 	
 	// King Harkinian
-	const audioHarkinianOah = useRef<HTMLAudioElement>(new Audio());
-	audioHarkinianOah.current.src = audioHarkinianOahSrc;
-	const audioHarkinianHit = useRef<HTMLAudioElement>(new Audio());
-	audioHarkinianHit.current.src = audioHarkinianHitSrc;
+	const audioHarkinianOah = useRef<HTMLAudioElement | null>(null);
+	const audioHarkinianHit = useRef<HTMLAudioElement | null>(null);
 	const videoHarkinianHit = useRef<HTMLVideoElement | null>(null);
-
-	useEffect(() =>
-	{
-		if (videoHarkinianHit.current)
-		{
-			videoHarkinianHit.current.src = videoHarkinianHitSrc;
-		}
-	}, []);
-
+	
 	// Fox
 	const imageFoxBad = useRef<HTMLImageElement>(new Image());
 	imageFoxBad.current.src = imageFoxBadSrc;
@@ -250,34 +222,118 @@ const Game: React.FC = () =>
 	imageFoxEnraged.current.src = imageFoxEnragedSrc;
 	imageFoxEnraged.current.width = 153;
 	imageFoxEnraged.current.height = 149;
-	const audioFoxEnrage = useRef<HTMLAudioElement>(new Audio());
-	audioFoxEnrage.current.src = audioFoxEnrageSrc;
+	const audioFoxEnrage = useRef<HTMLAudioElement | null>(null);
 	// Good sounds
-	const audioFoxMeow = useRef<HTMLAudioElement>(new Audio());
-	audioFoxMeow.current.src = audioFoxMeowSrc;
-	const audioFoxWoof = useRef<HTMLAudioElement>(new Audio());
-	audioFoxWoof.current.src = audioFoxWoofSrc;
-	const audioFoxQuack = useRef<HTMLAudioElement>(new Audio());
-	audioFoxQuack.current.src = audioFoxQuackSrc;
-	const audioFoxChicken = useRef<HTMLAudioElement>(new Audio());
-	audioFoxChicken.current.src = audioFoxChickenSrc;
-	const audioFoxGoat = useRef<HTMLAudioElement>(new Audio());
-	audioFoxGoat.current.src = audioFoxGoatSrc;
-	const audioFoxPig = useRef<HTMLAudioElement>(new Audio());
-	audioFoxPig.current.src = audioFoxPigSrc;
-	const audioFoxTweet = useRef<HTMLAudioElement>(new Audio());
-	audioFoxTweet.current.src = audioFoxTweetSrc;
+	const audioFoxMeow = useRef<HTMLAudioElement | null>(null);
+	const audioFoxWoof = useRef<HTMLAudioElement | null>(null);
+	const audioFoxQuack = useRef<HTMLAudioElement | null>(null);
+	const audioFoxChicken = useRef<HTMLAudioElement | null>(null);
+	const audioFoxGoat = useRef<HTMLAudioElement | null>(null);
+	const audioFoxPig = useRef<HTMLAudioElement | null>(null);
+	const audioFoxTweet = useRef<HTMLAudioElement | null>(null);
 	// Evil sounds
-	const audioFoxAhee = useRef<HTMLAudioElement>(new Audio());
-	audioFoxAhee.current.src = audioFoxAheeSrc;
-	const audioFoxCha = useRef<HTMLAudioElement>(new Audio());
-	audioFoxCha.current.src = audioFoxChaSrc;
-	const audioFoxKaka = useRef<HTMLAudioElement>(new Audio());
-	audioFoxKaka.current.src = audioFoxKakaSrc;
-	const audioFoxPapa = useRef<HTMLAudioElement>(new Audio());
-	audioFoxPapa.current.src = audioFoxPapaSrc;
-	const audioFoxYok = useRef<HTMLAudioElement>(new Audio());
-	audioFoxYok.current.src = audioFoxYokSrc;
+	const audioFoxAhee = useRef<HTMLAudioElement | null>(null);
+	const audioFoxCha = useRef<HTMLAudioElement | null>(null);
+	const audioFoxKaka = useRef<HTMLAudioElement | null>(null);
+	const audioFoxPapa = useRef<HTMLAudioElement | null>(null);
+	const audioFoxYok = useRef<HTMLAudioElement | null>(null);
+	
+	// Set the multimedia sources when the component has rendered
+	useEffect(() =>
+	{
+		if (audioGnome.current)
+		{
+			audioGnome.current.src = audioGnomeSrc;
+		}
+		if (audioHarkinianHit.current)
+		{
+			audioHarkinianHit.current.src = audioHarkinianHitSrc;
+		}
+		if (audioHarkinianOah.current)
+		{
+			audioHarkinianOah.current.src = audioHarkinianOahSrc;
+		}
+		if (audioFoxMeow.current)
+		{
+			audioFoxMeow.current.src = audioFoxMeowSrc;
+		}
+		if (audioFoxWoof.current)
+		{
+			audioFoxWoof.current.src = audioFoxWoofSrc;
+		}
+		if (audioFoxQuack.current)
+		{
+			audioFoxQuack.current.src = audioFoxQuackSrc;
+		}
+		if (audioFoxChicken.current)
+		{
+			audioFoxChicken.current.src = audioFoxChickenSrc;
+		}
+		if (audioFoxGoat.current)
+		{
+			audioFoxGoat.current.src = audioFoxGoatSrc;
+		}
+		if (audioFoxPig.current)
+		{
+			audioFoxPig.current.src = audioFoxPigSrc;
+		}
+		if (audioFoxTweet.current)
+		{
+			audioFoxTweet.current.src = audioFoxTweetSrc;
+		}
+		if (audioFoxAhee.current)
+		{
+			audioFoxAhee.current.src = audioFoxAheeSrc;
+		}
+		if (audioFoxCha.current)
+		{
+			audioFoxCha.current.src = audioFoxChaSrc;
+		}
+		if (audioFoxKaka.current)
+		{
+			audioFoxKaka.current.src = audioFoxKakaSrc;
+		}
+		if (audioFoxPapa.current)
+		{
+			audioFoxPapa.current.src = audioFoxPapaSrc;
+		}
+		if (audioFoxYok.current)
+		{
+			audioFoxYok.current.src = audioFoxYokSrc;
+		}
+		if (audioFoxEnrage.current)
+		{
+			audioFoxEnrage.current.src = audioFoxEnrageSrc;
+		}
+		if (videoHarkinianHit.current)
+		{
+			videoHarkinianHit.current.src = videoHarkinianHitSrc;
+		}
+		if (musicBavaria.current)
+		{
+			musicBavaria.current.src = musicBavariaSrc;
+		}
+		if (musicMushroomKingdom.current)
+		{
+			musicMushroomKingdom.current.src = musicMushroomKingdomSrc;
+		}
+		if (musicNumberOne.current)
+		{
+			musicNumberOne.current.src = musicNumberOneSrc;
+		}
+		if (musicStubb.current)
+		{
+			musicStubb.current.src = musicStubbSrc;
+		}
+		if (videoMcrolld.current)
+		{
+			  videoMcrolld.current.src = videoMcrolldSrc;
+		}
+		if (videoMcrolldReverse.current)
+		{
+			  videoMcrolldReverse.current.src = videoMcrolldReverseSrc;
+		}
+	}, []);
 
 	function randomizeColors(): void
 	{
@@ -1459,16 +1515,15 @@ const Game: React.FC = () =>
 		const eventName = `GameLoop`;
         socket.on(eventName, (newFrame: GameState) => {
             setReceivedFrame(newFrame);
-			// console.log("newFrame: " + newFrame.ball.x + ", " + newFrame.ball.y);
 			// console.log("ball from useEffect() FRONTEND: " + newFrame.ball.x + ", " + newFrame.ball.y);
-			// canvasRef.current.getContext('2d').beginPath();
-			// canvasRef.current.getContext('2d').arc(newFrame.ball.x, newFrame.ball.y, ballGlobalRadius, 0, Math.PI * 2);
-			// canvasRef.current.getContext('2d').fillStyle = "#FF0000";
-			// canvasRef.current.getContext('2d').fill();
-			// canvasRef.current.getContext('2d').closePath();
 			ballFromBackendX = newFrame.ball.x;
 			ballFromBackendY = newFrame.ball.y;
         });
+	
+		const sendMessageToBackend = () => {
+		  socket.emit('sendToBackend', paddleP1X);
+		//   console.log("FRONTEND Sent data to backend: " + paddleP1X);
+		};
 	
 		if (canvasRef.current)
 		{
@@ -1494,6 +1549,7 @@ const Game: React.FC = () =>
 					drawBackground(context);
 			
 					drawBalls(context);
+					drawBallFromBackend(context, receivedFrame);
 					drawPaddles(context);
 			
 					drawScore(context);
@@ -1560,6 +1616,8 @@ const Game: React.FC = () =>
 					updateScores();
 					difficultyHandler();
 
+					sendMessageToBackend();
+
 					frameCount++;
 				}
 
@@ -1600,41 +1658,11 @@ const Game: React.FC = () =>
         };
 	}, [frameRate]);
 
-	// START Data from backend START
-	// const [receivedFrame, setReceivedFrame] = useState<GameState>({
-    //     paddle1: { x: 0, y: 0 },
-    //     paddle2: { x: 0, y: 0 },
-    //     ball: { x: 0, y: 0 },
-    //     score1: 0,
-    //     score2: 0,
-    // });
-
-    // const socket = useContext(WebsocketContext);
-
-    // useEffect(() => {
-    //     const eventName = `GameLoop`;
-    //     socket.on(eventName, (newFrame: GameState) => {
-    //         setReceivedFrame(newFrame);
-	// 		// console.log("newFrame: " + newFrame.ball.x + ", " + newFrame.ball.y);
-	// 		console.log("ball from useEffect() FRONTEND: " + newFrame.ball.x + ", " + newFrame.ball.y);
-	// 		canvasRef.current.getContext('2d').beginPath();
-	// 		canvasRef.current.getContext('2d').arc(newFrame.ball.x, newFrame.ball.y, ballGlobalRadius, 0, Math.PI * 2);
-	// 		canvasRef.current.getContext('2d').fillStyle = "#FF0000";
-	// 		canvasRef.current.getContext('2d').fill();
-	// 		canvasRef.current.getContext('2d').closePath();
-    //     });
-    //     return () => {
-    //         console.log("Unregistering Events...");
-    //         socket.off(eventName);
-    //     };
-    // }, [socket, canvasRef]);
-	// END Data from backend END
-
 	function drawBallFromBackend(ctx: CanvasRenderingContext2D, backendFrame: GameState): void
 	{
 		ctx.beginPath();
-		console.log("backendFrame.ball: " + backendFrame.ball.x + ", " + backendFrame.ball.y);
-		console.log("ballFromBackend X and Y: " + ballFromBackendX + ", " + ballFromBackendY);
+		// console.log("backendFrame.ball: " + backendFrame.ball.x + ", " + backendFrame.ball.y);
+		// console.log("ballFromBackend X and Y: " + ballFromBackendX + ", " + ballFromBackendY);
 		// ctx.arc(backendFrame.ball.x, backendFrame.ball.y, ballGlobalRadius, 0, Math.PI * 2);
 		ctx.arc(ballFromBackendX, ballFromBackendY, ballGlobalRadius, 0, Math.PI * 2);
 		ctx.fillStyle = "#FF0000";
@@ -1645,6 +1673,66 @@ const Game: React.FC = () =>
 	return (
 		<div>
 			<canvas ref={canvasRef} tabIndex={0} width={canvasWidth} height={canvasHeight}></canvas>
+			<audio ref={audioGnome}>
+        		<source src={audioGnomeSrc} type="audio/mp3"/>
+      		</audio>
+			<audio ref={audioHarkinianHit}>
+        		<source src={audioHarkinianHitSrc} type="audio/mp3"/>
+      		</audio>
+			<audio ref={audioHarkinianOah}>
+        		<source src={audioHarkinianOahSrc} type="audio/mp3"/>
+      		</audio>
+			  <audio ref={audioFoxMeow}>
+        		<source src={audioFoxMeowSrc} type="audio/mp3"/>
+      		</audio>
+			  <audio ref={audioFoxWoof}>
+        		<source src={audioFoxWoofSrc} type="audio/mp3"/>
+      		</audio>
+			  <audio ref={audioFoxQuack}>
+        		<source src={audioFoxQuackSrc} type="audio/mp3"/>
+      		</audio>
+			  <audio ref={audioFoxChicken}>
+        		<source src={audioFoxChickenSrc} type="audio/mp3"/>
+      		</audio>
+			  <audio ref={audioFoxGoat}>
+        		<source src={audioFoxGoatSrc} type="audio/mp3"/>
+      		</audio>
+			  <audio ref={audioFoxPig}>
+        		<source src={audioFoxPigSrc} type="audio/mp3"/>
+      		</audio>
+			  <audio ref={audioFoxTweet}>
+        		<source src={audioFoxTweetSrc} type="audio/mp3"/>
+      		</audio>
+			<audio ref={audioFoxAhee}>
+        		<source src={audioFoxAheeSrc} type="audio/mp3"/>
+      		</audio>
+			<audio ref={audioFoxCha}>
+        		<source src={audioFoxChaSrc} type="audio/mp3"/>
+      		</audio>
+			<audio ref={audioFoxKaka}>
+        		<source src={audioFoxKakaSrc} type="audio/mp3"/>
+      		</audio>
+			<audio ref={audioFoxPapa}>
+        		<source src={audioFoxPapaSrc} type="audio/mp3"/>
+      		</audio>
+			<audio ref={audioFoxYok}>
+        		<source src={audioFoxYokSrc} type="audio/mp3"/>
+      		</audio>
+			<audio ref={audioFoxEnrage}>
+        		<source src={audioFoxEnrageSrc} type="audio/mp3"/>
+      		</audio>
+			<audio ref={musicBavaria}>
+        		<source src={musicBavariaSrc} type="audio/mp3"/>
+      		</audio>
+			<audio ref={musicMushroomKingdom}>
+        		<source src={musicMushroomKingdomSrc} type="audio/mp3"/>
+      		</audio>
+			<audio ref={musicNumberOne}>
+        		<source src={musicNumberOneSrc} type="audio/mp3"/>
+      		</audio>
+			<audio ref={musicStubb}>
+        		<source src={musicStubbSrc} type="audio/mp3"/>
+      		</audio>
 			<video ref={videoMcrolld} style={{ display: 'none' }}>
         		<source src={videoMcrolldSrc} type="video/mp4"/>
       		</video>

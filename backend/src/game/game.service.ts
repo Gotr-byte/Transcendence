@@ -52,6 +52,20 @@ export class GameService
 		setInterval( () => {
 			gameState?.calcNewPosition();
 			// console.log("ball from BACKEND: " + gameState?.ball.position.x + ", " + gameState?.ball.position.y);
+			player1.on('sendToBackend', (paddle1x: number) => {
+				// console.log('BACKEND Received message from the client: ' + paddle1x);
+				// Handle the message as needed on the backend
+			
+				// Send a response back to the client
+				// player1.emit('messageReceived', 'Message received on the server');
+			  });
+			  player2.on('sendToBackend', (paddle1x: number) => {
+				// console.log('BACKEND Received message from the client: ' + paddle1x);
+				// Handle the message as needed on the backend
+			
+				// Send a response back to the client
+				// player1.emit('messageReceived', 'Message received on the server');
+			  });
 			player1.emit('GameLoop', 
 			{
 				'paddle1': gameState?.paddle1.position,
