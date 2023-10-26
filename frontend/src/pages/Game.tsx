@@ -29,22 +29,33 @@ const Game: React.FC = () => {
 			}
 		});
 
-	useEffect(() => {
-		function handleKeyDown(e) {
-			console.log(e.keyCode);
-		};
-		
-		document.addEventListener('keydown', handleKeyDown);
-
-		return function cleanup() {
-			document.removeEventListener('keydown', handleKeyDown);
-		}
-	});
-
 		socketIo.on('disconnect', () => {
 			console.log('Socket.io connection disconnected.');
 		});
 	}, [socketIo]);
+
+	useEffect(() => {
+		// Function to handle key down event
+		const handleKeyDown = (event: KeyboardEvent) =>
+		{
+			console.log(event.key)
+		};
+	
+		// Function to handle key up event
+		const handleKeyUp = (event: KeyboardEvent) =>
+		{
+			console.log(event.key);
+		};
+	
+		// Attach event listeners when the component mounts
+		window.addEventListener('keydown', handleKeyDown);
+	
+		// Clean up event listeners when the component unmounts
+		return () => {
+			window.removeEventListener('keydown', handleKeyDown);
+		};
+	
+	}, []);
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
