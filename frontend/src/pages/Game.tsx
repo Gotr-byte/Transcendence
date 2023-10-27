@@ -35,27 +35,31 @@ const Game: React.FC = () => {
 	}, [socketIo]);
 
 	useEffect(() => {
-		// Function to handle key down event
+
+		//set to same fps as the BE is working with
+		//maybe on game init we can send the config data
+		//as json to the FE, telling fps, canvasSize, paddlesize etc ?
+		const fps = 1000 / 60;
+
+		const interval = setInterval(() => {
+			document.addEventListener('keydown', handleKeyDown);
+		}, fps);
+		
 		const handleKeyDown = (event: KeyboardEvent) =>
 		{
-			console.log(event.key)
+			if (event.key == 'ArrowUp' || event.key == 'ArrowDown')
+			{
+				console.log(event.key);
+				socketIo.emit("keypress", event.key);
+			}
 		};
 	
-		// Function to handle key up event
-		const handleKeyUp = (event: KeyboardEvent) =>
-		{
-			console.log(event.key);
-		};
-	
-		// Attach event listeners when the component mounts
-		window.addEventListener('keydown', handleKeyDown);
-	
-		// Clean up event listeners when the component unmounts
 		return () => {
-			window.removeEventListener('keydown', handleKeyDown);
+			document.removeEventListener('keydown', handleKeyDown);
+			clearInterval(interval);
 		};
 	
-	}, []);
+	}, [socketIo]);
 
 	useEffect(() => {
 		const canvas = canvasRef.current;
