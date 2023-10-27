@@ -47,9 +47,16 @@ export class GameService
 	public startGame(player1: Socket, player2: Socket): void
 	{
 		let gameState = this.getGameState(player1, player2);
-		if (!gameState)
+		if (!gameState || player1 == player2)
 			return;
 		setInterval( () => {
+			player1.on("keypress", (key) => {
+				gameState?.ballUp();
+			});
+			player2.on("keypress", (key) => {
+				gameState?.ballDown();
+			});
+
 			gameState?.calcNewPosition();
 			player1.emit('GameLoop', 
 			{

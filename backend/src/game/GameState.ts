@@ -65,6 +65,14 @@ export class GameState
 		return this.instance;
 	}
 
+	public ballUp(): void {
+		this.ball.position.y += 10;
+	}
+
+	public ballDown(): void {
+		this.ball.position.y -= 10;
+	}
+
 	public calcRandomDirection(round: number) : Coordinate {
 		let x: number = (round % 2 === 1) ? 1 : -1;
 		let y: number = (Math.random() * 2) - 1;
