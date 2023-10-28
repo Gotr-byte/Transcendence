@@ -69,7 +69,14 @@ const Game: React.FC = () => {
 				// Fill the canvas with white color
 				ctx.fillStyle = 'white';
 				ctx.fillRect(0, 0, canvas.width, canvas.height);
-
+				//paddles paddles are blue
+				ctx.fillStyle = 'blue';
+				ctx.beginPath();
+				ctx.fillRect(gameState.paddle1.x, gameState.paddle1.y, 50, 240);
+				ctx.closePath();
+				ctx.beginPath();
+				ctx.fillRect(gameState.paddle2.x, gameState.paddle2.y, 50, 240);
+				ctx.closePath();
 				// Draw the ball in red
 				ctx.beginPath();
 				ctx.arc(gameState.ball.x, gameState.ball.y, 10, 0, 2 * Math.PI); // 10 is the radius of the ball

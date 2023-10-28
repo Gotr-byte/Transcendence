@@ -51,10 +51,16 @@ export class GameService
 			return;
 		setInterval( () => {
 			player1.on("keypress", (key) => {
-				gameState?.ballUp();
+				if (key == 'ArrowUp')
+					gameState?.setPaddleDirection(1, -1);
+				else
+					gameState?.setPaddleDirection(1, 1);
 			});
 			player2.on("keypress", (key) => {
-				gameState?.ballDown();
+				if (key == 'ArrowUp')
+					gameState?.setPaddleDirection(2, -1);
+				else
+					gameState?.setPaddleDirection(2, 1);
 			});
 
 			gameState?.calcNewPosition();
