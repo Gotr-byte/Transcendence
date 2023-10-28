@@ -37,17 +37,36 @@ import audioFoxKakaSrc from '../../public/assets/SoundEffect_Fox_Kaka.mp3';
 import audioFoxPapaSrc from '../../public/assets/SoundEffect_Fox_Papa.mp3';
 import audioFoxYokSrc from '../../public/assets/SoundEffect_Fox_Yok.mp3';
 
-interface Coordinates {
+interface Coordinates
+{
     x: number;
     y: number;
 }
 
-interface GameState {
-    paddle1: Coordinates;
-    paddle2: Coordinates;
-    ball: Coordinates;
-    score1: number;
-    score2: number;
+interface Paddle
+{
+	pos: Coordinates;
+	isImmobilized: boolean;
+}
+
+interface Ball
+{
+	pos: Coordinates;
+	isUnlocked: boolean;
+}
+
+interface Fox
+{
+	pos: Coordinates;
+	isEvil: boolean;
+	isEnraged: boolean;
+}
+
+interface Triggerables
+{
+	triggeredGnome: boolean;
+	triggeredHarkinian: boolean;
+	triggeredPopup: boolean;
 }
 
 const Game: React.FC = () =>
@@ -179,6 +198,22 @@ const Game: React.FC = () =>
 	var scoreP1: number = 0;
 	var scoreP2: number = 0;
 	var whoLostBall: number = 0;
+
+
+
+	// Received game state
+
+	interface GameState
+	{
+		score1: number;
+		score2: number;
+		paddle1: Paddle;
+		paddle2: Paddle;
+		ball1: Ball;
+		ball2: Ball;
+		fox: Fox;
+		triggerables: Triggerables;
+	}
 	
 	
 	

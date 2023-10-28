@@ -32,7 +32,6 @@ export class GameService
 		const p2Id = this.socketService.getUserId(p2.id);
 
 		return this.GameLobby.get(p1Id + ":" + p2Id);
-
 	}
 
 
@@ -50,7 +49,7 @@ export class GameService
 		if (!gameState)
 			return;
 		setInterval( () => {
-			gameState?.calcNewPosition();
+			gameState?.calcNewState();
 			// console.log("ball from BACKEND: " + gameState?.ball.position.x + ", " + gameState?.ball.position.y);
 			player1.on('sendToBackend', (paddle1x: number) => {
 				// console.log('BACKEND Received message from the client: ' + paddle1x);
