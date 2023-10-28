@@ -66,19 +66,25 @@ export class GameService
 			gameState?.calcNewPosition();
 			player1.emit('GameLoop', 
 			{
+				'score1': gameState?.getGameInstance().getScore1(),
+				'score2': gameState?.getGameInstance().getScore2(),
 				'paddle1': gameState?.paddle1.position,
 				'paddle2': gameState?.paddle2.position,
 				'ball': gameState?.ball.position,
-				'score1': gameState?.getGameInstance().getScore1(),
-				'score2': gameState?.getGameInstance().getScore2()
+				'ball2': gameState?.ball2.position,
+				'fox': gameState?.fox,
+				'triggerables': gameState?.triggers
 			});
 			player2.emit('GameLoop', 
 			{
+				'score1': gameState?.getGameInstance().getScore1(),
+				'score2': gameState?.getGameInstance().getScore2(),
 				'paddle1': gameState?.paddle1.position,
 				'paddle2': gameState?.paddle2.position,
 				'ball': gameState?.ball.position,
-				'score1': gameState?.getGameInstance().getScore1(),
-				'score2': gameState?.getGameInstance().getScore2()
+				'ball2': gameState?.ball2.position,
+				'fox': gameState?.fox,
+				'triggerables': gameState?.triggers
 			});
 		}, 1000 / config.fps);
 	}

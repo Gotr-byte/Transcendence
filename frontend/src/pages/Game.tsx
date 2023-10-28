@@ -77,6 +77,8 @@ const Game: React.FC = () => {
 				ctx.beginPath();
 				ctx.fillRect(gameState.paddle2.x, gameState.paddle2.y, 50, 240);
 				ctx.closePath();
+				ctx.font='48px serif';
+				ctx.fillText(gameState.score1 + " : " + gameState.score2, 600, 360);
 				// Draw the ball in red
 				ctx.beginPath();
 				ctx.arc(gameState.ball.x, gameState.ball.y, 10, 0, 2 * Math.PI); // 10 is the radius of the ball

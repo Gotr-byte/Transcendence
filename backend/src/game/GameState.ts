@@ -22,12 +22,29 @@ export class Coordinate {
 	) {}
 }
 
+export class Fox {
+	public isEvil:		boolean;
+	public isEnraged:	boolean;
+
+	constructor(
+		public position:	Coordinate
+	) {}
+}
+
 export class Paddle {
-	public direction: number = 0;
+	public direction: 	number = 0;
+	public isImmobile:	boolean = false;
 	constructor(
 		public position: Coordinate,
 		public height: number
 	) {}
+}
+
+export class Triggerables
+{
+	public triggeredGnome:		boolean = false;
+	public triggeredHarkinian:	boolean = false;
+	public triggeredPopup:		boolean = false;
 }
 
 export class Ball 
@@ -38,6 +55,7 @@ export class Ball
 
 	constructor(
 		public direction: Coordinate,
+		public isUnlocked: boolean,
 		public readonly start_velocity: number) 
 		{
 			this.velocity = start_velocity;
@@ -46,31 +64,27 @@ export class Ball
 
 export class GameState 
 {
-	public paddle1: Paddle;
-	public paddle2: Paddle;
-	public ball: Ball;
+	public paddle1:		Paddle;
+	public paddle2:		Paddle;
+	public ball:		Ball;
+	public ball2:		Ball;
+	public fox: 		Fox;
+	public triggers:	Triggerables;
 
 	constructor(
 		private instance: GameInstance,
 		round: number)
    {
-		 let paddle_height: number = config.paddle.height;
+		let paddle_height: number = config.paddle.height;
 		this.paddle1 = new Paddle(new Coordinate(config.paddle.buffer, config.game_canvas.height / 2), paddle_height);
 		this.paddle2 = new Paddle(new Coordinate(config.game_canvas.width - config.paddle.buffer - config.paddle.width, config.game_canvas.height / 2), paddle_height);
-		 this.ball = new Ball(this.calcRandomDirection(round), config.ball.velocity);
+		this.ball = new Ball(this.calcRandomDirection(round), true, config.ball.velocity);
+		this.ball = new Ball(this.calcRandomDirection(round), false, config.ball.velocity, );
 	}
 
 	public getGameInstance(): GameInstance
 	{
 		return this.instance;
-	}
-
-	public ballUp(): void {
-		this.ball.position.y += 10;
-	}
-
-	public ballDown(): void {
-		this.ball.position.y -= 10;
 	}
 
 	public calcRandomDirection(round: number) : Coordinate {
@@ -120,6 +134,8 @@ export class GameState
 	}
 
 	public calcPaddlePosition(paddle: Paddle) : void {
+		if (paddle.isImmobile)
+			return;
 		if (paddle.position.y + (paddle.direction * config.paddle.velocity) <= 0) {
 			paddle.position.y = 0;
 		} else if ((paddle.position.y + paddle.height + (paddle.direction * config.paddle.velocity)) >= config.game_canvas.height) {
