@@ -79,7 +79,8 @@ export class GameState
 		this.paddle1 = new Paddle(new Coordinate(config.paddle.buffer, config.game_canvas.height / 2), paddle_height);
 		this.paddle2 = new Paddle(new Coordinate(config.game_canvas.width - config.paddle.buffer - config.paddle.width, config.game_canvas.height / 2), paddle_height);
 		this.ball = new Ball(this.calcRandomDirection(round), true, config.ball.velocity);
-		this.ball = new Ball(this.calcRandomDirection(round), false, config.ball.velocity, );
+		this.ball2 = new Ball(this.calcRandomDirection(round), false, config.ball.velocity, );
+		this.fox = new Fox(this.calcRandomDirection(1));
 	}
 
 	public getGameInstance(): GameInstance

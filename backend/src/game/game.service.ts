@@ -73,7 +73,7 @@ export class GameService
 				'ball': gameState?.ball.position,
 				'ball2': gameState?.ball2.position,
 				'fox': gameState?.fox,
-				'triggerables': gameState?.triggers
+				'triggerables': gameState?.triggers,
 			});
 			player2.emit('GameLoop', 
 			{
@@ -84,7 +84,7 @@ export class GameService
 				'ball': gameState?.ball.position,
 				'ball2': gameState?.ball2.position,
 				'fox': gameState?.fox,
-				'triggerables': gameState?.triggers
+				'triggerables': gameState?.triggers,
 			});
 		}, 1000 / config.fps);
 	}
