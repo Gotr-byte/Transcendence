@@ -84,4 +84,9 @@ export class GameInstance
 		this.finished = true;
 	}
 
+	public isFinished(): boolean
+	{
+		return this.finished;
+	}
+
 }

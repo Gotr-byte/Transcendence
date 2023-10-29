@@ -41,7 +41,7 @@ export class GameService
 		const player1Id = this.socketService.getUserId(player1.id);
 		const player2Id = this.socketService.getUserId(player2.id);
 
-		this.GameLobby.set(player1Id +":"+ player2Id, new GameState(new GameInstance, 1));
+		this.GameLobby.set(player1Id +":"+ player2Id, new GameState(new GameInstance));
 	}
 
 	public startGame(player1: Socket, player2: Socket): void

@@ -71,17 +71,18 @@ export class GameState
 	public ball2:		Ball;
 	public fox: 		Fox;
 	public triggers:	Triggerables;
+	public winner:		number;
 
 	constructor(
-		private instance: GameInstance,
-		round: number)
+		private instance: GameInstance)
    {
 		let paddle_height: number = config.paddle.height;
 		this.paddle1 = new Paddle(new Coordinate(config.paddle.buffer, config.game_canvas.height / 2), paddle_height);
 		this.paddle2 = new Paddle(new Coordinate(config.game_canvas.width - config.paddle.buffer - config.paddle.width, config.game_canvas.height / 2), paddle_height);
-		this.ball = new Ball(this.calcRandomDirection(round), true, config.ball.velocity);
-		this.ball2 = new Ball(this.calcRandomDirection(round), false, config.ball.velocity, );
+		this.ball = new Ball(this.calcRandomDirection(1), true, config.ball.velocity);
+		this.ball2 = new Ball(this.calcRandomDirection(1), false, config.ball.velocity, );
 		this.fox = new Fox(this.calcRandomDirection(1));
+		this.winner = 0;
 	}
 
 	public getGameInstance(): GameInstance
@@ -96,6 +97,17 @@ export class GameState
 	}
 
 	public calcNewPosition() : void {
+		if (this.instance.isFinished())
+			return;
+		if (this.instance.hasScored())
+		{
+			this.resetGameState();
+			this.instance.addRound();
+			this.winner = this.instance.whoWon();
+			if (this.winner)
+				this.instance.finishGame();
+			return;
+		}
 		this.calcBallPosition();
 		this.calcPaddlePosition(this.paddle1);
 		this.calcPaddlePosition(this.paddle2);
@@ -104,12 +116,6 @@ export class GameState
 	public calcBallPosition() : void {
 		let ball_new_x: number = this.ball.position.x + Math.round(this.ball.velocity * this.ball.direction.x);
 		let ball_new_y: number = this.ball.position.y + Math.round(this.ball.velocity * this.ball.direction.y);
-
-		if (this.instance.hasScored())
-		{
-			this.resetGameState();
-			return;
-		}
 
 		if (ball_new_y - this.ball.radius <= 0) {
 			ball_new_y = this.ball.radius;
@@ -174,7 +180,7 @@ export class GameState
 		this.ball.direction = this.calcRandomDirection(this.instance.getRound());
 
 		//make the game faster each round
-		this.ball.velocity = config.ball.velocity + this.instance.getRound();
+		this.ball.velocity = config.ball.velocity + (this.instance.getRound() / 2);
 
 		this.paddle1.position.y = (config.game_canvas.height - this.paddle1.height) / 2;
 		this.paddle2.position.y = (config.game_canvas.height - this.paddle2.height) / 2;
