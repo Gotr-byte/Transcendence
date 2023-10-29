@@ -79,7 +79,7 @@ export class GameState
 		this.paddle1 = new Paddle(new Coordinate(config.paddle.buffer, config.game_canvas.height / 2), paddle_height);
 		this.paddle2 = new Paddle(new Coordinate(config.game_canvas.width - config.paddle.buffer - config.paddle.width, config.game_canvas.height / 2), paddle_height);
 		this.ball = new Ball(this.calcRandomDirection(1), true, config.ball.velocity);
-		this.ball2 = new Ball(this.calcRandomDirection(1), true, config.ball.velocity);
+		this.ball2 = new Ball(this.calcRandomDirection(1), false, config.ball.velocity);
 		this.fox = new Fox(this.calcRandomDirection(1));
 		this.winner = 0;
 	}
@@ -103,6 +103,10 @@ export class GameState
 		if (this.instance.hasScored())
 		{
 			this.resetGameState();
+			if (Math.random() * 100 < 50.0)
+				this.ball2.isUnlocked = true;
+			else
+				this.ball2.isUnlocked = false;
 			this.instance.addRound();
 			this.winner = this.instance.whoWon();
 			if (this.winner)
