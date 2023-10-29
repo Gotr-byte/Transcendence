@@ -79,7 +79,7 @@ export class GameState
 		this.paddle1 = new Paddle(new Coordinate(config.paddle.buffer, config.game_canvas.height / 2), paddle_height);
 		this.paddle2 = new Paddle(new Coordinate(config.game_canvas.width - config.paddle.buffer - config.paddle.width, config.game_canvas.height / 2), paddle_height);
 		this.ball = new Ball(this.calcRandomDirection(1), true, config.ball.velocity);
-		this.ball2 = new Ball(this.calcRandomDirection(1), false, config.ball.velocity, );
+		this.ball2 = new Ball(this.calcRandomDirection(1), true, config.ball.velocity);
 		this.fox = new Fox(this.calcRandomDirection(1));
 		this.winner = 0;
 	}
@@ -109,47 +109,50 @@ export class GameState
 				this.instance.finishGame();
 			return;
 		}
-		this.calcBallPosition();
+		this.ball = this.calcBallPosition(this.ball);
+		if (this.ball2.isUnlocked)
+			this.ball2 = this.calcBallPosition(this.ball2);
 		this.calcPaddlePosition(this.paddle1);
 		this.calcPaddlePosition(this.paddle2);
 	}
 
-	public calcBallPosition() : void {
-		let ball_new_x: number = this.ball.position.x + Math.round(this.ball.velocity * this.ball.direction.x);
-		let ball_new_y: number = this.ball.position.y + Math.round(this.ball.velocity * this.ball.direction.y);
+	public calcBallPosition(ball: Ball) : Ball {
+		let ball_new_x: number = ball.position.x + Math.round(ball.velocity * ball.direction.x);
+		let ball_new_y: number = ball.position.y + Math.round(ball.velocity * ball.direction.y);
 
-		if (ball_new_y - this.ball.radius <= 0) {
-			ball_new_y = this.ball.radius;
-			this.ball.direction.y *= -1;
-		} else if (ball_new_y + this.ball.radius >= config.game_canvas.height) {
-			ball_new_y = config.game_canvas.height - this.ball.radius;
-			this.ball.direction.y *= -1;
+		if (ball_new_y - ball.radius <= 0) {
+			ball_new_y = ball.radius;
+			ball.direction.y *= -1;
+		} else if (ball_new_y + ball.radius >= config.game_canvas.height) {
+			ball_new_y = config.game_canvas.height - ball.radius;
+			ball.direction.y *= -1;
 		}
-		if ((ball_new_x - this.ball.radius) <= (config.paddle.buffer + config.paddle.width)) {
-			if ((((ball_new_y - this.ball.radius) > (this.paddle1.position.y + this.paddle1.height)) ||
-				((ball_new_y + this.ball.radius) < this.paddle1.position.y)) &&
+		if ((ball_new_x - ball.radius) <= (config.paddle.buffer + config.paddle.width)) {
+			if ((((ball_new_y - ball.radius) > (this.paddle1.position.y + this.paddle1.height)) ||
+				((ball_new_y + ball.radius) < this.paddle1.position.y)) &&
 				(!this.instance.hasScored())) {
 					this.instance.scoreP2();
 					this.instance.setScored();
 			} else {
-				ball_new_x = this.paddle1.position.x + config.paddle.width + this.ball.radius;
-				this.ball.direction.y = (ball_new_y - (this.paddle1.position.y + (this.paddle1.height / 2))) / (config.paddle.height / 4);
-				this.ball.direction.x *= -1;
+				ball_new_x = this.paddle1.position.x + config.paddle.width + ball.radius;
+				ball.direction.y = (ball_new_y - (this.paddle1.position.y + (this.paddle1.height / 2))) / (config.paddle.height / 4);
+				ball.direction.x *= -1;
 			}
-		} else if (ball_new_x + this.ball.radius >= (config.game_canvas.width - config.paddle.buffer - config.paddle.width)) {
-			if (((((ball_new_y - this.ball.radius) > (this.paddle2.position.y + this.paddle1.height)) ||
-				(ball_new_y + this.ball.radius) < this.paddle2.position.y)) &&
+		} else if (ball_new_x + ball.radius >= (config.game_canvas.width - config.paddle.buffer - config.paddle.width)) {
+			if (((((ball_new_y - ball.radius) > (this.paddle2.position.y + this.paddle1.height)) ||
+				(ball_new_y + ball.radius) < this.paddle2.position.y)) &&
 				(!this.instance.hasScored())) {
 					this.instance.scoreP1();
 					this.instance.setScored();
 			} else {
-				ball_new_x = this.paddle2.position.x - this.ball.radius;
-				this.ball.direction.y = (ball_new_y - (this.paddle2.position.y + (this.paddle2.height / 2))) / (config.paddle.height / 4);
-				this.ball.direction.x *= -1;
+				ball_new_x = this.paddle2.position.x - ball.radius;
+				ball.direction.y = (ball_new_y - (this.paddle2.position.y + (this.paddle2.height / 2))) / (config.paddle.height / 4);
+				ball.direction.x *= -1;
 			}
 		}
-		this.ball.position.x = ball_new_x;
-		this.ball.position.y = ball_new_y;
+		ball.position.x = ball_new_x;
+		ball.position.y = ball_new_y;
+		return ball;
 	}
 
 	public calcPaddlePosition(paddle: Paddle) : void {
@@ -179,6 +182,9 @@ export class GameState
 		this.ball.position.x = config.game_canvas.width / 2;
 		this.ball.position.y = config.game_canvas.height / 2;
 		this.ball.direction = this.calcRandomDirection(this.instance.getRound());
+			this.ball2.position.x = config.game_canvas.width / 2;
+			this.ball2.position.y = config.game_canvas.height / 2;
+			this.ball2.direction = this.calcRandomDirection(this.instance.getRound());
 
 		//make the game faster each round
 		this.ball.velocity = config.ball.velocity + (this.instance.getRound() / 2);

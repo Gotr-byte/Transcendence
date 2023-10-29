@@ -76,8 +76,8 @@ export class GameService
 				'score2': gameState?.getGameInstance().getScore2(),
 				'paddle1': gameState?.paddle1.position,
 				'paddle2': gameState?.paddle2.position,
-				'ball': gameState?.ball.position,
-				'ball2': gameState?.ball2.position,
+				'ball': gameState?.ball,
+				'ball2': gameState?.ball2,
 				'fox': gameState?.fox,
 				'triggerables': gameState?.triggers,
 			});

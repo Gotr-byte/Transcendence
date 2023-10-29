@@ -36,15 +36,6 @@ const Game: React.FC = () => {
 
 	useEffect(() => {
 
-		//set to same fps as the BE is working with
-		//maybe on game init we can send the config data
-		//as json to the FE, telling fps, canvasSize, paddlesize etc ?
-		const fps = 1000 / 60;
-
-		const interval = setInterval(() => {
-			document.addEventListener('keydown', handleKeyDown);
-		}, fps);
-		
 		const handleKeyDown = (event: KeyboardEvent) =>
 		{
 			if (event.key == 'ArrowUp' || event.key == 'ArrowDown')
@@ -53,10 +44,11 @@ const Game: React.FC = () => {
 				socketIo.emit("keypress", event.key);
 			}
 		};
+
+		document.addEventListener('keydown', handleKeyDown);
 	
 		return () => {
 			document.removeEventListener('keydown', handleKeyDown);
-			clearInterval(interval);
 		};
 	
 	}, [socketIo]);
@@ -83,6 +75,12 @@ const Game: React.FC = () => {
 				ctx.beginPath();
 				ctx.arc(gameState.ball.x, gameState.ball.y, 10, 0, 2 * Math.PI); // 10 is the radius of the ball
 				ctx.fillStyle = 'red';
+				ctx.fill();
+				ctx.closePath();
+				// Draw the  second ball in yellow
+				ctx.beginPath();
+				ctx.arc(gameState.ball2.x, gameState.ball2.y, 10, 0, 2 * Math.PI); // 10 is the radius of the ball
+				ctx.fillStyle = 'yellow';
 				ctx.fill();
 				ctx.closePath();
 			}

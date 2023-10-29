@@ -83,7 +83,7 @@ export class GameGateway implements OnGatewayDisconnect {
     if (!this.timestamp)
       return;
     const diff = Math.floor((Date.now() - this.timestamp) / 1000)
-    if (this.waitingUser === client && diff > GameConfig.matchTimeout)
+    if (this.waitingUser === client && diff > config.mmTimeout)
     {
       this.waitingUser = null;
       client.emit('matchmaking', 'operation timed out');
