@@ -9,7 +9,6 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from 'src/socket/socket.service';
-import { GameConfig } from './game.config';
 import { UserService } from 'src/user/user.service'
 import { User } from '@prisma/client';
 import { GameInstance } from './GameInstance';
@@ -64,6 +63,13 @@ export class GameService
 			});
 
 			gameState?.calcNewPosition();
+			if (gameState?.getGameInstance().isFinished())
+			{
+				player1.emit('GameLoop', "GameOver");
+				player2.emit('GameLoop', "GameOver");
+				return;
+			}
+
 			player1.emit('GameLoop', 
 			{
 				'score1': gameState?.getGameInstance().getScore1(),
@@ -89,4 +95,3 @@ export class GameService
 		}, 1000 / config.fps);
 	}
 }
-	

@@ -9,7 +9,6 @@ import {
 import { Server, Socket } from 'socket.io';
 import { GameService } from './game.service';
 import { SocketService } from 'src/socket/socket.service';
-import { GameConfig } from './game.config';
 import { UserService } from 'src/user/user.service'
 import { User } from '@prisma/client';
 import { GameInstance } from './GameInstance';
@@ -97,7 +96,9 @@ export class GameState
 	}
 
 	public calcNewPosition() : void {
-		if (this.instance.isFinished())
+		if (!this.instance.isStarted() && this.instance.getTimeDiff() > config.startTime)
+			this.instance.startGame();
+		if (this.instance.isFinished() || !this.instance.isStarted())
 			return;
 		if (this.instance.hasScored())
 		{

@@ -79,6 +79,11 @@ export class GameInstance
 		this.started = true;
 	}
 
+	public isStarted(): boolean
+	{
+		return this.started;
+	}
+
 	public finishGame(): void
 	{
 		this.finished = true;

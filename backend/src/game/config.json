@@ -14,5 +14,7 @@
 		"velocity": 5,
 		"radius": 30
 	},
-    "win": 10
+    "win": 10,
+	"startTime": 5000,
+	"mmTimeout": 60000
 }
