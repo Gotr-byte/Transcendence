@@ -46,42 +46,47 @@ export class GameService
 	public startGame(player1: Socket, player2: Socket): void
 	{
 		let gameState = this.getGameState(player1, player2);
-		if (!gameState)
+		if (!gameState || player1 == player2)
 			return;
+		//use setInterval to have fps without custom fps calculation !
 		setInterval( () => {
-			gameState?.calcNewState();
-			// console.log("ball from BACKEND: " + gameState?.ball.position.x + ", " + gameState?.ball.position.y);
-			player1.on('sendToBackend', (paddle1x: number) => {
-				// console.log('BACKEND Received message from the client: ' + paddle1x);
-				// Handle the message as needed on the backend
-			
-				// Send a response back to the client
-				// player1.emit('messageReceived', 'Message received on the server');
-			  });
-			  player2.on('sendToBackend', (paddle1x: number) => {
-				// console.log('BACKEND Received message from the client: ' + paddle1x);
-				// Handle the message as needed on the backend
-			
-				// Send a response back to the client
-				// player1.emit('messageReceived', 'Message received on the server');
-			  });
+			player1.on("keypress", (key) => {
+				if (key == 'ArrowUp')
+					gameState?.setPaddleDirection(1, -1);
+				else
+					gameState?.setPaddleDirection(1, 1);
+			});
+			player2.on("keypress", (key) => {
+				if (key == 'ArrowUp')
+					gameState?.setPaddleDirection(2, -1);
+				else
+					gameState?.setPaddleDirection(2, 1);
+			});
+
+			gameState?.calcNewPosition();
 			player1.emit('GameLoop', 
 			{
+				'score1': gameState?.getGameInstance().getScore1(),
+				'score2': gameState?.getGameInstance().getScore2(),
 				'paddle1': gameState?.paddle1.position,
 				'paddle2': gameState?.paddle2.position,
 				'ball': gameState?.ball.position,
-				'score1': gameState?.getGameInstance().getScore1(),
-				'score2': gameState?.getGameInstance().getScore2()
+				'ball2': gameState?.ball2.position,
+				'fox': gameState?.fox,
+				'triggerables': gameState?.triggers,
 			});
 			player2.emit('GameLoop', 
 			{
+				'score1': gameState?.getGameInstance().getScore1(),
+				'score2': gameState?.getGameInstance().getScore2(),
 				'paddle1': gameState?.paddle1.position,
 				'paddle2': gameState?.paddle2.position,
 				'ball': gameState?.ball.position,
-				'score1': gameState?.getGameInstance().getScore1(),
-				'score2': gameState?.getGameInstance().getScore2()
+				'ball2': gameState?.ball2.position,
+				'fox': gameState?.fox,
+				'triggerables': gameState?.triggers,
 			});
-		}, 1000 / config.fps);
+		}, 1000 / config.fps); // fps calculated here 1000ms / wanted fps
 	}
 }
 	

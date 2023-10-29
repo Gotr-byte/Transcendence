@@ -24,14 +24,30 @@ export class Coordinates
 	) {}
 }
 
-export class Paddle
-{
-	public direction: number = 0;
-	constructor
-	(
-		public position: Coordinates,
+export class Fox {
+	public isUnlocked:	boolean = false;
+	public isEvil:		boolean = false;
+	public isEnraged:	boolean = false;
+
+	constructor(
+		public position:	Coordinate
+	) {}
+}
+
+export class Paddle {
+	public direction: 	number = 0;
+	public isImmobile:	boolean = false;
+	constructor(
+		public position: Coordinate,
 		public height: number
 	) {}
+}
+
+export class Triggerables
+{
+	public triggeredGnome:		boolean = false;
+	public triggeredHarkinian:	boolean = false;
+	public triggeredPopup:		boolean = false;
 }
 
 export class Ball 
@@ -40,32 +56,35 @@ export class Ball
 	public radius: number = config.ball.radius;
 	public velocity: number;
 
-	constructor
-	(
-		public direction: Coordinates,
-		public readonly start_velocity: number
-	)
-	{
-		this.velocity = start_velocity;
-	}
+	constructor(
+		public direction: Coordinate,
+		public isUnlocked: boolean,
+		public readonly start_velocity: number) 
+		{
+			this.velocity = start_velocity;
+		}
 }
 
 export class GameState 
 {
-	public paddle1: Paddle;
-	public paddle2: Paddle;
-	public ball1: Ball;
+	public paddle1:		Paddle;
+	public paddle2:		Paddle;
+	public ball:		Ball;
+	public ball2:		Ball;
+	public fox: 		Fox;
+	public triggers:	Triggerables;
 
 	constructor
 	(
 		private instance: GameInstance,
-		round: number
-	)
-	{
+		round: number)
+   {
 		let paddle_height: number = config.paddle.height;
-		this.paddle1 = new Paddle(new Coordinates(config.paddle.buffer, config.game_canvas.height / 2), paddle_height);
-		this.paddle2 = new Paddle(new Coordinates(config.game_canvas.width - config.paddle.buffer - config.paddle.width, config.game_canvas.height / 2), paddle_height);
-		this.ball1 = new Ball(this.calcRandomDirection(round), config.ball.velocity);
+		this.paddle1 = new Paddle(new Coordinate(config.paddle.buffer, config.game_canvas.height / 2), paddle_height);
+		this.paddle2 = new Paddle(new Coordinate(config.game_canvas.width - config.paddle.buffer - config.paddle.width, config.game_canvas.height / 2), paddle_height);
+		this.ball = new Ball(this.calcRandomDirection(round), true, config.ball.velocity);
+		this.ball2 = new Ball(this.calcRandomDirection(round), false, config.ball.velocity, );
+		this.fox = new Fox(this.calcRandomDirection(1));
 	}
 
 	public getGameInstance(): GameInstance
@@ -145,10 +164,10 @@ export class GameState
 		// this.ball1.position.y = ball_new_y;
 	}
 
-	public calcPaddlePosition(paddle: Paddle): void
-	{
-		if (paddle.position.y + (paddle.direction * config.paddle.velocity) <= 0)
-		{
+	public calcPaddlePosition(paddle: Paddle) : void {
+		if (paddle.isImmobile)
+			return;
+		if (paddle.position.y + (paddle.direction * config.paddle.velocity) <= 0) {
 			paddle.position.y = 0;
 		}
 		else if ((paddle.position.y + paddle.height + (paddle.direction * config.paddle.velocity)) >= config.game_canvas.height)
