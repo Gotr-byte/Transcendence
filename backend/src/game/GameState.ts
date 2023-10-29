@@ -23,8 +23,9 @@ export class Coordinate {
 }
 
 export class Fox {
-	public isEvil:		boolean;
-	public isEnraged:	boolean;
+	public isUnlocked:	boolean = false;
+	public isEvil:		boolean = false;
+	public isEnraged:	boolean = false;
 
 	constructor(
 		public position:	Coordinate
