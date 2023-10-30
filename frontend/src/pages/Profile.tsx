@@ -26,8 +26,8 @@ import KickUser from "../components/ControlPanel/KickUser";
 export default function Profile() {
   return (
     <Tabs mt="40px" p="20px" colorScheme="purple" variant="enclosed" bgImage='url("../../public/1920paper.jpg")'
-    bgSize="100% 100%"  // This will stretch and squish your backgroun
-    bgRepeat="no-repeat" // This will prevent the image from repeating
+    bgSize="100% 100%"
+    bgRepeat="no-repeat"
     >
       <span>Account</span>
       <TabList>
@@ -61,7 +61,7 @@ export default function Profile() {
           <BanUserTemp/> 
           <LiftRestrictions/>
           <KickUser />
-          {/* <TwoFactorAuthSetup/> */}
+          <TwoFactorAuthSetup/>
         </TabPanel>
         <TabPanel>
           <Friends />

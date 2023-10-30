@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from "react";
-import { io, Socket } from "socket.io-client";
 import { Avatar, Flex, Text, Heading, Spacer, HStack } from "@chakra-ui/react";
 import { TwoFAComponent } from "./TwoFAComponent"; // Import the TwoFAComponent
 import { WebsocketContext } from "./Context/WebsocketContexts";
@@ -26,6 +25,8 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
 	const [user, setUser] = useState<User | null>(null);
 	const [showUser, setShowUser] = useState(false);
+	const [show2FAComponent, setShow2FAComponent] = useState<boolean>(false);
+	// const [sessionValid, setSessionValid] = useState<boolean>(false);
 	const socket = useContext(WebsocketContext);
 
 	const setupSocketConnection = (userId: string) => {
@@ -33,28 +34,29 @@ export const Navbar: React.FC<NavbarProps> = ({
 		console.log("Socket Connection Established");
 	};
 
-	const check2FAStatus = async () => {
+	const check2FAActive = async () => {
 		const response = await fetch(
 			`${import.meta.env.VITE_API_URL}/2fa/is2faactive`,
 			{
 				credentials: "include",
 			}
 		);
-	
 		const isActive = await response.json();
-	
-		return isActive;
-	}
 
-	const validateUser = async () => {
-		const is2FaActive = await check2FAStatus(); // Notice the await keyword here
-	
-		if (!is2FaActive) {
-			fetchUserData();
-		} else {
-			// request 2fa Token until 2fa is active
-			// fetchUserData();
-		}
+		return isActive;
+	};
+
+	const check2FAValid = async () => {
+		const response = await fetch(
+			`${import.meta.env.VITE_API_URL}/2fa/is2favalid`,
+			{
+				credentials: "include",
+			}
+		);
+
+		const isValid = await response.json();
+
+		return isValid;
 	};
 
 	const fetchUserData = () => {
@@ -79,27 +81,87 @@ export const Navbar: React.FC<NavbarProps> = ({
 			});
 	};
 
+	async function checkExistingSessions() {
+		try {
+		const response = await fetch(
+			`${import.meta.env.VITE_API_URL}/auth/check-existing-sessions`,
+			{
+				method: "POST",
+				credentials: "include",
+			}
+		);
+
+		if (!response.ok) {
+			throw new Error("Server returned an error");
+		}
+
+		const result = await response.json();
+		return result.removeThisSession;
+		} catch (error) {
+			console.error('Network or fetch error:', error);
+			return false;
+		}
+	}
+
+	const validateUser = async () => {
+		const is2FaActive = await check2FAActive();
+		const is2FaValid = await check2FAValid();
+
+		if (is2FaActive && !is2FaValid) {
+			setShow2FAComponent(true);
+		} else {
+			fetchUserData();
+		}
+	};
+
+	const checkSession = async () => {
+		const response = await fetch(
+			`${import.meta.env.VITE_API_URL}/auth/session-status`,
+			{
+				credentials: "include",
+			}
+		);
+		const message = await response.text();
+		return message === "Session Valid";
+	};
+
+	async function checkForMultipleSessions(): Promise<boolean> {
+		const removeThisSession = await checkExistingSessions()
+
+		if (removeThisSession) {
+			alert('Yo are not able to login, you have already an open active session')
+			return true;
+		}
+		return false;
+	}
+
+	useEffect(() => {
+		const checkLoginStatus = async () => {
+			// This can be a request to your backend to check if the user is logged in
+			// or any other mechanism you use to determine logged-in status.
+			if (!isLoggedIn) {
+				const sessionValid = await checkSession();
+				const multipleSessions = await checkForMultipleSessions();
+				if (sessionValid && !multipleSessions) {
+					await validateUser();
+				}
+			}
+			else fetchUserData();
+		};
+
+		checkLoginStatus();
+	}, []);
+
 	const handleLogout = () => {
 		fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
 			credentials: "include",
 		}).then((response) => response.json());
 		setShowUser(false);
 		setIsLoggedIn(false);
+
 		socket.close();
 		console.log("Socket Connection Closed");
 	};
-
-	// Function to handle successful 2FA verification
-	const handle2FASuccess = () => {
-		console.log("2FA verified successfully.");
-		// Redirect the user to the main page or reload the current page
-		// window.location.href = '/main-page-url';
-	};
-
-	useEffect(() => {
-		console.log(i++);
-		validateUser();
-	}, []);
 
 	let handleLogin = () => {
 		window.location.href = `${import.meta.env.VITE_API_URL}/auth/42/login`;
@@ -140,12 +202,14 @@ export const Navbar: React.FC<NavbarProps> = ({
 					</button>
 				)}
 			</HStack>
-
-			{/* Conditionally render the TwoFAComponent if 2FA is active for the logged-in user */}
-			{/* {isLoggedIn && user?.is2FaActive && !(user?.is2FaValid) &&(
-        <TwoFAComponent onVerify={handle2FASuccess} />
-    )} */}
-			{/* {isLoggedIn && (<TwoFAComponent onVerify={handle2FASuccess}/>)} */}
+			{show2FAComponent && (
+				<TwoFAComponent
+					onVerify={() => {
+						setShow2FAComponent(false);
+						validateUser();
+					}}
+				/>
+			)}
 		</Flex>
 	);
 };
