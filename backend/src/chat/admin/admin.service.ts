@@ -146,8 +146,8 @@ export class AdminService {
 
   private async checkAdminAchievement(username: string): Promise<void> {
     const user = await this.userService.getUserByName(username);
-    if (!user.achievements.includes('ADMINISTER'))
-      await this.userService.addAchievement(user.id, 'ADMINISTER');
+    if (!user.achievements.includes('ADMINISTART'))
+      await this.userService.addAchievement(user.id, 'ADMINISTART');
   }
 
   async liberateUser(
