@@ -15,6 +15,7 @@ import { TasksModule } from './tasks/tasks.module';
 import { GameModule } from './game/game.module';
 import { FriendshipsModule } from './user/user-relations/friendships/friendships.module';
 import { BlockingModule } from './user/user-relations/blocking/blocking.module';
+import { LeaderboardModule } from './leaderboard/leaderboard.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { BlockingModule } from './user/user-relations/blocking/blocking.module';
     TwoFaAuthModule,
     ImagekitModule,
     GameModule,
+    LeaderboardModule,
   ],
   providers: [ImagekitService],
 })
