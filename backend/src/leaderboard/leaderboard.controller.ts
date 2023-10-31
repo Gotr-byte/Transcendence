@@ -1,9 +1,10 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { LeaderboardService } from './leaderboard.service';
 import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @UseGuards(AuthenticatedGuard)
+@ApiTags('Leaderboard')
 @Controller('leaderboard')
 export class LeaderboardController {
   constructor(private readonly leaderboardService: LeaderboardService) {}
@@ -11,6 +12,7 @@ export class LeaderboardController {
   @Get()
   @ApiOperation({ summary: 'Get the leaderboard' })
   async getLeaderboard() {
-    await this.leaderboardService.generateLeaderboard();
+    const leaderboard = await this.leaderboardService.generateLeaderboard();
+    return leaderboard;
   }
 }
