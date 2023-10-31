@@ -79,4 +79,11 @@ export class UserService {
     const user = await this.getUserById(id);
     return user.achievements;
   }
+
+  async addAchievement(userId: number, achievement: string): Promise<void> {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { achievements: { push: achievement } },
+    });
+  }
 }

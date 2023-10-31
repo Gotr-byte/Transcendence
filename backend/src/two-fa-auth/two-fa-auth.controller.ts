@@ -18,11 +18,13 @@ import { User } from '@prisma/client';
 import { Verify2FADto } from './dto/two-fa-auth.dto';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+import { contains } from 'class-validator';
+import { UserService } from 'src/user/user.service';
 
 @ApiTags('Two Factor Authentication')
 @Controller('2fa')
 export class TwoFaAuthController {
-  constructor(private readonly twoFaService: TwoFaAuthService) {}
+  constructor(private readonly twoFaService: TwoFaAuthService, private readonly userService: UserService) {}
 
   @UseGuards(AuthenticatedGuard)
   @Get('qrcode')
@@ -66,6 +68,8 @@ export class TwoFaAuthController {
       await this.twoFaService.verifyToken(user, dto);
       (request.session as any).passport.user.is2FaActive = true;
       (request.session as any).passport.user.is2FaValid = true;
+      if (!user.achievements.includes('PARANOID'))
+        await this.userService.addAchievement(user.id, 'PARANOID');
     }
   }
 

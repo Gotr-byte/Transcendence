@@ -42,7 +42,7 @@ export class ManagementController {
     @Body() createUserDto: CreateChannelDto,
   ): Promise<ShowChannelDto> {
     const channel = await this.managementService.createChannel(
-      user.id,
+      user,
       createUserDto,
     );
     return channel;

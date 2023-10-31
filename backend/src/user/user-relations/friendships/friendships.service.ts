@@ -119,6 +119,9 @@ export class FriendshipsService {
       where,
       data: { isAccepted: true },
     });
+
+    await this.checkFriendshipAchievements(acceptingUser);
+    await this.checkFriendshipAchievements(invitingUser);
   }
 
   // Delete a friend request or an existing friendship
@@ -132,10 +135,38 @@ export class FriendshipsService {
         { receiverId: otherUser.id, senderId: user.id },
       ],
     };
-
+    await this.checkEndFriendshipAchievement(user, where);
     // Delete the identified friend request(s)
     await this.prisma.friendRequest.deleteMany({
       where,
     });
+  }
+
+  private async checkFriendshipAchievements(user: User): Promise<void> {
+    if (!user.achievements.includes('FIRSTCONTACT'))
+      await this.userService.addAchievement(user.id, 'FIRSTCONTACT');
+    else if (!user.achievements.includes('POPULARGUY')) {
+      const friendships = await this.prisma.friendRequest.count({
+        where: {
+          OR: [{ senderId: user.id }, { receiverId: user.id }],
+          isAccepted: true,
+        },
+      });
+      if (9 < friendships)
+        await this.userService.addAchievement(user.id, 'POPULARGUY');
+    }
+  }
+
+  private async checkEndFriendshipAchievement(
+    user: User,
+    where: object,
+  ): Promise<void> {
+    if (!user.achievements.includes('NOFRIENDER')) {
+      const friendRequest = await this.prisma.friendRequest.findMany({
+        where,
+      });
+      if (friendRequest[0].isAccepted)
+        await this.userService.addAchievement(user.id, 'NOFRIENDER');
+    }
   }
 }
