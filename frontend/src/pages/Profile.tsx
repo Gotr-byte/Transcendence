@@ -21,6 +21,8 @@ import TwoFactorAuthSetup from "../components/ControlPanel/TwoFactorAuthSetup";
 import LiftRestrictions from "../components/ControlPanel/LiftRestrictions";
 import UnblockUser from "../components/ControlPanel/UnblockUser";
 import KickUser from "../components/ControlPanel/KickUser";
+import Achievements from "../components/ControlPanel/Achievements ";
+import Leaderboard from "../components/ControlPanel/Leaderboard";
 
 
 export default function Profile() {
@@ -40,6 +42,8 @@ export default function Profile() {
           Recieved Friend Request
         </Tab>
         <Tab _selected={{ color: "white", bg: "purple.400" }}>MatchHistory</Tab>
+        <Tab _selected={{ color: "white", bg: "purple.400" }}>Achievements</Tab>
+        <Tab _selected={{ color: "white", bg: "purple.400" }}>Leaderboard</Tab>
       </TabList>
       <TabPanels style={{ minHeight: "calc(100vh - 400px)", minWidth: "400px"}}>
         <TabPanel>
@@ -74,6 +78,12 @@ export default function Profile() {
         </TabPanel>
         <TabPanel>
           <MatchesComponent/>
+        </TabPanel>
+        <TabPanel>
+          <Achievements/>
+        </TabPanel>
+        <TabPanel>
+          <Leaderboard/>
         </TabPanel>
       </TabPanels>
     </Tabs>
