@@ -133,8 +133,7 @@ export class GameState
 			this.calcFoxPosition();
 			//this.unstickFoxFromPaddle();
 			this.freePaddles();
-
-
+			this.foxBallCollission();
 		}
 
 		this.ball = this.calcBallPosition(this.ball);
@@ -142,6 +141,14 @@ export class GameState
 			this.ball2 = this.calcBallPosition(this.ball2);
 		this.calcPaddlePosition(this.paddle1);
 		this.calcPaddlePosition(this.paddle2);
+	}
+
+	public foxBallCollission(): void
+	{
+		if (!this.fox.isUnlocked || !this.fox.isEnraged)
+			return;
+		let fsize = this.fox.hasSizeOf;
+		//do collission logic here and let them bounce
 	}
 
 	public unlockBall(): void
