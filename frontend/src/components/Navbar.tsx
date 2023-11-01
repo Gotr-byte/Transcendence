@@ -3,8 +3,6 @@ import { Avatar, Flex, Text, Heading, Spacer, HStack } from "@chakra-ui/react";
 import { TwoFAComponent } from "./TwoFAComponent"; // Import the TwoFAComponent
 import { WebsocketContext } from "./Context/WebsocketContexts";
 
-var i: number = 1;
-
 interface User {
 	id: string;
 	username: string;

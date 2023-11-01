@@ -2,10 +2,6 @@ import { useEffect, useState } from "react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 
 interface Competitor {
-	// id: number;
-	// homePlayerId: number;
-	// awayPlayerId: number;
-	// winnerId: number;
 	position: number;
 	username: string;
 	wins: number,
@@ -52,7 +48,7 @@ function Leaderboard() {
 						<Td>{competitor.position}</Td>
 						<Td>{competitor.username}</Td>
 						<Td>{competitor.wins}</Td>
-						<Td>{competitor.loses}</Td>
+						<Td>{competitor.losses}</Td>
 						<Td>{competitor.points}</Td>
 					</Tr>
 				))}
