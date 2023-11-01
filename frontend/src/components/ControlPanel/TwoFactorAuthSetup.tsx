@@ -16,10 +16,10 @@ const TwoFactorAuthSetup: React.FC = () => {
 	useEffect(() => {
 		async function fetchInitialSwitchState() {
 			try {
-				const response = await fetch(`http://localhost:4000/2fa/is2faactive`, {
+				const response = await fetch(`${import.meta.env.VITE_API_URL}/2fa/is2faactive`, {
 					headers: {
 						"Access-Control-Allow-Credentials": "true",
-						"Access-Control-Allow-Origin": "http://localhost:5173",
+						"Access-Control-Allow-Origin": `${import.meta.env.VITE_FRONTEND_URL}`,
 					},
 					credentials: "include",
 				});
@@ -36,12 +36,12 @@ const TwoFactorAuthSetup: React.FC = () => {
 
 	async function activate2Fa() {
 		try {
-			const response = await fetch(`http://localhost:4000/2fa/activate`, {
+			const response = await fetch(`${import.meta.env.VITE_API_URL}/2fa/activate`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 					"Access-Control-Allow-Credentials": "true",
-					"Access-Control-Allow-Origin": "http://localhost:5173",
+					"Access-Control-Allow-Origin": `${import.meta.env.VITE_FRONTEND_URL}`,
 				},
 				credentials: "include",
 				body: JSON.stringify({ token }),
@@ -67,10 +67,10 @@ const TwoFactorAuthSetup: React.FC = () => {
 		}
 		async function fetchQrCode() {
 			try {
-				const response = await fetch(`http://localhost:4000/2fa/qrcode`, {
+				const response = await fetch(`${import.meta.env.VITE_API_URL}/2fa/qrcode`, {
 					headers: {
 						"Access-Control-Allow-Credentials": "true",
-						"Access-Control-Allow-Origin": "http://localhost:5173",
+						"Access-Control-Allow-Origin": `${import.meta.env.VITE_FRONTEND_URL}`,
 					},
 					credentials: "include",
 				});
@@ -98,12 +98,12 @@ const TwoFactorAuthSetup: React.FC = () => {
 
 	async function handleFetchToggle2FAuthOff() {
 		try {
-			const response = await fetch(`http://localhost:4000/2fa/deactivate`, {
+			const response = await fetch(`${import.meta.env.VITE_API_URL}/2fa/deactivate`, {
 				method: "PATCH",
 				credentials: "include",
 				headers: {
 					"Access-Control-Allow-Credentials": "true",
-					"Access-Control-Allow-Origin": "http://localhost:5173",
+					"Access-Control-Allow-Origin": `${import.meta.env.VITE_FRONTEND_URL}`,
 				},
 			});
 			if (response.ok) {

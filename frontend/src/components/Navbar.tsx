@@ -216,7 +216,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 				<TwoFAComponent
 					onVerify={() => {
 						setShow2FAComponent(false);
-						validateUser();
+						useEffect();
 					}}
 				/>
 			)}
