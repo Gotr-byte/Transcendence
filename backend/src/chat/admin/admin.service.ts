@@ -139,7 +139,15 @@ export class AdminService {
       data: { ...updateRole },
     });
 
+    if (updateRole.role === ChannelMemberRoles.ADMIN)
+      await this.checkAdminAchievement(username);
     return membership;
+  }
+
+  private async checkAdminAchievement(username: string): Promise<void> {
+    const user = await this.userService.getUserByName(username);
+    if (!user.achievements.includes('ADMINISTART'))
+      await this.userService.addAchievement(user.id, 'ADMINISTART');
   }
 
   async liberateUser(

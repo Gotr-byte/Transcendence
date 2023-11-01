@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import AddFriendButton from "./AddFriendButton";
 import UserProfile from "./UserProfile";
 import SendDirectMessage from "./SendDirectMessage";
-import JoinGameButton from "./JoinGameButton";
 import MatchThisUser from "./MatchThisUser";
 
 

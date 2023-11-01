@@ -6,10 +6,10 @@ export const sessionMiddleware = session({
   secret: process.env.SESSIONS_SECRET + '1896',
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 4320000 },
+  cookie: { maxAge: 4320000, httpOnly: true },
   store: new PrismaSessionStore(new PrismaClient(), {
     checkPeriod: 2 * 60 * 1000,
-    dbRecordIdIsSessionId: true,
+    dbRecordIdIsSessionId: false,
     dbRecordIdFunction: undefined,
   }),
 });

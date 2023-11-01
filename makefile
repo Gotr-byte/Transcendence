@@ -24,8 +24,8 @@ down:
 	@echo $(YELLOW) Containers Removed $(EOC);
 
 clean: down
-	@docker compose -f ./docker-compose.yml down --rmi all
-	@docker volume prune
+	@yes | docker compose -f ./docker-compose.yml down --rmi all
+	@yes | docker volume prune
 	@echo $(RED) Containers, Images and Volumes Removed $(EOC);
 
 fclean: down

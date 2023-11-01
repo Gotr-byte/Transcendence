@@ -3,22 +3,24 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Channel, ChannelMemberRoles, ChannelTypes } from '@prisma/client';
+import { Channel, ChannelMemberRoles, ChannelTypes, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatSharedService } from '../shared/chat-shared.service';
 import { CreateChannelDto, UpdateChannelDto } from './dto';
 import { ChannelDto, ShowChannelDto } from '../shared/dto';
 import * as argon from 'argon2';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class ManagementService {
   constructor(
     private prisma: PrismaService,
     private readonly chatSharedService: ChatSharedService,
+    private readonly userService: UserService,
   ) {}
 
   async createChannel(
-    creatorId: number,
+    creator: User,
     createChannelDto: CreateChannelDto,
   ): Promise<ShowChannelDto> {
     if (createChannelDto.channelType === ChannelTypes.PROTECTED) {
@@ -29,11 +31,12 @@ export class ManagementService {
     }
 
     const channel = await this.prisma.channel.create({
-      data: { creatorId, ...createChannelDto },
+      data: { creatorId: creator.id, ...createChannelDto },
     });
 
-    await this.addAdminUser(creatorId, channel.id);
-
+    await this.addAdminUser(creator.id, channel.id);
+    if (!creator.achievements.includes('CHANNELMAKER'))
+      await this.userService.addAchievement(creator.id, 'CHANNELMAKER');
     return ShowChannelDto.from(channel, 1);
   }
 

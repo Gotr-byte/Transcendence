@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { Session, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserDetails } from 'src/user/types';
 import { UserService } from 'src/user/user.service';
@@ -32,5 +32,21 @@ export class AuthService {
     await this.prisma.session.delete({
       where: { sid: sessionId },
     });
+  }
+
+  async getUserSessions(userId: number): Promise<Session[]> {
+    const searchString = `\"id\":${userId}`;
+    const sessions = await this.prisma.session.findMany({
+        where: {
+            data: {
+                contains: searchString
+            }
+        },
+        orderBy: {
+          expiresAt: 'asc'
+      }
+    });
+
+    return sessions;
   }
 }

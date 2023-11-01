@@ -66,6 +66,7 @@ export class BlockingService {
     const newBlock = await this.prisma.blocked.create({
       data: { blockingUserId: blockingUser.id, blockedUserId: blockedUser.id },
     });
+    await this.checkForBlockAchievements(blockingUser);
     return newBlock;
   }
 
@@ -97,5 +98,17 @@ export class BlockingService {
       },
     });
     return isBlocked ? true : false;
+  }
+
+  private async checkForBlockAchievements(user: User): Promise<void> {
+    if (!user.achievements.includes('BLOCKPRENTICE')) {
+      await this.userService.addAchievement(user.id, 'BLOCKPRENTICE');
+    } else if (!user.achievements.includes('BLOCKPRO')) {
+      const blockNo = await this.prisma.blocked.count({
+        where: { blockingUserId: user.id },
+      });
+      if (4 < blockNo)
+        await this.userService.addAchievement(user.id, 'BLOCKPRO');
+    }
   }
 }

@@ -93,5 +93,6 @@ export class GameService
 				'triggerables': gameState?.triggers,
 			});
 		}, 1000 / config.fps);
+
 	}
 }

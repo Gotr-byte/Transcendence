@@ -163,13 +163,14 @@ export class AdminController {
     @AuthUser() admin: User,
     @Body() updateRole: UpdateRoleDto,
   ): Promise<ChannelMember> {
-    const newRestriction = await this.adminService.updateRole(
+    const membership = await this.adminService.updateRole(
       +channelId,
       username,
       admin.id,
       updateRole,
     );
-    return newRestriction;
+    
+    return membership;
   }
 
   @Delete('id/:channelId/:username/liberate')

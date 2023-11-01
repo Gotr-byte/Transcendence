@@ -1,4 +1,14 @@
-import { Controller, Get, Inject, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Inject,
+  Post,
+  Req,
+  Res,
+  Session,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard42, SessionGuard } from './guards/http-guards';
 import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
@@ -27,33 +37,72 @@ export class AuthController {
   @ApiOperation({ summary: 'Handle successful 42 authentication callback' })
   @UseGuards(AuthGuard42)
   async handleRedirect(@Res() response: Response): Promise<void> {
-    response.redirect('/auth/status');
+    response.redirect(process.env.FRONTEND_URL || 'https://localhost:5173');
   }
 
   @Get('status')
   @ApiOperation({ summary: 'Check user authentication status' })
-  @UseGuards(SessionGuard)
-  async status(
-    @AuthUser() user: User,
-    @Res() response: Response,
-  ): Promise<void | ShowLoggedUserDto> {
-    if (process.env.FRONTEND_URL) response.redirect(process.env.FRONTEND_URL);
-    return ShowLoggedUserDto.from(user);
+  async status(@Session() session: Record<string, any>): Promise<string> {
+    const user = session?.passport?.user;
+    console.log(user);
+    if (!user) return 'Session not authenticated';
+    if (user.is2FaActive) {
+      if (user.is2FaValid) {
+        return 'User Authenticated';
+      }
+      return '2Fa not validated';
+    }
+    return 'User Authenticated';
   }
+
+  @Get('session-status')
+  @ApiOperation({
+    summary: 'Check if session exists, so if the user is authenticated via 42',
+  })
+  async sessionStatus(
+    @Session() session: Record<string, any>,
+  ): Promise<string> {
+    const user = session?.passport?.user;
+    if (!user) return 'Session Invalid';
+    return 'Session Valid';
+  }
+
+  @Post('check-existing-sessions')
+  @ApiOperation({
+    summary:
+      'Checks if a session for that user exist, if a session from another device already exists i will be checked if that user is online on that session, if yes returns false, if no session exists or user is offline on that other session returns false and removes the old session',
+  })
+  @UseGuards(SessionGuard)
+  async checkExistingSessions(@AuthUser() user: User, @Res() response: Response): Promise<void> {
+    const sessions = await this.authService.getUserSessions(user.id);
+
+    if (sessions.length < 2) {
+      response.send({ removeThisSession: false });
+      return;
+  }
+  if (!user.isOnline) {
+      await this.authService.deleteSession(sessions[0].sid);
+      response.send({ removeThisSession: false });
+      return;
+  }
+  await this.authService.deleteSession(sessions[1].sid);
+  response.cookie('connect.sid', '', { expires: new Date(0), httpOnly: true });
+  response.send({ removeThisSession: true });
+  return;
+}
 
   @Get('logout')
   @ApiOperation({ summary: 'Handle user logout' })
   @UseGuards(SessionGuard)
   async logout(
     @Req() request: Request,
-    @Res() response: Response,
     @AuthUser() user: User,
-  ): Promise<void> {
+  ): Promise<boolean> {
     await this.userService.updateUser(user, {
       isOnline: false,
       is2FaValid: false,
     });
     await this.authService.deleteSession(request.sessionID);
-    response.redirect('/auth/status');
+    return true;
   }
 }

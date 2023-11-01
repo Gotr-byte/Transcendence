@@ -16,8 +16,8 @@ async function bootstrap() {
     }),
   );
   app.enableCors({
-    origin: process.env.FRONTEND_URL,
-    methods: 'GET, POST, PATCH, DELETE',
+    origin: [process.env.FRONTEND_URL!, process.env.FRONTEND_URL_NO_PORT!],
+    methods: 'GET, POST, PATCH, DELETE, OPTIONS',
     credentials: true,
   });
   app.use(sessionMiddleware);
