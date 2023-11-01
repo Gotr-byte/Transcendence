@@ -16,5 +16,16 @@
 	},
     "win": 10,
 	"startTime": 5000,
-	"mmTimeout": 60000
+	"mmTimeout": 60000,
+	"unlockSecondBallAt": 40,
+	"fox": {
+		"minSize":	30,
+		"maxSize":	60,
+		"timeStick2Paddle":	3,
+		"minVelocity":	3,
+		"maxVelocity":	10,
+		"maxTimeGoodEvil":	15,
+		"getEnragedIn":	10,
+		"showUpWhen":	30
+	}
 }
