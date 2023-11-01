@@ -118,6 +118,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 			{
 				credentials: "include",
 			}
+			
 		);
 
 		if (!response.ok) {
