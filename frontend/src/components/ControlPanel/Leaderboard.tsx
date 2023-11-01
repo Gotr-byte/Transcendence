@@ -1,19 +1,24 @@
 import { useEffect, useState } from "react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 
-interface Match {
-	id: number;
-	homePlayerId: number;
-	awayPlayerId: number;
-	winnerId: number;
+interface Competitor {
+	// id: number;
+	// homePlayerId: number;
+	// awayPlayerId: number;
+	// winnerId: number;
+	position: number;
+	username: string;
+	wins: number,
+	losses: number,
+	points: number
 }
 
 function Leaderboard() {
-	const [matches, setMatches] = useState<Match[]>([]);
+	const [competitors, setCompetitors] = useState<Competitor[]>([]);
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		fetch(`${import.meta.env.VITE_API_URL}/matches/all/user`, {
+		fetch(`${import.meta.env.VITE_API_URL}/leaderboard`, {
 			credentials: "include",
 		})
 			.then((response) => {
@@ -22,7 +27,7 @@ function Leaderboard() {
 				}
 				return response.json();
 			})
-			.then((data: Match[]) => setMatches(data))
+			.then((data: Competitor[]) => setCompetitors(data))
 			.catch((error: Error) => setError(error.message));
 	}, []);
 
@@ -34,19 +39,21 @@ function Leaderboard() {
 		<Table variant="simple">
 			<Thead>
 				<Tr>
-					<Th>ID</Th>
-					<Th>Home Player ID</Th>
-					<Th>Away Player ID</Th>
-					<Th>Winner ID</Th>
+					<Th>Position</Th>
+					<Th>Username</Th>
+					<Th>Wins</Th>
+					<Th>Loses</Th>
+					<Th>Points</Th>
 				</Tr>
 			</Thead>
 			<Tbody>
-				{matches.map((match) => (
-					<Tr key={match.id}>
-						<Td>{match.id}</Td>
-						<Td>{match.homePlayerId}</Td>
-						<Td>{match.awayPlayerId}</Td>
-						<Td>{match.winnerId}</Td>
+				{competitors.map((competitor) => (
+					<Tr key={competitor.position}>
+						<Td>{competitor.position}</Td>
+						<Td>{competitor.username}</Td>
+						<Td>{competitor.wins}</Td>
+						<Td>{competitor.loses}</Td>
+						<Td>{competitor.points}</Td>
 					</Tr>
 				))}
 			</Tbody>
