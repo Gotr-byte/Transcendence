@@ -83,22 +83,22 @@ export const Navbar: React.FC<NavbarProps> = ({
 
 	async function checkExistingSessions() {
 		try {
-		const response = await fetch(
-			`${import.meta.env.VITE_API_URL}/auth/check-existing-sessions`,
-			{
-				method: "POST",
-				credentials: "include",
+			const response = await fetch(
+				`${import.meta.env.VITE_API_URL}/auth/check-existing-sessions`,
+				{
+					method: "POST",
+					credentials: "include",
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error("Server returned an error");
 			}
-		);
 
-		if (!response.ok) {
-			throw new Error("Server returned an error");
-		}
-
-		const result = await response.json();
-		return result.removeThisSession;
+			const result = await response.json();
+			return result.removeThisSession;
 		} catch (error) {
-			console.error('Network or fetch error:', error);
+			console.error("Network or fetch error:", error);
 			return false;
 		}
 	}
@@ -121,15 +121,24 @@ export const Navbar: React.FC<NavbarProps> = ({
 				credentials: "include",
 			}
 		);
+
+		if (!response.ok) {
+			if (response.status === 401) {
+				return false;
+			}
+		}
+
 		const message = await response.text();
 		return message === "Session Valid";
 	};
 
 	async function checkForMultipleSessions(): Promise<boolean> {
-		const removeThisSession = await checkExistingSessions()
+		const removeThisSession = await checkExistingSessions();
 
 		if (removeThisSession) {
-			alert('Yo are not able to login, you have already an open active session')
+			alert(
+				"Yo are not able to login, you have already an open active session"
+			);
 			return true;
 		}
 		return false;
@@ -141,12 +150,13 @@ export const Navbar: React.FC<NavbarProps> = ({
 			// or any other mechanism you use to determine logged-in status.
 			if (!isLoggedIn) {
 				const sessionValid = await checkSession();
-				const multipleSessions = await checkForMultipleSessions();
-				if (sessionValid && !multipleSessions) {
-					await validateUser();
+				if (sessionValid) {
+					const multipleSessions = await checkForMultipleSessions();
+					if (!multipleSessions) {
+						await validateUser();
+					}
 				}
-			}
-			else fetchUserData();
+			} else fetchUserData();
 		};
 
 		checkLoginStatus();

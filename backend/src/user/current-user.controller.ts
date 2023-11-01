@@ -62,8 +62,10 @@ export class CurrentUserController {
   ): Promise<ShowLoggedUserDto> {
     const updatedUser = await this.userService.updateUser(user, dto);
     (request.session as any).passport.user.username = dto.username;
-    if (dto.username && (dto.username !== user.username) && !user.achievements.includes('DRALIAS'))
+    if (dto.username && (dto.username !== user.username) && !user.achievements.includes('DRALIAS')) {
       await this.userService.addAchievement(user.id, 'DRALIAS');
+      (request.session as any).passport.user.achievements.include('DRALIAS');
+    }
     return updatedUser;
   }
 
@@ -90,8 +92,10 @@ export class CurrentUserController {
   ): Promise<ShowLoggedUserDto> {
     const updatedUser = await this.imagekit.uploadAvatar(image, user.id);
     (request.session as any).passport.user.avatar = updatedUser.avatar;
-    if (!user.achievements.includes('AVATARISH'))
+    if (!user.achievements.includes('AVATARISH')) {
       await this.userService.addAchievement(user.id, 'AVATARISH');
+      // (request.session as any).passport.user.achievements.include('AVATARISH');
+    }
     return ShowLoggedUserDto.from(updatedUser);
   }
 }
