@@ -17,10 +17,6 @@ const TwoFactorAuthSetup: React.FC = () => {
 		async function fetchInitialSwitchState() {
 			try {
 				const response = await fetch(`${import.meta.env.VITE_API_URL}/2fa/is2faactive`, {
-					headers: {
-						"Access-Control-Allow-Credentials": "true",
-						"Access-Control-Allow-Origin": `${import.meta.env.VITE_FRONTEND_URL}`,
-					},
 					credentials: "include",
 				});
 				const switchState = await response.json(); // Assuming response is in JSON format
@@ -40,8 +36,6 @@ const TwoFactorAuthSetup: React.FC = () => {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
-					"Access-Control-Allow-Credentials": "true",
-					"Access-Control-Allow-Origin": `${import.meta.env.VITE_FRONTEND_URL}`,
 				},
 				credentials: "include",
 				body: JSON.stringify({ token }),
@@ -68,10 +62,6 @@ const TwoFactorAuthSetup: React.FC = () => {
 		async function fetchQrCode() {
 			try {
 				const response = await fetch(`${import.meta.env.VITE_API_URL}/2fa/qrcode`, {
-					headers: {
-						"Access-Control-Allow-Credentials": "true",
-						"Access-Control-Allow-Origin": `${import.meta.env.VITE_FRONTEND_URL}`,
-					},
 					credentials: "include",
 				});
 				const text = await response.text();
@@ -101,10 +91,6 @@ const TwoFactorAuthSetup: React.FC = () => {
 			const response = await fetch(`${import.meta.env.VITE_API_URL}/2fa/deactivate`, {
 				method: "PATCH",
 				credentials: "include",
-				headers: {
-					"Access-Control-Allow-Credentials": "true",
-					"Access-Control-Allow-Origin": `${import.meta.env.VITE_FRONTEND_URL}`,
-				},
 			});
 			if (response.ok) {
 				alert("2Fauth deactivated successfully");
