@@ -39,6 +39,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 			`${import.meta.env.VITE_API_URL}/2fa/is2faactive`,
 			{
 				credentials: "include",
+				headers: {
+					"Access-Control-Allow-Credentials": "true",
+					"Access-Control-Allow-Origin": `${import.meta.env.VITE_FRONTEND_URL}`,
+				},
 			}
 		);
 		const isActive = await response.json();
@@ -51,6 +55,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 			`${import.meta.env.VITE_API_URL}/2fa/is2favalid`,
 			{
 				credentials: "include",
+				headers: {
+					"Access-Control-Allow-Credentials": "true",
+					"Access-Control-Allow-Origin": `${import.meta.env.VITE_FRONTEND_URL}`,
+				},
 			}
 		);
 
@@ -62,6 +70,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 	const fetchUserData = () => {
 		fetch(`${import.meta.env.VITE_API_URL}/profile`, {
 			credentials: "include",
+			headers: {
+				"Access-Control-Allow-Credentials": "true",
+				"Access-Control-Allow-Origin": `${import.meta.env.VITE_FRONTEND_URL}`,
+			},
 		})
 			.then((response) => {
 				if (!response.ok) {
@@ -88,6 +100,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 				{
 					method: "POST",
 					credentials: "include",
+					headers: {
+						"Access-Control-Allow-Credentials": "true",
+						"Access-Control-Allow-Origin": `${import.meta.env.VITE_FRONTEND_URL}`,
+					},
 				}
 			);
 
@@ -119,7 +135,12 @@ export const Navbar: React.FC<NavbarProps> = ({
 			`${import.meta.env.VITE_API_URL}/auth/session-status`,
 			{
 				credentials: "include",
+				headers: {
+					"Access-Control-Allow-Credentials": "true",
+					"Access-Control-Allow-Origin": `${import.meta.env.VITE_FRONTEND_URL}`,
+				},
 			}
+			
 		);
 
 		if (!response.ok) {
@@ -165,6 +186,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 	const handleLogout = () => {
 		fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
 			credentials: "include",
+			headers: {
+				"Access-Control-Allow-Credentials": "true",
+				"Access-Control-Allow-Origin": `${import.meta.env.VITE_FRONTEND_URL}`,
+			},
 		}).then((response) => response.json());
 		setShowUser(false);
 		setIsLoggedIn(false);
@@ -216,7 +241,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 				<TwoFAComponent
 					onVerify={() => {
 						setShow2FAComponent(false);
-						useEffect();
+						validateUser();
 					}}
 				/>
 			)}
