@@ -1,3 +1,9 @@
+In case of error when running: 
+
+export DOCKER_BUILDKIT=0
+
+The error occured randomly after a pause.
+
 Vite is a front-end tool that facilitates a faster and more efficient development experience for modern JavaScript frameworks such as React, Vue, and Svelte. It was created by Evan You, the creator of the Vue.js framework. Here's why Vite is useful and some of the features it offers based on information available until my last update in September 2021:
 
 1. Faster Development
