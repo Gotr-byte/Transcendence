@@ -8,6 +8,7 @@ export class GameInstance
 	private timestamp:		number = 0;
 	private started:		boolean = false;
 	private finished:		boolean = false;
+	private interrupted:	boolean = false;
 	private scored:			boolean = false;
 	private player1Score:	number = 0;
 	private player2Score:	number = 0;
@@ -95,6 +96,16 @@ export class GameInstance
 	public isFinished(): boolean
 	{
 		return this.finished;
+	}
+
+	public isInterrupted(): boolean
+	{
+		return this.interrupted;
+	}
+
+	public setInterrupted(): void
+	{
+		this.interrupted = true;
 	}
 
 	public getResult(): MatchResult

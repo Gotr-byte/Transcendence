@@ -14,7 +14,7 @@
 		"velocity": 5,
 		"radius": 30
 	},
-    "win": 300,
+    "win": 3,
 	"startTime": 5000,
 	"mmTimeout": 60000,
 	"unlockSecondBallAt": 40,
