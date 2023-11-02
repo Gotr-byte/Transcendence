@@ -67,6 +67,12 @@ export const Sidebar = () => {
                         Game
                     </NavLink>
                 </ListItem>
+                <ListItem>
+                    <NavLink to="/gamePlus">
+                        <ListIcon as={TriangleUpIcon} color="palegreen" style={{ fontFamily: "'IM Fell English SC', serif" }} />
+                        Game+
+                    </NavLink>
+                </ListItem>
             </List>
         </Box>
     )
