@@ -132,7 +132,7 @@ export class GameState
 			this.checkFoxMood();
 			this.isEnragedFox();
 			this.calcFoxPosition();
-			//this.unstickFoxFromPaddle();
+			this.unstickFoxFromPaddle();
 			this.freePaddles();
 			//this.foxBallCollission();
 		}
@@ -196,7 +196,7 @@ export class GameState
 
 	public isEnragedFox(): void
 	{
-		if (!this.fox.isUnlocked)
+		if (!this.fox.isUnlocked || !this.fox.isEnraged)
 			return;
 		let rndTime = Math.random() * config.fox.getEnragedIn;
 		if (Date.now() < this.fox.paddleTime + config.fox.getEnragedIn + rndTime)
@@ -238,9 +238,9 @@ export class GameState
 
 	public freePaddles(): void
 	{
-		if (!this.fox.isUnlocked || this.fox.velocity > 0)
+		if (!this.fox.isUnlocked || this.fox.velocity == 0)
 			return;
-		if (this.fox.velocity == 0 && this.fox.paddleTime < Date.now())
+		if (this.fox.paddleTime < Date.now())
 		{
 			this.fox.paddleTime = Date.now();
 			this.paddle1.isImmobile = false;
@@ -382,14 +382,12 @@ export class GameState
 		this.ball.position.y = config.game_canvas.height / 2;
 		this.ball.direction = this.calcRandomDirection(this.instance.getRound());
 
-		/*
 		this.fox.hasSizeOf = config.fox.minSize;
 		this.fox.isEnraged = false;
 		this.fox.isEvil = false;
 		this.fox.velocity = config.fox.minVelocity;
-		*/
-		this.fox.position.x = config.game_canvas.width / 2;
-		this.fox.position.y = config.game_canvas.width / 2;
+		//this.fox.position.x = config.game_canvas.width / 2;
+		//this.fox.position.y = config.game_canvas.width / 2;
 		//this.fox.direction = this.calcRandomDirection(this.instance.getRound());
 
 		this.ball2.position.x = config.game_canvas.width / 2;

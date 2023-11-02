@@ -90,7 +90,7 @@ const Game: React.FC = () => {
 				{
 					ctx.beginPath();
 					ctx.arc(gameState.fox.pos.x, gameState.fox.pos.y, gameState.fox.hasSizeOf, 0, 2 * Math.PI); // 10 is the radius of the ball
-					ctx.fillStyle = 'green';
+					ctx.fillStyle = 'orange';
 					ctx.fill();
 					ctx.closePath();
 				}
