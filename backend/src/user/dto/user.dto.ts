@@ -115,3 +115,11 @@ export class UserMatchStatsDto {
   matchesWon: number;
   totalPoints: number;
 }
+
+export class MatchHistoryDto {
+  opponentUsername: string;
+  homeScore: number;
+  awayScore: number;
+  result: 'Win' | 'Loss';
+  date: Date;
+}

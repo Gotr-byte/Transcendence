@@ -4,6 +4,7 @@ import { User } from '@prisma/client';
 import {
   ChangeUserDto,
   ChangeUserPropsDto,
+  MatchHistoryDto,
   ShowLoggedUserDto,
   ShowUsersDto,
   UserMatchStatsDto,
@@ -121,5 +122,40 @@ export class UserService {
       matchesWon,
       totalPoints
     };
+  }
+
+  async getLastFiveMatches(username: string): Promise<MatchHistoryDto[]> {
+    const user = await this.getUserByName(username);
+    // Fetch the last 5 matches where the user was either the home or away player.
+    const matches = await this.prisma.match.findMany({
+      where: {
+        OR: [
+          { homePlayerId: user.id },
+          { awayPlayerId: user.id },
+        ],
+      },
+      take: 5,
+      orderBy: {
+        ended: 'desc',
+      },
+      include: {
+        homePlayer: true,
+        awayPlayer: true,
+      },
+    });
+
+    return matches.map(match => {
+      const isHomePlayer = match.homePlayerId === user.id;
+      const opponent = isHomePlayer ? match.awayPlayer : match.homePlayer;
+      const result = match.winnerId === user.id ? 'Win' : 'Loss';
+      
+      return {
+        opponentUsername: opponent.username,
+        homeScore: match.homeScore,
+        awayScore: match.awayScore,
+        result,
+        date: match.ended,
+      };
+    });
   }
 }
