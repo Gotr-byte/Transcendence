@@ -6,14 +6,17 @@ export const MatchThisUser: React.FC<SendDirectMessageProps> = ({
   username,
 }) => {
   const socket = useContext(WebsocketContext);
-  const onSubmit = () => {
-    socket.emit("matchThisUser", username);
-  }
+
+    const redirectToGame = () => {
+        window.location.href = 'http://localhost:5173/game';
+        socket.emit("matchThisUser", username);
+    };
+
     return (
-        <Button variant="solid" size="xl" onClick={onSubmit}>
-         G
-        </Button>
-      );  
-};
+      <Button variant="solid" size="xl" onClick={redirectToGame}>
+      G
+     </Button>
+    );
+}
 
 export default MatchThisUser;
