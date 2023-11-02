@@ -129,11 +129,11 @@ export class GameState
 		this.unlockFox();
 		if (this.fox.isUnlocked)
 		{
-			//this.checkFoxMood();
-			//this.isEnragedFox();
+			this.checkFoxMood();
+			this.isEnragedFox();
 			this.calcFoxPosition();
 			//this.unstickFoxFromPaddle();
-			//this.freePaddles();
+			this.freePaddles();
 			//this.foxBallCollission();
 		}
 		this.ball = this.calcBallPosition(this.ball);
