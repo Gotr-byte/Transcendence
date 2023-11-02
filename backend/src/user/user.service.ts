@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from '@prisma/client';
 import {
@@ -10,10 +10,14 @@ import {
   UserMatchStatsDto,
 } from './dto';
 import { UserDetails } from './types';
+import { LeaderboardService } from 'src/leaderboard/leaderboard.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly leaderboardService: LeaderboardService,
+  ) {}
 
   // Get a list of all users
   async getAll(): Promise<ShowUsersDto> {
@@ -90,38 +94,19 @@ export class UserService {
   }
 
   async getUserMatchStats(username: string): Promise<UserMatchStatsDto> {
-    const user = await this.getUserByName(username);
-    // 1. Matches played
-    const matchesPlayed = await this.prisma.match.count({
-      where: {
-        OR: [{ homePlayerId: user.id }, { awayPlayerId: user.id }]
-      }
-    });
-  
-    // 2. Matches won
-    const matchesWon = await this.prisma.match.count({
-      where: { winnerId: user.id }
-    });
-  
-    // 3. Total points (based on your earlier points system)
-    const homeMatches = await this.prisma.match.findMany({
-      where: { homePlayerId: user.id }
-    });
-    const awayMatches = await this.prisma.match.findMany({
-      where: { awayPlayerId: user.id }
-    });
-  
-    const pointsFromGoals = homeMatches.reduce((acc, match) => acc + match.homeScore, 0) * 5 +
-                            awayMatches.reduce((acc, match) => acc + match.awayScore, 0) * 5;
-    
-    const pointsFromWins = matchesWon * 100;
-    const totalPoints = pointsFromGoals + pointsFromWins;
-  
-    return {
-      matchesPlayed,
-      matchesWon,
-      totalPoints
+    const leaderboard = await this.leaderboardService.generateLeaderboard();
+    const leaderboardEntry = leaderboard.find(
+      (entry) => entry.username === username,
+    );
+    if (!leaderboardEntry)
+      throw new InternalServerErrorException('Username not on leaderboard');
+    const userStats = {
+      position: leaderboardEntry.position,
+      matchesPlayed: leaderboardEntry.losses + leaderboardEntry.wins,
+      matchesWon: leaderboardEntry.wins,
+      totalPoints: leaderboardEntry.points,
     };
+    return userStats;
   }
 
   async getLastFiveMatches(username: string): Promise<MatchHistoryDto[]> {
@@ -129,10 +114,7 @@ export class UserService {
     // Fetch the last 5 matches where the user was either the home or away player.
     const matches = await this.prisma.match.findMany({
       where: {
-        OR: [
-          { homePlayerId: user.id },
-          { awayPlayerId: user.id },
-        ],
+        OR: [{ homePlayerId: user.id }, { awayPlayerId: user.id }],
       },
       take: 5,
       orderBy: {
@@ -144,11 +126,11 @@ export class UserService {
       },
     });
 
-    return matches.map(match => {
+    return matches.map((match) => {
       const isHomePlayer = match.homePlayerId === user.id;
       const opponent = isHomePlayer ? match.awayPlayer : match.homePlayer;
       const result = match.winnerId === user.id ? 'Win' : 'Loss';
-      
+
       return {
         opponentUsername: opponent.username,
         homeScore: match.homeScore,

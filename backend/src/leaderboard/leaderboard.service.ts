@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { LeaderboardEntry } from './types';
+import { LeaderboardEntryDto } from './dto';
 
 @Injectable()
 export class LeaderboardService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async generateLeaderboard(): Promise<LeaderboardEntry[]> {
+  async generateLeaderboard(): Promise<LeaderboardEntryDto[]> {
     // Step 1: Fetch all users and initialize their points to zero.
     const users = await this.prisma.user.findMany();
-    const leaderboardMap: Record<number, LeaderboardEntry> = {};
+    const leaderboardMap: Record<number, LeaderboardEntryDto> = {};
 
     users.forEach((user) => {
       leaderboardMap[user.id] = {
-		position: 0,
+        position: 0,
         username: user.username,
         wins: 0,
         losses: 0,
@@ -32,11 +32,11 @@ export class LeaderboardService {
       // Add win points
       if (match.winnerId === match.homePlayerId) {
         leaderboardMap[match.homePlayerId].points += 100;
-		leaderboardMap[match.homePlayerId].wins++;
+        leaderboardMap[match.homePlayerId].wins++;
         leaderboardMap[match.awayPlayerId].losses++;
       } else {
         leaderboardMap[match.awayPlayerId].points += 100;
-		leaderboardMap[match.awayPlayerId].wins++;
+        leaderboardMap[match.awayPlayerId].wins++;
         leaderboardMap[match.homePlayerId].losses++;
       }
     });
@@ -46,9 +46,9 @@ export class LeaderboardService {
       (a, b) => b.points - a.points,
     );
 
-	// Step 4: Add positions
-	leaderboardArray.forEach((entry, index) => {
-        entry.position = index + 1;
+    // Step 4: Add positions
+    leaderboardArray.forEach((entry, index) => {
+      entry.position = index + 1;
     });
 
     return leaderboardArray;
