@@ -1,7 +1,7 @@
 {
 	"game_canvas": {
-		"width": 1600,
-		"height": 1200
+		"width": 1200,
+		"height": 720
 	},
 	"paddle": {
 		"buffer": 50,
@@ -9,10 +9,23 @@
 		"velocity": 30,
 		"height": 240
 	},
-	"fps": 25,
+	"fps": 60,
 	"ball": {
-		"velocity": 17,
+		"velocity": 5,
 		"radius": 30
 	},
-    "win": 10
+    "win": 10,
+	"startTime": 5000,
+	"mmTimeout": 60000,
+	"unlockSecondBallAt": 40,
+	"fox": {
+		"minSize":	30,
+		"maxSize":	60,
+		"timeStick2Paddle":	3,
+		"minVelocity":	3,
+		"maxVelocity":	10,
+		"maxTimeGoodEvil":	15,
+		"getEnragedIn":	10,
+		"showUpWhen":	30
+	}
 }

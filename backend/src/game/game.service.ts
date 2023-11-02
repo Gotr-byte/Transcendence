@@ -9,7 +9,6 @@ import {
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { SocketService } from 'src/socket/socket.service';
-import { GameConfig } from './game.config';
 import { UserService } from 'src/user/user.service'
 import { User } from '@prisma/client';
 import { GameInstance } from './GameInstance';
@@ -41,34 +40,59 @@ export class GameService
 		const player1Id = this.socketService.getUserId(player1.id);
 		const player2Id = this.socketService.getUserId(player2.id);
 
-		this.GameLobby.set(player1Id +":"+ player2Id, new GameState(new GameInstance, 1));
+		this.GameLobby.set(player1Id +":"+ player2Id, new GameState(new GameInstance));
 	}
 
 	public startGame(player1: Socket, player2: Socket): void
 	{
 		let gameState = this.getGameState(player1, player2);
-		if (!gameState)
+		if (!gameState || player1 == player2)
 			return;
 		setInterval( () => {
+			player1.on("keypress", (key) => {
+				if (key == 'ArrowUp')
+					gameState?.setPaddleDirection(1, -1);
+				else
+					gameState?.setPaddleDirection(1, 1);
+			});
+			player2.on("keypress", (key) => {
+				if (key == 'ArrowUp')
+					gameState?.setPaddleDirection(2, -1);
+				else
+					gameState?.setPaddleDirection(2, 1);
+			});
+
 			gameState?.calcNewPosition();
+			if (gameState?.getGameInstance().isFinished())
+			{
+				player1.emit('GameLoop', "GameOver");
+				player2.emit('GameLoop', "GameOver");
+				return;
+			}
+
 			player1.emit('GameLoop', 
 			{
+				'score1': gameState?.getGameInstance().getScore1(),
+				'score2': gameState?.getGameInstance().getScore2(),
 				'paddle1': gameState?.paddle1.position,
 				'paddle2': gameState?.paddle2.position,
 				'ball': gameState?.ball.position,
-				'score1': gameState?.getGameInstance().getScore1(),
-				'score2': gameState?.getGameInstance().getScore2()
+				'ball2': gameState?.ball2.position,
+				'fox': gameState?.fox,
+				'triggerables': gameState?.triggers,
 			});
 			player2.emit('GameLoop', 
 			{
+				'score1': gameState?.getGameInstance().getScore1(),
+				'score2': gameState?.getGameInstance().getScore2(),
 				'paddle1': gameState?.paddle1.position,
 				'paddle2': gameState?.paddle2.position,
 				'ball': gameState?.ball.position,
-				'score1': gameState?.getGameInstance().getScore1(),
-				'score2': gameState?.getGameInstance().getScore2()
+				'ball2': gameState?.ball2.position,
+				'fox': gameState?.fox,
+				'triggerables': gameState?.triggers,
 			});
 		}, 1000 / config.fps);
 
 	}
 }
-	

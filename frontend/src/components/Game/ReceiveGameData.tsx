@@ -1,5 +1,5 @@
-import { useState, useEffect, useContext } from "react";
-import { WebsocketContext } from "../Context/WebsocketContexts";
+// import { useState, useEffect, useContext } from "react";
+// import { WebsocketContext } from "../Context/WebsocketContexts";
 import { Box, Heading, Text } from "@chakra-ui/react";
 
 interface Coordinates {

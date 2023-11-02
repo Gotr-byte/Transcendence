@@ -9,11 +9,11 @@ import {
 import { Server, Socket } from 'socket.io';
 import { GameService } from './game.service';
 import { SocketService } from 'src/socket/socket.service';
-import { GameConfig } from './game.config';
 import { UserService } from 'src/user/user.service'
 import { User } from '@prisma/client';
 import { GameInstance } from './GameInstance';
 import { GameState } from './GameState';
+import * as config from './config.json';
 
 @WebSocketGateway({
   cors: { origin: [process.env.FRONTEND_URL!, process.env.FRONTEND_URL_NO_PORT!],
@@ -30,18 +30,32 @@ export class GameGateway implements OnGatewayDisconnect {
   private waitingUser:  Socket | null;
   private timestamp:    number | null;
 
+  //wait only 1 minute for matching partner
+  async resetWaitingUser(): Promise<void>
+  {
+    if (!this.timestamp || !this.waitingUser)
+      return;
+    if (Date.now() - this.timestamp > config.mmTimeout)
+    {
+      this.waitingUser.emit('matchmaking', 'timeout');
+      this.waitingUser = null;
+      this.timestamp = null;
+    }
+  }
+
   @SubscribeMessage('match-random')
   async handleStartRandomMatchmaking(@ConnectedSocket() client: Socket,): Promise<void> 
   {
     if (this.waitingUser) 
     {
+      if (client == this.waitingUser)
+        return;
       const opponent = this.waitingUser;
       this.waitingUser = null;
       // If there's a waiting user, match them together
       client.emit('matchmaking', 'gameInit');
       opponent.emit('matchmaking', 'gameInit');
 
-      // createMatch(homePlayerId, awayPlayerId);
       this.gameService.initGame(client, opponent);
       this.gameService.startGame(client, opponent);
 
@@ -70,7 +84,7 @@ export class GameGateway implements OnGatewayDisconnect {
     if (!this.timestamp)
       return;
     const diff = Math.floor((Date.now() - this.timestamp) / 1000)
-    if (this.waitingUser === client && diff > GameConfig.matchTimeout)
+    if (this.waitingUser === client && diff > config.mmTimeout)
     {
       this.waitingUser = null;
       client.emit('matchmaking', 'operation timed out');
