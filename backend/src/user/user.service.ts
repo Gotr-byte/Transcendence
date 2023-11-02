@@ -6,6 +6,7 @@ import {
   ChangeUserPropsDto,
   ShowLoggedUserDto,
   ShowUsersDto,
+  UserMatchStatsDto,
 } from './dto';
 import { UserDetails } from './types';
 
@@ -85,5 +86,40 @@ export class UserService {
       where: { id: userId },
       data: { achievements: { push: achievement } },
     });
+  }
+
+  async getUserMatchStats(username: string): Promise<UserMatchStatsDto> {
+    const user = await this.getUserByName(username);
+    // 1. Matches played
+    const matchesPlayed = await this.prisma.match.count({
+      where: {
+        OR: [{ homePlayerId: user.id }, { awayPlayerId: user.id }]
+      }
+    });
+  
+    // 2. Matches won
+    const matchesWon = await this.prisma.match.count({
+      where: { winnerId: user.id }
+    });
+  
+    // 3. Total points (based on your earlier points system)
+    const homeMatches = await this.prisma.match.findMany({
+      where: { homePlayerId: user.id }
+    });
+    const awayMatches = await this.prisma.match.findMany({
+      where: { awayPlayerId: user.id }
+    });
+  
+    const pointsFromGoals = homeMatches.reduce((acc, match) => acc + match.homeScore, 0) * 5 +
+                            awayMatches.reduce((acc, match) => acc + match.awayScore, 0) * 5;
+    
+    const pointsFromWins = matchesWon * 100;
+    const totalPoints = pointsFromGoals + pointsFromWins;
+  
+    return {
+      matchesPlayed,
+      matchesWon,
+      totalPoints
+    };
   }
 }
