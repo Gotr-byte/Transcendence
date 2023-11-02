@@ -26,6 +26,6 @@
 		"maxVelocity":	10,
 		"maxTimeGoodEvil":	15,
 		"getEnragedIn":	10,
-		"showUpWhen":	30
+		"showUpWhen":	1
 	}
 }

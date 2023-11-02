@@ -86,7 +86,14 @@ const Game: React.FC = () => {
 					ctx.fill();
 					ctx.closePath();
 				}
-				console.log(gameState.fox);
+				if (gameState.fox.isUnlocked)
+				{
+					ctx.beginPath();
+					ctx.arc(gameState.fox.pos.x, gameState.fox.pos.y, gameState.fox.hasSizeOf, 0, 2 * Math.PI); // 10 is the radius of the ball
+					ctx.fillStyle = 'green';
+					ctx.fill();
+					ctx.closePath();
+				}
 			}
 		}
 	}, [gameState]);

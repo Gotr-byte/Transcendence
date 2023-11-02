@@ -90,8 +90,8 @@ export class GameService
 				'ball2': gameState?.ball2.position,
 				'ball2lock': gameState?.ball2.isUnlocked,
 				'fox': {
-					'isunlocked': gameState?.fox.isUnlocked,
-					'isevil': gameState?.fox.isEvil,
+					'isUnlocked': gameState?.fox.isUnlocked,
+					'isEvil': gameState?.fox.isEvil,
 					'isEnraged': gameState?.fox.isEnraged,
 					'hasSizeOf': gameState?.fox.hasSizeOf,
 					'pos': gameState?.fox.position
