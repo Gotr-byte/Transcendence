@@ -9,5 +9,6 @@ import { PrismaModule } from 'src/prisma/prisma.module';
   imports: [AuthModule, PrismaModule],
   providers: [MatchesService],
   controllers: [MatchesController],
+  exports: [MatchesService],
 })
 export class MatchesModule {}

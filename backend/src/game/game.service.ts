@@ -56,7 +56,7 @@ export class GameService
 		const winnerId = result.homeScore < result.awayScore ? player2Id : player1Id;
 
 		const matchData = { ...result, homePlayerId: player1Id, awayPlayerId: player2Id, winnerId}
-		this.matchService.createMatch(matchData)
+		this.matchService.createMatch(matchData);
 		console.log(matchData);
 		
 		player1.disconnect();
