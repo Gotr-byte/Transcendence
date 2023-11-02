@@ -17,7 +17,6 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly imagekit: ImagekitService,
   ) {}
 
   @Get()

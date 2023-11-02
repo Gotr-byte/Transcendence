@@ -1,4 +1,4 @@
-export type LeaderboardEntry = {
+export class LeaderboardEntryDto {
 	position: number;
 	username: string;
 	wins: number;

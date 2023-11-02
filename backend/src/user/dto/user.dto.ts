@@ -111,6 +111,7 @@ export class FileUploadDto {
 }
 
 export class UserMatchStatsDto {
+  position: number;
   matchesPlayed: number;
   matchesWon: number;
   totalPoints: number;
