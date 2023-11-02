@@ -27,6 +27,7 @@ const FileUpload: React.FC = () => {
 			} catch (error) {
 				console.error("File upload error", error);
 			}
+			window.location.reload();
 		}
 	};
 
