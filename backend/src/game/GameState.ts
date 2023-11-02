@@ -102,7 +102,7 @@ export class GameState
 		return new Coordinate(x, y);
 	}
 
-	public calcNewPosition() : void {
+	public async calcNewPosition() : Promise<void> {
 		if (!this.instance.isStarted() && this.instance.getTimeDiff() > config.startTime)
 			this.instance.startGame();
 		if (this.instance.isFinished() || !this.instance.isStarted())

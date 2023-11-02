@@ -1,7 +1,10 @@
+import { CreateMatchDto } from 'src/matches/dto/matchDto';
 import  * as config from './config.json';
+import { MatchResult } from './types';
 
 export class GameInstance
 {
+	private startTime:		Date = new Date();
 	private timestamp:		number = 0;
 	private started:		boolean = false;
 	private finished:		boolean = false;
@@ -94,4 +97,9 @@ export class GameInstance
 		return this.finished;
 	}
 
+	public getResult(): MatchResult
+	{
+		const result = { started: this.startTime, ended: new Date(), homeScore: this.player1Score, awayScore: this.player2Score}
+		return result
+	}
 }
