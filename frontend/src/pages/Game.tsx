@@ -2,6 +2,8 @@ import { useRef, useEffect, useState, useContext } from 'react';
 import { WebsocketContext } from '../components/Context/WebsocketContexts';
 import JoinRandom from '../components/Game/JoinRandom';
 
+import { useToast } from '@chakra-ui/react';
+
 interface Coordinates {
 	x: number;
 	y: number;
@@ -14,13 +16,45 @@ interface GameState {
 	scoreOne: number;
 	scoreTwo: number;
 }
+/*testing
+*/
+// interface Opponent {
+// 	playerOneId: number;
+// 	playerOneName: string;
+// 	playerTwoId: number;
+// 	playerTwoName: string;
+// 	timestamp: number;
+// }
+// */
 
 const Game: React.FC = () => {
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 	const [gameState, setGameState] = useState<GameState | null>(null);
 
 	const socketIo = useContext(WebsocketContext);
+	/* testing toast 
 
+
+	const toast = useToast();
+
+	const showToast = () => {
+		toast({
+				title: "Confirmation",
+				description: "Do you agree?",
+				status: "info",
+				duration: 9000,
+				isClosable: true,
+				position: "top-right",
+				render: () => (
+						<div>
+								Do you agree?
+								<Button size="sm" colorScheme="green" onClick={() => { console.log('Yes Clicked'); toast.closeAll(); }}>Yes</Button>
+								<Button size="sm" colorScheme="red" onClick={() => { console.log('No Clicked'); toast.closeAll(); }}>No</Button>
+						</div>
+				),
+		});
+	}
+*/
 
 	useEffect(() => {
 		socketIo.on('GameLoop', (data: GameState) => {
@@ -28,6 +62,15 @@ const Game: React.FC = () => {
 				setGameState(data);
 			}
 		});
+
+		/*testing
+		*/
+		// socketIo.on('GameRequest', (data: Opponent) => {
+		// 		// showToast()
+		// 		console.log(data);
+		// });
+		
+		//*/
 
 		socketIo.on('disconnect', () => {
 			console.log('Socket.io connection disconnected.');
