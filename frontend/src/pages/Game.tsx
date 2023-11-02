@@ -78,12 +78,15 @@ const Game: React.FC = () => {
 				ctx.fill();
 				ctx.closePath();
 				// Draw the  second ball in yellow
-				console.log("Ball2: " + gameState?.ball2.isUnlocked)
-				ctx.beginPath();
-				ctx.arc(gameState.ball2.x, gameState.ball2.y, 10, 0, 2 * Math.PI); // 10 is the radius of the ball
-				ctx.fillStyle = 'yellow';
-				ctx.fill();
-				ctx.closePath();
+				if (gameState.ball2lock)
+				{
+					ctx.beginPath();
+					ctx.arc(gameState.ball2.x, gameState.ball2.y, 10, 0, 2 * Math.PI); // 10 is the radius of the ball
+					ctx.fillStyle = 'yellow';
+					ctx.fill();
+					ctx.closePath();
+				}
+				console.log(gameState.fox);
 			}
 		}
 	}, [gameState]);

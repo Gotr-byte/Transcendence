@@ -34,13 +34,22 @@ export class GameService
 
 	}
 
-
 	public initGame(player1: Socket, player2: Socket): void
 	{
 		const player1Id = this.socketService.getUserId(player1.id);
 		const player2Id = this.socketService.getUserId(player2.id);
 
 		this.GameLobby.set(player1Id +":"+ player2Id, new GameState(new GameInstance));
+	}
+
+	public endGame(player1: Socket, player2: Socket): void
+	{
+		const player1Id = this.socketService.getUserId(player1.id);
+		const player2Id = this.socketService.getUserId(player2.id);
+
+		player1.disconnect();
+		player2.disconnect();
+		//this.GameLobby.delete(player1Id +":"+ player2Id);
 	}
 
 	public startGame(player1: Socket, player2: Socket): void
@@ -67,6 +76,7 @@ export class GameService
 			{
 				player1.emit('GameLoop', "GameOver");
 				player2.emit('GameLoop', "GameOver");
+				this.endGame(player1, player2);
 				return;
 			}
 
@@ -78,8 +88,14 @@ export class GameService
 				'paddle2': gameState?.paddle2.position,
 				'ball': gameState?.ball.position,
 				'ball2': gameState?.ball2.position,
-				'fox': gameState?.fox,
-				'triggerables': gameState?.triggers,
+				'ball2lock': gameState?.ball2.isUnlocked,
+				'fox': {
+					'isunlocked': gameState?.fox.isUnlocked,
+					'isevil': gameState?.fox.isEvil,
+					'isEnraged': gameState?.fox.isEnraged,
+					'hasSizeOf': gameState?.fox.hasSizeOf,
+					'pos': gameState?.fox.position
+				}
 			});
 			player2.emit('GameLoop', 
 			{
@@ -89,8 +105,14 @@ export class GameService
 				'paddle2': gameState?.paddle2.position,
 				'ball': gameState?.ball.position,
 				'ball2': gameState?.ball2.position,
-				'fox': gameState?.fox,
-				'triggerables': gameState?.triggers,
+				'ball2lock': gameState?.ball2.isUnlocked,
+				'fox': {
+					'isUnlocked': gameState?.fox.isUnlocked,
+					'isEvil': gameState?.fox.isEvil,
+					'isEnraged': gameState?.fox.isEnraged,
+					'hasSizeOf': gameState?.fox.hasSizeOf,
+					'pos': gameState?.fox.position
+				}
 			});
 		}, 1000 / config.fps);
 

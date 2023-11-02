@@ -58,7 +58,7 @@ export class GameGateway implements OnGatewayDisconnect {
 
       this.gameService.initGame(client, opponent);
       this.gameService.startGame(client, opponent);
-
+      this.waitingUser = null;
     }
     else
     {

@@ -5,3 +5,4 @@ out.txt
 coverLetter
 test.env
 .envOld
+.env.new

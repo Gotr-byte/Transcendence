@@ -135,7 +135,6 @@ export class GameState
 			this.freePaddles();
 			this.foxBallCollission();
 		}
-
 		this.ball = this.calcBallPosition(this.ball);
 		if (this.ball2.isUnlocked)
 			this.ball2 = this.calcBallPosition(this.ball2);
