@@ -43,7 +43,7 @@ const JoinChannelButton: React.FC<JoinChannelButtonProps> = ({
 			});
 
 			if (response.ok) {
-				const responseData = await response.json();
+				const responseData = await response.text();
 				console.log("Successfully joined the channel!", responseData);
 			} else {
 				console.error("Failed to join the channel!", response.status);

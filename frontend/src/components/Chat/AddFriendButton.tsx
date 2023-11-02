@@ -24,7 +24,7 @@ const AddFriendButton: React.FC<AcceptButtonProps> = ({ username }) => {
 		} catch (error) {
 			console.error("An error occurred:", error);
 		}
-		window.location.reload();
+		// window.location.reload();
 	};
 
 	return (
