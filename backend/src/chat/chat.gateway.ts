@@ -19,7 +19,10 @@ import { WsExceptionFilter } from 'src/filters/ws-exception-filter';
 @UseFilters(new WsExceptionFilter())
 @UsePipes(new WSValidationPipe())
 @WebSocketGateway({
-  cors: { origin: process.env.FRONTEND_URL, credentials: true },
+  cors: {
+    origin: [process.env.FRONTEND_URL!, process.env.FRONTEND_URL_NO_PORT!],
+    credentials: true,
+  },
 })
 export class ChatGateway implements OnGatewayConnection {
   @WebSocketServer() server: Server;

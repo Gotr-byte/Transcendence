@@ -16,7 +16,8 @@ import { GameState } from './GameState';
 import * as config from './config.json';
 
 @WebSocketGateway({
-  cors: { origin: process.env.FRONTEND_URL },
+  cors: { origin: [process.env.FRONTEND_URL!, process.env.FRONTEND_URL_NO_PORT!],
+  },
 })
 export class GameGateway implements OnGatewayDisconnect {
   @WebSocketServer() server: Server;

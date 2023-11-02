@@ -4,8 +4,10 @@ import { User } from '@prisma/client';
 import {
   ChangeUserDto,
   ChangeUserPropsDto,
+  MatchHistoryDto,
   ShowLoggedUserDto,
   ShowUsersDto,
+  UserMatchStatsDto,
 } from './dto';
 import { UserDetails } from './types';
 
@@ -84,6 +86,76 @@ export class UserService {
     await this.prisma.user.update({
       where: { id: userId },
       data: { achievements: { push: achievement } },
+    });
+  }
+
+  async getUserMatchStats(username: string): Promise<UserMatchStatsDto> {
+    const user = await this.getUserByName(username);
+    // 1. Matches played
+    const matchesPlayed = await this.prisma.match.count({
+      where: {
+        OR: [{ homePlayerId: user.id }, { awayPlayerId: user.id }]
+      }
+    });
+  
+    // 2. Matches won
+    const matchesWon = await this.prisma.match.count({
+      where: { winnerId: user.id }
+    });
+  
+    // 3. Total points (based on your earlier points system)
+    const homeMatches = await this.prisma.match.findMany({
+      where: { homePlayerId: user.id }
+    });
+    const awayMatches = await this.prisma.match.findMany({
+      where: { awayPlayerId: user.id }
+    });
+  
+    const pointsFromGoals = homeMatches.reduce((acc, match) => acc + match.homeScore, 0) * 5 +
+                            awayMatches.reduce((acc, match) => acc + match.awayScore, 0) * 5;
+    
+    const pointsFromWins = matchesWon * 100;
+    const totalPoints = pointsFromGoals + pointsFromWins;
+  
+    return {
+      matchesPlayed,
+      matchesWon,
+      totalPoints
+    };
+  }
+
+  async getLastFiveMatches(username: string): Promise<MatchHistoryDto[]> {
+    const user = await this.getUserByName(username);
+    // Fetch the last 5 matches where the user was either the home or away player.
+    const matches = await this.prisma.match.findMany({
+      where: {
+        OR: [
+          { homePlayerId: user.id },
+          { awayPlayerId: user.id },
+        ],
+      },
+      take: 5,
+      orderBy: {
+        ended: 'desc',
+      },
+      include: {
+        homePlayer: true,
+        awayPlayer: true,
+      },
+    });
+
+    return matches.map(match => {
+      const isHomePlayer = match.homePlayerId === user.id;
+      const opponent = isHomePlayer ? match.awayPlayer : match.homePlayer;
+      const result = match.winnerId === user.id ? 'Win' : 'Loss';
+      
+      return {
+        opponentUsername: opponent.username,
+        homeScore: match.homeScore,
+        awayScore: match.awayScore,
+        result,
+        date: match.ended,
+      };
     });
   }
 }

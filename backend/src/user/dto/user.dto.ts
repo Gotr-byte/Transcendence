@@ -109,3 +109,17 @@ export class FileUploadDto {
   @ApiProperty({ type: 'string', format: 'binary' })
   image: any; // Use 'any' type for binary data
 }
+
+export class UserMatchStatsDto {
+  matchesPlayed: number;
+  matchesWon: number;
+  totalPoints: number;
+}
+
+export class MatchHistoryDto {
+  opponentUsername: string;
+  homeScore: number;
+  awayScore: number;
+  result: 'Win' | 'Loss';
+  date: Date;
+}
