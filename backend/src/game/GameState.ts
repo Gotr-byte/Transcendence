@@ -148,7 +148,7 @@ export class GameState
 		if (!this.fox.isUnlocked || !this.fox.isEnraged)
 			return;
 		let fsize = this.fox.hasSizeOf;
-		//do collission logic here and let them bounce
+		//do collision logic here and let them bounce
 	}
 
 	public unlockBall(): void
@@ -199,12 +199,14 @@ export class GameState
 		if (!this.fox.isUnlocked)
 			return;
 		let rndTime = Math.random() * config.fox.getEnragedIn;
-		if (Date.now() > this.fox.paddleTime + config.fox.getEnragedIn + rndTime)
+		if (Date.now() < this.fox.paddleTime + config.fox.getEnragedIn + rndTime)
 		{
 			this.fox.isEnraged = true;
 			this.fox.velocity = config.fox.maxVelocity;
 			this.fox.hasSizeOf = config.fox.maxSize;
 		}
+		else
+			this.unrageFox;
 	}
 
 	public unrageFox(): void
@@ -249,74 +251,6 @@ export class GameState
 		}
 	}
 
-	/*
-	public calcFoxPosition() : void 
-	{
-		let fox_new_x: number = this.fox.position.x + Math.round(this.fox.velocity * this.fox.position.x);
-		let fox_new_y: number = this.fox.position.y + Math.round(this.fox.velocity * this.fox.position.y);
-
-		if (this.fox.sticking)
-			return;
-
-		if (fox_new_y - this.fox.hasSizeOf <= 0) 
-		{
-			fox_new_y = this.fox.hasSizeOf;
-			this.fox.position.y *= -1;
-		}
-		else if (fox_new_y + this.fox.hasSizeOf >= config.game_canvas.height) 
-		{
-			fox_new_y = config.game_canvas.height - this.fox.hasSizeOf;
-			this.fox.position.y *= -1;
-		}
-		if (fox_new_x - this.fox.hasSizeOf <= 0) 
-		{
-			fox_new_x = this.fox.hasSizeOf;
-			this.fox.position.x *= -1;
-		}
-		else if (fox_new_x + this.fox.hasSizeOf >= config.game_canvas.width) 
-		{
-			fox_new_x = config.game_canvas.width - this.fox.hasSizeOf;
-			this.fox.position.x *= -1;
-		}
-		if ((fox_new_x - this.fox.hasSizeOf) <= (config.paddle.buffer + config.paddle.width)) 
-		{
-			if ((((fox_new_y - this.fox.hasSizeOf) > (this.paddle1.position.y + this.paddle1.height)) ||
-				((fox_new_y + this.fox.hasSizeOf) < this.paddle1.position.y)))
-			{
-				//do nothing
-			}
-			else
-			{
-				fox_new_x = this.paddle1.position.x + config.paddle.width + this.fox.hasSizeOf;
-				this.fox.position.y = (fox_new_y - (this.paddle1.position.y + (this.paddle1.height / 2))) / (config.paddle.height / 4);
-				this.fox.position.x *= -1;
-				this.foxPaddleBehavior(1);
-			}
-		}
-		else if (fox_new_x + this.fox.hasSizeOf >= (config.game_canvas.width - config.paddle.buffer - config.paddle.width)) 
-		{
-			if (((((fox_new_y - this.fox.hasSizeOf) > (this.paddle2.position.y + this.paddle1.height)) ||
-				(fox_new_y + this.fox.hasSizeOf) < this.paddle2.position.y)))
-			{
-				//do nothing
-			}
-			else
-			{
-				fox_new_x = this.paddle2.position.x - this.fox.hasSizeOf;
-				this.fox.position.y = (fox_new_y - (this.paddle2.position.y + (this.paddle2.height / 2))) / (config.paddle.height / 4);
-				this.fox.position.x *= -1;
-				this.foxPaddleBehavior(2);
-			}
-		}
-		// 1% chance if enraged to reverse x and/or y direction
-		if (this.fox.isEnraged && Math.random() * 1000 <= 10)
-			fox_new_x *= -1;
-		if (this.fox.isEnraged && Math.random() * 1000 <= 10)
-			fox_new_y *= -1;
-		this.fox.position.x = fox_new_x;
-		this.fox.position.y = fox_new_y;
-	}
-*/
 	public calcFoxPosition() {
 		let fox_new_x: number = this.fox.position.x + Math.round(this.fox.velocity * this.fox.direction.x);
 		let fox_new_y: number = this.fox.position.y + Math.round(this.fox.velocity * this.fox.direction.y);
@@ -441,16 +375,26 @@ export class GameState
 		paddle.direction = direction;
 	}
 
-	public resetGameState() : void {
+	public resetGameState() : void 
+	{
 		this.instance.notScored();
 		this.ball.position.x = config.game_canvas.width / 2;
 		this.ball.position.y = config.game_canvas.height / 2;
+		this.ball.direction = this.calcRandomDirection(this.instance.getRound());
+
+		/*
+		this.fox.hasSizeOf = config.fox.minSize;
+		this.fox.isEnraged = false;
+		this.fox.isEvil = false;
+		this.fox.velocity = config.fox.minVelocity;
+		*/
 		this.fox.position.x = config.game_canvas.width / 2;
 		this.fox.position.y = config.game_canvas.width / 2;
-		this.ball.direction = this.calcRandomDirection(this.instance.getRound());
-			this.ball2.position.x = config.game_canvas.width / 2;
-			this.ball2.position.y = config.game_canvas.height / 2;
-			this.ball2.direction = this.calcRandomDirection(this.instance.getRound());
+		//this.fox.direction = this.calcRandomDirection(this.instance.getRound());
+
+		this.ball2.position.x = config.game_canvas.width / 2;
+		this.ball2.position.y = config.game_canvas.height / 2;
+		this.ball2.direction = this.calcRandomDirection(this.instance.getRound());
 
 		//make the game faster each round 
 		this.ball.velocity = config.ball.velocity + (this.instance.getRound() / 2);
