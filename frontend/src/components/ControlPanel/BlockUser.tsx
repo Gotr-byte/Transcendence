@@ -20,7 +20,7 @@ const BlockUser: React.FC = () => {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 
-			const data = await response.json();
+			const data = await response.text();
 			console.log("Friend added:", data);
 		} catch (error) {
 			console.error("There was a problem adding the friend:", error);

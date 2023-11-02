@@ -38,7 +38,7 @@ const DesignateAdmin: React.FC = () => {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 
-			const data = await response.json();
+			const data = await response.text();
 			console.log("Designated admin:", data);
 			setSuccess("Admin designated successfully."); // Setting success message on successful API response
 		} catch (error) {
