@@ -15,7 +15,7 @@ import { WsExceptionFilter } from 'src/filters/ws-exception-filter';
 // @UseGuards(WsAuthGuard)
 @WebSocketGateway({
   cors: {
-    origin: process.env.FRONTEND_URL,
+    origin: [process.env.FRONTEND_URL!, process.env.FRONTEND_URL_NO_PORT!],
     credentials: true,
   },
 })
