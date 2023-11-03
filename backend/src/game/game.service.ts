@@ -40,12 +40,27 @@ export class GameService
 
 	public endGame(player1: Socket, player2: Socket): void
 	{
+		let looser: Socket;
+		let winner: Socket;
+		let winnerId: number;
+
 		const gameInstance = this.getGameState(player1.id, player2.id)?.getGameInstance();
 		const player1Id = this.socketService.getUserId(player1.id);
 		const player2Id = this.socketService.getUserId(player2.id);
 		const result = gameInstance!.getResult();
 
-		const winnerId = result.homeScore < result.awayScore ? player2Id : player1Id;
+		if (result.homeScore < result.awayScore) {
+			winnerId = player2Id;
+			winner = player2;
+			looser = player1;
+		} else {
+			winnerId = player1Id;
+			winner = player1;
+			looser = player2;
+		}
+
+		winner.emit('EndGame', "You won!");
+		looser.emit('EndGame', "You lost!");
 
 		const matchData = { ...result, homePlayerId: player1Id, awayPlayerId: player2Id, winnerId}
 		this.matchService.createMatch(matchData);
@@ -74,16 +89,14 @@ export class GameService
 			gameState?.calcNewPosition();
 			if (gameState?.getGameInstance().isFinished())
 			{
-				player1.emit('GameLoop', "GameOver");
-				player2.emit('GameLoop', "GameOver");
 				this.endGame(player1, player2);
 				clearInterval(gameIntervall);
 				return;
 			}
 			if (gameState?.getGameInstance().isInterrupted())
 			{
-				player1.emit('GameLoop', "OpponentDisconnected");
-				player2.emit('GameLoop', "OpponentDisconnected");
+				player1.emit('EndGame', "Opponent Disconnected, you won by 3-0");
+				player2.emit('EndGame', "Opponent Disconnected, you won by 3-0");
 				clearInterval(gameIntervall);
 				return;
 			}
