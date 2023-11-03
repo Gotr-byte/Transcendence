@@ -69,7 +69,7 @@ const DesignateAdmin: React.FC = () => {
 				Channel Type:
 				<select value={role} onChange={(e) => setRole(e.target.value)}>
 					<option value="ADMIN">ADMIN</option>
-					<option value="MEMBER">MEMBER</option>
+					<option value="USER">USER</option>
 				</select>
 			</label>
 			<button onClick={designateHandler}>DesignateRole</button>
