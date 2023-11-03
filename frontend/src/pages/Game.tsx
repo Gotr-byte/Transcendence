@@ -101,7 +101,7 @@ const Game: React.FC = () => {
 	return (
 		<div>
 					<JoinRandom />
-					<AbortMatchmaking />
+					{/* <AbortMatchmaking /> */}
 					<canvas ref={canvasRef} width="1200" height="720" style={{ border: '1px solid black' }}></canvas>
 		</div>
 	);

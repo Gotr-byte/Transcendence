@@ -2,6 +2,7 @@ import { useRef, useEffect, useState, useContext } from 'react';
 import { WebsocketContext } from '../components/Context/WebsocketContexts';
 import JoinRandom from '../components/Game/JoinRandom';
 import AbortMatchmaking from '../components/Game/AbortMatchmaking';
+import JoinRandomPlus from '../components/Game/JoinRandomPlus';
 
 interface Coordinates {
 	x: number;
@@ -90,8 +91,8 @@ const GamePlus: React.FC = () => {
 
 	return (
 		<div>
-					<JoinRandom />
-					<AbortMatchmaking />
+					<JoinRandomPlus />
+					 {/* <AbortMatchmaking /> */}
 					<canvas ref={canvasRef} width="1200" height="720" style={{ border: '1px solid black' }}></canvas>
 		</div>
 	);
