@@ -56,8 +56,8 @@ export class GameGateway implements OnGatewayDisconnect {
       client.emit('matchmaking', 'gameInit');
       opponent.emit('matchmaking', 'gameInit');
 
-      this.gameService.initGame(client, opponent);
-      this.gameService.startGame(client, opponent);
+      this.gameService.initGame(opponent.id, client.id);
+      this.gameService.startGame(opponent, client);
       this.waitingUser = null;
     }
     else
@@ -142,7 +142,9 @@ export class GameGateway implements OnGatewayDisconnect {
     client.emit('matchmaking', 'Success: game request pending');
   }
 
-  handleDisconnect(@ConnectedSocket() client: Socket) {
+  handleDisconnect(@ConnectedSocket() client: Socket)  {
     if (this.waitingUser === client) this.waitingUser = null;
+    
+    this.gameService.handleDisconnect(client);
   }
 }
