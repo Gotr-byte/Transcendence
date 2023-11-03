@@ -17,11 +17,6 @@ export const Sidebar = () => {
     const socketIo = useContext(WebsocketContext);
     const toast = useToast();
 
-    const redirectToGame = (username) => {
-        window.location.href = `/game`;
-        socket.emit("matchThisUser", username);
-    };
-
     useEffect(() => {
         socketIo.on('GameRequest', (data: Opponent) => {
             // console.log(data);
