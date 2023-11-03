@@ -8,7 +8,7 @@ export const MatchThisUser: React.FC<SendDirectMessageProps> = ({
   const socket = useContext(WebsocketContext);
 
     const redirectToGame = () => {
-        window.location.href = 'http://localhost:5173/game';
+        window.location.href = `/game`;
         socket.emit("matchThisUser", username);
     };
 

@@ -24,7 +24,7 @@ const KickUser: React.FC = () => {
 			const data = await response.text();
 			console.log("Channel created:", data);
 		} catch (error) {
-			setError(`There was a problem enablig restriction ${error}`);
+			// setError(`There was a problem enablig restriction ${error}`);
 			console.error("There was a problem enabling restriction", error);
 		}
 	};
