@@ -6,6 +6,7 @@ import {
   IsNotEmpty,
   IsOptional,
   IsString,
+  Matches,
   NotContains,
 } from 'class-validator';
 
@@ -19,7 +20,9 @@ export class ChangeUserDto {
   @IsString()
   @IsNotEmpty()
   @IsOptional()
-  @NotContains(' ')
+  @Matches(/^[a-zA-Z0-9_]+$/, {
+    message: 'username can only contain letters, numbers, and underscores',
+  })
   username: string;
 
   // @IsUrl()

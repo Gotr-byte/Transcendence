@@ -28,6 +28,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     if (!userId) {
       userId = client.handshake.query.userId as string;
     }
+    if (!userId)
+      client.disconnect();
 
     // THIS IS THE VALIDATION CHECK FOR THE ACCESSING USER
     // const validUser = this.socketService.getValidUser(client);
