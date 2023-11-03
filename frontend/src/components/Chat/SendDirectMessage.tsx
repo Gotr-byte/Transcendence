@@ -42,7 +42,32 @@ export const SendDirectMessage: React.FC<SendDirectMessageProps> = ({
   >([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const socket = useContext(WebsocketContext);
+
+  const fetchDirectMessageHistory = async () => {
+    if (!username) return;
+
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/messages/user/${username}`,
+        {
+          credentials: "include",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setReceivedMessages(data.messages); // Assuming 'messages' is the array of message objects
+    } catch (error) {
+      console.error("Fetching direct messages failed: ", error);
+      setReceivedMessages([]); // Reset to empty array in case of error
+    }
+  };
+
   useEffect(() => {
+      fetchDirectMessageHistory();
     if (id === null) return;
     const eventName = `user-msg-${id}`
     socket.on(eventName, (newMessage: ReceivedMessagePayload) => {

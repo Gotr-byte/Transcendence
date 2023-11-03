@@ -8,72 +8,92 @@ import { Tab, TabList, Tabs } from "@chakra-ui/react";
 import { WebsocketContext } from "./Context/WebsocketContexts";
 
 type MessagePayload = {
-  content: string;
-  channelId: number;
+	content: string;
+	channelId: number;
 };
 
 type ReceivedMessagePayload = {
-  content: string;
-	sender:string;
+	content: string;
+	sender: string;
 };
 
 const ChatUI: React.FC = () => {
 	const [currentRoomId, setCurrentRoomId] = useState<number | null>(null);
-    const [sentMessage, setSentMessage] = useState<MessagePayload>({
-      content: "",
-      channelId: currentRoomId
-    });
+	const [sentMessage, setSentMessage] = useState<MessagePayload>({
+		content: "",
+		channelId: currentRoomId!,
+	});
 	const [receivedMessages, setReceivedMessages] = useState<
-    ReceivedMessagePayload[]
-  >([]);
+		ReceivedMessagePayload[]
+	>([]);
+	const [messageHistory, setMessageHistory] = useState<
+		ReceivedMessagePayload[]
+	>([]);
 	const socket = useContext(WebsocketContext);
 
 	const handleRoomChange = (roomId: number) => {
 		setCurrentRoomId(roomId);
 		setSentMessage({
-		  content: "",
+			content: "",
 			channelId: roomId, // Set the channelId to the roomId
-		  });
-			setReceivedMessages([]);
+		});
+		setReceivedMessages([]);
+		fetchMessageHistory(roomId);
 	};
-		useEffect(() => {
-			// Ensure a room is selected before registering event listeners
-			if (currentRoomId === null) return;
-	
-			// Dynamic event name based on `currentRoomId`
-			const eventName = `channel-msg-${currentRoomId}`;
-			
-			// Event handler function
-			const handleNewMessage = (newMessage: ReceivedMessagePayload) => {
-				const taggedMessage = {
-						...newMessage,
-						content: newMessage.sender + ": " + newMessage.content,
-				};
-				setReceivedMessages((prev) => [...prev, taggedMessage]);
-		};
-		
-	
-			// Register the event listener
-			socket.on(eventName, handleNewMessage);
-			
-			return () => {
-					// Unregister the event listener on cleanup
-					console.log("Unregistering Events...");
-					socket.off(eventName, handleNewMessage);
-			};
-	}, [socket, currentRoomId]); 
 
-	  const onSubmit = () => {
+	const fetchMessageHistory = async (roomId: number) => {
+		try {
+			const response = await fetch(
+				`${import.meta.env.VITE_API_URL}/messages/channel/${roomId}`,
+				{
+					credentials: "include",
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error(`HTTP error! Status: ${response.status}`);
+			}
+
+			const data = await response.json();
+			setMessageHistory(data.messages); // Assuming the JSON response is an array of messages
+		} catch (error) {
+			console.error("Fetching messages failed: ", error);
+		}
+	};
+
+	useEffect(() => {
+		// Ensure a room is selected before registering event listeners
+		if (currentRoomId === null) return;
+
+		// Dynamic event name based on `currentRoomId`
+		const eventName = `channel-msg-${currentRoomId}`;
+
+		// Event handler function
+		const handleNewMessage = (newMessage: ReceivedMessagePayload) => {
+			setReceivedMessages((prev) => [newMessage]);
+		};
+
+		// Register the event listener
+		socket.on(eventName, handleNewMessage);
+
+		return () => {
+			// Unregister the event listener on cleanup
+			console.log("Unregistering Events...");
+			socket.off(eventName, handleNewMessage);
+		};
+	}, [socket, currentRoomId]);
+
+	const onSubmit = () => {
 		if (sentMessage.content.trim() === "") {
-		  alert("Message content is empty. Please enter a message.");
-		  return;
+			alert("Message content is empty. Please enter a message.");
+			return;
 		}
 		// const contentWithUsername = username + ": " + sentMessage.content;
 		// const sentMessageJSON = { ...sentMessage, content: contentWithUsername };
 		const sentMessageJSON = sentMessage;
 		socket.emit("send-channel-message", sentMessageJSON);
 		setSentMessage({ ...sentMessage, content: "" });
-		};
+	};
 	return (
 		<Flex
 			direction="column"
@@ -118,12 +138,21 @@ const ChatUI: React.FC = () => {
 						overflowY="scroll"
 						height="calc(100vh - 50px)"
 					>
-					{receivedMessages.map((msg, index) => (
-                      <div key={index}>
-                      <p>{msg.content}</p>
-                      </div>
-                    ))}
-						{/* <MessageList roomId={currentRoomId} /> */}
+						{messageHistory.map((msg, index) => (
+							<div key={index}>
+								<p>
+									<strong>{msg.sender}</strong>: {msg.content}
+								</p>
+							</div>
+						))}
+						{receivedMessages.map((msg, index) => (
+							<div key={index}>
+							<p>
+								<strong>{msg.sender}</strong>: {msg.content}
+							</p>
+						</div>
+					))}
+						{/* Combine messageHistory with receivedMessages if needed */}
 					</Box>
 					<Box
 						borderWidth={1}
@@ -136,17 +165,16 @@ const ChatUI: React.FC = () => {
 				</Grid>
 			</Flex>
 			<Grid templateColumns="3fr 1fr" height="50px">
-			    <Input
-                  value={sentMessage.content}
-                  placeholder="Type your message here"
-                  onChange={(e) =>
-                    setSentMessage({ ...sentMessage, content: e.target.value })
-                  }
-                />
+				<Input
+					value={sentMessage.content}
+					placeholder="Type your message here"
+					onChange={(e) =>
+						setSentMessage({ ...sentMessage, content: e.target.value })
+					}
+				/>
 				<Button onClick={onSubmit}>Send</Button>
 			</Grid>
 		</Flex>
 	);
 };
-
 export default ChatUI;
