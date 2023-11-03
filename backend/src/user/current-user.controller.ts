@@ -64,7 +64,7 @@ export class CurrentUserController {
     (request.session as any).passport.user.username = dto.username;
     if (dto.username && (dto.username !== user.username) && !user.achievements.includes('DRALIAS')) {
       await this.userService.addAchievement(user.id, 'DRALIAS');
-      (request.session as any).passport.user.achievements.include('DRALIAS');
+      (request.session as any).passport.user.achievements.push('DRALIAS');
     }
     return updatedUser;
   }
@@ -94,7 +94,7 @@ export class CurrentUserController {
     (request.session as any).passport.user.avatar = updatedUser.avatar;
     if (!user.achievements.includes('AVATARISH')) {
       await this.userService.addAchievement(user.id, 'AVATARISH');
-      // (request.session as any).passport.user.achievements.include('AVATARISH');
+      // (request.session as any).passport.user.achievements.push('AVATARISH');
     }
     return ShowLoggedUserDto.from(updatedUser);
   }
