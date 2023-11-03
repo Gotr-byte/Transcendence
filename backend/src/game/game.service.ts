@@ -77,8 +77,8 @@ export class GameService
 			}
 			if (gameState?.getGameInstance().isInterrupted())
 			{
-				player1.emit('GameLoop', "Opponent Disconnected");
-				player2.emit('GameLoop', "Opponent Disconnected");
+				player1.emit('GameLoop', "OpponentDisconnected");
+				player2.emit('GameLoop', "OpponentDisconnected");
 				clearInterval(gameIntervall);
 				return;
 			}
