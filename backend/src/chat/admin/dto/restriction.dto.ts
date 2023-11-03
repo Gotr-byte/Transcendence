@@ -1,9 +1,9 @@
 import { ChannelUserRestrictionTypes } from '@prisma/client';
 import { Transform } from 'class-transformer';
-import { IsDate, IsOptional, IsString } from 'class-validator';
+import { IsDate, IsEnum, IsOptional } from 'class-validator';
 
 export class RestrictionDto {
-  @IsString()
+  @IsEnum(ChannelUserRestrictionTypes)
   restrictionType: ChannelUserRestrictionTypes;
 
   @IsDate()
