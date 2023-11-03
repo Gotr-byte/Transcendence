@@ -67,20 +67,35 @@ export class ChatGateway implements OnGatewayConnection {
 
     // Emit the messages and notifications
     for (const chatEvent of chatEvents) {
-      const memberSocketIds = await this.chatService.getSocketIdsFromUserId(
-        chatEvent.receiverId,
+      const receiverId = chatEvent.receiverId;
+      const isBlocked = await this.chatService.userIsBlocked(
+        receiverId,
+        userId,
       );
 
-      memberSocketIds.forEach((socketId) => {
-        if (userId == chatEvent.receiverId) {
-          client.emit(chatEvent.event, chatEvent.message);
-        } else {
-          client.to(socketId).emit(chatEvent.event, chatEvent.message);
-          client
-            .to(socketId)
-            .emit('chat-notifications', chatEvent.notification);
-        }
-      });
+      if (!isBlocked) {
+        const memberSocketIds = await this.chatService.getSocketIdsFromUserId(
+          receiverId,
+        );
+
+        memberSocketIds.forEach((socketId) => {
+          if (userId == receiverId) {
+            // If the sender is the receiver (message to self), emit directly to the client.
+            client.emit(chatEvent.event, chatEvent.message);
+          } else {
+            // Otherwise, emit to the recipient's socket.
+            client.to(socketId).emit(chatEvent.event, chatEvent.message);
+            client
+              .to(socketId)
+              .emit('chat-notifications', chatEvent.notification);
+          }
+        });
+      } else {
+        // Optionally handle the case where the user is blocked, e.g., notify the sender.
+        console.log(
+          `Message not sent. User ${userId} is blocked by User ${receiverId}.`,
+        );
+      }
     }
   }
 
@@ -119,7 +134,6 @@ export class ChatGateway implements OnGatewayConnection {
         .to(privateChatId)
         .emit('chat-notifications', chatEvents.notification);
     }
-
     client.emit(`user-msg-${userMessageDto.receiverId}`, chatEvents.message);
   }
 
