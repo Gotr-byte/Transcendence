@@ -147,11 +147,11 @@ const ChatUI: React.FC = () => {
 						))}
 						{receivedMessages.map((msg, index) => (
 							<div key={index}>
-							<p>
-								<strong>{msg.sender}</strong>: {msg.content}
-							</p>
-						</div>
-					))}
+								<p>
+									<strong>{msg.sender}</strong>: {msg.content}
+								</p>
+							</div>
+						))}
 						{/* Combine messageHistory with receivedMessages if needed */}
 					</Box>
 					<Box
