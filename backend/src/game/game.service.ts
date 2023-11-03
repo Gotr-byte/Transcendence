@@ -59,7 +59,7 @@ export class GameService
 			looser = player2;
 		}
 
-		winner.emit('EndGame', "You Won!");
+		winner.emit('EndGame', "You won!");
 		looser.emit('EndGame', "You lost!");
 
 		const matchData = { ...result, homePlayerId: player1Id, awayPlayerId: player2Id, winnerId}
