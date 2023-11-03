@@ -64,6 +64,8 @@ export class AuthController {
   ): Promise<string> {
     const user = session?.passport?.user;
     if (!user) return 'Session Invalid';
+    const sessions = await this.authService.getUserSessions(user.id);
+    if (!sessions) return 'Session Invalid';
     return 'Session Valid';
   }
 
