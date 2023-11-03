@@ -30,9 +30,10 @@ export class Fox {
 	public paddleTime:	number = 0;
 	public sticking:	number = 0;
 	public velocity:	number = config.ball.velocity;
+	public position:	Coordinate = new Coordinate(config.game_canvas.width / 2, config.game_canvas.height / 2);
 
 	constructor(
-		public position:	Coordinate
+		public direction:	Coordinate
 	) { 
 		this.timeStamp= Date.now();
 	}
@@ -85,9 +86,9 @@ export class GameState
 		let paddle_height: number = config.paddle.height;
 		this.paddle1 = new Paddle(new Coordinate(config.paddle.buffer, config.game_canvas.height / 2), paddle_height);
 		this.paddle2 = new Paddle(new Coordinate(config.game_canvas.width - config.paddle.buffer - config.paddle.width, config.game_canvas.height / 2), paddle_height);
-		this.ball = new Ball(this.calcRandomDirection(1), true, config.ball.velocity);
-		this.ball2 = new Ball(this.calcRandomDirection(1), false, config.ball.velocity);
-		this.fox = new Fox(this.calcRandomDirection(1));
+		this.ball = new Ball(this.calcRandomDirection(Math.random() * 2), true, config.ball.velocity);
+		this.ball2 = new Ball(this.calcRandomDirection(Math.random() * 2), false, config.ball.velocity);
+		this.fox = new Fox(this.calcRandomDirection(Math.random() * 2));
 		this.winner = 0;
 	}
 
@@ -102,7 +103,7 @@ export class GameState
 		return new Coordinate(x, y);
 	}
 
-	public calcNewPosition() : void {
+	public async calcNewPosition() : Promise<void> {
 		if (!this.instance.isStarted() && this.instance.getTimeDiff() > config.startTime)
 			this.instance.startGame();
 		if (this.instance.isFinished() || !this.instance.isStarted())
@@ -131,11 +132,10 @@ export class GameState
 			this.checkFoxMood();
 			this.isEnragedFox();
 			this.calcFoxPosition();
-			//this.unstickFoxFromPaddle();
+			this.unstickFoxFromPaddle();
 			this.freePaddles();
-			this.foxBallCollission();
+			//this.foxBallCollission();
 		}
-
 		this.ball = this.calcBallPosition(this.ball);
 		if (this.ball2.isUnlocked)
 			this.ball2 = this.calcBallPosition(this.ball2);
@@ -148,7 +148,7 @@ export class GameState
 		if (!this.fox.isUnlocked || !this.fox.isEnraged)
 			return;
 		let fsize = this.fox.hasSizeOf;
-		//do collission logic here and let them bounce
+		//do collision logic here and let them bounce
 	}
 
 	public unlockBall(): void
@@ -196,15 +196,17 @@ export class GameState
 
 	public isEnragedFox(): void
 	{
-		if (!this.fox.isUnlocked)
+		if (!this.fox.isUnlocked || !this.fox.isEnraged)
 			return;
 		let rndTime = Math.random() * config.fox.getEnragedIn;
-		if (Date.now() > this.fox.paddleTime + config.fox.getEnragedIn + rndTime)
+		if (Date.now() < this.fox.paddleTime + config.fox.getEnragedIn + rndTime)
 		{
 			this.fox.isEnraged = true;
 			this.fox.velocity = config.fox.maxVelocity;
 			this.fox.hasSizeOf = config.fox.maxSize;
 		}
+		else
+			this.unrageFox;
 	}
 
 	public unrageFox(): void
@@ -236,9 +238,9 @@ export class GameState
 
 	public freePaddles(): void
 	{
-		if (!this.fox.isUnlocked || this.fox.velocity > 0)
+		if (!this.fox.isUnlocked || this.fox.velocity == 0)
 			return;
-		if (this.fox.velocity == 0 && this.fox.paddleTime < Date.now())
+		if (this.fox.paddleTime < Date.now())
 		{
 			this.fox.paddleTime = Date.now();
 			this.paddle1.isImmobile = false;
@@ -249,50 +251,45 @@ export class GameState
 		}
 	}
 
-	public calcFoxPosition() : void 
-	{
-		let fox_new_x: number = this.fox.position.x + Math.round(this.fox.velocity * this.fox.position.x);
-		let fox_new_y: number = this.fox.position.y + Math.round(this.fox.velocity * this.fox.position.y);
+	public calcFoxPosition() {
+		let fox_new_x: number = this.fox.position.x + Math.round(this.fox.velocity * this.fox.direction.x);
+		let fox_new_y: number = this.fox.position.y + Math.round(this.fox.velocity * this.fox.direction.y);
 
 		if (this.fox.sticking)
 			return;
 
-		if (fox_new_y - this.fox.hasSizeOf <= 0) 
-		{
+		if (fox_new_y - this.fox.hasSizeOf <= 0) {
 			fox_new_y = this.fox.hasSizeOf;
-			this.fox.position.y *= -1;
-		}
-		else if (fox_new_y + this.fox.hasSizeOf >= config.game_canvas.height) 
-		{
+			this.fox.direction.y *= -1;
+		} else if (fox_new_y + this.fox.hasSizeOf >= config.game_canvas.height) {
 			fox_new_y = config.game_canvas.height - this.fox.hasSizeOf;
-			this.fox.position.y *= -1;
+			this.fox.direction.y *= -1;
 		}
 		if (fox_new_x - this.fox.hasSizeOf <= 0) 
 		{
 			fox_new_x = this.fox.hasSizeOf;
-			this.fox.position.x *= -1;
+			this.fox.direction.x *= -1;
 		}
 		else if (fox_new_x + this.fox.hasSizeOf >= config.game_canvas.width) 
 		{
 			fox_new_x = config.game_canvas.width - this.fox.hasSizeOf;
-			this.fox.position.x *= -1;
+			this.fox.direction.x *= -1;
 		}
-		if ((fox_new_x - this.fox.hasSizeOf) <= (config.paddle.buffer + config.paddle.width)) 
-		{
+		if ((fox_new_x - this.fox.hasSizeOf) <= (config.paddle.buffer + config.paddle.width)) {
 			if ((((fox_new_y - this.fox.hasSizeOf) > (this.paddle1.position.y + this.paddle1.height)) ||
 				((fox_new_y + this.fox.hasSizeOf) < this.paddle1.position.y)))
 			{
-				//do nothing
+					//do nothing
 			}
 			else
 			{
 				fox_new_x = this.paddle1.position.x + config.paddle.width + this.fox.hasSizeOf;
-				this.fox.position.y = (fox_new_y - (this.paddle1.position.y + (this.paddle1.height / 2))) / (config.paddle.height / 4);
-				this.fox.position.x *= -1;
+				this.fox.direction.y = (fox_new_y - (this.paddle1.position.y + (this.paddle1.height / 2))) / (config.paddle.height / 4);
+				this.fox.direction.x *= -1;
 				this.foxPaddleBehavior(1);
 			}
 		}
-		else if (fox_new_x + this.fox.hasSizeOf >= (config.game_canvas.width - config.paddle.buffer - config.paddle.width)) 
+		else if (fox_new_x + this.fox.hasSizeOf >= (config.game_canvas.width - config.paddle.buffer - config.paddle.width))
 		{
 			if (((((fox_new_y - this.fox.hasSizeOf) > (this.paddle2.position.y + this.paddle1.height)) ||
 				(fox_new_y + this.fox.hasSizeOf) < this.paddle2.position.y)))
@@ -302,16 +299,17 @@ export class GameState
 			else
 			{
 				fox_new_x = this.paddle2.position.x - this.fox.hasSizeOf;
-				this.fox.position.y = (fox_new_y - (this.paddle2.position.y + (this.paddle2.height / 2))) / (config.paddle.height / 4);
-				this.fox.position.x *= -1;
+				this.fox.direction.y = (fox_new_y - (this.paddle2.position.y + (this.paddle2.height / 2))) / (config.paddle.height / 4);
+				this.fox.direction.x *= -1;
 				this.foxPaddleBehavior(2);
 			}
 		}
 		// 1% chance if enraged to reverse x and/or y direction
 		if (this.fox.isEnraged && Math.random() * 1000 <= 10)
-			fox_new_x *= -1;
+			this.fox.direction.x *= -1;
 		if (this.fox.isEnraged && Math.random() * 1000 <= 10)
-			fox_new_y *= -1;
+			this.fox.direction.y *= -1;
+
 		this.fox.position.x = fox_new_x;
 		this.fox.position.y = fox_new_y;
 	}
@@ -377,14 +375,24 @@ export class GameState
 		paddle.direction = direction;
 	}
 
-	public resetGameState() : void {
+	public resetGameState() : void 
+	{
 		this.instance.notScored();
 		this.ball.position.x = config.game_canvas.width / 2;
 		this.ball.position.y = config.game_canvas.height / 2;
 		this.ball.direction = this.calcRandomDirection(this.instance.getRound());
-			this.ball2.position.x = config.game_canvas.width / 2;
-			this.ball2.position.y = config.game_canvas.height / 2;
-			this.ball2.direction = this.calcRandomDirection(this.instance.getRound());
+
+		this.fox.hasSizeOf = config.fox.minSize;
+		this.fox.isEnraged = false;
+		this.fox.isEvil = false;
+		this.fox.velocity = config.fox.minVelocity;
+		//this.fox.position.x = config.game_canvas.width / 2;
+		//this.fox.position.y = config.game_canvas.width / 2;
+		//this.fox.direction = this.calcRandomDirection(this.instance.getRound());
+
+		this.ball2.position.x = config.game_canvas.width / 2;
+		this.ball2.position.y = config.game_canvas.height / 2;
+		this.ball2.direction = this.calcRandomDirection(this.instance.getRound());
 
 		//make the game faster each round 
 		this.ball.velocity = config.ball.velocity + (this.instance.getRound() / 2);

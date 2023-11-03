@@ -9,7 +9,7 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { matchesService } from './matches.service';
+import { MatchesService } from './matches.service';
 import { CreateMatchDto, ShowAnyMatchDto } from './dto/matchDto';
 import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
 import { User } from '@prisma/client';
@@ -19,8 +19,8 @@ import { ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 @UseGuards(AuthenticatedGuard)
 @Controller('matches')
 @ApiTags('Matches')
-export class matchesController {
-  constructor(private readonly matchesService: matchesService) {}
+export class MatchesController {
+  constructor(private readonly matchesService: MatchesService) {}
 
   // Get all matches
   @Get('all')

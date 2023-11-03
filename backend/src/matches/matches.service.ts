@@ -4,7 +4,7 @@ import { User } from '@prisma/client';
 import { CreateMatchDto, ShowAnyMatchDto } from './dto/matchDto';
 
 @Injectable()
-export class matchesService {
+export class MatchesService {
   constructor(private prisma: PrismaService) {}
 
   // Get a list of all matches
