@@ -65,7 +65,6 @@ export class GameService
 
 	public look4match(socket: Socket,name: string|null, isBasic: boolean): GameQueue|null
 	{
-		console.log(socket.id + ": " + name + " - " + isBasic + " :: " + this.gameQueue.size);
 		for (const [key, value] of this.gameQueue) 
 		{
 			if (name == null && value.isBasic == isBasic)

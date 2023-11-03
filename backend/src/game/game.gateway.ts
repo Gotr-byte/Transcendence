@@ -49,9 +49,7 @@ export class GameGateway implements OnGatewayDisconnect {
     @ConnectedSocket() client: Socket,
   ): Promise<void> 
   {
-    console.log(client.id + " : " + game);
     let fromGameQueue = this.gameService.look4match(client, null, game != 'extended');
-    console.log("returned " + fromGameQueue?.socket.id)
     if (!fromGameQueue)
       return;
     if (game == 'extended')
