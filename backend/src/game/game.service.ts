@@ -59,8 +59,8 @@ export class GameService
 			looser = player2;
 		}
 
-		winner.emit('EndMatch', "You Won!");
-		looser.emit('EndMatch', "You lost!");
+		winner.emit('EndGame', "You Won!");
+		looser.emit('EndGame', "You lost!");
 
 		const matchData = { ...result, homePlayerId: player1Id, awayPlayerId: player2Id, winnerId}
 		this.matchService.createMatch(matchData);
@@ -95,8 +95,8 @@ export class GameService
 			}
 			if (gameState?.getGameInstance().isInterrupted())
 			{
-				player1.emit('EndMatch', "OpponentDisconnected");
-				player2.emit('EndMatch', "OpponentDisconnected");
+				player1.emit('EndGame', "OpponentDisconnected");
+				player2.emit('EndGame', "OpponentDisconnected");
 				clearInterval(gameIntervall);
 				return;
 			}
