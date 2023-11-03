@@ -81,6 +81,7 @@ export class GameState
 	public winner:		number;
 
 	constructor(
+		private isExtended: boolean,
 		private instance: GameInstance)
    {
 		let paddle_height: number = config.paddle.height;
@@ -111,22 +112,25 @@ export class GameState
 		if (this.instance.hasScored())
 		{
 			this.resetGameState();
-
-			// PoC, can be removed later
-			if (Math.random() * 100 < 50)
-				this.ball2.isUnlocked = true;
-			else
-				this.ball2.isUnlocked = false;
-			// remove until here
-
 			this.instance.addRound();
 			this.winner = this.instance.whoWon();
 			if (this.winner)
 				this.instance.finishGame();
 			return;
 		}
+		if (this.isExtended)
+			this.extendedVersion();
+		this.ball = this.calcBallPosition(this.ball);
+		this.calcPaddlePosition(this.paddle1);
+		this.calcPaddlePosition(this.paddle2);
+	}
+
+	public extendedVersion(): void
+	{
 		this.unlockBall();
 		this.unlockFox();
+		if (this.ball2.isUnlocked)
+			this.ball2 = this.calcBallPosition(this.ball2);
 		if (this.fox.isUnlocked)
 		{
 			this.checkFoxMood();
@@ -136,11 +140,7 @@ export class GameState
 			this.freePaddles();
 			//this.foxBallCollission();
 		}
-		this.ball = this.calcBallPosition(this.ball);
-		if (this.ball2.isUnlocked)
-			this.ball2 = this.calcBallPosition(this.ball2);
-		this.calcPaddlePosition(this.paddle1);
-		this.calcPaddlePosition(this.paddle2);
+
 	}
 
 	public foxBallCollission(): void
@@ -382,13 +382,16 @@ export class GameState
 		this.ball.position.y = config.game_canvas.height / 2;
 		this.ball.direction = this.calcRandomDirection(this.instance.getRound());
 
+		this.paddle1.position.y = (config.game_canvas.height - this.paddle1.height) / 2;
+		this.paddle2.position.y = (config.game_canvas.height - this.paddle2.height) / 2;
+
+		if (!this.isExtended)
+			return;
+
 		this.fox.hasSizeOf = config.fox.minSize;
 		this.fox.isEnraged = false;
 		this.fox.isEvil = false;
 		this.fox.velocity = config.fox.minVelocity;
-		//this.fox.position.x = config.game_canvas.width / 2;
-		//this.fox.position.y = config.game_canvas.width / 2;
-		//this.fox.direction = this.calcRandomDirection(this.instance.getRound());
 
 		this.ball2.position.x = config.game_canvas.width / 2;
 		this.ball2.position.y = config.game_canvas.height / 2;
@@ -396,8 +399,5 @@ export class GameState
 
 		//make the game faster each round 
 		this.ball.velocity = config.ball.velocity + (this.instance.getRound() / 2);
-
-		this.paddle1.position.y = (config.game_canvas.height - this.paddle1.height) / 2;
-		this.paddle2.position.y = (config.game_canvas.height - this.paddle2.height) / 2;
 	}
 }

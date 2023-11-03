@@ -44,7 +44,10 @@ export class GameGateway implements OnGatewayDisconnect {
   }
 
   @SubscribeMessage('match-random')
-  async handleStartRandomMatchmaking(@ConnectedSocket() client: Socket,): Promise<void> 
+  async handleStartRandomMatchmaking(
+    @MessageBody() game: string,
+    @ConnectedSocket() client: Socket,
+  ): Promise<void> 
   {
     if (this.waitingUser) 
     {
@@ -56,7 +59,10 @@ export class GameGateway implements OnGatewayDisconnect {
       client.emit('matchmaking', 'gameInit');
       opponent.emit('matchmaking', 'gameInit');
 
-      this.gameService.initGame(opponent.id, client.id);
+      if (game == 'extended')
+        this.gameService.initExtendedGame(opponent.id, client.id);
+      else
+        this.gameService.initBasicGame(opponent.id, client.id);
       this.gameService.startGame(opponent, client);
       this.waitingUser = null;
     }

@@ -14,7 +14,7 @@ export class GameService
 
 	constructor(
 	private readonly socketService: SocketService,
-	private readonly userService: UserService,
+	//private readonly userService: UserService,
 	private readonly matchService: MatchesService,
 	) {this.GameLobby = new Map<string, GameState>;}
 
@@ -23,9 +23,14 @@ export class GameService
 		return this.GameLobby.get(player1Id + ":" +player2Id);
 	}
 
-	public initGame(player1Id: string, player2Id: string): void
+	public initBasicGame(player1Id: string, player2Id: string): void
 	{
-		this.GameLobby.set(player1Id + ":" + player2Id, new GameState(new GameInstance));
+		this.GameLobby.set(player1Id + ":" + player2Id, new GameState(false, new GameInstance));
+	}
+
+	public initExtendedGame(player1Id: string, player2Id: string): void
+	{
+		this.GameLobby.set(player1Id + ":" + player2Id, new GameState(true, new GameInstance));
 	}
 
 	private deleteGame(player1Id: string, player2Id: string): void
