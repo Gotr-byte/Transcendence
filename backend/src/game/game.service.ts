@@ -28,7 +28,11 @@ export class GameService
 	private readonly socketService: SocketService,
 	//private readonly userService: UserService,
 	private readonly matchService: MatchesService,
-	) {this.GameLobby = new Map<string, GameState>;}
+	) 
+	{
+		this.GameLobby = new Map<string, GameState>;
+		this.gameQueue = new Map<string, GameQueue>;
+	}
 
 	private getGameState(player1Id: string, player2Id: string): GameState | undefined
 	{
