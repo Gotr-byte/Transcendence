@@ -60,31 +60,6 @@ export class GameGateway implements OnGatewayDisconnect {
         this.gameService.initBasicGame(fromGameQueue.socket.id, client.id);
     this.gameService.startGame(fromGameQueue.socket, client);
     this.gameService.removeFromGameQueue(fromGameQueue.socket.id);
-    /*
-    if (this.waitingUser) 
-    {
-      if (client == this.waitingUser)
-        return;
-      const opponent = this.waitingUser;
-      this.waitingUser = null;
-      // If there's a waiting user, match them together
-      client.emit('matchmaking', 'gameInit');
-      opponent.emit('matchmaking', 'gameInit');
-
-      if (game == 'extended')
-        this.gameService.initExtendedGame(opponent.id, client.id);
-      else
-        this.gameService.initBasicGame(opponent.id, client.id);
-      this.gameService.startGame(opponent, client);
-      this.waitingUser = null;
-    }
-    else
-    {
-      this.timestamp = Date.now();
-      client.emit('matchmaking', 'waiting for opponent...');
-      this.waitingUser = client;
-    }
-    */
   }
   
   @SubscribeMessage('abort-matchmaking')

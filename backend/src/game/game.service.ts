@@ -49,6 +49,20 @@ export class GameService
 		this.gameQueue.delete(socketId);
 	}
 
+	public timoutQueue(): void
+	{
+		let now = Date.now();
+
+		for (const [, value] of this.gameQueue)
+		{
+			if (now > value.timestamp + config.mmTimeout)
+			{
+				value.socket.emit('matchmaking', 'operation timed out');
+				this.gameQueue.delete(value.socket.id);
+			}
+		}
+	}
+
 	public look4match(socket: Socket,name: string|null, isBasic: boolean): GameQueue|null
 	{
 		console.log(socket.id + ": " + name + " - " + isBasic + " :: " + this.gameQueue.size);
