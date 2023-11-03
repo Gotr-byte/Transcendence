@@ -8,6 +8,7 @@ import RootLayout from "./layouts/RootLayout";
 import Profile from "./pages/Profile";
 import Chat from "./pages/Chat";
 import Game from "./pages/Game";
+import GamePlus from "./pages/GamePlus";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -15,6 +16,7 @@ const router = createBrowserRouter(
 			<Route path="profile" element={<Profile />} />
 			<Route path="chat" element={<Chat />} />
 			<Route path="game" element={<Game />} />
+			<Route path="gamePlus" element={<GamePlus />} />
 		</Route>
 	)
 );

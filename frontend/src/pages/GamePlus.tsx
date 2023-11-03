@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState, useContext } from 'react';
 import { WebsocketContext } from '../components/Context/WebsocketContexts';
 import JoinRandom from '../components/Game/JoinRandom';
-import AbortMatchmaking from '../components/Game/AbortMatchmaking';
 
 interface Coordinates {
 	x: number;
@@ -16,7 +15,7 @@ interface GameState {
 	scoreTwo: number;
 }
 
-const Game: React.FC = () => {
+const GamePlus: React.FC = () => {
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 	const [gameState, setGameState] = useState<GameState | null>(null);
 
@@ -91,10 +90,9 @@ const Game: React.FC = () => {
 	return (
 		<div>
 					<JoinRandom />
-					<AbortMatchmaking />
 					<canvas ref={canvasRef} width="1200" height="720" style={{ border: '1px solid black' }}></canvas>
 		</div>
 	);
 }
 
-export default Game;
+export default GamePlus;

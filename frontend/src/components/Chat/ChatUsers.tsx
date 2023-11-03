@@ -3,6 +3,7 @@ import AddFriendButton from "./AddFriendButton";
 import UserProfile from "./UserProfile";
 import SendDirectMessage from "./SendDirectMessage";
 import MatchThisUser from "./MatchThisUser";
+import MatchThisUserGamePlus from "./MatchThisUserGamePlus";
 
 
 type UserRole = "ADMIN" | "USER";
@@ -81,6 +82,7 @@ const ChatUsers: React.FC<ChatUsersProps> = ({ currentRoomId }) => {
 							<UserProfile username={user.username} />
 							<SendDirectMessage username={user.username} id={user.id} />
 							<MatchThisUser username={user.username} />
+							<MatchThisUserGamePlus username={user.username} />
 						</li>
 					))}
 				</ul>

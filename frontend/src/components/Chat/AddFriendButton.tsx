@@ -15,7 +15,6 @@ const AddFriendButton: React.FC<AcceptButtonProps> = ({ username }) => {
 					credentials: "include",
 				}
 			);
-
 			if (response.ok) {
 				alert("Friend request sent.");
 			} else {
