@@ -1,7 +1,7 @@
 import { ChannelMemberRoles } from '@prisma/client';
-import { IsString } from 'class-validator';
+import { IsEnum } from 'class-validator';
 
 export class UpdateRoleDto {
-  @IsString()
+  @IsEnum(ChannelMemberRoles)
   role: ChannelMemberRoles;
 }
