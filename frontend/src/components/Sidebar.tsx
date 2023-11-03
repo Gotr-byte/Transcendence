@@ -17,9 +17,14 @@ export const Sidebar = () => {
     const socketIo = useContext(WebsocketContext);
     const toast = useToast();
 
+    const redirectToGame = (username) => {
+        window.location.href = `/game`;
+        socket.emit("matchThisUser", username);
+    };
+
     useEffect(() => {
         socketIo.on('GameRequest', (data: Opponent) => {
-            console.log(data);
+            // console.log(data);
 
             // Show the toast with opponent data and Yes/No options
             toast({
@@ -34,15 +39,15 @@ export const Sidebar = () => {
                 render: ({ onClose }) => (
                     <Box color="white">
                         Player {data.playeroneName} wants to play with you.
-                        <Button size="sm" colorScheme="green" onClick={() => { console.log('Joining Game'); onClose(); window.location.href = 'http://localhost:5173/game';}}>Join</Button>
-                        <Button size="sm" colorScheme="red" onClick={onClose}>Decline</Button>
+                        <Button size="sm" colorScheme="green" onClick={() => { console.log('Joining Game'); onClose(); window.location.href = '/game'; socketIo.emit("matchThisUser", data.playeroneName);}}>Join</Button>
+                        <Button size="sm" colorScheme="red" onClick={onClose}>Close</Button>
                     </Box>
                 ),
             });
         });
 
         socketIo.on('EndGame', (data: String) => {
-            console.log("game over");
+            // console.log("game over");
 
             // Show the toast with opponent data and Yes/No options
             toast({
