@@ -1,16 +1,5 @@
 import { Match } from '@prisma/client';
 
-// CREATE TABLE public."Match" (
-//     id integer NOT NULL,
-//     started timestamp(3) without time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-//     ended timestamp(3) without time zone NOT NULL,
-//     "homePlayerId" integer NOT NULL,
-//     "awayPlayerId" integer NOT NULL,
-//     "winnerId" integer NOT NULL,
-//     "homeScore" integer NOT NULL,
-//     "awayScore" integer NOT NULL
-// );
-
 export class ShowAnyMatchDto {
   id: number;
   homePlayerId: number;

@@ -300,3 +300,68 @@ export class AdminService {
     return !user ? false : true;
   }
 }
+
+
+// 1   | Client connected with ID: n1tNy3-sSk24XoB_AAAB
+// transcendence1-backend-1   | Map(1) { 'n1tNy3-sSk24XoB_AAAB' => 12 }
+// transcendence1-frontend-1  | files in the public directory are served at the root path.
+// transcendence1-frontend-1  | Instead of /public/1920paper.jpg, use /1920paper.jpg.
+// transcendence1-backend-1   | Map(0) {}
+// transcendence1-backend-1   | Client disconnected with ID: n1tNy3-sSk24XoB_AAAB
+// transcendence1-frontend-1  | files in the public directory are served at the root path.
+// transcendence1-frontend-1  | Instead of /public/bookCover.jpg, use /bookCover.jpg.
+// transcendence1-frontend-1  | files in the public directory are served at the root path.
+// transcendence1-frontend-1  | Instead of /public/1920paper.jpg, use /1920paper.jpg.
+// transcendence1-backend-1   | Client connected with ID: TzhdORexcrgZIl_WAAAD
+// transcendence1-backend-1   | Map(1) { 'TzhdORexcrgZIl_WAAAD' => 12 }
+// transcendence1-backend-1   | [Nest] 19156  - 11/03/2023, 8:49:22 AM   ERROR [ExceptionsHandler]
+// transcendence1-backend-1   | Invalid `this.prisma.channelMember.update()` invocation in
+// transcendence1-backend-1   | /app/src/chat/admin/admin.service.ts:137:56
+// transcendence1-backend-1   |
+// transcendence1-backend-1   |   134 ): Promise<ChannelMember> {
+// transcendence1-backend-1   |   135   const userId = await this.validateAdminAction(channelId, username, adminId);
+// transcendence1-backend-1   |   136
+// transcendence1-backend-1   | → 137   const membership = await this.prisma.channelMember.update({
+// transcendence1-backend-1   |           where: {
+// transcendence1-backend-1   |             userId_channelId: {
+// transcendence1-backend-1   |               userId: 10,
+// transcendence1-backend-1   |               channelId: 4
+// transcendence1-backend-1   |             }
+// transcendence1-backend-1   |           },
+// transcendence1-backend-1   |           data: {
+// transcendence1-backend-1   |             role: "MEMBER"
+// transcendence1-backend-1   |                   ~~~~~~~~
+// transcendence1-backend-1   |           }
+// transcendence1-backend-1   |         })
+// transcendence1-backend-1   |
+// transcendence1-backend-1   | Invalid value for argument `role`. Expected ChannelMemberRoles.
+// transcendence1-backend-1   | PrismaClientValidationError:
+// transcendence1-backend-1   | Invalid `this.prisma.channelMember.update()` invocation in
+// transcendence1-backend-1   | /app/src/chat/admin/admin.service.ts:137:56
+// transcendence1-backend-1   |
+// transcendence1-backend-1   |   134 ): Promise<ChannelMember> {
+// transcendence1-backend-1   |   135   const userId = await this.validateAdminAction(channelId, username, adminId);
+// transcendence1-backend-1   |   136
+// transcendence1-backend-1   | → 137   const membership = await this.prisma.channelMember.update({
+// transcendence1-backend-1   |           where: {
+// transcendence1-backend-1   |             userId_channelId: {
+// transcendence1-backend-1   |               userId: 10,
+// transcendence1-backend-1   |               channelId: 4
+// transcendence1-backend-1   |             }
+// transcendence1-backend-1   |           },
+// transcendence1-backend-1   |           data: {
+// transcendence1-backend-1   |             role: "MEMBER"
+// transcendence1-backend-1   |                   ~~~~~~~~
+// transcendence1-backend-1   |           }
+// transcendence1-backend-1   |         })
+// transcendence1-backend-1   |
+// transcendence1-backend-1   | Invalid value for argument `role`. Expected ChannelMemberRoles.
+// transcendence1-backend-1   |     at En (/app/node_modules/@prisma/client/runtime/library.js:116:5888)
+// transcendence1-backend-1   |     at Cn.handleRequestError (/app/node_modules/@prisma/client/runtime/library.js:123:6516)
+// transcendence1-backend-1   |     at Cn.handleAndLogRequestError (/app/node_modules/@prisma/client/runtime/library.js:123:6206)
+// transcendence1-backend-1   |     at Cn.request (/app/node_modules/@prisma/client/runtime/library.js:123:5926)
+// transcendence1-backend-1   |     at l (/app/node_modules/@prisma/client/runtime/library.js:128:9968)
+// transcendence1-backend-1   |     at AdminService.updateRole (/app/src/chat/admin/admin.service.ts:137:24)
+// transcendence1-backend-1   |     at AdminController.updateRole (/app/src/chat/admin/admin.controller.ts:166:24)
+// transcendence1-backend-1   |     at /app/node_modules/@nestjs/core/router/router-execution-context.js:46:28
+// transcendence1-backend-1   |     at /app/node_modules/@nestjs/core/router/router-proxy.js:9:17

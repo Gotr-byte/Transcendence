@@ -6,7 +6,7 @@ type MatchmakingPayload = {
   content: string;
 };
 
-export const JoinGame: React.FC<SendDirectMessageProps> = () => {
+export const AbortMatchmaking: React.FC<SendDirectMessageProps> = () => {
 
 const socket = useContext(WebsocketContext);
 const [receivedPrompts, setReceivedPrompts] = useState<
@@ -28,7 +28,7 @@ const onSubmit = () => {
   return (
     <div>
     <Button variant="solid" size="xl" onClick={onSubmit}>
-       Join Random Game
+       Abort Matchmaking
       </Button>
     <p>{receivedPrompts.content}</p>
     </ div>
@@ -36,4 +36,4 @@ const onSubmit = () => {
     );
 };
 
-export default JoinGame;
+export default AbortMatchmaking;

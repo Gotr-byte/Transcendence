@@ -6,7 +6,7 @@ type MatchmakingPayload = {
   content: string;
 };
 
-export const JoinGame: React.FC<SendDirectMessageProps> = () => {
+export const JoinGamePlus: React.FC<SendDirectMessageProps> = () => {
 
 const socket = useContext(WebsocketContext);
 const [receivedPrompts, setReceivedPrompts] = useState<
@@ -36,4 +36,4 @@ const onSubmit = () => {
     );
 };
 
-export default JoinGame;
+export default JoinGamePlus;

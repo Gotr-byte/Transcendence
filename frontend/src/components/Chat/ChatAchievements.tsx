@@ -36,7 +36,7 @@ function ChatAchievements({ username }: AchievementsProps) {
         <Table variant="simple">
             <Thead>
                 <Tr>
-                    <Th>Your Achievements</Th>
+                    <Th>User Achievements</Th>
                 </Tr>
             </Thead>
             <Tbody>

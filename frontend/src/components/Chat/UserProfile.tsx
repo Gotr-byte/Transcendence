@@ -11,6 +11,7 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react";
 import ChatAchievements from "./ChatAchievements";
+import UserStats from "./UserStats";
 interface UserProfileProps {
 	username: string;
 }
@@ -70,6 +71,7 @@ const UserProfile: React.FC<UserProfileProps> = ({ username }) => {
 							</div>
 							<div>In Game: {profileData.inGame ? "Yes" : "No"}</div>
 							<ChatAchievements username={profileData.username} />
+							<UserStats username={profileData.username} />
 						</ModalBody>
 						<ModalFooter>
 							<Button colorScheme="blue" mr={3} onClick={onClose}>

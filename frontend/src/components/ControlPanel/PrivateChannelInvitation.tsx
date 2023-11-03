@@ -29,7 +29,7 @@ const PrivateChannelInvitation: React.FC = () => {
 			}
 
 			// Log the response
-			const data = await response.json();
+			const data = await response.text();
 			console.log("Channel created:", data);
 		} catch (error) {
 			setError(`There was a problem creating the channel: ${error}`);

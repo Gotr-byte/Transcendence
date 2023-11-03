@@ -1,7 +1,6 @@
 import { useRef, useEffect, useState, useContext } from 'react';
 import { WebsocketContext } from '../components/Context/WebsocketContexts';
 import JoinRandom from '../components/Game/JoinRandom';
-import AbortMatchmaking from '../components/Game/AbortMatchmaking';
 
 interface Coordinates {
 	x: number;
@@ -16,7 +15,7 @@ interface GameState {
 	scoreTwo: number;
 }
 
-const Game: React.FC = () => {
+const GamePlus: React.FC = () => {
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
 	const [gameState, setGameState] = useState<GameState | null>(null);
 
@@ -78,22 +77,12 @@ const Game: React.FC = () => {
 				ctx.fill();
 				ctx.closePath();
 				// Draw the  second ball in yellow
-				if (gameState.ball2lock)
-				{
-					ctx.beginPath();
-					ctx.arc(gameState.ball2.x, gameState.ball2.y, 10, 0, 2 * Math.PI); // 10 is the radius of the ball
-					ctx.fillStyle = 'yellow';
-					ctx.fill();
-					ctx.closePath();
-				}
-				if (gameState.fox.isUnlocked)
-				{
-					ctx.beginPath();
-					ctx.arc(gameState.fox.pos.x, gameState.fox.pos.y, gameState.fox.hasSizeOf, 0, 2 * Math.PI); // 10 is the radius of the ball
-					ctx.fillStyle = 'orange';
-					ctx.fill();
-					ctx.closePath();
-				}
+				console.log("Ball2: " + gameState?.ball2.isUnlocked)
+				ctx.beginPath();
+				ctx.arc(gameState.ball2.x, gameState.ball2.y, 10, 0, 2 * Math.PI); // 10 is the radius of the ball
+				ctx.fillStyle = 'yellow';
+				ctx.fill();
+				ctx.closePath();
 			}
 		}
 	}, [gameState]);
@@ -101,10 +90,9 @@ const Game: React.FC = () => {
 	return (
 		<div>
 					<JoinRandom />
-					<AbortMatchmaking />
 					<canvas ref={canvasRef} width="1200" height="720" style={{ border: '1px solid black' }}></canvas>
 		</div>
 	);
 }
 
-export default Game;
+export default GamePlus;

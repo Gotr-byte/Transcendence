@@ -152,7 +152,7 @@ export class AdminController {
     examples: {
       example1: {
         value: {
-          role: 'MEMBER OR ADMIN',
+          role: 'USER OR ADMIN',
         },
       },
     },
@@ -202,3 +202,4 @@ export class AdminController {
     return `User '${username}' was kicked from channel with ID: '${channelId}' by '${admin.username}'`;
   }
 }
+

@@ -25,7 +25,7 @@ const LeaveChannelButton: React.FC<LeaveChannelButtonProps> = ({
 			});
 
 			if (response.ok) {
-				const responseData = await response.json();
+				const responseData = await response.text();
 				console.log("Successfully left the channel!", responseData);
 			} else {
 				console.error("Failed to leave the channel!", response.status);
