@@ -51,12 +51,14 @@ export class GameService
 
 	public look4match(socket: Socket,name: string|null, isBasic: boolean): GameQueue|null
 	{
-		this.gameQueue.forEach( value => {
+		console.log(socket.id + ": " + name + " - " + isBasic + " :: " + this.gameQueue.size);
+		for (const [key, value] of this.gameQueue) 
+		{
 			if (name == null && value.isBasic == isBasic)
 				return value;
 			if (name != null && name == value.name)
 				return value;
-		})
+		}
 		this.add2GameQueue(socket, name, isBasic);
 		return null;
 	}
