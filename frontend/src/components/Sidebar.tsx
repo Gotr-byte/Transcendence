@@ -41,6 +41,28 @@ export const Sidebar = () => {
             });
         });
 
+        socketIo.on('EndGame', (data: String) => {
+            console.log("game over");
+
+            // Show the toast with opponent data and Yes/No options
+            toast({
+                title: `Game Over`,
+                description: `Have a nice day`,
+                status: "info",
+                duration: null, // Toast won't close automatically
+                isClosable: true,
+                position: "top-right",
+                variant: "solid",
+                colorScheme: "teal",
+                render: ({ onClose }) => (
+                    <Box color="white">
+                        {data}
+                        <Button size="sm" colorScheme="green" onClick={() => { console.log('Joining Game'); onClose(); window.location.href = '/chat';}}>Ok</Button>
+                    </Box>
+                ),
+            });
+        });
+
         return () => {
             socketIo.off('GameRequest');  // Cleanup the listener when component unmounts
         };
