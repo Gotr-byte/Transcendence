@@ -7,10 +7,22 @@ import { GameState } from './GameState';
 import * as config from './config.json';
 import { MatchesService } from 'src/matches/matches.service';
 
+export class GameQueue
+{
+		public timestamp:	number;
+
+	constructor(
+		public socket:		Socket,
+		public name:		string|null,
+		public isBasic:		boolean
+	){ this.timestamp = Date.now(); }
+}
+
 @Injectable()
 export class GameService 
 {
 	private GameLobby: Map<string, GameState>;
+	private gameQueue: Map<string, GameQueue>;
 
 	constructor(
 	private readonly socketService: SocketService,
@@ -21,6 +33,28 @@ export class GameService
 	private getGameState(player1Id: string, player2Id: string): GameState | undefined
 	{
 		return this.GameLobby.get(player1Id + ":" +player2Id);
+	}
+
+	public add2GameQueue(socket: Socket, name: string|null, isBasic: boolean)
+	{
+		this.gameQueue.set(socket.id, new GameQueue(socket, name, isBasic));
+	}
+
+	public removeFromGameQueue(socketId: string)
+	{
+		this.gameQueue.delete(socketId);
+	}
+
+	public look4match(socket: Socket,name: string|null, isBasic: boolean): GameQueue|null
+	{
+		this.gameQueue.forEach( value => {
+			if (name == null && value.isBasic == isBasic)
+				return value;
+			if (name != null && name == value.name)
+				return value;
+		})
+		this.add2GameQueue(socket, name, isBasic);
+		return null;
 	}
 
 	public initBasicGame(player1Id: string, player2Id: string): void

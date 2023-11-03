@@ -49,6 +49,17 @@ export class GameGateway implements OnGatewayDisconnect {
     @ConnectedSocket() client: Socket,
   ): Promise<void> 
   {
+    console
+    let fromGameQueue = this.gameService.look4match(client, null, game != 'extended');
+    if (!fromGameQueue)
+      return;
+    if (game == 'extended')
+        this.gameService.initExtendedGame(fromGameQueue.socket.id, client.id);
+    else
+        this.gameService.initBasicGame(fromGameQueue.socket.id, client.id);
+    this.gameService.startGame(fromGameQueue.socket, client);
+    this.gameService.removeFromGameQueue(fromGameQueue.socket.id);
+    /*
     if (this.waitingUser) 
     {
       if (client == this.waitingUser)
@@ -72,6 +83,7 @@ export class GameGateway implements OnGatewayDisconnect {
       client.emit('matchmaking', 'waiting for opponent...');
       this.waitingUser = client;
     }
+    */
   }
   
   @SubscribeMessage('abort-matchmaking')
