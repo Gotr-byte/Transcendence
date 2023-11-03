@@ -95,8 +95,8 @@ export class GameService
 			}
 			if (gameState?.getGameInstance().isInterrupted())
 			{
-				player1.emit('EndGame', "OpponentDisconnected");
-				player2.emit('EndGame', "OpponentDisconnected");
+				player1.emit('EndGame', "Opponent Disconnected, you won by 3-0");
+				player2.emit('EndGame', "Opponent Disconnected, you won by 3-0");
 				clearInterval(gameIntervall);
 				return;
 			}
