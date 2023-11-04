@@ -6,12 +6,15 @@ import { useContext } from 'react';
 import { WebsocketContext } from '../components/Context/WebsocketContexts';
 
 interface Opponent {
+    gameType: string;
     playerOneId: number;
     playeroneName: string;
     playerTwoId: number;
     playerTwoName: string;
     timestamp: number;
 }
+
+
 
 export const Sidebar = () => {
     const socketIo = useContext(WebsocketContext);
@@ -32,7 +35,7 @@ export const Sidebar = () => {
                 render: ({ onClose }) => (
                     <Box color="white">
                         Player {data.playeroneName} wants to play with you.
-                        <Button size="sm" colorScheme="green" onClick={() => { socketIo.emit('acceptGameRequest', data); onClose(); window.location.href = '/game'; }}>Join</Button>
+                        <Button size="sm" colorScheme="green" onClick={() => { socketIo.emit('acceptGameRequest', data); onClose(); (data.gameType == "extended" ? window.location.href = '/gamePlus' : window.location.href = '/game'); }}>Join</Button>
                         {/* <Button size="sm" colorScheme="green" onClick={() => { console.log('Joining Game'); onClose(); window.location.href = '/gamePlus'; socketIo.emit("matchThisUser", data.playeroneName);}}>Join</Button> */}
 
                         <Button size="sm" colorScheme="red" onClick={onClose}>Close</Button>

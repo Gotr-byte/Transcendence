@@ -9,7 +9,12 @@ export const MatchThisUserGamePlus: React.FC<SendDirectMessageProps> = ({
 
     const redirectToGame = () => {
         window.location.href = `/gamePlus`;
-        socket.emit("matchThisUser", username);
+        const dataToSend = {
+          name: username,
+          game: "expanded"
+        };
+        
+        socket.emit("matchThisUser", dataToSend);
     };
 
     return (
