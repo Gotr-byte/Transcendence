@@ -3,6 +3,9 @@ import React, { useState } from "react";
 const AddFriend: React.FC = () => {
 	const [username, setUsername] = useState<string>("");
 
+
+	const validUsernamePattern = /^[a-zA-Z0-9_]*$/;
+
 	const handleAddFriend = async () => {
 		try {
 			const response = await fetch(
@@ -28,13 +31,22 @@ const AddFriend: React.FC = () => {
 		window.location.reload();
 	};
 
+	const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === "" || validUsernamePattern.test(value)) {
+      setUsername(value);
+    }
+  };
+
+
 	return (
 		<div>
 			<input
 				type="text"
 				placeholder="Enter friend's username"
 				value={username}
-				onChange={(e) => setUsername(e.target.value)}
+				// onChange={(e) => setUsername(e.target.value)}
+				onChange={handleUsernameChange}
 				maxLength={15}
 			/>
 			<button onClick={handleAddFriend}>Add Friend </button>
