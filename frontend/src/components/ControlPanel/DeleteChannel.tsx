@@ -18,6 +18,13 @@ const DeleteChannel: React.FC = () => {
 				}
 			);
 
+			if (response.status === 404) {
+				alert(
+					`Channel ID: ${id} doesnt exist`
+				);
+				return;
+			}
+
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}

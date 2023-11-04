@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ChannelMember } from '@prisma/client';
+import { NotFoundError } from 'rxjs';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CustomError } from 'src/shared/shared.errors';
 
@@ -57,5 +58,13 @@ export class ChatSharedService {
         },
       },
     });
+  }
+
+  async verifyChannelPresence(channelId: number): Promise<void> {
+    const channel = await this.prisma.channel.findUnique({
+      where: { id: channelId },
+    });
+    if (!channel)
+      throw new NotFoundException(`Channel (ID:${channelId}) doesn't extist`);
   }
 }

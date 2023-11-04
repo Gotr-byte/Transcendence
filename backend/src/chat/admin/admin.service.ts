@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatSharedService } from '../shared/chat-shared.service';
@@ -33,6 +34,7 @@ export class AdminService {
     channelId: number,
     adminId: number,
   ): Promise<ShowUsersRolesRestrictions> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     await this.ensureUserIsAdmin(channelId, adminId);
 
     const channelUsers = await this.prisma.user.findMany({
@@ -53,6 +55,7 @@ export class AdminService {
     channelId: number,
     adminId: number,
   ): Promise<ShowUsersRestrictions> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     await this.ensureUserIsAdmin(channelId, adminId);
 
     const allRestrictions = await this.prisma.channelUserRestriction.findMany({
@@ -76,6 +79,7 @@ export class AdminService {
     adminId: number,
     username: string,
   ): Promise<ChannelMember> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     await this.ensureUserIsAdmin(channelId, adminId);
     const user = await this.userService.getUserByName(username);
 
@@ -97,6 +101,7 @@ export class AdminService {
     adminId: number,
     restrictionDto: RestrictionDto,
   ): Promise<ChannelUserRestriction> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     const userId = await this.validateAdminAction(channelId, username, adminId);
     if (
       restrictionDto.restrictionType === ChannelUserRestrictionTypes.BANNED &&
@@ -132,6 +137,7 @@ export class AdminService {
     adminId: number,
     updateRole: UpdateRoleDto,
   ): Promise<ChannelMember> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     const userId = await this.validateAdminAction(channelId, username, adminId);
 
     const membership = await this.prisma.channelMember.update({
@@ -155,6 +161,7 @@ export class AdminService {
     username: string,
     adminId: number,
   ): Promise<void> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     await this.ensureUserIsAdmin(channelId, adminId);
     const user = await this.userService.getUserByName(username);
 
@@ -173,6 +180,7 @@ export class AdminService {
     username: string,
     adminId: number,
   ): Promise<void> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     const userId = await this.validateAdminAction(channelId, username, adminId);
 
     await this.chatSharedService.deleteUserFromChannel(channelId, userId);
@@ -256,7 +264,7 @@ export class AdminService {
       },
     });
     if (!adminship)
-      throw new ForbiddenException(
+      throw new UnauthorizedException(
         `User with id: '${adminId}' is not Admin of  of this channel (ID:${channelId})`,
       );
   }

@@ -24,6 +24,16 @@ const UpdateUser: React.FC = () => {
         body: JSON.stringify(payload),
       });
 
+      if (response.status === 400) {
+        alert(`The naming format is not accepted please deliver a username with characters 'A-z', '0-9' or '_' and a length of 1 - 15`);
+        return;
+      }
+
+      if (response.status === 409) {
+        alert('That username is already taken. Please try a different one.');
+        return;
+      }
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

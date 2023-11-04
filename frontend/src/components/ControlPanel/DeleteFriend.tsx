@@ -18,6 +18,11 @@ const DeleteFriend: React.FC = () => {
 				}
 			);
 
+			if (response.status === 404) {
+				alert(`User: '${friendName}' doesn't exist or you were no friends`);
+				return;
+			}
+
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}

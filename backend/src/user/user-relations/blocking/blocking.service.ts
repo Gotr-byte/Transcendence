@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { Blocked, User } from '@prisma/client';
 
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -78,14 +78,14 @@ export class BlockingService {
     await this.checkBlockAction(blockedUser.id, blockingUser.id);
 
     // Delete the block record
-    await this.prisma.blocked.delete({
+    const removed = await this.prisma.blocked.deleteMany({
       where: {
-        blockingUserId_blockedUserId: {
           blockedUserId: blockedUser.id,
           blockingUserId: blockingUser.id,
-        },
       },
     });
+    if (removed.count === 0)
+      throw new ConflictException(`Already unblocked User: ${blockedName}`)
   }
 
   async isBlockedBy(userId: number, memberId: number): Promise<boolean> {

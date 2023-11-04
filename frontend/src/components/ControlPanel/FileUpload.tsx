@@ -22,6 +22,16 @@ const FileUpload: React.FC = () => {
 						body: formData,
 					}
 				);
+
+				if (response.status === 413) {
+					alert('Upload not possible, the file you try to upload is bigger than 10 mb');
+					return;
+				  }
+				if (response.status === 415) {
+					alert('Upload not possible, wrong file type. Possible types are jpg/jpeg/png and bmp');
+					return;
+				  }
+				
 				const data = await response.json();
 				console.log("File uploaded successfully", data);
 			} catch (error) {
