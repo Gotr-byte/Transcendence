@@ -10,6 +10,7 @@ const CreateChannel: React.FC = () => {
 	const [title, setTitle] = useState<string>("");
 	const [channelType, setChannelType] = useState<string>("PUBLIC");
 	const [password, setPassword] = useState<string>("");
+	const validTitlePattern = /^[a-zA-Z0-9_]*$/;
 
 	const createChannel = async () => {
 		const channelData: Channel = {
@@ -47,13 +48,22 @@ const CreateChannel: React.FC = () => {
 		window.location.reload();
 	};
 
+	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+			if (value === "" || validTitlePattern.test(value)) {
+				setTitle(value);
+			}
+		};
+	
+
 	return (
 		<div>
 			<input
 				type="text"
 				placeholder="Enter chat room title"
 				value={title}
-				onChange={(e) => setTitle(e.target.value)}
+				onChange={handleTitleChange}
+				maxLength={15}
 			/>
 
 			<label>
@@ -75,6 +85,7 @@ const CreateChannel: React.FC = () => {
 						type="password"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
+						maxLength={15}
 					/>
 				</label>
 			)}
