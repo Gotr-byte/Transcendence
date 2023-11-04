@@ -32,9 +32,9 @@ export const Sidebar = () => {
                     <Box color="white">
                         Player {data.playeroneName} wants to play with you.
                         <Button size="sm" colorScheme="green" onClick={() => {
+                            socketIo.emit("acceptGameRequest", data);
                             onClose();
                             history.push('/game'); // this replaces window.location.href
-                            socketIo.emit("acceptGameRequest", data);
                         }}>Join</Button>
                         {/* <Button size="sm" colorScheme="green" onClick={() => { console.log('Joining Game'); onClose(); window.location.href = '/gamePlus'; socketIo.emit("matchThisUser", data.playeroneName);}}>Join</Button> */}
 
