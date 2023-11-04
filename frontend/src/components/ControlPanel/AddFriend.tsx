@@ -35,6 +35,7 @@ const AddFriend: React.FC = () => {
 				placeholder="Enter friend's username"
 				value={username}
 				onChange={(e) => setUsername(e.target.value)}
+				maxLength={15}
 			/>
 			<button onClick={handleAddFriend}>Add Friend </button>
 		</div>
