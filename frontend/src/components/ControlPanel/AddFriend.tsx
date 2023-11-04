@@ -45,7 +45,6 @@ const AddFriend: React.FC = () => {
 				type="text"
 				placeholder="Enter friend's username"
 				value={username}
-				// onChange={(e) => setUsername(e.target.value)}
 				onChange={handleUsernameChange}
 				maxLength={15}
 			/>
