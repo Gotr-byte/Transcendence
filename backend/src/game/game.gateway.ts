@@ -27,20 +27,13 @@ export class GameGateway implements OnGatewayDisconnect {
     private readonly userService: UserService,
   ) {}
 
-  private waitingUser:  Socket | null;
-  private timestamp:    number | null;
-
   //wait only 1 minute for matching partner
   async resetWaitingUser(): Promise<void>
   {
-    if (!this.timestamp || !this.waitingUser)
-      return;
-    if (Date.now() - this.timestamp > config.mmTimeout)
-    {
-      this.waitingUser.emit('matchmaking', 'timeout');
-      this.waitingUser = null;
-      this.timestamp = null;
-    }
+    setInterval( () => {
+      console.log("TimeoutQueue");
+      this.gameService.timoutQueue();
+    }, 500);
   }
 
   @SubscribeMessage('match-random')
@@ -59,39 +52,28 @@ export class GameGateway implements OnGatewayDisconnect {
     this.gameService.startGame(fromGameQueue.socket, client);
     this.gameService.removeFromGameQueue(fromGameQueue.socket.id);
   }
-  
+ 
   @SubscribeMessage('abort-matchmaking')
   async handleAbortMatchmaking(@ConnectedSocket() client: Socket,): Promise<void>
   {
-    if (this.waitingUser === client)
-    {
-      this.waitingUser = null;
-      client.emit('matchmaking', 'operation aborted');
-    }
-  }
-
-  @SubscribeMessage('timeout-matchmaking')
-  async handleTimeoutMatchmaking(@ConnectedSocket() client: Socket,): Promise<void>
-  {
-    if (!this.timestamp)
-      return;
-    const diff = Math.floor((Date.now() - this.timestamp) / 1000)
-    if (this.waitingUser === client && diff > config.mmTimeout)
-    {
-      this.waitingUser = null;
-      client.emit('matchmaking', 'operation timed out');
-    }
+    this.gameService.removeFromGameQueue(client.id);
   }
 
   @SubscribeMessage('matchThisUser')
   async handleMatchThisSpecificUser(
     @MessageBody() name: string,
+    @MessageBody() game: string,
     @ConnectedSocket() client: Socket
     ): Promise<void>
   {
     let user:User;
     let sender:User;
 
+    if (this.gameService.isInGameQueue(client.id))
+    {
+      client.emit('matchmaking', 'error: already requesting');
+      return;
+    }
     if (name == null || name.length == 0)
     {
       client.emit('matchmaking', 'error: no name given');
@@ -132,11 +114,11 @@ export class GameGateway implements OnGatewayDisconnect {
       });
 
     client.emit('matchmaking', 'Success: game request pending');
+    this.gameService.look4match(client, name, game != 'extended');
   }
 
-  handleDisconnect(@ConnectedSocket() client: Socket)  {
-    if (this.waitingUser === client) this.waitingUser = null;
-    
+  handleDisconnect(@ConnectedSocket() client: Socket)  
+  {
     this.gameService.handleDisconnect(client);
   }
 }
