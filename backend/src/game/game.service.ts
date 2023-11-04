@@ -155,20 +155,26 @@ export class GameService
 		}
 		const gameIntervall = setInterval( () => {
 			player1.on("keypress", (key) => {
-				if (key === "ARROWUP" || key === "ARROWUP+SPACE" || key === "ARROWDOWN" || key === "ARROWDOWN+SPACE")
-					console.log("keypress1: " + key);
-				if (key === "ARROWUP" || key === "ARROWUP+SPACE") //(key == 'ArrowUp')
-					gameState?.setPaddleDirection(1, -1);
+				let paddleSpeed: number = 1;
+				if (key === "ARROWUP+SPACE" || key === "ARROWDOWN+SPACE")
+					paddleSpeed = 2;
+				if (key === "ARROWUP" || key === "ARROWUP+SPACE")
+					gameState?.setPaddleDirection(1, -paddleSpeed);
 				else if (key === "ARROWDOWN" || key === "ARROWDOWN+SPACE")
-					gameState?.setPaddleDirection(1, 1);
+					gameState?.setPaddleDirection(1, paddleSpeed);
+				else
+					gameState?.setPaddleDirection(1, 0);
 			});
 			player2.on("keypress", (key) => {
-				if (key === "ARROWUP" || key === "ARROWUP+SPACE" || key === "ARROWDOWN" || key === "ARROWDOWN+SPACE")
-					console.log("keypress2: " + key);
-				if (key === "ARROWUP" || key === "ARROWUP+SPACE") //(key == 'ArrowUp')
-					gameState?.setPaddleDirection(2, -1);
+				let paddleSpeed: number = 1;
+				if (key === "ARROWUP+SPACE" || key === "ARROWDOWN+SPACE")
+					paddleSpeed = 2;
+				if (key === "ARROWUP" || key === "ARROWUP+SPACE")
+					gameState?.setPaddleDirection(2, -paddleSpeed);
 				else if (key === "ARROWDOWN" || key === "ARROWDOWN+SPACE")
-					gameState?.setPaddleDirection(2, 1);
+					gameState?.setPaddleDirection(2, paddleSpeed);
+				else
+					gameState?.setPaddleDirection(2, 0);
 			});
 
 			gameState?.calcNewPosition();

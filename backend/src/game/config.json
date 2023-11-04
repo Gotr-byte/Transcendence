@@ -4,15 +4,15 @@
 		"height": 768
 	},
 	"paddle": {
-		"buffer": 50,
-		"width": 50,
-		"velocity": 30,
-		"height": 240
+		"buffer": 0,
+		"width": 10,
+		"velocity": 10,
+		"height": 70
 	},
 	"fps": 60,
 	"ball": {
 		"velocity": 5,
-		"radius": 30
+		"radius": 15
 	},
     "win": 50,
 	"startTime": 5000,
