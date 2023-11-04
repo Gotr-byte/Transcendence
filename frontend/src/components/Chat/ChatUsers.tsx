@@ -50,6 +50,9 @@ const ChatUsers: React.FC<ChatUsersProps> = ({ currentRoomId }) => {
 						credentials: "include",
 					}
 				);
+				
+
+			if (response.status === 404) return;
 
 				if (!response.ok) {
 					throw new Error("Failed to fetch users");

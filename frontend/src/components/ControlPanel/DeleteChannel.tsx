@@ -18,11 +18,31 @@ const DeleteChannel: React.FC = () => {
 				}
 			);
 
+			if (response.status === 400) {
+				alert(
+					`What do you think? We dont have that much channels ;)`
+				);
+				return;
+			}
+
+			if (response.status === 401) {
+				alert(
+					`You are not authorized to delete this channel. You have to be channel owner`
+				);
+				return;
+			}
+
+			if (response.status === 404) {
+				alert(
+					`Channel ID: ${id} doesnt exist`
+				);
+				return;
+			}
+
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-			window.location.reload();
-			console.log(`Channel ${id} successfully deleted`);
+			alert(`Channel Id: ${id} successfully deleted`);
 			setId(0);
 		} catch (error) {
 			console.error(`There was a problem deleting the channel ${id}`, error);

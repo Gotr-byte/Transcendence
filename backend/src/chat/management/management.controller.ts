@@ -7,6 +7,8 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
+import { ChannelId } from '../channel/channel.decorator';
+import { ChannelIdValidationPipe } from 'src/filters/channel-validation-pipe';
 import { ManagementService } from './management.service';
 import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
 import { AuthUser } from 'src/auth/auth.decorator';
@@ -64,7 +66,7 @@ export class ManagementController {
     },
   })
   async editChannel(
-    @Param('channelId') channelId: string,
+    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number,
     @AuthUser() user: User,
     @Body() editChannelDto: UpdateChannelDto,
   ): Promise<ChannelDto> {
@@ -83,7 +85,7 @@ export class ManagementController {
   })
   @ApiParam({ name: 'channelId', description: 'ID of the channel' })
   async deleteChannel(
-    @Param('channelId') channelId: string,
+    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number,
     @AuthUser() user: User,
   ): Promise<string> {
     await this.managementService.deleteChannel(+channelId, user.id);

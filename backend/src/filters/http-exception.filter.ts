@@ -54,7 +54,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       });
     } else if (exception instanceof CustomError) {
       if (exception.type === 'UNKNOWN_CHANNEL_ERROR') {
-        response.status(HttpStatus.BAD_REQUEST).json({
+        response.status(HttpStatus.CONFLICT).json({
           message: exception.message,
           error: 'Bad Request Error',
           statusCode: 400,

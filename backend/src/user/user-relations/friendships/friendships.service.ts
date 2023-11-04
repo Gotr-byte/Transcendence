@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from '@prisma/client';
 
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -87,7 +87,7 @@ export class FriendshipsService {
 
     // Throw an exception if a request already exists
     if (existingRequest) {
-      throw new BadRequestException(
+      throw new ConflictException(
         `There is already a friendRequest for '${sendingUser.username}' and '${invitedName}'`,
       );
     }
@@ -137,9 +137,11 @@ export class FriendshipsService {
     };
     await this.checkEndFriendshipAchievement(user, where);
     // Delete the identified friend request(s)
-    await this.prisma.friendRequest.deleteMany({
+    const deleted = await this.prisma.friendRequest.deleteMany({
       where,
     });
+    if (deleted.count === 0)
+      throw new NotFoundException(`You had no friendship to ${otherUsername}`);
   }
 
   private async checkFriendshipAchievements(user: User): Promise<void> {
@@ -165,7 +167,7 @@ export class FriendshipsService {
       const friendRequest = await this.prisma.friendRequest.findMany({
         where,
       });
-      if (friendRequest[0].isAccepted)
+      if (friendRequest[0]?.isAccepted)
         await this.userService.addAchievement(user.id, 'NOFRIENDER');
     }
   }

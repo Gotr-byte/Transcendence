@@ -27,9 +27,13 @@ export class ShowUsersRoles {
 
   constructor(users: UserWithRole[]) {
     this.usersNo = users.length;
-    this.users = users.map((member) =>
+    const mappedUsers = users.map((member) =>
       ShowUserRoles.from(member.user, member.role),
     );
+
+    this.users = mappedUsers.sort((a, b) => {
+      return Number(b.isOnline) - Number(a.isOnline);
+    });
   }
 
   static from(users: UserWithRole[]): ShowUsersRoles {

@@ -15,6 +15,8 @@ import {
   UpdateRoleDto,
   RestrictionDto,
 } from './dto';
+import { ChannelId } from '../channel/channel.decorator';
+import { ChannelIdValidationPipe } from 'src/filters/channel-validation-pipe';
 import { AuthUser } from 'src/auth/auth.decorator';
 import { ChannelMember, ChannelUserRestriction, User } from '@prisma/client';
 import { ApiBody, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
@@ -33,8 +35,7 @@ export class AdminController {
   })
   @ApiParam({ name: 'channelId', description: 'ID of the channel' })
   async getChannelUsersAsAdmin(
-    @Param('channelId') channelId: string,
-    @AuthUser() admin: User,
+    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number,    @AuthUser() admin: User,
   ): Promise<ShowUsersRolesRestrictions> {
     const users = await this.adminService.getChannelUsersAsAdmin(
       +channelId,
@@ -50,8 +51,7 @@ export class AdminController {
   })
   @ApiParam({ name: 'channelId', description: 'ID of the channel' })
   async getMutedUsers(
-    @Param('channelId') channelId: string,
-    @AuthUser() admin: User,
+    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number,    @AuthUser() admin: User,
   ): Promise<ShowUsersRestrictions> {
     const users = await this.adminService.getRestrictedUsers(
       +channelId,
@@ -68,8 +68,7 @@ export class AdminController {
   @ApiParam({ name: 'channelId', description: 'ID of the channel' })
   @ApiParam({ name: 'username', description: 'username to add' })
   async addUserToChannel(
-    @Param('channelId') channelId: string,
-    @Param('username') username: string,
+    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number,    @Param('username') username: string,
     @AuthUser() admin: User,
   ): Promise<string> {
     await this.adminService.addUserToChannel(+channelId, admin.id, username);
@@ -96,8 +95,7 @@ export class AdminController {
     },
   })
   async restrictUser(
-    @Param('channelId') channelId: string,
-    @Param('username') username: string,
+    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number,    @Param('username') username: string,
     @AuthUser() admin: User,
     @Body() createRestrictionDto: RestrictionDto,
   ): Promise<ChannelUserRestriction> {
@@ -128,8 +126,7 @@ export class AdminController {
     },
   })
   async updateRestriction(
-    @Param('channelId') channelId: string,
-    @Param('username') username: string,
+    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number,    @Param('username') username: string,
     @AuthUser() admin: User,
     @Body() updateRestrictionDto: RestrictionDto,
   ): Promise<ChannelUserRestriction> {
@@ -158,7 +155,7 @@ export class AdminController {
     },
   })
   async updateRole(
-    @Param('channelId') channelId: string,
+    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number,
     @Param('username') username: string,
     @AuthUser() admin: User,
     @Body() updateRole: UpdateRoleDto,
@@ -178,8 +175,7 @@ export class AdminController {
   @ApiParam({ name: 'channelId', description: 'ID of the channel' })
   @ApiParam({ name: 'username', description: 'username to liberate' })
   async liberateUser(
-    @Param('channelId') channelId: string,
-    @Param('username') username: string,
+    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number,    @Param('username') username: string,
     @AuthUser() admin: User,
   ): Promise<string> {
     await this.adminService.liberateUser(+channelId, username, admin.id);
@@ -194,8 +190,7 @@ export class AdminController {
   @ApiParam({ name: 'channelId', description: 'ID of the channel' })
   @ApiParam({ name: 'username', description: 'username to kick' })
   async kickUser(
-    @Param('channelId') channelId: string,
-    @Param('username') username: string,
+    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number, @Param('username') username: string,
     @AuthUser() admin: User,
   ): Promise<string> {
     await this.adminService.kickUser(+channelId, username, admin.id);

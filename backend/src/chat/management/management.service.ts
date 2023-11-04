@@ -1,9 +1,15 @@
 import {
   BadRequestException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Channel, ChannelMemberRoles, ChannelTypes, User } from '@prisma/client';
+import {
+  Channel,
+  ChannelMemberRoles,
+  ChannelTypes,
+  User,
+} from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatSharedService } from '../shared/chat-shared.service';
 import { CreateChannelDto, UpdateChannelDto } from './dto';
@@ -45,6 +51,7 @@ export class ManagementService {
     userId: number,
     editChannelDto: UpdateChannelDto,
   ): Promise<ChannelDto> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     const channel = await this.verifyCreator(channelId, userId);
 
     const isChannelProtected = await this.isChannelProtected(
@@ -66,6 +73,7 @@ export class ManagementService {
   }
 
   async deleteChannel(channelId: number, userId: number): Promise<void> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     await this.verifyCreator(channelId, userId);
     await this.chatSharedService.deleteAllChannelRestrictions(channelId);
     await this.chatSharedService.deleteAllChannelMessages(channelId);

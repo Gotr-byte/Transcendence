@@ -6,8 +6,11 @@ import {
   Param,
   Delete,
   UseGuards,
+  BadRequestException,
 } from '@nestjs/common';
 import { ChannelService } from './channel.service';
+import { ChannelId } from './channel.decorator';
+import { ChannelIdValidationPipe } from 'src/filters/channel-validation-pipe';
 import { AuthenticatedGuard } from 'src/auth/guards/http-guards';
 import { User } from '@prisma/client';
 import { AuthUser } from 'src/auth/auth.decorator';
@@ -48,7 +51,7 @@ export class ChannelController {
   @ApiOperation({ summary: 'Get a visible channel by ID' })
   @ApiParam({ name: 'channelId', description: 'ID of the channel' })
   async getChannel(
-    @Param('channelId') channelId: string,
+    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number,
     @AuthUser() user: User,
   ): Promise<ShowChannelDto> {
     const channel = await this.channelService.getChannel(+channelId, user.id);
@@ -62,13 +65,16 @@ export class ChannelController {
   })
   @ApiParam({ name: 'channelId', description: 'ID of the channel' })
   async getChannelUsers(
-    @Param('channelId') channelId: string,
+    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number,
     @AuthUser() user: User,
   ): Promise<ShowUsersRoles> {
+    if (1000 < +channelId)
+      throw new BadRequestException('ChannelId is too big');
     const userList = await this.channelService.getChannelUsers(
       +channelId,
       user.id,
     );
+    console.log(userList);
     return userList;
   }
 
@@ -86,7 +92,7 @@ export class ChannelController {
     },
   })
   async joinChannel(
-    @Param('channelId') channelId: string,
+    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number,
     @AuthUser() user: User,
     @Body() joinChannelDto: JoinChannelDto,
   ): Promise<string> {
@@ -100,7 +106,7 @@ export class ChannelController {
       'Leave a channel where logged user is member in. If the last member of the channel leaves the channel, the channel will be deleted, with its restrictions and messages',
   })
   async leaveChannel(
-    @Param('channelId') channelId: string,
+    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number,
     @AuthUser() user: User,
   ): Promise<string> {
     await this.channelService.leaveChannel(+channelId, user.id);

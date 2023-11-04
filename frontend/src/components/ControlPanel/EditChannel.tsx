@@ -26,6 +26,10 @@ const EditChannel: React.FC = () => {
 
 		if (channelType === "PROTECTED") {
 			channelData.password = password;
+			if (!password) {
+				alert("Password can not be empty");
+				return;
+			}
 		}
 
 		try {
@@ -41,6 +45,32 @@ const EditChannel: React.FC = () => {
 					body: JSON.stringify(channelData),
 				}
 			);
+
+			if (response.status === 400) {
+				alert(
+					`What do you think? We dont have that much channels ;)`
+				);
+				return;
+			}
+
+			if (response.status === 400) {
+				alert(
+					`The naming format is not accepted please deliver a channel name with characters 'A-z', '0-9' or '_' a length of 1 - 15`
+				);
+				return;
+			}
+
+			if (response.status === 401) {
+				alert(
+					`You are not authorized to change this channel. You have to be admin or owner`
+				);
+				return;
+			}
+
+			if (response.status === 404) {
+				alert(`Channel ID: ${id} doesnt exist`);
+				return;
+			}
 
 			// Error handling
 			if (!response.ok) {

@@ -2,21 +2,23 @@ import { useState } from "react";
 
 interface Decree {
 	restrictionType: string;
-	duration: string;
+	duration?: string;
 }
 
 const BanUserTemp: React.FC = () => {
-	const [id, setId] = useState<number>(0); // id is now a number
+	const [id, setId] = useState<number>(0);
 	const [username, setUsername] = useState<string>("");
 	const [restrictionType, setRestrictionType] = useState<string>("BANNED");
 	const [duration, setDuration] = useState<string>("");
 	const validUsernamePattern = /^[a-zA-Z0-9_]*$/;
 
-	const decreeData: Decree = {
-		restrictionType,
-		duration
-	};
 	const banHandler = async () => {
+		// Construct the payload inside the handler
+		const payload: Decree = {
+			restrictionType,
+			...(duration && { duration }), // Only include duration if it is not empty
+		};
+
 		try {
 			const response = await fetch(
 				`${
@@ -28,14 +30,38 @@ const BanUserTemp: React.FC = () => {
 						"Content-Type": "application/json",
 					},
 					credentials: "include",
-					body: JSON.stringify(decreeData),
+					body: JSON.stringify(payload), // Use the conditionally constructed payload
 				}
 			);
+
+			if (response.status === 400) {
+				alert(`What you you think? We dont have that much channels ;)`);
+				return;
+			}
+
+			if (response.status === 401) {
+				alert(
+					`You are not authorized to restrict users on this channel. You have to be admin or owner`
+				);
+				return;
+			}
+
+			if (response.status === 404) {
+				alert(`Username: ${username} or Channel ID: ${id} doesnt exist`);
+				return;
+			}
+
+			if (response.status === 409) {
+				alert(`Username: ${username} is already restricted`);
+				return;
+			}
+
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			const data = await response.json();
-			console.log("Restriction decreed:", data);
+			if (!duration) alert(`${restrictionType} ${username} indefinitely`);
+			else alert(`${restrictionType} ${username} until ${duration}`);
 		} catch (error) {
 			console.error("There was a problem enabling restriction", error);
 		}
@@ -85,13 +111,11 @@ const BanUserTemp: React.FC = () => {
 			<label>
 				Duration (eg. 2023-11-07T10:07:07.000Z):
 				<input
-					 type="text"
-					 placeholder="YYYY-MM-DDTHH:MM:SS:"
-					 value={duration}
-					 onChange={(e) => setDuration(e.target.value)}
-					 maxLength={24}
+					type="datetime-local"
+					value={duration}
+					onChange={(e) => setDuration(e.target.value)}
 				/>
-			 </label>
+			</label>
 			<button onClick={banHandler}>EnableRestriction</button>
 		</div>
 	);

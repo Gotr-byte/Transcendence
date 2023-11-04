@@ -34,15 +34,38 @@ const DesignateAdmin: React.FC = () => {
 				}
 			);
 
+			if (response.status === 400) {
+				alert(
+					`What do you think? We dont have that much channels ;)`
+				);
+				return;
+			}
+
+			if (response.status === 401) {
+				alert(
+					`You are not authorized to change this users role. You have to be admin or owner`
+				);
+				return;
+			}
+
+			if (response.status === 409) {
+				alert(`${username} already has role ${role}`);
+				return;
+			}
+
+			if (response.status === 404) {
+				alert(`Channel ID or username doesnt exist on the server`);
+				return;
+			}
+
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 
 			const data = await response.text();
 			console.log("Designated admin:", data);
-			setSuccess("Admin designated successfully."); // Setting success message on successful API response
+			alert(`${role} designated successfully to ${username} on channel Id: ${id}`); // Setting success message on successful API response
 		} catch (error) {
-			setError(`There was a problem designating admin: ${error}`);
 			console.error("There was a problem designating admin:", error);
 		}
 	};
@@ -80,7 +103,7 @@ const DesignateAdmin: React.FC = () => {
 				maxLength={15}
 			/>
 			<label>
-				Channel Type:
+				Role:
 				<select value={role} onChange={(e) => setRole(e.target.value)}>
 					<option value="ADMIN">ADMIN</option>
 					<option value="USER">USER</option>

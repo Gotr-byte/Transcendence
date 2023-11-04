@@ -23,6 +23,33 @@ const PrivateChannelInvitation: React.FC = () => {
 				}
 			);
 
+
+			if (response.status === 400) {
+				alert(
+					`What do you think? We dont have that much channels ;)`
+				);
+				return;
+			}
+
+			if (response.status === 401) {
+				alert(
+					`You are not authorized to add users to this channel. You have to be admin or owner`
+				);
+				return;
+			}
+
+			if (response.status === 403) {
+				alert(
+					`${username} is BANNED on this channel`
+				);
+				return;
+			}
+
+			if (response.status === 404) {
+				alert(`Channel ID or username doesnt exist on the server`);
+				return;
+			}
+	
 			// Error handling
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
@@ -30,7 +57,7 @@ const PrivateChannelInvitation: React.FC = () => {
 
 			// Log the response
 			const data = await response.text();
-			console.log("Channel created:", data);
+			alert(`${username} was liberated on channel Id: ${id}`);
 		} catch (error) {
 			console.error("There was a problem creating the channel:", error);
 		}

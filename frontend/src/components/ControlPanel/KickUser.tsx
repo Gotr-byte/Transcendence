@@ -8,9 +8,7 @@ const KickUser: React.FC = () => {
 	const kickHandler = async () => {
 		try {
 			const response = await fetch(
-				`${
-					import.meta.env.VITE_API_URL
-				}/chat/admin/id/${id}/${username}/kick`,
+				`${import.meta.env.VITE_API_URL}/chat/admin/id/${id}/${username}/kick`,
 				{
 					method: "DELETE",
 					headers: {
@@ -19,11 +17,35 @@ const KickUser: React.FC = () => {
 					credentials: "include",
 				}
 			);
+
+			console.log(response.status);
+			if (response.status === 400) {
+				alert(`What do you think? We dont have that much channels ;)`);
+				return;
+			}
+
+			if (response.status === 401) {
+				alert(
+					`You are not authorized to kick user. You have to be admin or owner`
+				);
+				return;
+			}
+
+			if (response.status === 404) {
+				alert(`Channel ID or username doesnt exist on the server`);
+				return;
+			}
+
+			if (response.status === 409) {
+				alert(`${username} is not on Channel Id: ${id}`);
+				return;
+			}
+
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			const data = await response.text();
-			console.log("Channel created:", data);
+			alert(`${username} was kicked from Channel Id: ${id}`);
 		} catch (error) {
 			// setError(`There was a problem enablig restriction ${error}`);
 			console.error("There was a problem enabling restriction", error);
