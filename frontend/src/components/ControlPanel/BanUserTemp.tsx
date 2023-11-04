@@ -1,9 +1,4 @@
 import { useState } from "react";
-import { Button } from "@chakra-ui/react";
-// {
-//   "restrictionType": "optional-restrictionType BANNED or MUTED",
-//   "duration": "optional-duration for the restriction in JS Date format, if empty: indefinite restriction"
-// }
 
 interface Decree {
 	restrictionType: string;
@@ -15,8 +10,7 @@ const BanUserTemp: React.FC = () => {
 	const [username, setUsername] = useState<string>("");
 	const [restrictionType, setRestrictionType] = useState<string>("BANNED");
 	const [duration, setDuration] = useState<string>("");
-
-	const [error, setError] = useState<string | null>(null);
+	const validUsernamePattern = /^[a-zA-Z0-9_]*$/;
 
 	const decreeData: Decree = {
 		restrictionType,
@@ -41,13 +35,24 @@ const BanUserTemp: React.FC = () => {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			const data = await response.json();
-			console.log("Channel created:", data);
+			console.log("Restriction decreed:", data);
 		} catch (error) {
-			setError(`There was a problem enablig restriction ${error}`);
 			console.error("There was a problem enabling restriction", error);
 		}
 	};
-
+	const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+		// Check if the value is not empty and is a number within the range 0-99
+		if (value === '' || (Number(value) >= 0 && Number(value) <= 99)) {
+			setId(Number(value));
+		}
+	};
+	const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+			if (value === "" || validUsernamePattern.test(value)) {
+				setUsername(value);
+			}
+		};
 	return (
 		<div>
 			<label>
@@ -57,14 +62,15 @@ const BanUserTemp: React.FC = () => {
 					type="number"
 					placeholder="Enter chat id"
 					value={id}
-					onChange={(e) => setId(Number(e.target.value))}
+					onChange={handleIdChange}
 				/>
 			</label>
 			<input
 				type="text"
 				placeholder="Enter username"
 				value={username}
-				onChange={(e) => setUsername(e.target.value)}
+				onChange={handleUsernameChange}
+        maxLength={15}
 			/>
 			<label>
 				Restriction Type:
@@ -77,12 +83,13 @@ const BanUserTemp: React.FC = () => {
 				</select>
 			</label>
 			<label>
-				Duration:
+				Duration (eg. 2023-11-07T10:07:07.000Z):
 				<input
 					 type="text"
 					 placeholder="YYYY-MM-DDTHH:MM:SS:"
 					 value={duration}
 					 onChange={(e) => setDuration(e.target.value)}
+					 maxLength={24}
 				/>
 			 </label>
 			<button onClick={banHandler}>EnableRestriction</button>
