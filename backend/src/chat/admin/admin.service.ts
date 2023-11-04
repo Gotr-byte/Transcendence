@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
@@ -139,6 +140,9 @@ export class AdminService {
   ): Promise<ChannelMember> {
     await this.chatSharedService.verifyChannelPresence(channelId);
     const userId = await this.validateAdminAction(channelId, username, adminId);
+    const role = await this.getCurrentRole(channelId, userId);
+    if (role === updateRole.role)
+      throw new ConflictException(`User: ${username}, already has that role`);
 
     const membership = await this.prisma.channelMember.update({
       where: { userId_channelId: { userId, channelId } },
@@ -280,6 +284,17 @@ export class AdminService {
       throw new BadRequestException(
         `User with id: '${userId}' the creator of this channel (ID: ${channelId})`,
       );
+  }
+
+  private async getCurrentRole(
+    channelId: number,
+    userId: number,
+  ): Promise<ChannelMemberRoles> {
+    const membership = await this.prisma.channelMember.findUniqueOrThrow({
+      where: { userId_channelId: { userId, channelId } },
+    });
+
+    return membership.role;
   }
 
   private async getUserRoleRestriction(
