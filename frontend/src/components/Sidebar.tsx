@@ -6,7 +6,6 @@ import { useContext } from 'react';
 import { WebsocketContext } from '../components/Context/WebsocketContexts';
 
 interface Opponent {
-    gameType: string;
     playerOneId: number;
     playeroneName: string;
     playerTwoId: number;
@@ -14,15 +13,12 @@ interface Opponent {
     timestamp: number;
 }
 
-
-
 export const Sidebar = () => {
     const socketIo = useContext(WebsocketContext);
     const toast = useToast();
 
     useEffect(() => {
         socketIo.on('GameRequest', (data: Opponent) => {
-            console.log(data);
             toast({
                 title: `Game Request from ${data.playeroneName}`,
                 description: `Would you like to join the game?`,
@@ -35,7 +31,11 @@ export const Sidebar = () => {
                 render: ({ onClose }) => (
                     <Box color="white">
                         Player {data.playeroneName} wants to play with you.
-                        <Button size="sm" colorScheme="green" onClick={() => { socketIo.emit('acceptGameRequest', data); onClose(); (data.gameType == "extended" ? window.location.href = '/gamePlus' : window.location.href = '/game'); }}>Join</Button>
+                        <Button size="sm" colorScheme="green" onClick={() => {
+                            onClose();
+                            history.push('/game'); // this replaces window.location.href
+                            socketIo.emit("acceptGameRequest", data);
+                        }}>Join</Button>
                         {/* <Button size="sm" colorScheme="green" onClick={() => { console.log('Joining Game'); onClose(); window.location.href = '/gamePlus'; socketIo.emit("matchThisUser", data.playeroneName);}}>Join</Button> */}
 
                         <Button size="sm" colorScheme="red" onClick={onClose}>Close</Button>
