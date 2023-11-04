@@ -27,11 +27,6 @@ export class GameGateway implements OnGatewayDisconnect {
     private readonly userService: UserService,
   ) {}
 
-  /* deprecated
-  private waitingUser:  Socket | null;
-  private timestamp:    number | null;
-  */
-
   //wait only 1 minute for matching partner
   async resetWaitingUser(): Promise<void>
   {
@@ -63,21 +58,6 @@ export class GameGateway implements OnGatewayDisconnect {
   {
     this.gameService.removeFromGameQueue(client.id);
   }
-
-  /* deprecated
-  @SubscribeMessage('timeout-matchmaking')
-  async handleTimeoutMatchmaking(@ConnectedSocket() client: Socket,): Promise<void>
-  {
-    if (!this.timestamp)
-      return;
-    const diff = Math.floor((Date.now() - this.timestamp) / 1000)
-    if (this.waitingUser === client && diff > config.mmTimeout)
-    {
-      this.waitingUser = null;
-      client.emit('matchmaking', 'operation timed out');
-    }
-  }
-*/
 
   @SubscribeMessage('matchThisUser')
   async handleMatchThisSpecificUser(
