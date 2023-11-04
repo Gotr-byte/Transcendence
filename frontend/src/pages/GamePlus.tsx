@@ -98,9 +98,9 @@ const Game: React.FC = () =>
 	const canvasWidth: number = 1200; //1366
 	const canvasHeight: number = 720; //768
 
-	const [frameRate, setFrameRate] = useState(60);
-	const thenRef = useRef<number | null>(null);
-	const startTimeRef = useRef<number | null>(null);
+	// const [frameRate, setFrameRate] = useState(60);
+	// const thenRef = useRef<number | null>(null);
+	// const startTimeRef = useRef<number | null>(null);
 
 	// Game modes
 			
@@ -627,13 +627,13 @@ const Game: React.FC = () =>
 	function drawPaddles(ctx: CanvasRenderingContext2D): void
 	{
 		ctx.beginPath();
-		ctx.rect(lastGameState.paddle1.x, canvasHeight - paddleGlobalHeight, paddleGlobalWidth - paddleGlobalReduction, paddleGlobalHeight);
+		ctx.rect(lastGameState.paddle1.x, lastGameState.paddle1.y, paddleGlobalWidth - paddleGlobalReduction, paddleGlobalHeight);
 		ctx.fillStyle = "#" + colorCodeRGBP1;
 		ctx.fill();
 		ctx.closePath();
 		
 		ctx.beginPath();
-		ctx.rect(lastGameState.paddle2.x, 0, paddleGlobalWidth - paddleGlobalReduction, paddleGlobalHeight);
+		ctx.rect(lastGameState.paddle2.x, lastGameState.paddle2.y, paddleGlobalWidth - paddleGlobalReduction, paddleGlobalHeight);
 		ctx.fillStyle = "#" + colorCodeRGBP2;
 		ctx.fill();
 		ctx.closePath();
@@ -1906,23 +1906,30 @@ const Game: React.FC = () =>
 			{
 				KeysPressed.keyArrowDown = true;
 			}
-			if (event.key === 'Space')
+			if (event.key === 'Space' || event.key === ' ')
 			{
 				KeysPressed.keySpace = true;
 			}
+			
+			console.log("FE - handleKeyDown() - key: " + event.key);
+			console.log("FE - handleKeyDown() - KeysPressed.keyArrowUp: " + KeysPressed.keyArrowUp);
+			keyString = "";
 
-			// if (event.key === 'A' || event.key === 'a')
-			// {
-			// 	keyAPressed = true;
-			// }
-			// else if (event.key === 'D' || event.key === 'd')
-			// {
-			// 	keyDPressed = true;
-			// }
-			// else if (event.key === 'S' || event.key === 's')
-			// {
-			// 	keySPressed = true;
-			// }
+			if (KeysPressed.keyArrowUp === true)
+			{
+				keyString = "ARROWUP";
+			}
+			else if (KeysPressed.keyArrowDown === true)
+			{
+				keyString = "ARROWDOWN";
+			}
+			if (KeysPressed.keySpace === true && keyString != "")
+			{
+				keyString = keyString + "+SPACE";
+			}
+			
+			console.log("FE - keyString: " + keyString);
+			socket.emit('keypress', keyString);
 		};
 	
 		// Function to handle key up event
@@ -1936,33 +1943,37 @@ const Game: React.FC = () =>
 			{
 				KeysPressed.keyArrowDown = false;
 			}
-			if (event.key === 'Space')
+			if (event.key === 'Space' || event.key === ' ')
 			{
 				KeysPressed.keySpace = false;
 			}
+			
+			keyString = "";
 
-			// if (event.key === 'A' || event.key === 'a')
-			// {
-			// 	keyAPressed = false;
-			// }
-			// else if (event.key === 'D' || event.key === 'd')
-			// {
-			// 	keyDPressed = false;
-			// }
-			// else if (event.key === 'S' || event.key === 's')
-			// {
-			// 	keySPressed = false;
-			// }
+			if (KeysPressed.keyArrowUp === true)
+			{
+				keyString = "ARROWUP";
+			}
+			else if (KeysPressed.keyArrowDown === true)
+			{
+				keyString = "ARROWDOWN";
+			}
+			if (KeysPressed.keySpace === true && keyString != "")
+			{
+				keyString = keyString + "+SPACE";
+			}
+
+			socket.emit('keypress', keyString);
 		};
 	
 		// Attach event listeners when the component mounts
-		window.addEventListener('keydown', handleKeyDown);
-		window.addEventListener('keyup', handleKeyUp);
+		document.addEventListener('keydown', handleKeyDown);
+		document.addEventListener('keyup', handleKeyUp);
 	
 		// Clean up event listeners when the component unmounts
 		return () => {
-			window.removeEventListener('keydown', handleKeyDown);
-			window.removeEventListener('keyup', handleKeyUp);
+			document.removeEventListener('keydown', handleKeyDown);
+			document.removeEventListener('keyup', handleKeyUp);
 		};
 	
 	}, []);
@@ -2035,7 +2046,7 @@ const Game: React.FC = () =>
 	function prepareKeyString(): void
 	{
 		keyString = "";
-
+		// console.log("FE - prepareKeyString(): up, down, space: " + KeysPressed.keyArrowUp + ", " + KeysPressed.keyArrowDown + ", " + KeysPressed.keySpace);
 		if (KeysPressed.keyArrowUp === true)
 		{
 			keyString = "ARROWUP";
@@ -2053,6 +2064,7 @@ const Game: React.FC = () =>
 	function sendKeystrokes(): void
 	{
 		prepareKeyString();
+		// console.log("FE - keyString: " + keyString);
 		socket.emit('keypress', keyString);
 	}
 
@@ -2068,7 +2080,7 @@ const Game: React.FC = () =>
 			{
 				setReceivedGameState(newState);
 				lastGameState = receivedGameState;
-				console.log("ball x: " + lastGameState.ball.x);
+				// console.log("ball x: " + lastGameState.ball.x);
 			}
         });
 	
@@ -2083,23 +2095,23 @@ const Game: React.FC = () =>
 
 			const drawClassic = (timestamp: number) =>
 			{
-				if (!thenRef.current)
-				{
-			  		thenRef.current = timestamp;
-			  		startTimeRef.current = timestamp;
-				}
+				// if (!thenRef.current)
+				// {
+			  	// 	thenRef.current = timestamp;
+			  	// 	startTimeRef.current = timestamp;
+				// }
 
-				const elapsed: number = timestamp - thenRef.current;
-				const interval: number = 1000 / frameRate;
+				// const elapsed: number = timestamp - thenRef.current;
+				// const interval: number = 1000 / frameRate;
 
-				if (elapsed > interval)
-				{
-					thenRef.current = timestamp - (elapsed % interval);
+				// if (elapsed > interval)
+				// {
+				// 	thenRef.current = timestamp - (elapsed % interval);
 
 					context.clearRect(0, 0, canvasWidth, canvasHeight);
 
 					updateGameState();
-					sendKeystrokes();
+					// sendKeystrokes();
 	
 					drawBackground(context);
 			
@@ -2119,31 +2131,31 @@ const Game: React.FC = () =>
 					// updateVariables();
 					// updateScores();
 
-					frameCount++;
-				}
+				// 	frameCount++;
+				// }
 
 				requestAnimationFrame(drawClassic);
 		  	};
 
 			const drawEnhanced = (timestamp: number) =>
 			{
-				if (!thenRef.current)
-				{
-			  		thenRef.current = timestamp;
-			  		startTimeRef.current = timestamp;
-				}
+				// if (!thenRef.current)
+				// {
+			  	// 	thenRef.current = timestamp;
+			  	// 	startTimeRef.current = timestamp;
+				// }
 
-				const elapsed: number = timestamp - thenRef.current;
-				const interval: number = 1000 / frameRate;
+				// const elapsed: number = timestamp - thenRef.current;
+				// const interval: number = 1000 / frameRate;
 
-				if (elapsed > interval)
-				{
-					thenRef.current = timestamp - (elapsed % interval);
+				// if (elapsed > interval)
+				// {
+				// 	thenRef.current = timestamp - (elapsed % interval);
 
 					context.clearRect(0, 0, canvasWidth, canvasHeight);
 
 					updateGameState();
-					sendKeystrokes();
+					// sendKeystrokes();
 	
 					drawBackground(context);
 					
@@ -2186,31 +2198,31 @@ const Game: React.FC = () =>
 
 					// sendMessageToBackend();
 
-					frameCount++;
-				}
+				// 	frameCount++;
+				// }
 
 				requestAnimationFrame(drawEnhanced);
 			};
 
-			const calculateFrameRate = () =>
-			{
-				const now: number = performance.now();
-				const elapsed: number = now - startTimeRef.current!;
+			// const calculateFrameRate = () =>
+			// {
+			// 	const now: number = performance.now();
+			// 	const elapsed: number = now - startTimeRef.current!;
 
-				if (elapsed >= 1000)
-				{
-					const fps: number = (frameCount / elapsed) * 1000;
-					// console.log(`Frame rate: ${fps.toFixed(2)} FPS`);
+			// 	if (elapsed >= 1000)
+			// 	{
+			// 		const fps: number = (frameCount / elapsed) * 1000;
+			// 		// console.log(`Frame rate: ${fps.toFixed(2)} FPS`);
 
-					frameCount = 0; // Reset frameCount
+			// 		frameCount = 0; // Reset frameCount
 
-					startTimeRef.current = now;
-				}
+			// 		startTimeRef.current = now;
+			// 	}
 
-				requestAnimationFrame(calculateFrameRate);
-			};
+			// 	requestAnimationFrame(calculateFrameRate);
+			// };
 
-			calculateFrameRate();
+			// calculateFrameRate();
 			if (classicMode === true)
 			{
 				ballGlobalSpeedDefault = 7;

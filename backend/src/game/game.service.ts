@@ -54,15 +54,19 @@ export class GameService
 			return;
 		const gameIntervall = setInterval( () => {
 			player1.on("keypress", (key) => {
-				if (key == 'ArrowUp')
+				if (key === "ARROWUP" || key === "ARROWUP+SPACE" || key === "ARROWDOWN" || key === "ARROWDOWN+SPACE")
+					console.log("keypress1: " + key);
+				if (key === "ARROWUP" || key === "ARROWUP+SPACE") //(key == 'ArrowUp')
 					gameState?.setPaddleDirection(1, -1);
-				else
+				else if (key === "ARROWDOWN" || key === "ARROWDOWN+SPACE")
 					gameState?.setPaddleDirection(1, 1);
 			});
 			player2.on("keypress", (key) => {
-				if (key == 'ArrowUp')
+				if (key === "ARROWUP" || key === "ARROWUP+SPACE" || key === "ARROWDOWN" || key === "ARROWDOWN+SPACE")
+					console.log("keypress2: " + key);
+				if (key === "ARROWUP" || key === "ARROWUP+SPACE") //(key == 'ArrowUp')
 					gameState?.setPaddleDirection(2, -1);
-				else
+				else if (key === "ARROWDOWN" || key === "ARROWDOWN+SPACE")
 					gameState?.setPaddleDirection(2, 1);
 			});
 
