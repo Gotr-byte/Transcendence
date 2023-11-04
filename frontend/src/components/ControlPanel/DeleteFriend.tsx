@@ -3,6 +3,7 @@ import React, { useState } from "react";
 const DeleteFriend: React.FC = () => {
 	const [friendName, setFriendName] = useState("");
 
+	const validUsernamePattern = /^[a-zA-Z0-9_]*$/;
 	const handleDelete = async () => {
 		if (!friendName) {
 			console.error("Friend name cannot be empty");
@@ -32,14 +33,22 @@ const DeleteFriend: React.FC = () => {
 		}
 	};
 
+	const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+			if (value === "" || validUsernamePattern.test(value)) {
+				setFriendName(value);
+			}
+		};
+
 	return (
 		<div>
 			<input
 				type="text"
 				placeholder="Enter friend's username"
 				value={friendName}
-				onChange={(e) => setFriendName(e.target.value)}
-			/>
+				onChange={handleUsernameChange}
+        maxLength={15}
+				/>
 			<button onClick={handleDelete}>Delete Friend</button>
 		</div>
 	);
