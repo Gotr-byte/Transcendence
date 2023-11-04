@@ -4,7 +4,7 @@ const PrivateChannelInvitation: React.FC = () => {
 	// Initialize state
 	const [id, setId] = useState<number>(0); // id is now a number
 	const [username, setUsername] = useState<string>("");
-	const [error, setError] = useState<string | null>(null);
+	const validTitlePattern = /^[a-zA-Z0-9_]*$/;
 
 	// Function to handle editing the channel
 	const inviteHandler = async () => {
@@ -32,12 +32,25 @@ const PrivateChannelInvitation: React.FC = () => {
 			const data = await response.text();
 			console.log("Channel created:", data);
 		} catch (error) {
-			setError(`There was a problem creating the channel: ${error}`);
 			console.error("There was a problem creating the channel:", error);
 		}
 	};
 
-	// JSX
+	const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+			if (value === "" || validTitlePattern.test(value)) {
+				setUsername(value);
+			}
+		};
+
+		const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+			const value = e.target.value;
+			// Check if the value is not empty and is a number within the range 0-99
+			if (value === '' || (Number(value) >= 0 && Number(value) <= 99)) {
+				setId(Number(value));
+			}
+		};
+
 	return (
 		<div>
 			<label>
@@ -47,7 +60,7 @@ const PrivateChannelInvitation: React.FC = () => {
 					type="number" // Input type is now "number"
 					placeholder="Enter chat id"
 					value={id}
-					onChange={(e) => setId(Number(e.target.value))} // Convert string to number
+					onChange={handleIdChange} // Convert string to number
 				/>
 			</label>
 
@@ -55,7 +68,7 @@ const PrivateChannelInvitation: React.FC = () => {
 				type="text"
 				placeholder="Enter username"
 				value={username}
-				onChange={(e) => setUsername(e.target.value)}
+				onChange={handleUsernameChange}
 			/>
 
 			<button onClick={inviteHandler}>Invite</button>
