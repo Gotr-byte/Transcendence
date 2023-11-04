@@ -145,5 +145,6 @@ export class GameGateway implements OnGatewayDisconnect {
   handleDisconnect(@ConnectedSocket() client: Socket)  
   {
     this.gameService.handleDisconnect(client);
+    this.gameService.timoutQueue();
   }
 }
