@@ -31,7 +31,9 @@ export const Sidebar = () => {
                 render: ({ onClose }) => (
                     <Box color="white">
                         Player {data.playeroneName} wants to play with you.
-                        <Button size="sm" colorScheme="green" onClick={() => { console.log('Joining Game'); onClose(); window.location.href = '/game'; socketIo.emit("matchThisUser", data.playeroneName);}}>Join</Button>
+                        <Button size="sm" colorScheme="green" onClick={() => { console.log('Joining Game'); onClose(); window.location.href = '/game'; socketIo.emit("acceptGameRequest", data);}}>Join</Button>
+                        {/* <Button size="sm" colorScheme="green" onClick={() => { console.log('Joining Game'); onClose(); window.location.href = '/gamePlus'; socketIo.emit("matchThisUser", data.playeroneName);}}>Join</Button> */}
+
                         <Button size="sm" colorScheme="red" onClick={onClose}>Close</Button>
                     </Box>
                 ),
@@ -51,7 +53,7 @@ export const Sidebar = () => {
                 render: ({ onClose }) => (
                     <Box color="white">
                         {data}
-                        <Button size="sm" colorScheme="green" onClick={() => { console.log('Joining Game'); onClose(); window.location.href = '/chat';}}>Ok</Button>
+                        <Button size="sm" colorScheme="green" onClick={() => { console.log('Game Over'); onClose(); window.location.href = '/chat';}}>Ok</Button>
                     </Box>
                 ),
             });

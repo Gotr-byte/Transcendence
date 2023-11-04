@@ -35,9 +35,7 @@ function Achievements() {
     }, []);
 
     useEffect(() => {
-        if (!username) return;  // Don't fetch achievements if username isn't available
-
-        // Using the fetched username to fetch achievements
+        if (!username) return;
         fetch(`${import.meta.env.VITE_API_URL}/users/${username}/achievements`, {
             credentials: "include",
         })
@@ -49,7 +47,7 @@ function Achievements() {
             })
             .then((data: Achievement[]) => setAchievements(data))
             .catch((error: Error) => setError(error.message));
-    }, [username]);  // Depend on the username so it re-runs when username is available
+    }, [username]);
 
     if (error) {
         return <div>Error: {error}</div>;

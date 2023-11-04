@@ -8,7 +8,7 @@ interface User {
 	username: string;
 	isOnline: boolean;
 	avatar: string;
-	is2FaActive: boolean; // Assuming the API returns this field
+	is2FaActive: boolean;
 	is2FaValid?: boolean;
 }
 
@@ -24,7 +24,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 	const [user, setUser] = useState<User | null>(null);
 	const [showUser, setShowUser] = useState(false);
 	const [show2FAComponent, setShow2FAComponent] = useState<boolean>(false);
-	// const [sessionValid, setSessionValid] = useState<boolean>(false);
 	const socket = useContext(WebsocketContext);
 
 	const setupSocketConnection = (userId: string) => {
@@ -32,30 +31,36 @@ export const Navbar: React.FC<NavbarProps> = ({
 		console.log("Socket Connection Established");
 	};
 
-	const check2FAActive = async () => {
-		const response = await fetch(
-			`${import.meta.env.VITE_API_URL}/2fa/is2faactive`,
-			{
-				credentials: "include",
-			}
-		);
-		const isActive = await response.json();
 
-		return isActive;
-	};
+	const check2FAActive = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/2fa/is2faactive`, {
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error('Failed to check 2FA active status');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error checking 2FA active status:", error);
+      throw error;
+    }
+  };
 
 	const check2FAValid = async () => {
-		const response = await fetch(
-			`${import.meta.env.VITE_API_URL}/2fa/is2favalid`,
-			{
-				credentials: "include",
-			}
-		);
-
-		const isValid = await response.json();
-
-		return isValid;
-	};
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/2fa/is2favalid`, {
+        credentials: "include",
+      });
+      if (!response.ok) {
+        throw new Error('Failed to check 2FA valid status');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error("Error checking 2FA valid status:", error);
+      throw error;
+    }
+  };
 
 	const fetchUserData = () => {
 		fetch(`${import.meta.env.VITE_API_URL}/profile`, {
@@ -145,8 +150,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
 	useEffect(() => {
 		const checkLoginStatus = async () => {
-			// This can be a request to your backend to check if the user is logged in
-			// or any other mechanism you use to determine logged-in status.
 			if (!isLoggedIn) {
 				const sessionValid = await checkSession();
 				if (sessionValid) {
@@ -161,16 +164,21 @@ export const Navbar: React.FC<NavbarProps> = ({
 		checkLoginStatus();
 	}, []);
 
-	const handleLogout = () => {
-		fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
-			credentials: "include",
-		}).then((response) => response.json());
-		setShowUser(false);
-		setIsLoggedIn(false);
+	const handleLogout = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/logout`, {
+        credentials: "include",
+      });
+      await response.json();
+      setShowUser(false);
+      setIsLoggedIn(false);
+      socket.close();
+      console.log("Socket Connection Closed");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
+  };
 
-		socket.close();
-		console.log("Socket Connection Closed");
-	};
 
 	let handleLogin = () => {
 		window.location.href = `${import.meta.env.VITE_API_URL}/auth/42/login`;
