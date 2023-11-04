@@ -37,9 +37,8 @@ export const Sidebar = () => {
                         <Button size="sm" colorScheme="green" onClick={() => {
                             socketIo.emit("acceptGameRequest", data);
                             onClose();
-                            navigate('/game');; // this replaces window.location.href
+                            (data.gameType === "extended"? navigate('/gamePlus'):navigate('/game'));
                         }}>Join</Button>
-                        {/* <Button size="sm" colorScheme="green" onClick={() => { console.log('Joining Game'); onClose(); window.location.href = '/gamePlus'; socketIo.emit("matchThisUser", data.playeroneName);}}>Join</Button> */}
 
                         <Button size="sm" colorScheme="red" onClick={onClose}>Close</Button>
                     </Box>

@@ -17,7 +17,7 @@ export const MatchThisUser: React.FC<SendDirectMessageProps> = ({
     // Prepare the data to send
     const dataToSend = {
       name: username,
-      game: ""
+      game: "basic"
     };
   
     // Emit the socket event with the object
