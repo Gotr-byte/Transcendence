@@ -18,6 +18,19 @@ const UnblockUser: React.FC = () => {
 				}
 			);
 
+			if (response.status === 400) {
+				alert(`You cannot block/unblock yourself`);
+				return;
+			}
+			if (response.status === 404) {
+				alert(`User ${username} doesn't exist`);
+				return;
+			}
+			if (response.status === 409) {
+				alert(`User: ${username} wasn't blocked`);
+				return;
+			}
+
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
@@ -27,7 +40,6 @@ const UnblockUser: React.FC = () => {
 		} catch (error) {
 			console.error("There was a problem adding the friend:", error);
 		}
-		window.location.reload();
 	};
 
 	const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {

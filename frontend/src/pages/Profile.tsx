@@ -59,7 +59,6 @@ export default function Profile() {
           <BlockUser />
           <UnblockUser />
           <DesignateAdmin/>
-          <BanUser/>
           <BanUserTemp/> 
           <LiftRestrictions/>
           <KickUser />

@@ -1,8 +1,10 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatSharedService } from '../shared/chat-shared.service';
@@ -33,6 +35,7 @@ export class AdminService {
     channelId: number,
     adminId: number,
   ): Promise<ShowUsersRolesRestrictions> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     await this.ensureUserIsAdmin(channelId, adminId);
 
     const channelUsers = await this.prisma.user.findMany({
@@ -53,6 +56,7 @@ export class AdminService {
     channelId: number,
     adminId: number,
   ): Promise<ShowUsersRestrictions> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     await this.ensureUserIsAdmin(channelId, adminId);
 
     const allRestrictions = await this.prisma.channelUserRestriction.findMany({
@@ -76,6 +80,7 @@ export class AdminService {
     adminId: number,
     username: string,
   ): Promise<ChannelMember> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     await this.ensureUserIsAdmin(channelId, adminId);
     const user = await this.userService.getUserByName(username);
 
@@ -97,7 +102,12 @@ export class AdminService {
     adminId: number,
     restrictionDto: RestrictionDto,
   ): Promise<ChannelUserRestriction> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     const userId = await this.validateAdminAction(channelId, username, adminId);
+    // const currentRestriction = await this.getCurrentRestriction(
+    //   channelId,
+    //   userId,
+    // );
     if (
       restrictionDto.restrictionType === ChannelUserRestrictionTypes.BANNED &&
       (await this.userIsOnChannel(channelId, userId))
@@ -132,7 +142,11 @@ export class AdminService {
     adminId: number,
     updateRole: UpdateRoleDto,
   ): Promise<ChannelMember> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     const userId = await this.validateAdminAction(channelId, username, adminId);
+    const role = await this.getCurrentRole(channelId, userId);
+    if (role === updateRole.role)
+      throw new ConflictException(`User: ${username}, already has that role`);
 
     const membership = await this.prisma.channelMember.update({
       where: { userId_channelId: { userId, channelId } },
@@ -155,17 +169,18 @@ export class AdminService {
     username: string,
     adminId: number,
   ): Promise<void> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     await this.ensureUserIsAdmin(channelId, adminId);
     const user = await this.userService.getUserByName(username);
 
-    await this.prisma.channelUserRestriction.delete({
+    const removed = await this.prisma.channelUserRestriction.deleteMany({
       where: {
-        restrictedUserId_restrictedChannelId: {
           restrictedUserId: user.id,
           restrictedChannelId: channelId,
-        },
       },
     });
+    if (removed.count === 0)
+      throw new ConflictException('No restriction for that user');
   }
 
   async kickUser(
@@ -173,6 +188,7 @@ export class AdminService {
     username: string,
     adminId: number,
   ): Promise<void> {
+    await this.chatSharedService.verifyChannelPresence(channelId);
     const userId = await this.validateAdminAction(channelId, username, adminId);
 
     await this.chatSharedService.deleteUserFromChannel(channelId, userId);
@@ -228,7 +244,7 @@ export class AdminService {
       },
     });
     if (restriction)
-      throw new BadRequestException(
+      throw new ForbiddenException(
         `User with id: '${userId}' is banned on this channel (ID: ${channelId})`,
       );
   }
@@ -256,7 +272,7 @@ export class AdminService {
       },
     });
     if (!adminship)
-      throw new ForbiddenException(
+      throw new UnauthorizedException(
         `User with id: '${adminId}' is not Admin of  of this channel (ID:${channelId})`,
       );
   }
@@ -272,6 +288,32 @@ export class AdminService {
       throw new BadRequestException(
         `User with id: '${userId}' the creator of this channel (ID: ${channelId})`,
       );
+  }
+
+  private async getCurrentRole(
+    channelId: number,
+    userId: number,
+  ): Promise<ChannelMemberRoles> {
+    const membership = await this.prisma.channelMember.findUniqueOrThrow({
+      where: { userId_channelId: { userId, channelId } },
+    });
+
+    return membership.role;
+  }
+
+  private async getCurrentRestriction(
+    channelId: number,
+    userId: number,
+  ): Promise<ChannelUserRestriction | null> {
+    const restriction = await this.prisma.channelUserRestriction.findUnique({
+      where: {
+        restrictedUserId_restrictedChannelId: {
+          restrictedUserId: userId,
+          restrictedChannelId: channelId,
+        },
+      },
+    });
+    return restriction;
   }
 
   private async getUserRoleRestriction(
@@ -300,7 +342,6 @@ export class AdminService {
     return !user ? false : true;
   }
 }
-
 
 // 1   | Client connected with ID: n1tNy3-sSk24XoB_AAAB
 // transcendence1-backend-1   | Map(1) { 'n1tNy3-sSk24XoB_AAAB' => 12 }

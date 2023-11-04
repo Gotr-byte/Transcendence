@@ -19,16 +19,28 @@ const AddFriend: React.FC = () => {
 				}
 			);
 
+			if (response.status === 400) {
+				alert(`You cannot befriend yourself`);
+				return;
+			}
+			if (response.status === 404) {
+				alert(`User ${username} doesn't exist`);
+				return;
+			}
+			if (response.status === 409) {
+				alert(`Already send a friend request to ${username}`);
+				return;
+			}
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 
 			const data = await response.text();
 			console.log("Friend added:", data);
+			window.location.reload();
 		} catch (error) {
 			console.error("There was a problem adding the friend:", error);
 		}
-		window.location.reload();
 	};
 
 	const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +60,7 @@ const AddFriend: React.FC = () => {
 				onChange={handleUsernameChange}
 				maxLength={15}
 			/>
-			<button onClick={handleAddFriend}>Add Friend </button>
+			<button onClick={handleAddFriend}>Send friend request </button>
 		</div>
 	);
 };

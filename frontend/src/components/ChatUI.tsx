@@ -50,10 +50,14 @@ const ChatUI: React.FC = () => {
 				}
 			);
 
+			if (response.status === 409) {
+				setMessageHistory([]);
+				return;
+			}
+
 			if (!response.ok) {
 				throw new Error(`HTTP error! Status: ${response.status}`);
 			}
-
 			const data = await response.json();
 			setMessageHistory(data.messages); // Assuming the JSON response is an array of messages
 		} catch (error) {
@@ -127,9 +131,6 @@ const ChatUI: React.FC = () => {
 						Available Rooms
 					</Text>
 					<ChannelsAvailable onChangeRoom={handleRoomChange} />
-					<Text fontSize="md" p="4" fontWeight="bold">
-						Direct Messages
-					</Text>
 				</Box>
 				<Grid templateColumns="3fr 1fr" flex="1" overflowY="hidden">
 					<Box
