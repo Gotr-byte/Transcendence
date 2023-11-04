@@ -37,8 +37,10 @@ export class ChatGateway implements OnGatewayConnection {
     if (!userId) {
       userId = client.handshake.query.userId as string;
     }
-    if (!userId)
+    if (!userId) {
       client.disconnect();
+      return;
+    }
 
     // THIS IS THE VALIDATION CHECK FOR THE ACCESSING USER
     // const validUser = this.socketService.getValidUser(client);
