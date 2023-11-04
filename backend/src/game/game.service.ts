@@ -49,13 +49,19 @@ export class GameService
 		this.gameQueue.delete(socketId);
 	}
 
+	public isInGameQueue(socketId: string): boolean
+	{
+		return this.gameQueue.has(socketId);
+	}
+
 	public timoutQueue(): void
 	{
 		let now = Date.now();
 
 		for (const [, value] of this.gameQueue)
 		{
-			if (now > value.timestamp + config.mmTimeout)
+			if (now > value.timestamp + config.mmTimeout ||
+				!value.socket.connected)
 			{
 				value.socket.emit('matchmaking', 'operation timed out');
 				this.gameQueue.delete(value.socket.id);
