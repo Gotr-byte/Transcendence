@@ -2,7 +2,7 @@ import { useState } from "react";
 
 const BlockUser: React.FC = () => {
 	const [username, setUsername] = useState<string>("");
-
+  const validUsernamePattern = /^[a-zA-Z0-9_]*$/;
 	const handleBlockUser = async () => {
 		try {
 			const response = await fetch(
@@ -27,6 +27,12 @@ const BlockUser: React.FC = () => {
 		}
 		window.location.reload();
 	};
+	const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+			if (value === "" || validUsernamePattern.test(value)) {
+				setUsername(value);
+			}
+		};
 
 	return (
 		<div>
@@ -34,7 +40,8 @@ const BlockUser: React.FC = () => {
 				type="text"
 				placeholder="Enter username to block"
 				value={username}
-				onChange={(e) => setUsername(e.target.value)}
+        onChange={handleUsernameChange}
+        maxLength={15}
 			/>
 			<button onClick={handleBlockUser}>Block user</button>
 		</div>

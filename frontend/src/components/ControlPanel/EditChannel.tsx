@@ -14,7 +14,7 @@ const EditChannel: React.FC = () => {
 	const [channelType, setChannelType] = useState<string>("PUBLIC");
 	const [password, setPassword] = useState<string>("");
 	const [error, setError] = useState<string | null>(null);
-
+  const validTitlePattern = /^[a-zA-Z0-9_]*$/;
 	// Function to handle editing the channel
 	const editChannelHandler = async () => {
 		// Prepare the channel data
@@ -56,6 +56,22 @@ const EditChannel: React.FC = () => {
 		}
 	};
 
+	const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+		// Check if the value is not empty and is a number within the range 0-99
+		if (value === '' || (Number(value) >= 0 && Number(value) <= 99)) {
+			setId(Number(value));
+		}
+	};
+
+	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+			if (value === "" || validTitlePattern.test(value)) {
+				setTitle(value);
+			}
+		};
+
+
 	// JSX
 	return (
 		<div>
@@ -66,7 +82,7 @@ const EditChannel: React.FC = () => {
 					type="number" // Input type is now "number"
 					placeholder="Enter chat id"
 					value={id}
-					onChange={(e) => setId(Number(e.target.value))} // Convert string to number
+					onChange={handleIdChange}
 				/>
 			</label>
 
@@ -74,7 +90,8 @@ const EditChannel: React.FC = () => {
 				type="text"
 				placeholder="Enter chat title"
 				value={title}
-				onChange={(e) => setTitle(e.target.value)}
+				onChange={handleTitleChange}
+				maxLength={15}
 			/>
 
 			<label>
@@ -96,6 +113,7 @@ const EditChannel: React.FC = () => {
 						type="password"
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
+						maxLength={15}
 					/>
 				</label>
 			)}

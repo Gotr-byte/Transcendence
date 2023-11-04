@@ -10,7 +10,7 @@ const DesignateAdmin: React.FC = () => {
 	const [role, setRole] = useState<string>("ADMIN");
 	const [error, setError] = useState<string | null>(null);
 	const [success, setSuccess] = useState<string | null>(null); // New state variable for success message
-
+  const validUsernamePattern = /^[a-zA-Z0-9_]*$/;
 	const designateHandler = async () => {
 		if (id <= 0 || username === "") {
 			setError("Please provide valid ID and username.");
@@ -46,7 +46,20 @@ const DesignateAdmin: React.FC = () => {
 			console.error("There was a problem designating admin:", error);
 		}
 	};
+	const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+		// Check if the value is not empty and is a number within the range 0-99
+		if (value === '' || (Number(value) >= 0 && Number(value) <= 99)) {
+			setId(Number(value));
+		}
+	};
 
+	const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+			if (value === "" || validUsernamePattern.test(value)) {
+				setUsername(value);
+			}
+		};
 	return (
 		<div>
 			<label>
@@ -56,14 +69,15 @@ const DesignateAdmin: React.FC = () => {
 					type="number"
 					placeholder="Enter chat id"
 					value={id}
-					onChange={(e) => setId(Number(e.target.value))}
+					onChange={handleIdChange}
 				/>
 			</label>
 			<input
 				type="text"
 				placeholder="Enter username"
 				value={username}
-				onChange={(e) => setUsername(e.target.value)}
+				onChange={handleUsernameChange}
+				maxLength={15}
 			/>
 			<label>
 				Channel Type:

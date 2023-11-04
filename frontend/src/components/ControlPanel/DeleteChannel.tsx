@@ -25,7 +25,14 @@ const DeleteChannel: React.FC = () => {
 			console.log(`Channel ${id} successfully deleted`);
 			setId(0);
 		} catch (error) {
-			console.error(`There was a problem deleting the friend ${id}`, error);
+			console.error(`There was a problem deleting the channel ${id}`, error);
+		}
+	};
+
+	const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+		if (value === '' || (Number(value) >= 0 && Number(value) <= 99)) {
+			setId(Number(value));
 		}
 	};
 
@@ -36,7 +43,7 @@ const DeleteChannel: React.FC = () => {
 				style={{ width: "20px" }}
 				type="number"
 				value={id}
-				onChange={(e) => setId(Number(e.target.value))}
+				onChange={handleIdChange}
 			/>
 			<button onClick={handleDelete}>Delete Channel</button>
 		</div>
