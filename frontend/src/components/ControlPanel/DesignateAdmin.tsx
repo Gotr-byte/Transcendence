@@ -86,7 +86,7 @@ const DesignateAdmin: React.FC = () => {
 	return (
 		<div>
 			<label>
-				ChatId=
+				ChannelId=
 				<input
 					style={{ width: "20px" }}
 					type="number"

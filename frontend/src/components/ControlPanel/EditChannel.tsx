@@ -106,7 +106,7 @@ const EditChannel: React.FC = () => {
 	return (
 		<div>
 			<label>
-				ChatIdToEdit=
+				ChannelIdToEdit=
 				<input
 					style={{ width: "20px" }}
 					type="number" // Input type is now "number"

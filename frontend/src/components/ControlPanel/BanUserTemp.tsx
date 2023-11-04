@@ -82,7 +82,7 @@ const BanUserTemp: React.FC = () => {
 	return (
 		<div>
 			<label>
-				ChatId=
+				ChannelId=
 				<input
 					style={{ width: "20px" }}
 					type="number"
@@ -109,7 +109,7 @@ const BanUserTemp: React.FC = () => {
 				</select>
 			</label>
 			<label>
-				Duration (eg. 2023-11-07T10:07:07.000Z):
+				No date for indefinite restriciton:
 				<input
 					type="datetime-local"
 					value={duration}

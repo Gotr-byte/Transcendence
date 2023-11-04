@@ -58,7 +58,7 @@ const DeleteChannel: React.FC = () => {
 
 	return (
 		<div>
-			<label>ChatIdToDelete=</label>
+			<label>ChannelIdToDelete=</label>
 			<input
 				style={{ width: "20px" }}
 				type="number"

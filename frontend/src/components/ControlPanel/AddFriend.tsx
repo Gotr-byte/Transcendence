@@ -60,7 +60,7 @@ const AddFriend: React.FC = () => {
 				onChange={handleUsernameChange}
 				maxLength={15}
 			/>
-			<button onClick={handleAddFriend}>Add Friend </button>
+			<button onClick={handleAddFriend}>Send friend request </button>
 		</div>
 	);
 };

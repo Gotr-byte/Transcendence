@@ -50,7 +50,7 @@ const LiftRestrictions: React.FC = () => {
 			}
 			const data = await response.text();
 			alert(
-				`Restriction: ${restrictionType} lifted from ${username}`
+				`Restriction lifted from ${username}`
 			);
 		} catch (error) {
 			console.error("There was a problem enabling restriction", error);
@@ -76,7 +76,7 @@ const LiftRestrictions: React.FC = () => {
 	return (
 		<div>
 			<label>
-				ChatId=
+				ChannelId=
 				<input
 					style={{ width: "20px" }}
 					type="number"

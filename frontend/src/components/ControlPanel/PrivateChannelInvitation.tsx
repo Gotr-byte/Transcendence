@@ -81,7 +81,7 @@ const PrivateChannelInvitation: React.FC = () => {
 	return (
 		<div>
 			<label>
-				ChatId=
+				ChannelId=
 				<input
 					style={{ width: "20px" }}
 					type="number" // Input type is now "number"
@@ -98,7 +98,7 @@ const PrivateChannelInvitation: React.FC = () => {
 				onChange={handleUsernameChange}
 			/>
 
-			<button onClick={inviteHandler}>Invite</button>
+			<button onClick={inviteHandler}>Add to Channel</button>
 		</div>
 	);
 };
