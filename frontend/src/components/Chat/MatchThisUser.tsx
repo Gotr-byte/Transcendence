@@ -9,7 +9,11 @@ export const MatchThisUser: React.FC<SendDirectMessageProps> = ({
 
     const redirectToGame = () => {
         window.location.href = `/game`;
-        socket.emit("matchThisUser", username);
+        const dataToSend = {
+          name: username,
+          game: ""
+        };
+        socket.emit("matchThisUser", dataToSend);
     };
 
     return (
