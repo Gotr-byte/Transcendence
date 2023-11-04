@@ -328,10 +328,7 @@ const Game: React.FC = () =>
 	// var subliminalSelectorDepression: number = 0;
 	// var subliminalSelectorSchizophrenia: number = 0;
 	// var subliminalSelectorHellish: number = 0;
-	const [subliminalSelectorDepression, setSubliminalSelectorDepression] = useState<number>(0);
-	const [subliminalSelectorSchizophrenia, setSubliminalSelectorSchizophrenia] = useState<number>(0);
-	const [subliminalSelectorHellish, setSubliminalSelectorHellish] = useState<number>(0);
-
+	
 	var subliminalMessagesArrayDepression: string[] =
 	[
 		'Where were you?',
@@ -387,7 +384,7 @@ const Game: React.FC = () =>
 		'Loss...',
 		'Darkness surrounding!'
 	];
-
+	
 	var subliminalMessagesArraySchizophrenia: string[] =
 	[
 		'Perdition awaits...',
@@ -449,7 +446,7 @@ const Game: React.FC = () =>
 		'Take control!',
 		'Let it go!'
 	];
-
+	
 	var subliminalMessagesArrayHellish: string[] =
 	[
 		'It burns!',
@@ -494,6 +491,10 @@ const Game: React.FC = () =>
 		'Egg!'
 	];
 
+	const [subliminalSelectorDepression, setSubliminalSelectorDepression] = useState<number>(Math.floor(Math.random() * 100) % (subliminalMessagesArrayDepression.length));
+	const [subliminalSelectorSchizophrenia, setSubliminalSelectorSchizophrenia] = useState<number>(Math.floor(Math.random() * 100) % (subliminalMessagesArraySchizophrenia.length));
+	const [subliminalSelectorHellish, setSubliminalSelectorHellish] = useState<number>(Math.floor(Math.random() * 100) % (subliminalMessagesArrayHellish.length));
+	
 	// Set the multimedia sources when the component has rendered
 	useEffect(() =>
 	{
@@ -1803,8 +1804,14 @@ const Game: React.FC = () =>
 	// 	}
 	// }
 
-	function drawDepression(ctx: CanvasRenderingContext2D): void
+	function drawSubliminalDepression(ctx: CanvasRenderingContext2D): void
 	{
+		if (subliminalDepressionIsActive === false)
+		{
+			// setSubliminalSelectorDepression(Math.floor(Math.random() * 100) % (subliminalMessagesArrayDepression.length));
+			setSubliminalDepressionIsActive(true);
+		}
+
 		// Background
 		ctx.beginPath();
 		ctx.rect(0, 0, canvasWidth, canvasHeight);
@@ -1820,34 +1827,11 @@ const Game: React.FC = () =>
 		ctx.fillText(`${subliminalMessagesArrayDepression[subliminalSelectorDepression]}`, canvasWidth / 2, canvasHeight / 2);
 	}
 
-	function drawSubliminalDepression(ctx: CanvasRenderingContext2D): void
-	{
-		if (subliminalDepressionIsActive === false)
-		{
-			setSubliminalSelectorDepression(Math.floor(Math.random() * 100) % (subliminalMessagesArrayDepression.length));
-			setSubliminalDepressionIsActive(true);
-		}
-		drawDepression(ctx);
-		// // Background
-		// ctx.beginPath();
-		// ctx.rect(0, 0, canvasWidth, canvasHeight);
-		// ctx.fillStyle = "#000000";
-		// ctx.fill();
-		// ctx.closePath();
-
-		// // Text
-		// ctx.font = "110px Sherwood";
-		// ctx.textAlign = 'center'; // Horizontal centering
-		// ctx.textBaseline = 'middle'; // Vertical centering
-		// ctx.fillStyle = '#FFFFFF';
-		// ctx.fillText(`${subliminalMessagesArrayDepression[subliminalSelectorDepression]}`, canvasWidth / 2, canvasHeight / 2);
-	}
-
 	function drawSubliminalSchizophrenia(ctx: CanvasRenderingContext2D): void
 	{
 		if (subliminalSchizophreniaIsActive === false)
 		{
-			setSubliminalSelectorSchizophrenia(Math.floor(Math.random() * 100) % (subliminalMessagesArraySchizophrenia.length));
+			// setSubliminalSelectorSchizophrenia(Math.floor(Math.random() * 100) % (subliminalMessagesArraySchizophrenia.length));
 			setSubliminalSchizophreniaIsActive(true);
 		}
 
@@ -1870,7 +1854,7 @@ const Game: React.FC = () =>
 	{
 		if (subliminalHellishIsActive === false)
 		{
-			setSubliminalSelectorHellish(Math.floor(Math.random() * 100) % (subliminalMessagesArrayHellish.length));
+			// setSubliminalSelectorHellish(Math.floor(Math.random() * 100) % (subliminalMessagesArrayHellish.length));
 			setSubliminalHellishIsActive(true);
 		}
 
@@ -1898,6 +1882,10 @@ const Game: React.FC = () =>
 				setSubliminalDepressionIsActive(false);
 				setSubliminalSchizophreniaIsActive(false);
 				setSubliminalHellishIsActive(false);
+
+				setSubliminalSelectorDepression(Math.floor(Math.random() * 100) % (subliminalMessagesArrayDepression.length));
+				setSubliminalSelectorSchizophrenia(Math.floor(Math.random() * 100) % (subliminalMessagesArraySchizophrenia.length));
+				setSubliminalSelectorHellish(Math.floor(Math.random() * 100) % (subliminalMessagesArrayHellish.length));
 			}
 			if (subliminalDepressionIsActive === true)
 			{
@@ -1912,7 +1900,7 @@ const Game: React.FC = () =>
 				drawSubliminalHellish(ctx);
 			}
 		}
-		else if (Math.floor(Math.random() * 300) === 66)
+		else if (Math.floor(Math.random() * 200) === 42)
 		{
 			setSubliminalStartTime(timestamp);
 
