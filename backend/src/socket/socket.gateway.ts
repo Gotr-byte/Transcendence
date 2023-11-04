@@ -11,6 +11,13 @@ import { UseFilters, UseGuards } from '@nestjs/common';
 import { WsAuthGuard } from 'src/auth/guards/socket-guards';
 import { WsExceptionFilter } from 'src/filters/ws-exception-filter';
 
+
+declare module "socket.io" {
+  interface Socket {
+    shouldHandleDisconnect?: boolean;
+  }
+}
+
 @UseFilters(new WsExceptionFilter())
 // @UseGuards(WsAuthGuard)
 @WebSocketGateway({
@@ -29,6 +36,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       userId = client.handshake.query.userId as string;
     }
     if (!userId) {
+      client.shouldHandleDisconnect = false
       client.disconnect();
       return;
     }
@@ -48,6 +56,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleDisconnect(@ConnectedSocket() client: Socket) {
+    if (client.shouldHandleDisconnect === false)
+      return;
     await this.socketService.disconnectUser(client.id);
     console.info(`Client disconnected with ID: ${client.id}`);
   }
