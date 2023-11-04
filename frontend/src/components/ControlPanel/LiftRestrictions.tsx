@@ -22,7 +22,7 @@ const LiftRestrictions: React.FC = () => {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			const data = await response.text();
-			console.log("Channel created:", data);
+			console.log(`${data}`);
 		} catch (error) {
 			console.error("There was a problem enabling restriction", error);
 		}
