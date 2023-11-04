@@ -19,6 +19,7 @@ export const Sidebar = () => {
 
     useEffect(() => {
         socketIo.on('GameRequest', (data: Opponent) => {
+            console.log(data);
             toast({
                 title: `Game Request from ${data.playeroneName}`,
                 description: `Would you like to join the game?`,
@@ -31,7 +32,7 @@ export const Sidebar = () => {
                 render: ({ onClose }) => (
                     <Box color="white">
                         Player {data.playeroneName} wants to play with you.
-                        <Button size="sm" colorScheme="green" onClick={() => { onClose(); window.location.href = '/game'; socketIo.emit("acceptGameRequest", data);}}>Join</Button>
+                        <Button size="sm" colorScheme="green" onClick={() => { socketIo.emit('acceptGameRequest', data); onClose(); window.location.href = '/game'; }}>Join</Button>
                         {/* <Button size="sm" colorScheme="green" onClick={() => { console.log('Joining Game'); onClose(); window.location.href = '/gamePlus'; socketIo.emit("matchThisUser", data.playeroneName);}}>Join</Button> */}
 
                         <Button size="sm" colorScheme="red" onClick={onClose}>Close</Button>

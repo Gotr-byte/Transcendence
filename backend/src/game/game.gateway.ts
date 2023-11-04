@@ -58,23 +58,53 @@ export class GameGateway implements OnGatewayDisconnect {
   {
     this.gameService.removeFromGameQueue(client.id);
   }
+ 
+  @SubscribeMessage('acceptGameRequest')
+  async handleAcceptedGameRequest(
+    @MessageBody() data: any,
+    @ConnectedSocket() player2: Socket
+    ): Promise<void>
+  {
+    console.log('Backend:' + JSON.stringify(data));
+    if (!data.playerOneId)
+    {
+      console.log('error in response format');
+      player2.emit('matchmaking', 'error in response format');
+      return;
+    }
+    let gameQueue = this.gameService.takeFromGameQueue(data.player1Id);
+    if (gameQueue == null)
+    {
+      console.log('error, maybe already expired ');
+      player2.emit('matchmaking', 'error, maybe request already expired');
+      return;
+    }
+    player2.emit('matchmaking', 'success, game will start shortly');
+    gameQueue.socket.emit('matchmaking', 'success, game will start shortly');
+    if (gameQueue.isBasic)
+       this.gameService.initBasicGame(gameQueue.socket.id, player2.id);
+   else
+       this.gameService.initExtendedGame(gameQueue.socket.id, player2.id);
+   this.gameService.startGame(gameQueue.socket, player2);
+  }
 
   @SubscribeMessage('matchThisUser')
   async handleMatchThisSpecificUser(
-    @MessageBody() name: string,
-    @MessageBody() game: string,
+    @MessageBody() data: any, 
     @ConnectedSocket() client: Socket
     ): Promise<void>
   {
-    let user:User;
-    let sender:User;
+    let user:   User;
+    let sender: User;
+    let name = data.name;
+    let game = data.game || 'basic';
 
     if (this.gameService.isInGameQueue(client.id))
     {
       client.emit('matchmaking', 'error: already requesting');
       return;
     }
-    if (name == null || name.length == 0)
+    if (!name || name.length == 0)
     {
       client.emit('matchmaking', 'error: no name given');
       return;
@@ -106,11 +136,12 @@ export class GameGateway implements OnGatewayDisconnect {
     sender = await this.userService.getUserById(this.socketService.getUserId(client.id));
     receivingSocket.emit("GameRequest", 
       {
-        "playerOneId": sender.id,
+        "playerOneId": client.id,
         "playeroneName": sender.username,
-        "playerTwoId": user.id,
+        "playerTwoId": receivingSocket.id,
         "playerTwoName": user.username,
-        "timeStamp": tstamp
+        "timeStamp": tstamp,
+        "gameType": game
       });
 
     client.emit('matchmaking', 'Success: game request pending');
@@ -120,5 +151,6 @@ export class GameGateway implements OnGatewayDisconnect {
   handleDisconnect(@ConnectedSocket() client: Socket)  
   {
     this.gameService.handleDisconnect(client);
+    this.gameService.timoutQueue();
   }
 }
