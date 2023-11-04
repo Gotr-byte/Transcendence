@@ -17,7 +17,7 @@ export default function RootLayout() {
           colSpan={{ base: 6, lg: 2, xl: 1 }}
           minHeight={{ lg: "100vh" }}
           p={{ base: "20px", lg: "30px" }}
-          bgImage='url("../../public/bookCover.jpg")'
+          bgImage='url("/bookCover.jpg")'
           bgSize="100% 100%" 
           bgRepeat="no-repeat" 
         >

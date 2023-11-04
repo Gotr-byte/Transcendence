@@ -27,7 +27,7 @@ import Leaderboard from "../components/ControlPanel/Leaderboard";
 
 export default function Profile() {
   return (
-    <Tabs mt="40px" p="20px" colorScheme="purple" variant="enclosed" bgImage='url("../../public/1920paper.jpg")'
+    <Tabs mt="40px" p="20px" colorScheme="purple" variant="enclosed" bgImage='url("/1920paper.jpg")'
     bgSize="100% 100%"
     bgRepeat="no-repeat"
     >

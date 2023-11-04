@@ -19,14 +19,11 @@ export const Sidebar = () => {
 
     useEffect(() => {
         socketIo.on('GameRequest', (data: Opponent) => {
-            // console.log(data);
-
-            // Show the toast with opponent data and Yes/No options
             toast({
                 title: `Game Request from ${data.playeroneName}`,
                 description: `Would you like to join the game?`,
                 status: "info",
-                duration: null, // Toast won't close automatically
+                duration: null,
                 isClosable: true,
                 position: "top-right",
                 variant: "solid",
@@ -42,14 +39,11 @@ export const Sidebar = () => {
         });
 
         socketIo.on('EndGame', (data: String) => {
-            // console.log("game over");
-
-            // Show the toast with opponent data and Yes/No options
             toast({
                 title: `Game Over`,
                 description: `Have a nice day`,
                 status: "info",
-                duration: null, // Toast won't close automatically
+                duration: null,
                 isClosable: true,
                 position: "top-right",
                 variant: "solid",
@@ -64,7 +58,7 @@ export const Sidebar = () => {
         });
 
         return () => {
-            socketIo.off('GameRequest');  // Cleanup the listener when component unmounts
+            socketIo.off('GameRequest');
         };
     }, [toast, socketIo]);
 

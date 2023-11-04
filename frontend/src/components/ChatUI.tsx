@@ -152,7 +152,6 @@ const ChatUI: React.FC = () => {
 								</p>
 							</div>
 						))}
-						{/* Combine messageHistory with receivedMessages if needed */}
 					</Box>
 					<Box
 						borderWidth={1}
