@@ -90,6 +90,7 @@ export class GameState
 		this.ball = new Ball(this.calcRandomDirection(Math.random() * 2), true, config.ball.velocity);
 		this.ball2 = new Ball(this.calcRandomDirection(Math.random() * 2), false, config.ball.velocity);
 		this.fox = new Fox(this.calcRandomDirection(Math.random() * 2));
+		this.triggers = new Triggerables();
 		this.winner = 0;
 	}
 
@@ -127,6 +128,7 @@ export class GameState
 
 	public extendedVersion(): void
 	{
+		this.triggerTriggerables();
 		this.unlockBall();
 		this.unlockFox();
 		if (this.ball2.isUnlocked)
@@ -149,6 +151,17 @@ export class GameState
 			return;
 		let fsize = this.fox.hasSizeOf;
 		//do collision logic here and let them bounce
+	}
+
+	public triggerTriggerables(): void
+	{
+		if (this.instance.getScore1() + this.instance.getScore2() >= config.unlockPopupsAt)
+		{
+			if (Math.floor(Math.random() * 1000) === 666)
+				this.triggers.triggeredPopup = true;
+			else
+				this.triggers.triggeredPopup = false;
+		}
 	}
 
 	public unlockBall(): void

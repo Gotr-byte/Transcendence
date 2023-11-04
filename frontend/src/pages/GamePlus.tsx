@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState, useContext } from 'react';
 import { WebsocketContext } from "../components/Context/WebsocketContexts";
 
 import JoinRandom from '../components/Game/JoinRandom';
+import JoinRandomPlus from '../components/Game/JoinRandomPlus';
 import ReceivedGameData from '../components/Game/ReceiveGameData';
 
 import musicBavariaSrc from '../../public/assets/Music_Meanwhile_in_Bavaria.mp3';
@@ -247,7 +248,7 @@ const Game: React.FC = () =>
 		// gnome: Gnome;
 		// harkinian: Harkinian;
 		fox: Fox;
-		// triggerables: Triggerables;
+		triggers: Triggerables;
 	}
 	
 	
@@ -328,10 +329,7 @@ const Game: React.FC = () =>
 	// var subliminalSelectorDepression: number = 0;
 	// var subliminalSelectorSchizophrenia: number = 0;
 	// var subliminalSelectorHellish: number = 0;
-	const [subliminalSelectorDepression, setSubliminalSelectorDepression] = useState<number>(0);
-	const [subliminalSelectorSchizophrenia, setSubliminalSelectorSchizophrenia] = useState<number>(0);
-	const [subliminalSelectorHellish, setSubliminalSelectorHellish] = useState<number>(0);
-
+	
 	var subliminalMessagesArrayDepression: string[] =
 	[
 		'Where were you?',
@@ -387,7 +385,7 @@ const Game: React.FC = () =>
 		'Loss...',
 		'Darkness surrounding!'
 	];
-
+	
 	var subliminalMessagesArraySchizophrenia: string[] =
 	[
 		'Perdition awaits...',
@@ -449,7 +447,7 @@ const Game: React.FC = () =>
 		'Take control!',
 		'Let it go!'
 	];
-
+	
 	var subliminalMessagesArrayHellish: string[] =
 	[
 		'It burns!',
@@ -494,6 +492,10 @@ const Game: React.FC = () =>
 		'Egg!'
 	];
 
+	const [subliminalSelectorDepression, setSubliminalSelectorDepression] = useState<number>(Math.floor(Math.random() * 100) % (subliminalMessagesArrayDepression.length));
+	const [subliminalSelectorSchizophrenia, setSubliminalSelectorSchizophrenia] = useState<number>(Math.floor(Math.random() * 100) % (subliminalMessagesArraySchizophrenia.length));
+	const [subliminalSelectorHellish, setSubliminalSelectorHellish] = useState<number>(Math.floor(Math.random() * 100) % (subliminalMessagesArrayHellish.length));
+	
 	// Set the multimedia sources when the component has rendered
 	useEffect(() =>
 	{
@@ -1547,80 +1549,60 @@ const Game: React.FC = () =>
 		}
 	}
 	
-	// function popup_trap(): void
-	// {
-	// 	// if (isUnlockedPopups)
-	// 	// {
-	// 		if (lastGameState.triggerables.triggeredPopup === true) //(Math.floor(Math.random() * 10000) === 666)
-	// 		{
-	// 			var selector = Math.floor(Math.random() * 100) % 11; // % 5
-	// 			if (selector === 0)
-	// 			{
-	// 				alert("Run!");
-	// 			}
-	// 			else if (selector === 1)
-	// 			{
-	// 				alert("Hide!");
-	// 			}
-	// 			else if (selector === 2)
-	// 			{
-	// 				alert("Resist!");
-	// 			}
-	// 			else if (selector === 3)
-	// 			{
-	// 				alert("Fight!");
-	// 			}
-	// 			else if (selector === 4)
-	// 			{
-	// 				alert("Dog!");
-	// 			}
-	// 			else if (selector === 5)
-	// 			{
-	// 				alert("Try rump!");
-	// 			}
-	// 			else if (selector === 6)
-	// 			{
-	// 				alert("Be wary of danger!");
-	// 			}
-	// 			else if (selector === 7)
-	// 			{
-	// 				alert("Seek grace!");
-	// 			}
-	// 			else if (selector === 8)
-	// 			{
-	// 				alert("Visions of madness!");
-	// 			}
-	// 			else if (selector === 9)
-	// 			{
-	// 				alert("Ahh, suffering...");
-	// 			}
-	// 			else if (selector === 10)
-	// 			{
-	// 				alert("Praise the faith!");
-	// 			}
-	// 			// if (selector === 0)
-	// 			// {
-	// 			// 	alert("cLICK THIS LINK AND WIN 1 BITCOIN!!! http://hostmyvirus.co.ck/f1L3r4p3");
-	// 			// }
-	// 			// else if (selector === 1)
-	// 			// {
-	// 			// 	alert("Want see many womans whit BIG BALLS??? Clik her http://baitandhack.ro/r4n50mM0n573r-Tr0j4n");
-	// 			// }
-	// 			// else if (selector === 2)
-	// 			// {
-	// 			// 	alert("You are FBI suspekt childs pronorgafy! You have right to a turny! Free lawers best servis CALL NOW!!! +40769 666 911");
-	// 			// }
-	// 			// else if (selector === 1)
-	// 			// {
-	// 			// 	alert("1 new message from Elon Musk: Hello I am Elon Musk I end world hunger I love you send $100 to my wallet 4DZpldiB34afdq5BjdwT9ayHyLJnkMbKevc8 I send you 1000.000.000 DOGE");
-	// 			// }
-	// 			// else if (selector === 2)
-	// 			// {
-	// 			// 	alert("Legal drugs online order 100% SAFE http://jestesglupilol.pl");
-	// 			// }
-	// 		}
-	// 	// }
-	// }
+	function popup_trap(score1: number, score2: number, trigger: boolean): void
+	{
+		if (score1 + score2 >= 10) //isUnlockedPopups
+		{
+			if (trigger === true) //(Math.floor(Math.random() * 10000) === 666)
+			{
+				var selector = Math.floor(Math.random() * 100) % 11; // % 5
+				if (selector === 0)
+				{
+					alert("Run!");
+				}
+				else if (selector === 1)
+				{
+					alert("Hide!");
+				}
+				else if (selector === 2)
+				{
+					alert("Resist!");
+				}
+				else if (selector === 3)
+				{
+					alert("Fight!");
+				}
+				else if (selector === 4)
+				{
+					alert("Dog!");
+				}
+				else if (selector === 5)
+				{
+					alert("Try rump!");
+				}
+				else if (selector === 6)
+				{
+					alert("Be wary of danger!");
+				}
+				else if (selector === 7)
+				{
+					alert("Seek grace!");
+				}
+				else if (selector === 8)
+				{
+					alert("Visions of madness!");
+				}
+				else if (selector === 9)
+				{
+					alert("Ahh, suffering...");
+				}
+				else if (selector === 10)
+				{
+					alert("Praise the faith!");
+				}
+			}
+		}
+	}
 	
 	// function updateVariables(): void
 	// {
@@ -1803,8 +1785,14 @@ const Game: React.FC = () =>
 	// 	}
 	// }
 
-	function drawDepression(ctx: CanvasRenderingContext2D): void
+	function drawSubliminalDepression(ctx: CanvasRenderingContext2D): void
 	{
+		if (subliminalDepressionIsActive === false)
+		{
+			// setSubliminalSelectorDepression(Math.floor(Math.random() * 100) % (subliminalMessagesArrayDepression.length));
+			setSubliminalDepressionIsActive(true);
+		}
+
 		// Background
 		ctx.beginPath();
 		ctx.rect(0, 0, canvasWidth, canvasHeight);
@@ -1820,34 +1808,11 @@ const Game: React.FC = () =>
 		ctx.fillText(`${subliminalMessagesArrayDepression[subliminalSelectorDepression]}`, canvasWidth / 2, canvasHeight / 2);
 	}
 
-	function drawSubliminalDepression(ctx: CanvasRenderingContext2D): void
-	{
-		if (subliminalDepressionIsActive === false)
-		{
-			setSubliminalSelectorDepression(Math.floor(Math.random() * 100) % (subliminalMessagesArrayDepression.length));
-			setSubliminalDepressionIsActive(true);
-		}
-		drawDepression(ctx);
-		// // Background
-		// ctx.beginPath();
-		// ctx.rect(0, 0, canvasWidth, canvasHeight);
-		// ctx.fillStyle = "#000000";
-		// ctx.fill();
-		// ctx.closePath();
-
-		// // Text
-		// ctx.font = "110px Sherwood";
-		// ctx.textAlign = 'center'; // Horizontal centering
-		// ctx.textBaseline = 'middle'; // Vertical centering
-		// ctx.fillStyle = '#FFFFFF';
-		// ctx.fillText(`${subliminalMessagesArrayDepression[subliminalSelectorDepression]}`, canvasWidth / 2, canvasHeight / 2);
-	}
-
 	function drawSubliminalSchizophrenia(ctx: CanvasRenderingContext2D): void
 	{
 		if (subliminalSchizophreniaIsActive === false)
 		{
-			setSubliminalSelectorSchizophrenia(Math.floor(Math.random() * 100) % (subliminalMessagesArraySchizophrenia.length));
+			// setSubliminalSelectorSchizophrenia(Math.floor(Math.random() * 100) % (subliminalMessagesArraySchizophrenia.length));
 			setSubliminalSchizophreniaIsActive(true);
 		}
 
@@ -1870,7 +1835,7 @@ const Game: React.FC = () =>
 	{
 		if (subliminalHellishIsActive === false)
 		{
-			setSubliminalSelectorHellish(Math.floor(Math.random() * 100) % (subliminalMessagesArrayHellish.length));
+			// setSubliminalSelectorHellish(Math.floor(Math.random() * 100) % (subliminalMessagesArrayHellish.length));
 			setSubliminalHellishIsActive(true);
 		}
 
@@ -1898,6 +1863,10 @@ const Game: React.FC = () =>
 				setSubliminalDepressionIsActive(false);
 				setSubliminalSchizophreniaIsActive(false);
 				setSubliminalHellishIsActive(false);
+
+				setSubliminalSelectorDepression(Math.floor(Math.random() * 100) % (subliminalMessagesArrayDepression.length));
+				setSubliminalSelectorSchizophrenia(Math.floor(Math.random() * 100) % (subliminalMessagesArraySchizophrenia.length));
+				setSubliminalSelectorHellish(Math.floor(Math.random() * 100) % (subliminalMessagesArrayHellish.length));
 			}
 			if (subliminalDepressionIsActive === true)
 			{
@@ -1912,7 +1881,7 @@ const Game: React.FC = () =>
 				drawSubliminalHellish(ctx);
 			}
 		}
-		else if (Math.floor(Math.random() * 300) === 66)
+		else if (Math.floor(Math.random() * 200) === 42)
 		{
 			setSubliminalStartTime(timestamp);
 
@@ -2077,13 +2046,13 @@ const Game: React.FC = () =>
 				x: (canvasWidth / 2),
 				y: (canvasHeight / 2)
 			},
+		},
+		triggers:
+		{
+			triggeredGnome: false,
+			triggeredHarkinian: false,
+			triggeredPopup: false
 		}
-		// triggerables:
-		// {
-		// 	triggeredGnome: false,
-		// 	triggeredHarkinian: false,
-		// 	triggeredPopup: false
-		// }
 	}
 
 	function updateGameState(): void
@@ -2263,7 +2232,7 @@ const Game: React.FC = () =>
 					// moveBalls();
 					// moveFox(timestamp);
 			
-					// popup_trap();
+					popup_trap(receivedGameState.score1, receivedGameState.score2, receivedGameState.triggers.triggeredPopup);
 			
 					// updateVariables();
 					// updateScores();
@@ -2326,6 +2295,7 @@ const Game: React.FC = () =>
 	return (
 		<div>
 			<JoinRandom />
+			<JoinRandomPlus />
 			<canvas ref={canvasRef} tabIndex={0} width={canvasWidth} height={canvasHeight}></canvas>
 			<audio ref={audioGnome}>
         		<source src={audioGnomeSrc} type="audio/mp3"/>
