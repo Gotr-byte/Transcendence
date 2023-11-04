@@ -35,14 +35,35 @@ const BanUserTemp: React.FC = () => {
 					body: JSON.stringify(payload), // Use the conditionally constructed payload
 				}
 			);
+
+			if (response.status === 400) {
+				alert(`What you you think? We dont have that much channels ;)`);
+				return;
+			}
+
+			if (response.status === 401) {
+				alert(
+					`You are not authorized to restrict users on this channel. You have to be admin or owner`
+				);
+				return;
+			}
+
+			if (response.status === 404) {
+				alert(`Username: ${username} or Channel ID: ${id} doesnt exist`);
+				return;
+			}
+
+			if (response.status === 409) {
+				alert(`Username: ${username} is already restricted`);
+				return;
+			}
+
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			const data = await response.json();
-			if (!duration)
-				alert(`${restrictionType} ${username} indefinitely`)
-			else
-			alert(`${restrictionType} ${username} until ${duration}`)
+			if (!duration) alert(`${restrictionType} ${username} indefinitely`);
+			else alert(`${restrictionType} ${username} until ${duration}`);
 		} catch (error) {
 			setError(`There was a problem enabling restriction: ${error}`);
 			console.error("There was a problem enabling restriction", error);

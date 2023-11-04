@@ -25,6 +25,13 @@ const DeleteChannel: React.FC = () => {
 				return;
 			}
 
+			if (response.status === 401) {
+				alert(
+					`You are not authorized to delete this channel. You have to be channel owner`
+				);
+				return;
+			}
+
 			if (response.status === 404) {
 				alert(
 					`Channel ID: ${id} doesnt exist`

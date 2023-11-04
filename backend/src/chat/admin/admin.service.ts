@@ -104,6 +104,10 @@ export class AdminService {
   ): Promise<ChannelUserRestriction> {
     await this.chatSharedService.verifyChannelPresence(channelId);
     const userId = await this.validateAdminAction(channelId, username, adminId);
+    // const currentRestriction = await this.getCurrentRestriction(
+    //   channelId,
+    //   userId,
+    // );
     if (
       restrictionDto.restrictionType === ChannelUserRestrictionTypes.BANNED &&
       (await this.userIsOnChannel(channelId, userId))
@@ -297,6 +301,21 @@ export class AdminService {
     return membership.role;
   }
 
+  private async getCurrentRestriction(
+    channelId: number,
+    userId: number,
+  ): Promise<ChannelUserRestriction | null> {
+    const restriction = await this.prisma.channelUserRestriction.findUnique({
+      where: {
+        restrictedUserId_restrictedChannelId: {
+          restrictedUserId: userId,
+          restrictedChannelId: channelId,
+        },
+      },
+    });
+    return restriction;
+  }
+
   private async getUserRoleRestriction(
     channelId: number,
     userId: number,
@@ -323,7 +342,6 @@ export class AdminService {
     return !user ? false : true;
   }
 }
-
 
 // 1   | Client connected with ID: n1tNy3-sSk24XoB_AAAB
 // transcendence1-backend-1   | Map(1) { 'n1tNy3-sSk24XoB_AAAB' => 12 }

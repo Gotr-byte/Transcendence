@@ -48,7 +48,6 @@ export default function Profile() {
       <TabPanels style={{ minHeight: "calc(100vh - 400px)", minWidth: "400px"}}>
         <TabPanel>
           <UpdateUser />
-          <UpdateAvatar />
           <FileUpload/>
           <AddFriend />
           <DeleteFriend />
@@ -61,7 +60,6 @@ export default function Profile() {
           <BlockUser />
           <UnblockUser />
           <DesignateAdmin/>
-          <BanUser/>
           <BanUserTemp/> 
           <LiftRestrictions/>
           <KickUser />

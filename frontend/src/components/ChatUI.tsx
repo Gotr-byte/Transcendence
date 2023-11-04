@@ -127,9 +127,6 @@ const ChatUI: React.FC = () => {
 						Available Rooms
 					</Text>
 					<ChannelsAvailable onChangeRoom={handleRoomChange} />
-					<Text fontSize="md" p="4" fontWeight="bold">
-						Direct Messages
-					</Text>
 				</Box>
 				<Grid templateColumns="3fr 1fr" flex="1" overflowY="hidden">
 					<Box
