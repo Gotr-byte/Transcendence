@@ -48,6 +48,13 @@ const EditChannel: React.FC = () => {
 
 			if (response.status === 400) {
 				alert(
+					`What you you think? We dont have that much channels ;)`
+				);
+				return;
+			}
+
+			if (response.status === 400) {
+				alert(
 					`The naming format is not accepted please deliver a channel name with characters 'A-z', '0-9' or '_' a length of 1 - 15`
 				);
 				return;

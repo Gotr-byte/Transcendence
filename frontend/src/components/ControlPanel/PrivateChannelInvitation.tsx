@@ -30,6 +30,13 @@ const PrivateChannelInvitation: React.FC = () => {
 				return;
 			}
 
+			if (response.status === 403) {
+				alert(
+					`${username} is BANNED on this channel`
+				);
+				return;
+			}
+
 			if (response.status === 404) {
 				alert(`Channel ID or username doesnt exist on the server`);
 				return;

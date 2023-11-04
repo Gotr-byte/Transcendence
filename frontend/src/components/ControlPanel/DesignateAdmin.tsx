@@ -34,6 +34,13 @@ const DesignateAdmin: React.FC = () => {
 				}
 			);
 
+			if (response.status === 400) {
+				alert(
+					`What you you think? We dont have that much channels ;)`
+				);
+				return;
+			}
+
 			if (response.status === 401) {
 				alert(
 					`You are not authorized to change this users role. You have to be admin or owner`

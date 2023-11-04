@@ -240,7 +240,7 @@ export class AdminService {
       },
     });
     if (restriction)
-      throw new BadRequestException(
+      throw new ForbiddenException(
         `User with id: '${userId}' is banned on this channel (ID: ${channelId})`,
       );
   }

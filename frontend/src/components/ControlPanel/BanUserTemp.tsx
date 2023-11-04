@@ -1,28 +1,26 @@
 import { useState } from "react";
 import { Button } from "@chakra-ui/react";
-// {
-//   "restrictionType": "optional-restrictionType BANNED or MUTED",
-//   "duration": "optional-duration for the restriction in JS Date format, if empty: indefinite restriction"
-// }
 
 interface Decree {
 	restrictionType: string;
-	duration: string;
+	duration?: string;
 }
 
 const BanUserTemp: React.FC = () => {
-	const [id, setId] = useState<number>(0); // id is now a number
+	const [id, setId] = useState<number>(0);
 	const [username, setUsername] = useState<string>("");
 	const [restrictionType, setRestrictionType] = useState<string>("BANNED");
 	const [duration, setDuration] = useState<string>("");
 
 	const [error, setError] = useState<string | null>(null);
 
-	const decreeData: Decree = {
-		restrictionType,
-		duration
-	};
 	const banHandler = async () => {
+		// Construct the payload inside the handler
+		const payload: Decree = {
+			restrictionType,
+			...(duration && { duration }), // Only include duration if it is not empty
+		};
+
 		try {
 			const response = await fetch(
 				`${
@@ -34,16 +32,19 @@ const BanUserTemp: React.FC = () => {
 						"Content-Type": "application/json",
 					},
 					credentials: "include",
-					body: JSON.stringify(decreeData),
+					body: JSON.stringify(payload), // Use the conditionally constructed payload
 				}
 			);
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			const data = await response.json();
-			console.log("Channel created:", data);
+			if (!duration)
+				alert(`${restrictionType} ${username} indefinitely`)
+			else
+			alert(`${restrictionType} ${username} until ${duration}`)
 		} catch (error) {
-			setError(`There was a problem enablig restriction ${error}`);
+			setError(`There was a problem enabling restriction: ${error}`);
 			console.error("There was a problem enabling restriction", error);
 		}
 	};
@@ -79,12 +80,11 @@ const BanUserTemp: React.FC = () => {
 			<label>
 				Duration:
 				<input
-					 type="text"
-					 placeholder="YYYY-MM-DDTHH:MM:SS:"
-					 value={duration}
-					 onChange={(e) => setDuration(e.target.value)}
+					type="datetime-local"
+					value={duration}
+					onChange={(e) => setDuration(e.target.value)}
 				/>
-			 </label>
+			</label>
 			<button onClick={banHandler}>EnableRestriction</button>
 		</div>
 	);
