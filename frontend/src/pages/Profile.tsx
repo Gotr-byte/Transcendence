@@ -48,7 +48,7 @@ export default function Profile() {
       <TabPanels style={{ minHeight: "calc(100vh - 400px)", minWidth: "400px"}}>
         <TabPanel>
           <UpdateUser />
-          {/* <UpdateAvatar /> */}
+          <UpdateAvatar />
           <FileUpload/>
           <AddFriend />
           <DeleteFriend />
