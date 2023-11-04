@@ -20,7 +20,7 @@ export class SocketService {
   async disconnectUser(socketId: string): Promise<void> {
     const userId = this.getUserId(socketId);
     if (!userId) {
-      throw new WsException('userId is not found in socket map');
+      return;
     }
     const user = await this.userService.getUserById(userId);
     await this.userService.updateUser(user, { isOnline: false });
