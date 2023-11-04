@@ -61,11 +61,14 @@ export class GameService
 
 	public takeFromGameQueue(socketId: string): GameQueue|null
 	{
+		return this.gameQueue.get(socketId) || null;
+		/*
 		let instance = this.gameQueue.get(socketId);
 		this.gameQueue.delete(socketId);
 		if (typeof instance !== 'undefined')
 			return instance;
 		return null;
+		*/
 	}
 
 	public isInGameQueue(socketId: string): boolean
@@ -149,7 +152,10 @@ export class GameService
 	{
 		let gameState = this.getGameState(player1.id, player2.id);
 		if (!gameState || player1 == player2)
+		{
+			console.log("BACKEND: error: no GameState");
 			return;
+		}
 		const gameIntervall = setInterval( () => {
 			player1.on("keypress", (key) => {
 				if (key == 'ArrowUp')
