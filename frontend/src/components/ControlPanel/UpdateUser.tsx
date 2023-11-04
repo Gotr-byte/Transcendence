@@ -38,7 +38,7 @@ const UpdateUser: React.FC = () => {
   };
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+  const value = e.target.value;
     if (value === "" || validUsernamePattern.test(value)) {
       setName(value);
     }
