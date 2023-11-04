@@ -76,6 +76,7 @@ export class GameGateway implements OnGatewayDisconnect {
       player2.emit('matchmaking', 'error, maybe request already expired');
       return;
     }
+    player2.emit('matchmaking', 'success, game will start shortly');
     if (gameQueue.isBasic)
        this.gameService.initBasicGame(gameQueue.socket.id, player2.id);
    else
