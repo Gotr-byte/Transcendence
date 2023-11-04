@@ -49,6 +49,16 @@ export class GameService
 		this.gameQueue.delete(socketId);
 	}
 
+	public dumpQueue(): void
+	{
+		let i = 1;
+		for (const [key , value] of this.gameQueue)
+		{
+			console.log(i + ') Backend dump queue: ' + key);
+			i++;
+		}
+	}
+
 	public takeFromGameQueue(socketId: string): GameQueue|null
 	{
 		let instance = this.gameQueue.get(socketId);

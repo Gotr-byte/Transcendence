@@ -66,13 +66,14 @@ export class GameGateway implements OnGatewayDisconnect {
     ): Promise<void>
   {
     console.log('Backend:' + JSON.stringify(data));
+    this.gameService.dumpQueue();
     if (!data.playerOneId)
     {
       console.log('error in response format');
       player2.emit('matchmaking', 'error in response format');
       return;
     }
-    let gameQueue = this.gameService.takeFromGameQueue(data.player1Id);
+    let gameQueue = this.gameService.takeFromGameQueue(data.playerOneId);
     if (gameQueue == null)
     {
       console.log('error, maybe already expired ');
@@ -81,11 +82,13 @@ export class GameGateway implements OnGatewayDisconnect {
     }
     player2.emit('matchmaking', 'success, game will start shortly');
     gameQueue.socket.emit('matchmaking', 'success, game will start shortly');
+    /*
     if (gameQueue.isBasic)
        this.gameService.initBasicGame(gameQueue.socket.id, player2.id);
    else
        this.gameService.initExtendedGame(gameQueue.socket.id, player2.id);
    this.gameService.startGame(gameQueue.socket, player2);
+   */
   }
 
   @SubscribeMessage('matchThisUser')
@@ -146,6 +149,7 @@ export class GameGateway implements OnGatewayDisconnect {
 
     client.emit('matchmaking', 'Success: game request pending');
     this.gameService.look4match(client, name, game != 'extended');
+    this.gameService.dumpQueue();
   }
 
   handleDisconnect(@ConnectedSocket() client: Socket)  
