@@ -51,6 +51,7 @@ const UpdateUser: React.FC = () => {
         placeholder="Enter username"
         value={username}
         onChange={handleUsernameChange}
+        maxLength={15}
       />
       <button onClick={handleUpdate}>Update username</button>
     </div>
