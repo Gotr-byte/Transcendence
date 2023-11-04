@@ -3,6 +3,7 @@ import { useState } from "react";
 const KickUser: React.FC = () => {
 	const [id, setId] = useState<number>(0); // id is now a number
 	const [username, setUsername] = useState<string>("");
+	const validUsernamePattern = /^[a-zA-Z0-9_]*$/;
 
 	const kickHandler = async () => {
 		try {
@@ -29,6 +30,18 @@ const KickUser: React.FC = () => {
 		}
 	};
 
+	const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+		if (value === '' || (Number(value) >= 0 && Number(value) <= 99)) {
+			setId(Number(value));
+		}
+	};
+	const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+			if (value === "" || validUsernamePattern.test(value)) {
+				setUsername(value);
+			}
+		};
 	return (
 		<div>
 			<label>
@@ -38,14 +51,15 @@ const KickUser: React.FC = () => {
 					type="number"
 					placeholder="Enter chat id"
 					value={id}
-					onChange={(e) => setId(Number(e.target.value))}
+					onChange={handleIdChange}
 				/>
 			</label>
 			<input
 				type="text"
 				placeholder="Enter username"
 				value={username}
-				onChange={(e) => setUsername(e.target.value)}
+				onChange={handleUsernameChange}
+        maxLength={15}
 			/>
 			<button onClick={kickHandler}>KickUser</button>
 		</div>
