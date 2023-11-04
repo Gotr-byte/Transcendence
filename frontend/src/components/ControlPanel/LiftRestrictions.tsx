@@ -1,19 +1,9 @@
 import { useState } from "react";
 
-interface Decree {
-	restrictionType: string;
-}
-
 const LiftRestrictions: React.FC = () => {
 	const [id, setId] = useState<number>(0); // id is now a number
 	const [username, setUsername] = useState<string>("");
-	const [restrictionType, setRestrictionType] = useState<string>("BANNED");
-
-	const [error, setError] = useState<string | null>(null);
-
-	const decreeData: Decree = {
-		restrictionType,
-	};
+	const validUsernamePattern = /^[a-zA-Z0-9_]*$/;
 	const banHandler = async () => {
 		try {
 			const response = await fetch(
@@ -26,7 +16,6 @@ const LiftRestrictions: React.FC = () => {
 						"Content-Type": "application/json",
 					},
 					credentials: "include",
-					body: JSON.stringify(decreeData),
 				}
 			);
 			if (!response.ok) {
@@ -35,10 +24,25 @@ const LiftRestrictions: React.FC = () => {
 			const data = await response.text();
 			console.log("Channel created:", data);
 		} catch (error) {
-			setError(`There was a problem enablig restriction ${error}`);
 			console.error("There was a problem enabling restriction", error);
 		}
 	};
+
+	const handleIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+		// Check if the value is not empty and is a number within the range 0-99
+		if (value === '' || (Number(value) >= 0 && Number(value) <= 99)) {
+			setId(Number(value));
+		}
+	};
+
+	const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const value = e.target.value;
+			if (value === "" || validUsernamePattern.test(value)) {
+				setUsername(value);
+			}
+		};
+	
 
 	return (
 		<div>
@@ -49,14 +53,15 @@ const LiftRestrictions: React.FC = () => {
 					type="number"
 					placeholder="Enter chat id"
 					value={id}
-					onChange={(e) => setId(Number(e.target.value))}
+					onChange={handleIdChange}
 				/>
 			</label>
 			<input
 				type="text"
 				placeholder="Enter username"
 				value={username}
-				onChange={(e) => setUsername(e.target.value)}
+				onChange={handleUsernameChange}
+				maxLength={15}
 			/>
 			<button onClick={banHandler}>LiftRestriction</button>
 		</div>
