@@ -4,6 +4,8 @@ import { List, ListItem, ListIcon, Box, Button, useToast } from "@chakra-ui/reac
 import { NavLink } from 'react-router-dom';
 import { useContext } from 'react';
 import { WebsocketContext } from '../components/Context/WebsocketContexts';
+import { useNavigate } from 'react-router-dom';
+
 
 interface Opponent {
     playerOneId: number;
@@ -16,6 +18,7 @@ interface Opponent {
 export const Sidebar = () => {
     const socketIo = useContext(WebsocketContext);
     const toast = useToast();
+    const navigate = useNavigate();
 
     useEffect(() => {
         socketIo.on('GameRequest', (data: Opponent) => {
@@ -34,7 +37,7 @@ export const Sidebar = () => {
                         <Button size="sm" colorScheme="green" onClick={() => {
                             socketIo.emit("acceptGameRequest", data);
                             onClose();
-                            history.push('/game'); // this replaces window.location.href
+                            navigate('/game');; // this replaces window.location.href
                         }}>Join</Button>
                         {/* <Button size="sm" colorScheme="green" onClick={() => { console.log('Joining Game'); onClose(); window.location.href = '/gamePlus'; socketIo.emit("matchThisUser", data.playeroneName);}}>Join</Button> */}
 
