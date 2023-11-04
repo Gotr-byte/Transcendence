@@ -6,6 +6,7 @@ import { useContext } from 'react';
 import { WebsocketContext } from '../components/Context/WebsocketContexts';
 import { useNavigate } from 'react-router-dom';
 
+
 interface Opponent {
     playerOneId: number;
     playeroneName: string;
@@ -36,7 +37,7 @@ export const Sidebar = () => {
                         <Button size="sm" colorScheme="green" onClick={() => {
                             socketIo.emit("acceptGameRequest", data);
                             onClose();
-                            navigate('/game'); // this replaces window.location.href
+                            navigate('/game');; // this replaces window.location.href
                         }}>Join</Button>
                         {/* <Button size="sm" colorScheme="green" onClick={() => { console.log('Joining Game'); onClose(); window.location.href = '/gamePlus'; socketIo.emit("matchThisUser", data.playeroneName);}}>Join</Button> */}
 
