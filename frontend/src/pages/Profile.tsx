@@ -5,7 +5,6 @@ import DeleteFriend from "../components/ControlPanel/DeleteFriend";
 import AddFriend from "../components/ControlPanel/AddFriend";
 import SentFriendRequests from "../components/ControlPanel/SentFriendRequests";
 import ReceivedFriendRequests from "../components/ControlPanel/RecievedFriendRequests";
-import UpdateAvatar from "../components/ControlPanel/UpdateAvatar";
 import CreateChannel from "../components/ControlPanel/CreateChannel";
 import { Spacer } from "@chakra-ui/react";
 import EditChannel from "../components/ControlPanel/EditChannel";
