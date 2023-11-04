@@ -50,7 +50,10 @@ const ChatUI: React.FC = () => {
 				}
 			);
 
-			if (response.status === 409) return;
+			if (response.status === 409) {
+				setMessageHistory([]);
+				return;
+			}
 
 			if (!response.ok) {
 				throw new Error(`HTTP error! Status: ${response.status}`);

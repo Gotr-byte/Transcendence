@@ -5,7 +5,6 @@ import SendDirectMessage from "./SendDirectMessage";
 import MatchThisUser from "./MatchThisUser";
 import MatchThisUserGamePlus from "./MatchThisUserGamePlus";
 
-
 type UserRole = "ADMIN" | "USER";
 
 interface User {
@@ -50,9 +49,11 @@ const ChatUsers: React.FC<ChatUsersProps> = ({ currentRoomId }) => {
 						credentials: "include",
 					}
 				);
-				
 
-			if (response.status === 404) return;
+				if (response.status === 404) {
+					setChatUsers([]);
+					return;
+				}
 
 				if (!response.ok) {
 					throw new Error("Failed to fetch users");
