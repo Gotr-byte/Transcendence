@@ -50,10 +50,11 @@ const ChatUI: React.FC = () => {
 				}
 			);
 
+			if (response.status === 409) return;
+
 			if (!response.ok) {
 				throw new Error(`HTTP error! Status: ${response.status}`);
 			}
-
 			const data = await response.json();
 			setMessageHistory(data.messages); // Assuming the JSON response is an array of messages
 		} catch (error) {

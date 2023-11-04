@@ -74,6 +74,7 @@ export class ChannelController {
       +channelId,
       user.id,
     );
+    console.log(userList);
     return userList;
   }
 
