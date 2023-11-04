@@ -51,9 +51,9 @@ export class SocketService {
     throw new WsException('Internal validation socket error');
   }
 
-  getUserId(socketId: string): number | null {
+  getUserId(socketId: string): number {
     const userId = this.userSocketMap.get(socketId);
-    if (!userId) return null;
+    if (!userId) throw new WsException('userId is not found in socket map');
     return userId;
   }
 
