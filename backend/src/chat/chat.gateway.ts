@@ -38,6 +38,7 @@ export class ChatGateway implements OnGatewayConnection {
       userId = client.handshake.query.userId as string;
     }
     if (!userId) {
+      client.shouldHandleDisconnect = false
       client.disconnect();
       return;
     }
