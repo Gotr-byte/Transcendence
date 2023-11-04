@@ -26,8 +26,8 @@ const DeleteFriend: React.FC = () => {
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
+			alert(`${friendName} was successfully unfriended`);
 			window.location.reload();
-			console.log(`Friend ${friendName} successfully deleted`);
 			setFriendName("");
 		} catch (error) {
 			console.error(

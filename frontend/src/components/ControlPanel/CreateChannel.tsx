@@ -56,7 +56,7 @@ const CreateChannel: React.FC = () => {
 			}
 
 			const data = await response.json();
-			console.log("Channel created:", data);
+			alert(`Channel ${channelData.channelType} was created succesfully`);
 		} catch (error) {
 			console.error("There was a problem creating the channel:", error);
 		}

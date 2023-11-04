@@ -20,7 +20,7 @@ const DeleteChannel: React.FC = () => {
 
 			if (response.status === 400) {
 				alert(
-					`What you you think? We dont have that much channels ;)`
+					`What do you think? We dont have that much channels ;)`
 				);
 				return;
 			}
@@ -42,8 +42,7 @@ const DeleteChannel: React.FC = () => {
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
-			window.location.reload();
-			console.log(`Channel ${id} successfully deleted`);
+			alert(`Channel Id: ${id} successfully deleted`);
 			setId(0);
 		} catch (error) {
 			console.error(`There was a problem deleting the friend ${id}`, error);

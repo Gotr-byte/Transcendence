@@ -29,13 +29,41 @@ const LiftRestrictions: React.FC = () => {
 					body: JSON.stringify(decreeData),
 				}
 			);
+
+			if (response.status === 400) {
+				alert(
+					`What do you think? We dont have that much channels ;)`
+				);
+				return;
+			}
+
+			if (response.status === 401) {
+				alert(
+					`You are not authorized to lift this users restriction. You have to be admin or owner`
+				);
+				return;
+			}
+
+			if (response.status === 409) {
+				alert(
+					`There is no restriction for ${username}`
+				);
+				return;
+			}
+
+			if (response.status === 404) {
+				alert(`Channel ID or username doesnt exist on the server`);
+				return;
+			}
+
 			if (!response.ok) {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			const data = await response.text();
-			console.log("Channel created:", data);
+			alert(
+				`Restriction: ${restrictionType} lifted from ${username}`
+			);
 		} catch (error) {
-			setError(`There was a problem enablig restriction ${error}`);
 			console.error("There was a problem enabling restriction", error);
 		}
 	};

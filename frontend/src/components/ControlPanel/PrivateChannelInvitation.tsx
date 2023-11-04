@@ -23,6 +23,14 @@ const PrivateChannelInvitation: React.FC = () => {
 				}
 			);
 
+
+			if (response.status === 400) {
+				alert(
+					`What do you think? We dont have that much channels ;)`
+				);
+				return;
+			}
+
 			if (response.status === 401) {
 				alert(
 					`You are not authorized to add users to this channel. You have to be admin or owner`
@@ -49,7 +57,7 @@ const PrivateChannelInvitation: React.FC = () => {
 
 			// Log the response
 			const data = await response.text();
-			console.log("Channel created:", data);
+			alert(`${username} was liberated on channel Id: ${id}`);
 		} catch (error) {
 			setError(`There was a problem when adding a user to the channel: ${error}`);
 			console.error("There was a problem when adding a user to the channel:", error);

@@ -173,14 +173,14 @@ export class AdminService {
     await this.ensureUserIsAdmin(channelId, adminId);
     const user = await this.userService.getUserByName(username);
 
-    await this.prisma.channelUserRestriction.delete({
+    const removed = await this.prisma.channelUserRestriction.deleteMany({
       where: {
-        restrictedUserId_restrictedChannelId: {
           restrictedUserId: user.id,
           restrictedChannelId: channelId,
-        },
       },
     });
+    if (removed.count === 0)
+      throw new ConflictException('No restriction for that user');
   }
 
   async kickUser(

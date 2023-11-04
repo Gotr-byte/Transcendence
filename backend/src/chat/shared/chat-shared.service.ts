@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { ChannelMember } from '@prisma/client';
 import { NotFoundError } from 'rxjs';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -33,9 +33,11 @@ export class ChatSharedService {
     channelId: number,
     userId: number,
   ): Promise<void> {
-    await this.prisma.channelMember.delete({
-      where: { userId_channelId: { userId, channelId } },
+    const removed = await this.prisma.channelMember.deleteMany({
+      where: { userId, channelId },
     });
+    if (removed.count === 0)
+      throw new ConflictException('User is not on channel');
   }
 
   async ensureUserIsMember(channelId: number, userId: number): Promise<void> {

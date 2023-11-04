@@ -48,7 +48,7 @@ const EditChannel: React.FC = () => {
 
 			if (response.status === 400) {
 				alert(
-					`What you you think? We dont have that much channels ;)`
+					`What do you think? We dont have that much channels ;)`
 				);
 				return;
 			}

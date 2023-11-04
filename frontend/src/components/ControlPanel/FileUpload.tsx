@@ -33,7 +33,7 @@ const FileUpload: React.FC = () => {
 				  }
 				
 				const data = await response.json();
-				console.log("File uploaded successfully", data);
+				alert("Avatar was changed successfully");
 			} catch (error) {
 				console.error("File upload error", error);
 			}

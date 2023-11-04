@@ -36,7 +36,7 @@ const DesignateAdmin: React.FC = () => {
 
 			if (response.status === 400) {
 				alert(
-					`What you you think? We dont have that much channels ;)`
+					`What do you think? We dont have that much channels ;)`
 				);
 				return;
 			}
@@ -64,7 +64,7 @@ const DesignateAdmin: React.FC = () => {
 
 			const data = await response.text();
 			console.log("Designated admin:", data);
-			alert(`${role} designated successfully.`); // Setting success message on successful API response
+			alert(`${role} designated successfully to ${username} on channel Id: ${id}`); // Setting success message on successful API response
 		} catch (error) {
 			console.error("There was a problem designating admin:", error);
 		}

@@ -190,7 +190,7 @@ export class AdminController {
   @ApiParam({ name: 'channelId', description: 'ID of the channel' })
   @ApiParam({ name: 'username', description: 'username to kick' })
   async kickUser(
-    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number,    @Param('username') username: string,
+    @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number, @Param('username') username: string,
     @AuthUser() admin: User,
   ): Promise<string> {
     await this.adminService.kickUser(+channelId, username, admin.id);

@@ -39,8 +39,8 @@ const UpdateUser: React.FC = () => {
       }
 
       const data = await response.json();
-      console.log(data);
 
+      alert(`${username} was succesfully changed to ${payload.username}`)
       window.location.reload();
     } catch (error) {
       console.error("There was an error updating the user:", error);
