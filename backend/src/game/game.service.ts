@@ -49,6 +49,15 @@ export class GameService
 		this.gameQueue.delete(socketId);
 	}
 
+	public takeFromGameQueue(socketId: string): GameQueue|null
+	{
+		let instance = this.gameQueue.get(socketId);
+		this.gameQueue.delete(socketId);
+		if (typeof instance !== 'undefined')
+			return instance;
+		return null;
+	}
+
 	public isInGameQueue(socketId: string): boolean
 	{
 		return this.gameQueue.has(socketId);

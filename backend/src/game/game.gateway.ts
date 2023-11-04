@@ -58,6 +58,31 @@ export class GameGateway implements OnGatewayDisconnect {
   {
     this.gameService.removeFromGameQueue(client.id);
   }
+  
+  @SubscribeMessage('acceptGameRequest')
+  async handleAcceptedGameRequest(
+    @MessageBody() data: any,
+    @ConnectedSocket() player2: Socket
+    ): Promise<void>
+  {
+    if (!data.playerOneId)
+    {
+      player2.emit('matchmaking', 'error in response format');
+      return;
+    }
+    let gameQueue = this.gameService.takeFromGameQueue(data.player1Id);
+    if (gameQueue == null)
+    {
+      player2.emit('matchmaking', 'error, maybe request already expired');
+      return;
+    }
+    if (gameQueue.isBasic)
+       this.gameService.initBasicGame(gameQueue.socket.id, player2.id);
+   else
+       this.gameService.initExtendedGame(gameQueue.socket.id, player2.id);
+   this.gameService.startGame(gameQueue.socket, player2);
+  }
+
 
   @SubscribeMessage('matchThisUser')
   async handleMatchThisSpecificUser(
