@@ -82,12 +82,7 @@ export class ChannelService {
     await this.validateAndGetChannel(channelId, userId, typesInScope);
 
     const channelUsers = await this.prisma.channelMember.findMany({
-      where: {
-        channelId,
-        NOT: {
-          userId: userId, // This excludes the logged user by their ID
-        },
-      },
+      where: { channelId },
       include: { user: true },
     });
     return ShowUsersRoles.from(channelUsers);

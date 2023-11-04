@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import {
   CreateChannelMessageDto,
   CreateUserMessageDto,
@@ -9,6 +9,10 @@ import { UserService } from 'src/user/user.service';
 import { ShowMessageDto, ShowMessagesDto } from './dto/show-messages.dto';
 import { UsernameId } from './types/types';
 import { CustomError } from 'src/shared/shared.errors';
+import {
+  ChannelUserRestriction,
+  ChannelUserRestrictionTypes,
+} from '@prisma/client';
 
 @Injectable()
 export class MessagesService {
@@ -22,10 +26,14 @@ export class MessagesService {
     userId: number,
     createChannelMessageDto: CreateChannelMessageDto,
   ): Promise<ShowMessageDto> {
-    await this.ensureUserIsNotRestricted(
+    const restriction = await this.getPossibleRestriction(
       createChannelMessageDto.channelId,
       userId,
     );
+    if (restriction?.restrictionType === ChannelUserRestrictionTypes.MUTED) {
+      const errorMessage = `User with id '${userId}' is MUTED on channel: (ID:${createChannelMessageDto.channelId})`;
+      throw new CustomError(errorMessage, `USER_MUTED`);
+    }
     await this.chatSharedService.ensureUserIsMember(
       createChannelMessageDto.channelId,
       userId,
@@ -55,7 +63,11 @@ export class MessagesService {
     userId: number,
     channelId: number,
   ): Promise<ShowMessagesDto> {
-    await this.ensureUserIsNotRestricted(channelId, userId);
+    const restriction = await this.getPossibleRestriction(channelId, userId);
+    if (restriction?.restrictionType === ChannelUserRestrictionTypes.BANNED) {
+      const errorMessage = `User with id '${userId}' is BANNED on channel: (ID:${channelId})`;
+      throw new CustomError(errorMessage, `USER_BANNED`);
+    }
     await this.chatSharedService.ensureUserIsMember(channelId, userId);
 
     const messages = await this.getVisibleChannelMessages(channelId, userId);
@@ -121,10 +133,10 @@ export class MessagesService {
     return usernamesArray;
   }
 
-  private async ensureUserIsNotRestricted(
+  private async getPossibleRestriction(
     restrictedChannelId: number,
     restrictedUserId: number,
-  ) {
+  ): Promise<ChannelUserRestriction | null> {
     const restriction = await this.prisma.channelUserRestriction.findUnique({
       where: {
         restrictedUserId_restrictedChannelId: {
@@ -133,13 +145,7 @@ export class MessagesService {
         },
       },
     });
-    if (restriction) {
-      const errorMessage = `User with id '${restrictedUserId}' is ${restriction.restrictionType} on channel: (ID:${restrictedChannelId})`;
-      throw new CustomError(
-        errorMessage,
-        `USER_${restriction.restrictionType}`,
-      );
-    }
+    return restriction;
   }
 
   private async getVisibleChannelMessages(
