@@ -150,7 +150,6 @@ export class GameGateway implements OnGatewayDisconnect {
 
     client.emit('matchmaking', 'Success: game request pending');
     this.gameService.look4match(client, name, game != 'extended');
-    this.gameService.dumpQueue();
   }
 
   handleDisconnect(@ConnectedSocket() client: Socket)  
