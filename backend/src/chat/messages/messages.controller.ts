@@ -108,11 +108,11 @@ export class MessagesController {
     @Param('username') username: string,
     @AuthUser() user: User,
   ): Promise<ShowMessagesDto> {
-    const newMessage = await this.messagesService.getUserMessages(
+    const messages = await this.messagesService.getUserMessages(
       user.id,
       username,
     );
-    return newMessage;
+    return messages;
   }
 
   @Get('chats')

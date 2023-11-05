@@ -79,9 +79,6 @@ export class ChatGateway implements OnGatewayConnection {
       channelMessageDto,
     );
 
-    console.log(chatEvents);
-    console.log('test');
-
     // Emit the messages and notifications
     for (const chatEvent of chatEvents) {
       const receiverId = chatEvent.receiverId;

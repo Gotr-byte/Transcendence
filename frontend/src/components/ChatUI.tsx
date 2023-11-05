@@ -23,6 +23,7 @@ const ChatUI: React.FC = () => {
 		content: "",
 		channelId: currentRoomId!,
 	});
+	
 	const [receivedMessages, setReceivedMessages] = useState<
 		ReceivedMessagePayload[]
 	>([]);
