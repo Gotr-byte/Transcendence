@@ -13,7 +13,7 @@ import ReceivedGameData from '../components/Game/ReceiveGameData';
 
 // import videoMcrolldSrc from '../../public/assets/Video_Mcrolld.mp4';
 // import videoMcrolldReverseSrc from '../../public/assets/Video_Mcrolld_reverse.mp4';
-/*
+
 import audioGnomeSrc from '../../public/assets/SoundEffect_Gnome.mp3';
 import imageGnomeSrc from '../../public/assets/Image_Gnome.png';
 
@@ -38,7 +38,6 @@ import audioFoxChaSrc from '../../public/assets/SoundEffect_Fox_Cha.mp3';
 import audioFoxKakaSrc from '../../public/assets/SoundEffect_Fox_Kaka.mp3';
 import audioFoxPapaSrc from '../../public/assets/SoundEffect_Fox_Papa.mp3';
 import audioFoxYokSrc from '../../public/assets/SoundEffect_Fox_Yok.mp3';
-*/
 
 interface Coordinates
 {
@@ -258,7 +257,7 @@ const Game: React.FC = () =>
 	
 	
 	// Assets
-/*	
+	
 	// Music
 	const musicBavaria = useRef<HTMLAudioElement | null>(null);
 	const musicMushroomKingdom = useRef<HTMLAudioElement | null>(null);
@@ -319,7 +318,7 @@ const Game: React.FC = () =>
 	
 	var foxGoodSoundPlaying: HTMLAudioElement = audioFoxMeow;
 	var foxEvilSoundPlaying: HTMLAudioElement = audioFoxAhee;
-*/
+
 	// var subliminalDepressionIsActive: boolean = false;
 	// var subliminalSchizophreniaIsActive: boolean = false;
 	// var subliminalHellishIsActive: boolean = false;
@@ -501,7 +500,6 @@ const Game: React.FC = () =>
 	const [subliminalSelectorHellish, setSubliminalSelectorHellish] = useState<number>(Math.floor(Math.random() * 100) % (subliminalMessagesArrayHellish.length));
 	
 	// Set the multimedia sources when the component has rendered
-	/*
 	useEffect(() =>
 	{
 		if (audioGnome.current)
@@ -603,7 +601,7 @@ const Game: React.FC = () =>
 		// 	  videoMcrolldReverse.current.src = videoMcrolldReverseSrc;
 		// }
 	}, []);
-*/
+
 	function randomizeColors(): void
 	{
 		//if (difficultyScore >= 20)
@@ -681,20 +679,20 @@ const Game: React.FC = () =>
 				{
 					setGnomeStartTime(timestamp);
 					setGnomeIsActive(true);
-	//				audioGnome.current.play();
+					audioGnome.current.play();
 					// gnome_swap();
 				}
 			}
 			else if (timestamp - gnomeStartTime <= 200)
 			{
-	//			ctx.drawImage(imageGnome.current, ball1X - 80, ball1Y - 90);
+				ctx.drawImage(imageGnome.current, ball1X - 80, ball1Y - 90);
 				if (score1 + score2 >= 40)
 				{
-			//		ctx.drawImage(imageGnome.current, ball2X - 80, ball2Y - 90);
+					ctx.drawImage(imageGnome.current, ball2X - 80, ball2Y - 90);
 				}
 				if (score1 + score2 >= 30)
 				{
-					//ctx.drawImage(imageGnome.current, foxX - 80, foxY - 90);
+					ctx.drawImage(imageGnome.current, foxX - 80, foxY - 90);
 				}
 			}
 			else
@@ -713,13 +711,13 @@ const Game: React.FC = () =>
 				if (triggered === true) //(Math.floor(Math.random()*1000) === 666)
 				{
 					setHarkinianIsActive(true);
-	//				videoHarkinianHit.current.play();
-			//		audioHarkinianOah.current.play();
-					//audioHarkinianHit.current.play();
+					videoHarkinianHit.current.play();
+					audioHarkinianOah.current.play();
+					audioHarkinianHit.current.play();
 					//harkinian_hit(Math.floor(Math.random() * 100));
 				}
 			}
-	/*		else if (videoHarkinianHit.current.paused === false)
+			else if (videoHarkinianHit.current.paused === false)
 			{
 				ctx.drawImage(videoHarkinianHit.current, posX - (harkinianWidth / 2), posY - (harkinianHeight / 2), harkinianWidth, harkinianHeight);
 			}
@@ -727,7 +725,7 @@ const Game: React.FC = () =>
 			{
 				setHarkinianIsActive(false);
 			}
-		}*/
+		}
 	}
 	
 	function drawFox(ctx: CanvasRenderingContext2D, score1: number, score2: number, foxUnlocked: boolean, foxEvil: boolean, foxEnraged: boolean, foxPosX: number, foxPosY: number): void
@@ -736,15 +734,15 @@ const Game: React.FC = () =>
 		{
 			if (foxEnraged === true)
 			{
-//				ctx.drawImage(imageFoxEnraged.current, foxPosX, foxPosY);
+				ctx.drawImage(imageFoxEnraged.current, foxPosX, foxPosY);
 			}
 			else if (foxEvil === true)
 			{
-		//		ctx.drawImage(imageFoxBad.current, foxPosX, foxPosY);
+				ctx.drawImage(imageFoxBad.current, foxPosX, foxPosY);
 			}
 			else
 			{
-				//ctx.drawImage(imageFoxGood.current, foxPosX, foxPosY);
+				ctx.drawImage(imageFoxGood.current, foxPosX, foxPosY);
 			}
 		}
 	}
@@ -1174,7 +1172,7 @@ const Game: React.FC = () =>
 	// 		foxTimestampLastAppeased = timestamp;
 	// 	}
 	// }
-/*	
+	
 	function fox_sounds_good(): void
 	{
 		let selector: number = Math.floor(Math.random() * 100) % 7;
@@ -1246,7 +1244,7 @@ const Game: React.FC = () =>
 			foxEvilSoundPlaying = audioFoxYok.current;
 		}
 	}
-*/
+
 	// function foxSounds(): void
 	// {
 	// 	if (lastGameState.fox.triggeredEnrage === true && (audioFoxEnrage.current.paused() || audioFoxEnrage.current.ended()))
@@ -1358,7 +1356,7 @@ const Game: React.FC = () =>
 			}
 		}
 	}
-/*	
+	
 	function control_music(score1: number, score2: number): void
 	{
 		// console.log("control_music() - difficultyScore: " + difficultyScore);
@@ -1408,7 +1406,7 @@ const Game: React.FC = () =>
 			musicStubb.current.pause()
 		}
 	}
-*/	
+	
 	// function gnome_swap_1_2(): void
 	// {
 	// 	let temp_ball1X: number = ball1X;
@@ -1524,7 +1522,7 @@ const Game: React.FC = () =>
 	// 		ball2DirY = -ball2DirY;
 	// 	}
 	// }
-/*	
+	
 	function mcrolld(ctx: CanvasRenderingContext2D, score1: number, score2: number): void
 	{
 		if (score1 + score2 >= 35)
@@ -1609,7 +1607,7 @@ const Game: React.FC = () =>
 			}
 		}
 	}
-*/	
+	
 	// function updateVariables(): void
 	// {
 	// 	ball1SpeedX = ballGlobalSpeedDefault + ballGlobalSpeedAddedPerma + ballGlobalSpeedAddedTemp;
@@ -2238,7 +2236,7 @@ const Game: React.FC = () =>
 					// moveBalls();
 					// moveFox(timestamp);
 			
-//					popup_trap(receivedGameState.score1, receivedGameState.score2, receivedGameState.triggers.triggeredPopup);
+					popup_trap(receivedGameState.score1, receivedGameState.score2, receivedGameState.triggers.triggeredPopup);
 			
 					// updateVariables();
 					// updateScores();
@@ -2303,7 +2301,6 @@ const Game: React.FC = () =>
 			{/* <JoinRandom /> */}
 			<JoinRandomPlus />
 			<canvas ref={canvasRef} tabIndex={0} width={canvasWidth} height={canvasHeight}></canvas>
-			{/*
 			<audio ref={audioGnome}>
         		<source src={audioGnomeSrc} type="audio/mp3"/>
       		</audio>
@@ -2372,13 +2369,13 @@ const Game: React.FC = () =>
       		</video>
 			  <video ref={videoMcrolldReverse} style={{ display: 'none' }}>
         		<source src={videoMcrolldReverseSrc} type="video/mp4"/>
-      		</video>}
+      		</video> */}
 			<video ref={videoHarkinianHit} style={{ display: 'none' }}>
         		<source src={videoHarkinianHitSrc} type="video/mp4"/>
-	</video>}
+      		</video>
 			{/* <ReceivedGameData /> */}
 		</div>
-	)};
+	);
 };
 
 export default Game;
