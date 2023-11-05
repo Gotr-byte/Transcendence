@@ -209,8 +209,6 @@ export class GameService
 					'pos': gameState?.fox.position
 				},
 				'triggers': {
-					'triggeredGnome': gameState?.triggers.triggeredGnome,
-					'triggeredHarkinian': gameState?.triggers.triggeredHarkinian,
 					'triggeredPopup': gameState?.triggers.triggeredPopup
 				}
 			});

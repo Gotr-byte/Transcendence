@@ -184,19 +184,17 @@ const Game: React.FC = () =>
 	// var colorCodeRGBP2: string = "0095DD";
 	const [colorCodeRGBBackground, setColorCodeRGBBackground] = useState<string>("000000");
 	const [colorCodeRGBScore, setColorCodeRGBScore] = useState<string>("FFFFFF");
-	const [colorCodeRGBBall1, setColorCodeRGBBall1] = useState<string>("0E4242");
-	const [colorCodeRGBBall2, setColorCodeRGBBall2] = useState<string>("0E4242");
-	const [colorCodeRGBP1, setColorCodeRGBP1] = useState<string>("0E4242");
-	const [colorCodeRGBP2, setColorCodeRGBP2] = useState<string>("0E4242");
+	const [colorCodeRGBBall1, setColorCodeRGBBall1] = useState<string>("0095DD");
+	const [colorCodeRGBBall2, setColorCodeRGBBall2] = useState<string>("0095DD");
+	const [colorCodeRGBP1, setColorCodeRGBP1] = useState<string>("0095DD");
+	const [colorCodeRGBP2, setColorCodeRGBP2] = useState<string>("0095DD");
 	
 	
 	
 	// Gnome
 	
-	// var gnomeIsActive: boolean = false;
-	const [gnomeIsActive, setGnomeIsActive] = useState<boolean>(false);
-	// var gnomeStartTime: any = null;
-	const [gnomeStartTime, setGnomeStartTime] = useState<any>(null);
+	var gnomeIsActive: boolean = false;
+	var gnomeStartTime: any = null;
 	
 	
 	
@@ -667,38 +665,38 @@ const Game: React.FC = () =>
 		ctx.fillText(`Score P2: ${score2}`, canvasWidth - 100, 20);
 	}
 	
-	function drawGnome(ctx: CanvasRenderingContext2D, score1: number, score2: number, triggered: boolean, ball1X: number, ball1Y: number, ball2X: number, ball2Y: number, foxX: number, foxY: number, timestamp: number): void
-	{
-		if (score1 + score2 >= 5)
-		{
-			if (gnomeIsActive === false)
-			{
-				if (triggered === true) // (Math.floor(Math.random()*1000) === 666)
-				{
-					setGnomeStartTime(timestamp);
-					setGnomeIsActive(true);
-					audioGnome.current.play();
-					// gnome_swap();
-				}
-			}
-			else if (timestamp - gnomeStartTime <= 200)
-			{
-				ctx.drawImage(imageGnome.current, ball1X - 80, ball1Y - 90);
-				if (score1 + score2 >= 40)
-				{
-					ctx.drawImage(imageGnome.current, ball2X - 80, ball2Y - 90);
-				}
-				if (score1 + score2 >= 30)
-				{
-					ctx.drawImage(imageGnome.current, foxX - 80, foxY - 90);
-				}
-			}
-			else
-			{
-				setGnomeIsActive(false);
-			}
-		}
-	}
+	// function drawGnome(ctx: CanvasRenderingContext2D, timestamp: number): void
+	// {
+	// 	if (lastGameState.gnome.isUnlocked === true)
+	// 	{
+	// 		if (gnomeIsActive === false)
+	// 		{
+	// 			if (lastGameState.triggerables.triggeredGnome === true) // (Math.floor(Math.random()*1000) === 666)
+	// 			{
+	// 				gnomeStartTime = timestamp;
+	// 				gnomeIsActive = true;
+	// 				audioGnome.current.play();
+	// 				// gnome_swap();
+	// 			}
+	// 		}
+	// 		else if (timestamp - gnomeStartTime <= 200)
+	// 		{
+	// 			ctx.drawImage(imageGnome.current, lastGameState.ball1.pos.x - 80, lastGameState.ball1.pos.y - 90);
+	// 			if (lastGameState.ball2.isUnlocked === true)
+	// 			{
+	// 				ctx.drawImage(imageGnome.current, lastGameState.ball2.pos.x - 80, lastGameState.ball2.pos.y - 90);
+	// 			}
+	// 			if (lastGameState.fox.isUnlocked === true)
+	// 			{
+	// 				ctx.drawImage(imageGnome.current, lastGameState.fox.pos.x - 80, lastGameState.fox.pos.y - 90);
+	// 			}
+	// 		}
+	// 		else
+	// 		{
+	// 			gnomeIsActive = false;
+	// 		}
+	// 	}
+	// }
 	
 	// function drawHarkinian(ctx: CanvasRenderingContext2D): void
 	// {
@@ -2215,7 +2213,7 @@ const Game: React.FC = () =>
 					// setUnlockedGnome(!unlockedGnome);
 					// console.log("FE - main loop - unlockedGnome: " + unlockedGnome);
 					// console.log("FE - main loop - END");
-					drawGnome(context, receivedGameState.score1, receivedGameState.score2, receivedGameState.triggers.triggeredGnome, receivedGameState.ball.x, receivedGameState.ball.y, receivedGameState.ball2.x, receivedGameState.ball2.y, receivedGameState.fox.pos.x, receivedGameState.fox.pos.y, Date.now());
+					// drawGnome(context, timestamp);
 					// drawHarkinian(context);
 					drawScore(context, receivedGameState.score1, receivedGameState.score2); // DONE
 
@@ -2296,7 +2294,7 @@ const Game: React.FC = () =>
 	
 	return (
 		<div>
-			{/* <JoinRandom /> */}
+			<JoinRandom />
 			<JoinRandomPlus />
 			<canvas ref={canvasRef} tabIndex={0} width={canvasWidth} height={canvasHeight}></canvas>
 			<audio ref={audioGnome}>
