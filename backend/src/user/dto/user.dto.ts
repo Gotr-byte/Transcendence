@@ -47,6 +47,10 @@ export class ChangeUserPropsDto {
   @IsOptional()
   isOnline?: boolean;
 
+  @IsBoolean()
+  @IsOptional()
+  inGame?: boolean;
+
   @IsString()
   @IsOptional()
   @NotContains(' ')
