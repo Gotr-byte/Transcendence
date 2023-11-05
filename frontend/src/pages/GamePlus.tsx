@@ -151,8 +151,8 @@ const Game: React.FC = () =>
 	
 	// Paddles
 	
-	var paddleGlobalHeight: number = 70;
-	var paddleGlobalWidth: number = 10;
+	var paddleGlobalHeight: number = 240;
+	var paddleGlobalWidth: number = 50;
 	var paddleGlobalReduction: number = 0;
 	var paddleGlobalSpeed: number = 10;
 	
