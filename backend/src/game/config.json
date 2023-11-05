@@ -1,7 +1,7 @@
 {
 	"game_canvas": {
-		"width": 1366,
-		"height": 768
+		"width": 1200,
+		"height": 720
 	},
 	"paddle": {
 		"buffer": 50,
@@ -14,7 +14,7 @@
 		"velocity": 5,
 		"radius": 30
 	},
-    "win": 50,
+    "win": 3,
 	"startTime": 5000,
 	"mmTimeout": 60000,
 	"unlockSecondBallAt": 20,
@@ -26,6 +26,6 @@
 		"maxVelocity":	6,
 		"maxTimeGoodEvil":	15,
 		"getEnragedIn":	10,
-		"showUpWhen":	5
+		"showUpWhen":	1
 	}
 }
