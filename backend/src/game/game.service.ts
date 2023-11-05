@@ -3,7 +3,7 @@ import { Socket } from 'socket.io';
 import { SocketService } from 'src/socket/socket.service';
 import { UserService } from 'src/user/user.service'
 import { GameInstance } from './GameInstance';
-import { GameState } from './GameState';
+import { GameState, Harkinian } from './GameState';
 import * as config from './config.json';
 import { MatchesService } from 'src/matches/matches.service';
 
@@ -208,6 +208,9 @@ export class GameService
 					'hasSizeOf': gameState?.fox.hasSizeOf,
 					'pos': gameState?.fox.position
 				},
+				'harkinian': {
+					'pos': gameState?.harkinian.position
+				},
 				'triggers': {
 					'triggeredGnome': gameState?.triggers.triggeredGnome,
 					'triggeredHarkinian': gameState?.triggers.triggeredHarkinian,
@@ -229,6 +232,9 @@ export class GameService
 					'isEnraged': gameState?.fox.isEnraged,
 					'hasSizeOf': gameState?.fox.hasSizeOf,
 					'pos': gameState?.fox.position
+				},
+				'harkinian': {
+					'pos': gameState?.harkinian.position
 				},
 				'triggers': {
 					'triggeredGnome': gameState?.triggers.triggeredGnome,

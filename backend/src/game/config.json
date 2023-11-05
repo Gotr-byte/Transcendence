@@ -18,6 +18,7 @@
 	"startTime": 5000,
 	"mmTimeout": 60000,
 	"unlockGnomeAt": 5,
+	"unlockHarkinianAt": 15,
 	"unlockSecondBallAt": 40,
 	"unlockPopupsAt": 50,
 	"fox": {
