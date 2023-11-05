@@ -26,7 +26,7 @@ export class GameService
 
 	constructor(
 	private readonly socketService: SocketService,
-	//private readonly userService: UserService,
+	private readonly userService: UserService,
 	private readonly matchService: MatchesService,
 	) 
 	{
@@ -116,6 +116,11 @@ export class GameService
 		this.GameLobby.delete(player1Id +":"+ player2Id);;
 	}
 
+	public changeInGameStatus(userId: number, inGame: boolean)
+	{
+		this.userService.updateUserViaId(userId, { inGame });
+	}
+
 	public endGame(player1: Socket, player2: Socket): void
 	{
 		let looser: Socket;
@@ -125,6 +130,8 @@ export class GameService
 		const gameInstance = this.getGameState(player1.id, player2.id)?.getGameInstance();
 		const player1Id = this.socketService.getUserId(player1.id);
 		const player2Id = this.socketService.getUserId(player2.id);
+		this.changeInGameStatus(player1Id, false);
+		this.changeInGameStatus(player2Id, false);
 		const result = gameInstance!.getResult();
 
 		if (result.homeScore < result.awayScore) {
@@ -153,6 +160,11 @@ export class GameService
 			console.log("BACKEND: error: no GameState");
 			return;
 		}
+
+		const homePlayerId = this.socketService.getUserId(player1.id);
+		const awayPlayerId = this.socketService.getUserId(player2.id);
+		this.changeInGameStatus(homePlayerId, true);
+		this.changeInGameStatus(awayPlayerId, true);
 		const gameIntervall = setInterval( () => {
 			player1.on("keypress", (key) => {
 				let paddleSpeed: number = 1;
@@ -254,6 +266,8 @@ export class GameService
 		if (result) {
 			const homePlayerId = this.socketService.getUserId(players[0]);
 			const awayPlayerId = this.socketService.getUserId(players[1]);
+			this.changeInGameStatus(homePlayerId, false);
+			this.changeInGameStatus(awayPlayerId, false);
 
 			if (players[0] === leavingPlayer) {
 				result.homeScore = 0;
