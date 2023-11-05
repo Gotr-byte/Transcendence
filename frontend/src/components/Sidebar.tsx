@@ -70,7 +70,7 @@ export const Sidebar = () => {
             // Show the toast for the initial login prompt
             // toast({
                 // title: 'Welcome!',
-                // description: 'Change your avatar and username in the account section!',
+                // description: 'Welcome traveller! Change your avatar and username in the account section!',
                 // status: 'info',
                 // duration: 9000,
                 // isClosable: true,
