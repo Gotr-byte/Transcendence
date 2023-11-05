@@ -10,14 +10,8 @@ type MatchmakingPayload = {
 export const JoinRandom: React.FC = () => {
 
 const socket = useContext(WebsocketContext);
-const [receivedPrompts, setReceivedPrompts] = useState<
-MatchmakingPayload[]
->([]);
 useEffect(() => {
   const eventName = `matchmaking`
-  socket.on(eventName, (newMessage: MatchmakingPayload) => {
-    setReceivedPrompts((prev) => [...prev, newMessage]);
-  });
   return () => {
     console.log("Unregistering Events...");
     socket.off(eventName);
