@@ -60,7 +60,6 @@ export class ChatService {
     userId: number,
     savedMessage: ShowMessageDto,
   ): Promise<ChatEvent[]> {
-    console.log(savedMessage);
     const channelId = savedMessage.receivingChannelId;
     if (!channelId) throw new Error('Channel Id is Missing');
     // Fetch the channel members excluding the message sender
@@ -74,7 +73,7 @@ export class ChatService {
 
     // Send message to members and check blocking logic
     for (const member of channelMembers.users) {
-      if (member.isOnline && !(await this.userIsBlocked(userId, member.id))) {
+      if (member.isOnline && !(await this.userIsBlocked(member.id, userId))) {
         chatEvents.push({
           receiverId: member.id,
           event: `channel-msg-${channelId}`,
@@ -119,7 +118,6 @@ export class ChatService {
     userId: number,
     savedMessage: ShowMessageDto,
   ): Promise<ChatEvent> {
-    console.log(savedMessage);
     const receiverId = savedMessage.receivingUserId;
     if (!receiverId) throw new Error('ReceiverId is missing');
 

@@ -3,7 +3,7 @@ import { Socket } from 'socket.io';
 import { SocketService } from 'src/socket/socket.service';
 import { UserService } from 'src/user/user.service'
 import { GameInstance } from './GameInstance';
-import { GameState } from './GameState';
+import { GameState, Harkinian } from './GameState';
 import * as config from './config.json';
 import { MatchesService } from 'src/matches/matches.service';
 
@@ -155,20 +155,26 @@ export class GameService
 		}
 		const gameIntervall = setInterval( () => {
 			player1.on("keypress", (key) => {
-				if (key === "ARROWUP" || key === "ARROWUP+SPACE" || key === "ARROWDOWN" || key === "ARROWDOWN+SPACE")
-					console.log("keypress1: " + key);
-				if (key === "ARROWUP" || key === "ARROWUP+SPACE") //(key == 'ArrowUp')
-					gameState?.setPaddleDirection(1, -1);
+				let paddleSpeed: number = 1;
+				if (key === "ARROWUP+SPACE" || key === "ARROWDOWN+SPACE")
+					paddleSpeed = 2;
+				if (key === "ARROWUP" || key === "ARROWUP+SPACE")
+					gameState?.setPaddleDirection(1, -paddleSpeed);
 				else if (key === "ARROWDOWN" || key === "ARROWDOWN+SPACE")
-					gameState?.setPaddleDirection(1, 1);
+					gameState?.setPaddleDirection(1, paddleSpeed);
+				else
+					gameState?.setPaddleDirection(1, 0);
 			});
 			player2.on("keypress", (key) => {
-				if (key === "ARROWUP" || key === "ARROWUP+SPACE" || key === "ARROWDOWN" || key === "ARROWDOWN+SPACE")
-					console.log("keypress2: " + key);
-				if (key === "ARROWUP" || key === "ARROWUP+SPACE") //(key == 'ArrowUp')
-					gameState?.setPaddleDirection(2, -1);
+				let paddleSpeed: number = 1;
+				if (key === "ARROWUP+SPACE" || key === "ARROWDOWN+SPACE")
+					paddleSpeed = 2;
+				if (key === "ARROWUP" || key === "ARROWUP+SPACE")
+					gameState?.setPaddleDirection(2, -paddleSpeed);
 				else if (key === "ARROWDOWN" || key === "ARROWDOWN+SPACE")
-					gameState?.setPaddleDirection(2, 1);
+					gameState?.setPaddleDirection(2, paddleSpeed);
+				else
+					gameState?.setPaddleDirection(2, 0);
 			});
 
 			gameState?.calcNewPosition();
@@ -201,6 +207,14 @@ export class GameService
 					'isEnraged': gameState?.fox.isEnraged,
 					'hasSizeOf': gameState?.fox.hasSizeOf,
 					'pos': gameState?.fox.position
+				},
+				'harkinian': {
+					'pos': gameState?.harkinian.position
+				},
+				'triggers': {
+					'triggeredGnome': gameState?.triggers.triggeredGnome,
+					'triggeredHarkinian': gameState?.triggers.triggeredHarkinian,
+					'triggeredPopup': gameState?.triggers.triggeredPopup
 				}
 			});
 			player2.emit('GameLoop', 
@@ -218,6 +232,14 @@ export class GameService
 					'isEnraged': gameState?.fox.isEnraged,
 					'hasSizeOf': gameState?.fox.hasSizeOf,
 					'pos': gameState?.fox.position
+				},
+				'harkinian': {
+					'pos': gameState?.harkinian.position
+				},
+				'triggers': {
+					'triggeredGnome': gameState?.triggers.triggeredGnome,
+					'triggeredHarkinian': gameState?.triggers.triggeredHarkinian,
+					'triggeredPopup': gameState?.triggers.triggeredPopup
 				}
 			});
 		}, 1000 / config.fps);

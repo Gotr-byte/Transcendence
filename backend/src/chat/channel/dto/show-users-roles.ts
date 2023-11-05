@@ -6,6 +6,7 @@ export class ShowUserRoles {
   username: string;
   avatar: string;
   isOnline: boolean;
+  inGame: boolean;
   role: ChannelMemberRoles;
 
   constructor(user: User, role: ChannelMemberRoles) {
@@ -13,6 +14,7 @@ export class ShowUserRoles {
     this.username = user.username;
     this.avatar = user.avatar;
     this.isOnline = user.isOnline;
+    this.inGame = user.inGame;
     this.role = role;
   }
 

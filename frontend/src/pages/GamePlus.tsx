@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState, useContext } from 'react';
 import { WebsocketContext } from "../components/Context/WebsocketContexts";
 
 import JoinRandom from '../components/Game/JoinRandom';
+import JoinRandomPlus from '../components/Game/JoinRandomPlus';
 import ReceivedGameData from '../components/Game/ReceiveGameData';
 
 import musicBavariaSrc from '../../public/assets/Music_Meanwhile_in_Bavaria.mp3';
@@ -64,7 +65,7 @@ interface Gnome
 interface Harkinian
 {
 	pos: Coordinates;
-	isUnlocked: boolean;
+	// isUnlocked: boolean;
 }
 
 interface Fox
@@ -151,8 +152,8 @@ const Game: React.FC = () =>
 	
 	// Paddles
 	
-	var paddleGlobalHeight: number = 240;
-	var paddleGlobalWidth: number = 50;
+	var paddleGlobalHeight: number = 70;
+	var paddleGlobalWidth: number = 10;
 	var paddleGlobalReduction: number = 0;
 	var paddleGlobalSpeed: number = 10;
 	
@@ -183,23 +184,26 @@ const Game: React.FC = () =>
 	// var colorCodeRGBP2: string = "0095DD";
 	const [colorCodeRGBBackground, setColorCodeRGBBackground] = useState<string>("000000");
 	const [colorCodeRGBScore, setColorCodeRGBScore] = useState<string>("FFFFFF");
-	const [colorCodeRGBBall1, setColorCodeRGBBall1] = useState<string>("0095DD");
-	const [colorCodeRGBBall2, setColorCodeRGBBall2] = useState<string>("0095DD");
-	const [colorCodeRGBP1, setColorCodeRGBP1] = useState<string>("0095DD");
-	const [colorCodeRGBP2, setColorCodeRGBP2] = useState<string>("0095DD");
+	const [colorCodeRGBBall1, setColorCodeRGBBall1] = useState<string>("0E4242");
+	const [colorCodeRGBBall2, setColorCodeRGBBall2] = useState<string>("0E4242");
+	const [colorCodeRGBP1, setColorCodeRGBP1] = useState<string>("0E4242");
+	const [colorCodeRGBP2, setColorCodeRGBP2] = useState<string>("0E4242");
 	
 	
 	
 	// Gnome
 	
-	var gnomeIsActive: boolean = false;
-	var gnomeStartTime: any = null;
+	// var gnomeIsActive: boolean = false;
+	const [gnomeIsActive, setGnomeIsActive] = useState<boolean>(false);
+	// var gnomeStartTime: any = null;
+	const [gnomeStartTime, setGnomeStartTime] = useState<any>(null);
 	
 	
 	
 	// King Harkinian
 	
-	var harkinianIsActive = false;
+	// var harkinianIsActive = false;
+	const [harkinianIsActive, setHarkinianIsActive] = useState<boolean>(false);
 	var harkinianX = canvasWidth / 2;
 	var harkinianY = canvasHeight / 2;
 	var harkinianWidth = 200;
@@ -245,9 +249,9 @@ const Game: React.FC = () =>
 		ball2: Coordinates;
 		ball2lock: boolean;
 		// gnome: Gnome;
-		// harkinian: Harkinian;
+		harkinian: Harkinian;
 		fox: Fox;
-		// triggerables: Triggerables;
+		triggers: Triggerables;
 	}
 	
 	
@@ -328,10 +332,7 @@ const Game: React.FC = () =>
 	// var subliminalSelectorDepression: number = 0;
 	// var subliminalSelectorSchizophrenia: number = 0;
 	// var subliminalSelectorHellish: number = 0;
-	const [subliminalSelectorDepression, setSubliminalSelectorDepression] = useState<number>(0);
-	const [subliminalSelectorSchizophrenia, setSubliminalSelectorSchizophrenia] = useState<number>(0);
-	const [subliminalSelectorHellish, setSubliminalSelectorHellish] = useState<number>(0);
-
+	
 	var subliminalMessagesArrayDepression: string[] =
 	[
 		'Where were you?',
@@ -387,7 +388,7 @@ const Game: React.FC = () =>
 		'Loss...',
 		'Darkness surrounding!'
 	];
-
+	
 	var subliminalMessagesArraySchizophrenia: string[] =
 	[
 		'Perdition awaits...',
@@ -449,7 +450,7 @@ const Game: React.FC = () =>
 		'Take control!',
 		'Let it go!'
 	];
-
+	
 	var subliminalMessagesArrayHellish: string[] =
 	[
 		'It burns!',
@@ -494,6 +495,10 @@ const Game: React.FC = () =>
 		'Egg!'
 	];
 
+	const [subliminalSelectorDepression, setSubliminalSelectorDepression] = useState<number>(Math.floor(Math.random() * 100) % (subliminalMessagesArrayDepression.length));
+	const [subliminalSelectorSchizophrenia, setSubliminalSelectorSchizophrenia] = useState<number>(Math.floor(Math.random() * 100) % (subliminalMessagesArraySchizophrenia.length));
+	const [subliminalSelectorHellish, setSubliminalSelectorHellish] = useState<number>(Math.floor(Math.random() * 100) % (subliminalMessagesArrayHellish.length));
+	
 	// Set the multimedia sources when the component has rendered
 	useEffect(() =>
 	{
@@ -659,68 +664,69 @@ const Game: React.FC = () =>
 	{
 		ctx.font = "20px Sherwood";
 		ctx.fillStyle = "#" + colorCodeRGBScore;
-		ctx.fillText(`Score P1: ${score1}`, 100, 20);
+		ctx.textAlign = 'center'; // Horizontal centering
+		ctx.fillText(`Score P1: ${score1}`, 50, 20);
 		ctx.fillText(`Score P2: ${score2}`, canvasWidth - 100, 20);
 	}
 	
-	// function drawGnome(ctx: CanvasRenderingContext2D, timestamp: number): void
-	// {
-	// 	if (lastGameState.gnome.isUnlocked === true)
-	// 	{
-	// 		if (gnomeIsActive === false)
-	// 		{
-	// 			if (lastGameState.triggerables.triggeredGnome === true) // (Math.floor(Math.random()*1000) === 666)
-	// 			{
-	// 				gnomeStartTime = timestamp;
-	// 				gnomeIsActive = true;
-	// 				audioGnome.current.play();
-	// 				// gnome_swap();
-	// 			}
-	// 		}
-	// 		else if (timestamp - gnomeStartTime <= 200)
-	// 		{
-	// 			ctx.drawImage(imageGnome.current, lastGameState.ball1.pos.x - 80, lastGameState.ball1.pos.y - 90);
-	// 			if (lastGameState.ball2.isUnlocked === true)
-	// 			{
-	// 				ctx.drawImage(imageGnome.current, lastGameState.ball2.pos.x - 80, lastGameState.ball2.pos.y - 90);
-	// 			}
-	// 			if (lastGameState.fox.isUnlocked === true)
-	// 			{
-	// 				ctx.drawImage(imageGnome.current, lastGameState.fox.pos.x - 80, lastGameState.fox.pos.y - 90);
-	// 			}
-	// 		}
-	// 		else
-	// 		{
-	// 			gnomeIsActive = false;
-	// 		}
-	// 	}
-	// }
+	function drawGnome(ctx: CanvasRenderingContext2D, score1: number, score2: number, triggered: boolean, ball1X: number, ball1Y: number, ball2X: number, ball2Y: number, foxX: number, foxY: number, timestamp: number): void
+	{
+		if (score1 + score2 >= 5)
+		{
+			if (gnomeIsActive === false)
+			{
+				if (triggered === true) // (Math.floor(Math.random()*1000) === 666)
+				{
+					setGnomeStartTime(timestamp);
+					setGnomeIsActive(true);
+					audioGnome.current.play();
+					// gnome_swap();
+				}
+			}
+			else if (timestamp - gnomeStartTime <= 200)
+			{
+				ctx.drawImage(imageGnome.current, ball1X - 80, ball1Y - 90);
+				if (score1 + score2 >= 40)
+				{
+					ctx.drawImage(imageGnome.current, ball2X - 80, ball2Y - 90);
+				}
+				if (score1 + score2 >= 30)
+				{
+					ctx.drawImage(imageGnome.current, foxX - 80, foxY - 90);
+				}
+			}
+			else
+			{
+				setGnomeIsActive(false);
+			}
+		}
+	}
 	
-	// function drawHarkinian(ctx: CanvasRenderingContext2D): void
-	// {
-	// 	if (lastGameState.harkinian.isUnlocked === true)
-	// 	{
-	// 		if (harkinianIsActive === false)
-	// 		{
-	// 			if (lastGameState.triggerables.triggeredHarkinian === true) //(Math.floor(Math.random()*1000) === 666)
-	// 			{
-	// 				harkinianIsActive = true;
-	// 				videoHarkinianHit.current.play();
-	// 				audioHarkinianOah.current.play();
-	// 				audioHarkinianHit.current.play();
-	// 				//harkinian_hit(Math.floor(Math.random() * 100));
-	// 			}
-	// 		}
-	// 		else if (videoHarkinianHit.current.paused === false)
-	// 		{
-	// 			ctx.drawImage(videoHarkinianHit.current, lastGameState.harkinian.pos.x, lastGameState.harkinian.pos.y, harkinianWidth, harkinianHeight);
-	// 		}
-	// 		else
-	// 		{
-	// 			harkinianIsActive = false;
-	// 		}
-	// 	}
-	// }
+	function drawHarkinian(ctx: CanvasRenderingContext2D, score1: number, score2: number, triggered: boolean, posX: number, posY: number): void
+	{
+		if (score1 + score2 >= 15)
+		{
+			if (harkinianIsActive === false)
+			{
+				if (triggered === true) //(Math.floor(Math.random()*1000) === 666)
+				{
+					setHarkinianIsActive(true);
+					videoHarkinianHit.current.play();
+					audioHarkinianOah.current.play();
+					audioHarkinianHit.current.play();
+					//harkinian_hit(Math.floor(Math.random() * 100));
+				}
+			}
+			else if (videoHarkinianHit.current.paused === false)
+			{
+				ctx.drawImage(videoHarkinianHit.current, posX - (harkinianWidth / 2), posY - (harkinianHeight / 2), harkinianWidth, harkinianHeight);
+			}
+			else
+			{
+				setHarkinianIsActive(false);
+			}
+		}
+	}
 	
 	function drawFox(ctx: CanvasRenderingContext2D, score1: number, score2: number, foxUnlocked: boolean, foxEvil: boolean, foxEnraged: boolean, foxPosX: number, foxPosY: number): void
 	{
@@ -1547,80 +1553,60 @@ const Game: React.FC = () =>
 		}
 	}
 	
-	// function popup_trap(): void
-	// {
-	// 	// if (isUnlockedPopups)
-	// 	// {
-	// 		if (lastGameState.triggerables.triggeredPopup === true) //(Math.floor(Math.random() * 10000) === 666)
-	// 		{
-	// 			var selector = Math.floor(Math.random() * 100) % 11; // % 5
-	// 			if (selector === 0)
-	// 			{
-	// 				alert("Run!");
-	// 			}
-	// 			else if (selector === 1)
-	// 			{
-	// 				alert("Hide!");
-	// 			}
-	// 			else if (selector === 2)
-	// 			{
-	// 				alert("Resist!");
-	// 			}
-	// 			else if (selector === 3)
-	// 			{
-	// 				alert("Fight!");
-	// 			}
-	// 			else if (selector === 4)
-	// 			{
-	// 				alert("Dog!");
-	// 			}
-	// 			else if (selector === 5)
-	// 			{
-	// 				alert("Try rump!");
-	// 			}
-	// 			else if (selector === 6)
-	// 			{
-	// 				alert("Be wary of danger!");
-	// 			}
-	// 			else if (selector === 7)
-	// 			{
-	// 				alert("Seek grace!");
-	// 			}
-	// 			else if (selector === 8)
-	// 			{
-	// 				alert("Visions of madness!");
-	// 			}
-	// 			else if (selector === 9)
-	// 			{
-	// 				alert("Ahh, suffering...");
-	// 			}
-	// 			else if (selector === 10)
-	// 			{
-	// 				alert("Praise the faith!");
-	// 			}
-	// 			// if (selector === 0)
-	// 			// {
-	// 			// 	alert("cLICK THIS LINK AND WIN 1 BITCOIN!!! http://hostmyvirus.co.ck/f1L3r4p3");
-	// 			// }
-	// 			// else if (selector === 1)
-	// 			// {
-	// 			// 	alert("Want see many womans whit BIG BALLS??? Clik her http://baitandhack.ro/r4n50mM0n573r-Tr0j4n");
-	// 			// }
-	// 			// else if (selector === 2)
-	// 			// {
-	// 			// 	alert("You are FBI suspekt childs pronorgafy! You have right to a turny! Free lawers best servis CALL NOW!!! +40769 666 911");
-	// 			// }
-	// 			// else if (selector === 1)
-	// 			// {
-	// 			// 	alert("1 new message from Elon Musk: Hello I am Elon Musk I end world hunger I love you send $100 to my wallet 4DZpldiB34afdq5BjdwT9ayHyLJnkMbKevc8 I send you 1000.000.000 DOGE");
-	// 			// }
-	// 			// else if (selector === 2)
-	// 			// {
-	// 			// 	alert("Legal drugs online order 100% SAFE http://jestesglupilol.pl");
-	// 			// }
-	// 		}
-	// 	// }
-	// }
+	function popup_trap(score1: number, score2: number, trigger: boolean): void
+	{
+		if (score1 + score2 >= 10) //isUnlockedPopups
+		{
+			if (trigger === true) //(Math.floor(Math.random() * 10000) === 666)
+			{
+				var selector = Math.floor(Math.random() * 100) % 11; // % 5
+				if (selector === 0)
+				{
+					alert("Run!");
+				}
+				else if (selector === 1)
+				{
+					alert("Hide!");
+				}
+				else if (selector === 2)
+				{
+					alert("Resist!");
+				}
+				else if (selector === 3)
+				{
+					alert("Fight!");
+				}
+				else if (selector === 4)
+				{
+					alert("Dog!");
+				}
+				else if (selector === 5)
+				{
+					alert("Try rump!");
+				}
+				else if (selector === 6)
+				{
+					alert("Be wary of danger!");
+				}
+				else if (selector === 7)
+				{
+					alert("Seek grace!");
+				}
+				else if (selector === 8)
+				{
+					alert("Visions of madness!");
+				}
+				else if (selector === 9)
+				{
+					alert("Ahh, suffering...");
+				}
+				else if (selector === 10)
+				{
+					alert("Praise the faith!");
+				}
+			}
+		}
+	}
 	
 	// function updateVariables(): void
 	// {
@@ -1803,8 +1789,14 @@ const Game: React.FC = () =>
 	// 	}
 	// }
 
-	function drawDepression(ctx: CanvasRenderingContext2D): void
+	function drawSubliminalDepression(ctx: CanvasRenderingContext2D): void
 	{
+		if (subliminalDepressionIsActive === false)
+		{
+			// setSubliminalSelectorDepression(Math.floor(Math.random() * 100) % (subliminalMessagesArrayDepression.length));
+			setSubliminalDepressionIsActive(true);
+		}
+
 		// Background
 		ctx.beginPath();
 		ctx.rect(0, 0, canvasWidth, canvasHeight);
@@ -1820,34 +1812,11 @@ const Game: React.FC = () =>
 		ctx.fillText(`${subliminalMessagesArrayDepression[subliminalSelectorDepression]}`, canvasWidth / 2, canvasHeight / 2);
 	}
 
-	function drawSubliminalDepression(ctx: CanvasRenderingContext2D): void
-	{
-		if (subliminalDepressionIsActive === false)
-		{
-			setSubliminalSelectorDepression(Math.floor(Math.random() * 100) % (subliminalMessagesArrayDepression.length));
-			setSubliminalDepressionIsActive(true);
-		}
-		drawDepression(ctx);
-		// // Background
-		// ctx.beginPath();
-		// ctx.rect(0, 0, canvasWidth, canvasHeight);
-		// ctx.fillStyle = "#000000";
-		// ctx.fill();
-		// ctx.closePath();
-
-		// // Text
-		// ctx.font = "110px Sherwood";
-		// ctx.textAlign = 'center'; // Horizontal centering
-		// ctx.textBaseline = 'middle'; // Vertical centering
-		// ctx.fillStyle = '#FFFFFF';
-		// ctx.fillText(`${subliminalMessagesArrayDepression[subliminalSelectorDepression]}`, canvasWidth / 2, canvasHeight / 2);
-	}
-
 	function drawSubliminalSchizophrenia(ctx: CanvasRenderingContext2D): void
 	{
 		if (subliminalSchizophreniaIsActive === false)
 		{
-			setSubliminalSelectorSchizophrenia(Math.floor(Math.random() * 100) % (subliminalMessagesArraySchizophrenia.length));
+			// setSubliminalSelectorSchizophrenia(Math.floor(Math.random() * 100) % (subliminalMessagesArraySchizophrenia.length));
 			setSubliminalSchizophreniaIsActive(true);
 		}
 
@@ -1870,7 +1839,7 @@ const Game: React.FC = () =>
 	{
 		if (subliminalHellishIsActive === false)
 		{
-			setSubliminalSelectorHellish(Math.floor(Math.random() * 100) % (subliminalMessagesArrayHellish.length));
+			// setSubliminalSelectorHellish(Math.floor(Math.random() * 100) % (subliminalMessagesArrayHellish.length));
 			setSubliminalHellishIsActive(true);
 		}
 
@@ -1898,6 +1867,10 @@ const Game: React.FC = () =>
 				setSubliminalDepressionIsActive(false);
 				setSubliminalSchizophreniaIsActive(false);
 				setSubliminalHellishIsActive(false);
+
+				setSubliminalSelectorDepression(Math.floor(Math.random() * 100) % (subliminalMessagesArrayDepression.length));
+				setSubliminalSelectorSchizophrenia(Math.floor(Math.random() * 100) % (subliminalMessagesArraySchizophrenia.length));
+				setSubliminalSelectorHellish(Math.floor(Math.random() * 100) % (subliminalMessagesArrayHellish.length));
 			}
 			if (subliminalDepressionIsActive === true)
 			{
@@ -1912,7 +1885,7 @@ const Game: React.FC = () =>
 				drawSubliminalHellish(ctx);
 			}
 		}
-		else if (Math.floor(Math.random() * 300) === 66)
+		else if (Math.floor(Math.random() * 200) === 42)
 		{
 			setSubliminalStartTime(timestamp);
 
@@ -2057,15 +2030,15 @@ const Game: React.FC = () =>
 		// {
 		// 	isUnlocked: false,
 		// },
-		// harkinian:
-		// {
-		// 	pos:
-		// 	{
-		// 		x: 0,
-		// 		y: 0
-		// 	},
+		harkinian:
+		{
+			pos:
+			{
+				x: 0,
+				y: 0
+			}
 		// 	isUnlocked: false
-		// },
+		},
 		fox:
 		{
 			isUnlocked: false,
@@ -2077,13 +2050,13 @@ const Game: React.FC = () =>
 				x: (canvasWidth / 2),
 				y: (canvasHeight / 2)
 			},
+		},
+		triggers:
+		{
+			triggeredGnome: false,
+			triggeredHarkinian: false,
+			triggeredPopup: false
 		}
-		// triggerables:
-		// {
-		// 	triggeredGnome: false,
-		// 	triggeredHarkinian: false,
-		// 	triggeredPopup: false
-		// }
 	}
 
 	function updateGameState(): void
@@ -2244,8 +2217,8 @@ const Game: React.FC = () =>
 					// setUnlockedGnome(!unlockedGnome);
 					// console.log("FE - main loop - unlockedGnome: " + unlockedGnome);
 					// console.log("FE - main loop - END");
-					// drawGnome(context, timestamp);
-					// drawHarkinian(context);
+					drawGnome(context, receivedGameState.score1, receivedGameState.score2, receivedGameState.triggers.triggeredGnome, receivedGameState.ball.x, receivedGameState.ball.y, receivedGameState.ball2.x, receivedGameState.ball2.y, receivedGameState.fox.pos.x, receivedGameState.fox.pos.y, Date.now());
+					drawHarkinian(context, receivedGameState.score1, receivedGameState.score2, receivedGameState.triggers.triggeredHarkinian, receivedGameState.harkinian.pos.x, receivedGameState.harkinian.pos.y);
 					drawScore(context, receivedGameState.score1, receivedGameState.score2); // DONE
 
 					if (receivedGameState.score1 + receivedGameState.score2 >= 35)
@@ -2263,7 +2236,7 @@ const Game: React.FC = () =>
 					// moveBalls();
 					// moveFox(timestamp);
 			
-					// popup_trap();
+					popup_trap(receivedGameState.score1, receivedGameState.score2, receivedGameState.triggers.triggeredPopup);
 			
 					// updateVariables();
 					// updateScores();
@@ -2325,7 +2298,8 @@ const Game: React.FC = () =>
 	
 	return (
 		<div>
-			<JoinRandom />
+			{/* <JoinRandom /> */}
+			<JoinRandomPlus />
 			<canvas ref={canvasRef} tabIndex={0} width={canvasWidth} height={canvasHeight}></canvas>
 			<audio ref={audioGnome}>
         		<source src={audioGnomeSrc} type="audio/mp3"/>

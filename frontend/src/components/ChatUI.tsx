@@ -23,6 +23,7 @@ const ChatUI: React.FC = () => {
 		content: "",
 		channelId: currentRoomId!,
 	});
+	
 	const [receivedMessages, setReceivedMessages] = useState<
 		ReceivedMessagePayload[]
 	>([]);
@@ -73,9 +74,9 @@ const ChatUI: React.FC = () => {
 		const eventName = `channel-msg-${currentRoomId}`;
 
 		// Event handler function
-		const handleNewMessage = (newMessage: ReceivedMessagePayload) => {
-			setReceivedMessages((prev) => [newMessage]);
-		};
+const handleNewMessage = (newMessage: ReceivedMessagePayload) => {
+    setReceivedMessages((prevMessages) => [...prevMessages, newMessage]); // This appends the new message to the array
+};
 
 		// Register the event listener
 		socket.on(eventName, handleNewMessage);

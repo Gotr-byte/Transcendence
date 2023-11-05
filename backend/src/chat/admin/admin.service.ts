@@ -301,21 +301,6 @@ export class AdminService {
     return membership.role;
   }
 
-  private async getCurrentRestriction(
-    channelId: number,
-    userId: number,
-  ): Promise<ChannelUserRestriction | null> {
-    const restriction = await this.prisma.channelUserRestriction.findUnique({
-      where: {
-        restrictedUserId_restrictedChannelId: {
-          restrictedUserId: userId,
-          restrictedChannelId: channelId,
-        },
-      },
-    });
-    return restriction;
-  }
-
   private async getUserRoleRestriction(
     channelId: number,
     userId: number,
