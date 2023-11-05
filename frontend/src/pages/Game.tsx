@@ -27,6 +27,25 @@ interface KeyPresses
 const Game: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [gameState, setGameState] = useState<GameState | null>(null);
+  const [resizingFactor, setResizingFactor] = useState<number>(1);
+
+  var backendWidth: number = 1024;
+  var backendHeight: number = 576;
+
+  const updateResizingFactor = () => {
+	if (window.innerWidth >= 1366 && window.innerHeight >= 768)
+	{
+		setResizingFactor(window.innerWidth / backendWidth);
+	}
+  };
+
+  useEffect(() => {
+    window.addEventListener('resize', updateResizingFactor);
+
+    return () => {
+      window.removeEventListener('resize', updateResizingFactor);
+    };
+  }, []);
 
   const socketIo = useContext(WebsocketContext);
 
@@ -57,10 +76,12 @@ const Game: React.FC = () => {
 		{
 			if (event.key === 'ArrowUp' || event.key === 'Up')
 			{
+				event.preventDefault();
 				KeysPressed.keyArrowUp = true;
 			}
 			if (event.key === 'ArrowDown' || event.key === 'Down')
 			{
+				event.preventDefault();
 				KeysPressed.keyArrowDown = true;
 			}
 			
@@ -121,16 +142,20 @@ const Game: React.FC = () => {
     if (canvas && gameState) {
       const ctx = canvas.getContext("2d");
       if (ctx) {
+		// Ensure the canvas is the correct size
+		canvas.width = backendWidth * resizingFactor;
+		canvas.height = backendHeight * resizingFactor;
+
         // Fill the canvas with black color
         ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         // Paddles are white
         ctx.fillStyle = "white";
         ctx.beginPath();
-        ctx.fillRect(gameState.paddle1.x, gameState.paddle1.y, 10, 70);
+        ctx.fillRect(gameState.paddle1.x * resizingFactor, gameState.paddle1.y * resizingFactor, 10 * resizingFactor, 70 * resizingFactor);
         ctx.closePath();
         ctx.beginPath();
-        ctx.fillRect(gameState.paddle2.x, gameState.paddle2.y, 10, 70);
+        ctx.fillRect(gameState.paddle2.x * resizingFactor, gameState.paddle2.y * resizingFactor, 10 * resizingFactor, 70 * resizingFactor);
         ctx.closePath();
         ctx.font = "48px serif";
 		ctx.textAlign = 'center'; // Horizontal centering
@@ -138,7 +163,7 @@ const Game: React.FC = () => {
         ctx.fillText(gameState.score1 + " : " + gameState.score2, canvas.width / 2, canvas.height / 2);
         // Draw the ball in white
         ctx.beginPath();
-        ctx.arc(gameState.ball.x, gameState.ball.y, 15, 0, 2 * Math.PI); // 10 is the radius of the ball
+        ctx.arc(gameState.ball.x * resizingFactor, gameState.ball.y * resizingFactor, 15 * resizingFactor, 0, 2 * Math.PI * resizingFactor); // 15 is the radius of the ball
         ctx.fillStyle = "white";
         ctx.fill();
         ctx.closePath();
@@ -165,7 +190,7 @@ const Game: React.FC = () => {
         // }
       }
     }
-  }, [gameState]);
+  }, [gameState, resizingFactor]);
 
   return (
     <div>
@@ -173,9 +198,10 @@ const Game: React.FC = () => {
       {/* <AbortMatchmaking /> */}
       <canvas
         ref={canvasRef}
-        width="1200"
-        height="720"
-        style={{ border: "1px solid black" }}
+        // width="1200"
+        // height="720"
+        // style={{ border: "1px solid black" }}
+		style={{ border: "1px solid black", width: '100%', height: '100%', display: 'block' }}
       ></canvas>
       <Box bg="#e0dbb7" p={4}>
         <p>Transcendence: The Duel of Eternity</p>

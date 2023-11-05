@@ -96,8 +96,27 @@ interface KeyPresses
 const Game: React.FC = () =>
 {
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
-	const canvasWidth: number = 1200; //1200
-	const canvasHeight: number = 720; //720
+	// const canvasWidth: number = 1024; //1200
+	// const canvasHeight: number = 576; //720
+	const [resizingFactor, setResizingFactor] = useState<number>(1);
+  
+	var backendWidth: number = 1024;
+	var backendHeight: number = 576;
+  
+	const updateResizingFactor = () => {
+	  if (window.innerWidth >= 1366 && window.innerHeight >= 768)
+	  {
+		  setResizingFactor(window.innerWidth / backendWidth);
+	  }
+	};
+  
+	useEffect(() => {
+	  window.addEventListener('resize', updateResizingFactor);
+  
+	  return () => {
+		window.removeEventListener('resize', updateResizingFactor);
+	  };
+	}, []);
 
 	// const [frameRate, setFrameRate] = useState(60);
 	// const thenRef = useRef<number | null>(null);
@@ -134,15 +153,15 @@ const Game: React.FC = () =>
 	var ballGlobalSpeedAddedPerma: number = 0;
 	var ballGlobalSpeedAddedTemp: number = 0;
 
-	var ball1X: number = canvasWidth / 2;
-	var ball1Y: number = canvasHeight / 2;
+	// var ball1X: number = canvasRef.current.width / 2;
+	// var ball1Y: number = canvasRef.current.height / 2;
 	var ball1DirX: number = 1;
 	var ball1DirY: number = 1;
 	var ball1SpeedX: number = 1;
 	var ball1SpeedY: number = 1;		
 
-	var ball2X: number = canvasWidth / 2;
-	var ball2Y: number = canvasHeight / 2;
+	// var ball2X: number = canvasRef.current.width / 2;
+	// var ball2Y: number = canvasRef.current.height / 2;
 	var ball2DirX: number = 1;
 	var ball2DirY: number = 1;
 	var ball2SpeedX: number = 1;
@@ -157,9 +176,9 @@ const Game: React.FC = () =>
 	var paddleGlobalReduction: number = 0;
 	var paddleGlobalSpeed: number = 10;
 	
-	var paddleP1X: number = (canvasWidth - paddleGlobalWidth) / 2;
+	// var paddleP1X: number = (canvasRef.current.width - paddleGlobalWidth * resizingFactor) / 2;
 	var paddleP1SpeedMod: number = 0;
-	var paddleP2X: number = (canvasWidth - paddleGlobalWidth) / 2;
+	// var paddleP2X: number = (canvasRef.current.height - paddleGlobalWidth * resizingFactor) / 2;
 	var paddleP2SpeedMod: number = 0;
 	
 	var paddleP1IsAttacked: boolean = false;
@@ -204,8 +223,8 @@ const Game: React.FC = () =>
 	
 	// var harkinianIsActive = false;
 	const [harkinianIsActive, setHarkinianIsActive] = useState<boolean>(false);
-	var harkinianX = canvasWidth / 2;
-	var harkinianY = canvasHeight / 2;
+	// var harkinianX = canvasRef.current.width / 2;
+	// var harkinianY = canvasRef.current.height / 2;
 	var harkinianWidth = 200;
 	var harkinianHeight = 150;
 	
@@ -213,8 +232,8 @@ const Game: React.FC = () =>
 	
 	// Fox
 	
-	var foxPosX: number = canvasWidth / 2;
-	var foxPosY: number = canvasHeight / 2;
+	// var foxPosX: number = canvasRef.current.width / 2;
+	// var foxPosY: number = canvasRef.current.height / 2;
 	var foxDirX: number = 1;
 	var foxDirY: number = 1;
 	var foxSpeedDefault: number = 3;
@@ -618,7 +637,7 @@ const Game: React.FC = () =>
 	function drawBackground(ctx: CanvasRenderingContext2D): void
 	{
 		ctx.beginPath();
-		ctx.rect(0, 0, canvasWidth, canvasHeight);
+		ctx.rect(0, 0, canvasRef.current.width, canvasRef.current.height);
 		ctx.fillStyle = "#" + colorCodeRGBBackground;
 		ctx.fill();
 		ctx.closePath();
@@ -629,7 +648,7 @@ const Game: React.FC = () =>
 		// if (lastGameState.triggerables.triggeredGnome === false)
 		// {
 			ctx.beginPath();
-			ctx.arc(ball1x, ball1y, ballGlobalRadius, 0, Math.PI * 2);
+			ctx.arc(ball1x * resizingFactor, ball1y * resizingFactor, ballGlobalRadius * resizingFactor, 0, Math.PI * 2);
 			ctx.fillStyle = "#" + colorCodeRGBBall1;
 			ctx.fill();
 			ctx.closePath();
@@ -637,7 +656,7 @@ const Game: React.FC = () =>
 			if (ball2unlocked === true)
 			{
 				ctx.beginPath();
-				ctx.arc(ball2x, ball2y, ballGlobalRadius, 0, Math.PI * 2);
+				ctx.arc(ball2x * resizingFactor, ball2y * resizingFactor, ballGlobalRadius * resizingFactor, 0, Math.PI * 2);
 				ctx.fillStyle = "#" + colorCodeRGBBall2;
 				ctx.fill();
 				ctx.closePath();
@@ -648,13 +667,13 @@ const Game: React.FC = () =>
 	function drawPaddles(ctx: CanvasRenderingContext2D, paddle1x: number, paddle1y: number, paddle2x: number, paddle2y: number): void
 	{
 		ctx.beginPath();
-		ctx.rect(paddle1x, paddle1y, paddleGlobalWidth - paddleGlobalReduction, paddleGlobalHeight);
+		ctx.rect(paddle1x * resizingFactor, paddle1y * resizingFactor, (paddleGlobalWidth - paddleGlobalReduction) * resizingFactor, paddleGlobalHeight * resizingFactor);
 		ctx.fillStyle = "#" + colorCodeRGBP1;
 		ctx.fill();
 		ctx.closePath();
 		
 		ctx.beginPath();
-		ctx.rect(paddle2x, paddle2y, paddleGlobalWidth - paddleGlobalReduction, paddleGlobalHeight);
+		ctx.rect(paddle2x * resizingFactor, paddle2y * resizingFactor, (paddleGlobalWidth - paddleGlobalReduction) * resizingFactor, paddleGlobalHeight * resizingFactor);
 		ctx.fillStyle = "#" + colorCodeRGBP2;
 		ctx.fill();
 		ctx.closePath();
@@ -665,8 +684,8 @@ const Game: React.FC = () =>
 		ctx.font = "20px Sherwood";
 		ctx.fillStyle = "#" + colorCodeRGBScore;
 		ctx.textAlign = 'center'; // Horizontal centering
-		ctx.fillText(`Score P1: ${score1}`, 50, 20);
-		ctx.fillText(`Score P2: ${score2}`, canvasWidth - 100, 20);
+		ctx.fillText(`Score P1: ${score1}`, 50 * resizingFactor, 20 * resizingFactor);
+		ctx.fillText(`Score P2: ${score2}`, canvasRef.current.width - 100 * resizingFactor, 20 * resizingFactor);
 	}
 	
 	function drawGnome(ctx: CanvasRenderingContext2D, score1: number, score2: number, triggered: boolean, ball1X: number, ball1Y: number, ball2X: number, ball2Y: number, foxX: number, foxY: number, timestamp: number): void
@@ -685,14 +704,14 @@ const Game: React.FC = () =>
 			}
 			else if (timestamp - gnomeStartTime <= 200)
 			{
-				ctx.drawImage(imageGnome.current, ball1X - 80, ball1Y - 90);
+				ctx.drawImage(imageGnome.current, (ball1X - 80) * resizingFactor, (ball1Y - 90) * resizingFactor);
 				if (score1 + score2 >= 40)
 				{
-					ctx.drawImage(imageGnome.current, ball2X - 80, ball2Y - 90);
+					ctx.drawImage(imageGnome.current, (ball2X - 80) * resizingFactor, (ball2Y - 90) * resizingFactor);
 				}
 				if (score1 + score2 >= 30)
 				{
-					ctx.drawImage(imageGnome.current, foxX - 80, foxY - 90);
+					ctx.drawImage(imageGnome.current, (foxX - 80) * resizingFactor, (foxY - 90) * resizingFactor);
 				}
 			}
 			else
@@ -719,7 +738,7 @@ const Game: React.FC = () =>
 			}
 			else if (videoHarkinianHit.current.paused === false)
 			{
-				ctx.drawImage(videoHarkinianHit.current, posX - (harkinianWidth / 2), posY - (harkinianHeight / 2), harkinianWidth, harkinianHeight);
+				ctx.drawImage(videoHarkinianHit.current, (posX - (harkinianWidth / 2)) * resizingFactor, (posY - (harkinianHeight / 2)) * resizingFactor, harkinianWidth * resizingFactor, harkinianHeight * resizingFactor);
 			}
 			else
 			{
@@ -734,15 +753,15 @@ const Game: React.FC = () =>
 		{
 			if (foxEnraged === true)
 			{
-				ctx.drawImage(imageFoxEnraged.current, foxPosX, foxPosY);
+				ctx.drawImage(imageFoxEnraged.current, foxPosX * resizingFactor, foxPosY * resizingFactor);
 			}
 			else if (foxEvil === true)
 			{
-				ctx.drawImage(imageFoxBad.current, foxPosX, foxPosY);
+				ctx.drawImage(imageFoxBad.current, foxPosX * resizingFactor, foxPosY * resizingFactor);
 			}
 			else
 			{
-				ctx.drawImage(imageFoxGood.current, foxPosX, foxPosY);
+				ctx.drawImage(imageFoxGood.current, foxPosX * resizingFactor, foxPosY * resizingFactor);
 			}
 		}
 	}
@@ -777,7 +796,7 @@ const Game: React.FC = () =>
 		let collision: boolean = false;
 		
 		if (ballReceivedY <= 3 ||
-			ballReceivedY >= canvasHeight - 3)
+			ballReceivedY >= canvasRef.current.height - 3)
 		{
 			collision = true;
 		}
@@ -885,64 +904,64 @@ const Game: React.FC = () =>
 	// 	return collision;
 	// }
 	
-	function collisionCheck(): void
-	{
-		// Collisions.collision_ball1_paddle1 = 0;
-		// Collisions.collision_ball1_paddle2 = 0;
-		Collisions.collision_ball1_wall = false;
-		// Collisions.ball1_loser = 0;
-		// Collisions.collision_ball2_paddle1 = 0;
-		// Collisions.collision_ball2_paddle2 = 0;
-		Collisions.collision_ball2_wall = false;
-		// Collisions.ball2_loser = 0;
+	// function collisionCheck(): void
+	// {
+	// 	// Collisions.collision_ball1_paddle1 = 0;
+	// 	// Collisions.collision_ball1_paddle2 = 0;
+	// 	Collisions.collision_ball1_wall = false;
+	// 	// Collisions.ball1_loser = 0;
+	// 	// Collisions.collision_ball2_paddle1 = 0;
+	// 	// Collisions.collision_ball2_paddle2 = 0;
+	// 	Collisions.collision_ball2_wall = false;
+	// 	// Collisions.ball2_loser = 0;
 		
-		// Collisions.fox_ball1 = "";
-		// Collisions.fox_ball2 = "";
-		// Collisions.fox_paddle1 = false;
-		// Collisions.fox_paddle2 = false;
-		// Collisions.fox_wall = "";
+	// 	// Collisions.fox_ball1 = "";
+	// 	// Collisions.fox_ball2 = "";
+	// 	// Collisions.fox_paddle1 = false;
+	// 	// Collisions.fox_paddle2 = false;
+	// 	// Collisions.fox_wall = "";
 	
-		// Collisions.collision_ball1_paddle1 = collisionCheck_ballPaddle(ball1X + (ball1SpeedX * ball1DirX), ball1Y + (ball1SpeedY * ball1DirY));
-		// Collisions.collision_ball1_paddle2 = collisionCheck_ballPaddle(ball1X + (ball1SpeedX * ball1DirX), ball1Y + (ball1SpeedY * ball1DirY));
-		Collisions.collision_ball1_wall = collisionCheck_ballWall(lastGameState.ball.y);
-		// Collisions.ball1_loser = 0;
-		// if (Collisions.collision_ball1_paddle1 === 0 && Collisions.collision_ball1_paddle2 === 0)
-		// {
-		// 	Collisions.ball1_loser = collisionCheck_lostBall(ball1X + (ball1SpeedX * ball1DirX), ball1Y + (ball1SpeedY * ball1DirY));
-		// }
+	// 	// Collisions.collision_ball1_paddle1 = collisionCheck_ballPaddle(ball1X + (ball1SpeedX * ball1DirX), ball1Y + (ball1SpeedY * ball1DirY));
+	// 	// Collisions.collision_ball1_paddle2 = collisionCheck_ballPaddle(ball1X + (ball1SpeedX * ball1DirX), ball1Y + (ball1SpeedY * ball1DirY));
+	// 	Collisions.collision_ball1_wall = collisionCheck_ballWall(lastGameState.ball.y);
+	// 	// Collisions.ball1_loser = 0;
+	// 	// if (Collisions.collision_ball1_paddle1 === 0 && Collisions.collision_ball1_paddle2 === 0)
+	// 	// {
+	// 	// 	Collisions.ball1_loser = collisionCheck_lostBall(ball1X + (ball1SpeedX * ball1DirX), ball1Y + (ball1SpeedY * ball1DirY));
+	// 	// }
 		
-		if (isUnlockedSecondBall)
-		{
-			// Collisions.collision_ball2_paddle1 = collisionCheck_ballPaddle(ball2X + (ball2SpeedX * ball2DirX), ball2Y + (ball2SpeedY * ball2DirY));
-			// Collisions.collision_ball2_paddle2 = collisionCheck_ballPaddle(ball2X + (ball2SpeedX * ball2DirX), ball2Y + (ball2SpeedY * ball2DirY));
-			Collisions.collision_ball2_wall = collisionCheck_ballWall(lastGameState.ball2.y);
-			// Collisions.ball2_loser = 0;
-			// if (Collisions.collision_ball2_paddle1 === 0 || Collisions.collision_ball2_paddle2 === 0)
-			// {
-			// 	Collisions.ball2_loser = collisionCheck_lostBall(ball2X + (ball2SpeedX * ball2DirX), ball2Y + (ball2SpeedY * ball2DirY));
-			// }
-		}
+	// 	if (isUnlockedSecondBall)
+	// 	{
+	// 		// Collisions.collision_ball2_paddle1 = collisionCheck_ballPaddle(ball2X + (ball2SpeedX * ball2DirX), ball2Y + (ball2SpeedY * ball2DirY));
+	// 		// Collisions.collision_ball2_paddle2 = collisionCheck_ballPaddle(ball2X + (ball2SpeedX * ball2DirX), ball2Y + (ball2SpeedY * ball2DirY));
+	// 		Collisions.collision_ball2_wall = collisionCheck_ballWall(lastGameState.ball2.y);
+	// 		// Collisions.ball2_loser = 0;
+	// 		// if (Collisions.collision_ball2_paddle1 === 0 || Collisions.collision_ball2_paddle2 === 0)
+	// 		// {
+	// 		// 	Collisions.ball2_loser = collisionCheck_lostBall(ball2X + (ball2SpeedX * ball2DirX), ball2Y + (ball2SpeedY * ball2DirY));
+	// 		// }
+	// 	}
 		
-		// if (isUnlockedFox)
-		// {
-		// 	if (foxIsEnraged)
-		// 	{
-		// 		var foxWidth = 153;
-		// 		var foxHeight = 149;
-		// 	}
-		// 	else
-		// 	{
-		// 		var foxWidth = 50;
-		// 		var foxHeight = 49;
-		// 	}
+	// 	// if (isUnlockedFox)
+	// 	// {
+	// 	// 	if (foxIsEnraged)
+	// 	// 	{
+	// 	// 		var foxWidth = 153;
+	// 	// 		var foxHeight = 149;
+	// 	// 	}
+	// 	// 	else
+	// 	// 	{
+	// 	// 		var foxWidth = 50;
+	// 	// 		var foxHeight = 49;
+	// 	// 	}
 			
-		// 	Collisions.fox_ball1 = collisionCheck_foxBall(ball1X, ball1Y, foxWidth, foxHeight);
-		// 	Collisions.fox_ball2 = collisionCheck_foxBall(ball2X, ball2Y, foxWidth, foxHeight);
-		// 	Collisions.fox_paddle1 = collisionCheck_foxPaddle(paddleP1X, canvasHeight - paddleGlobalHeight, foxWidth, foxHeight);
-		// 	Collisions.fox_paddle2 = collisionCheck_foxPaddle(paddleP2X, 0, foxWidth, foxHeight);
-		// 	Collisions.fox_wall = collisionCheck_foxWall(foxWidth, foxHeight);
-		// }
-	}
+	// 	// 	Collisions.fox_ball1 = collisionCheck_foxBall(ball1X, ball1Y, foxWidth, foxHeight);
+	// 	// 	Collisions.fox_ball2 = collisionCheck_foxBall(ball2X, ball2Y, foxWidth, foxHeight);
+	// 	// 	Collisions.fox_paddle1 = collisionCheck_foxPaddle(paddleP1X, canvasHeight - paddleGlobalHeight, foxWidth, foxHeight);
+	// 	// 	Collisions.fox_paddle2 = collisionCheck_foxPaddle(paddleP2X, 0, foxWidth, foxHeight);
+	// 	// 	Collisions.fox_wall = collisionCheck_foxWall(foxWidth, foxHeight);
+	// 	// }
+	// }
 	
 	// function moveBalls(): void
 	// {
@@ -1543,11 +1562,11 @@ const Game: React.FC = () =>
 			}
 			if (mcrolldQueued)
 			{
-				ctx.drawImage(videoMcrolldReverse.current, (canvasWidth - 1024) / 2, (canvasHeight - 768) / 2, 1024, 768);
+				ctx.drawImage(videoMcrolldReverse.current, (canvasRef.current.width - 1024) / 2, (canvasRef.current.height - 768) / 2, 1024 * resizingFactor, 768 * resizingFactor);
 			}
 			else if (mcrolldReverseQueued)
 			{
-				ctx.drawImage(videoMcrolld.current, (canvasWidth - 1024) / 2, (canvasHeight - 768) / 2, 1024, 768);
+				ctx.drawImage(videoMcrolld.current, (canvasRef.current.width - 1024) / 2, (canvasRef.current.height - 768) / 2, 1024 * resizingFactor, 768 * resizingFactor);
 			}
 			// ctx.drawImage(videoToDraw, (canvasWidth - 1024) / 2, (canvasHeight - 768) / 2, 1024, 768);
 		}
@@ -1799,7 +1818,7 @@ const Game: React.FC = () =>
 
 		// Background
 		ctx.beginPath();
-		ctx.rect(0, 0, canvasWidth, canvasHeight);
+		ctx.rect(0, 0, canvasRef.current.width, canvasRef.current.height);
 		ctx.fillStyle = "#000000";
 		ctx.fill();
 		ctx.closePath();
@@ -1809,7 +1828,7 @@ const Game: React.FC = () =>
 		ctx.textAlign = 'center'; // Horizontal centering
 		ctx.textBaseline = 'middle'; // Vertical centering
 		ctx.fillStyle = '#FFFFFF';
-		ctx.fillText(`${subliminalMessagesArrayDepression[subliminalSelectorDepression]}`, canvasWidth / 2, canvasHeight / 2);
+		ctx.fillText(`${subliminalMessagesArrayDepression[subliminalSelectorDepression]}`, canvasRef.current.width / 2, canvasRef.current.height / 2);
 	}
 
 	function drawSubliminalSchizophrenia(ctx: CanvasRenderingContext2D): void
@@ -1822,7 +1841,7 @@ const Game: React.FC = () =>
 
 		// Background
 		ctx.beginPath();
-		ctx.rect(0, 0, canvasWidth, canvasHeight);
+		ctx.rect(0, 0, canvasRef.current.width, canvasRef.current.height);
 		ctx.fillStyle = "#000000";
 		ctx.fill();
 		ctx.closePath();
@@ -1832,7 +1851,7 @@ const Game: React.FC = () =>
 		ctx.textAlign = 'center'; // Horizontal centering
 		ctx.textBaseline = 'middle'; // Vertical centering
 		ctx.fillStyle = 'yellow';
-		ctx.fillText(`${subliminalMessagesArraySchizophrenia[subliminalSelectorSchizophrenia]}`, canvasWidth / 2, canvasHeight / 2);
+		ctx.fillText(`${subliminalMessagesArraySchizophrenia[subliminalSelectorSchizophrenia]}`, canvasRef.current.width / 2, canvasRef.current.height / 2);
 	}
 
 	function drawSubliminalHellish(ctx: CanvasRenderingContext2D): void
@@ -1845,7 +1864,7 @@ const Game: React.FC = () =>
 
 		// Background
 		ctx.beginPath();
-		ctx.rect(0, 0, canvasWidth, canvasHeight);
+		ctx.rect(0, 0, canvasRef.current.width, canvasRef.current.height);
 		ctx.fillStyle = "#000000";
 		ctx.fill();
 		ctx.closePath();
@@ -1855,7 +1874,7 @@ const Game: React.FC = () =>
 		ctx.textAlign = 'center'; // Horizontal centering
 		ctx.textBaseline = 'middle'; // Vertical centering
 		ctx.fillStyle = '#FF0000';
-		ctx.fillText(`${subliminalMessagesArrayHellish[subliminalSelectorHellish]}`, canvasWidth / 2, canvasHeight / 2);
+		ctx.fillText(`${subliminalMessagesArrayHellish[subliminalSelectorHellish]}`, canvasRef.current.width / 2, canvasRef.current.height / 2);
 	}
 
 	function drawSubliminalMessages(ctx: CanvasRenderingContext2D, timestamp: number): void
@@ -1919,14 +1938,17 @@ const Game: React.FC = () =>
 		{
 			if (event.key === 'ArrowUp' || event.key === 'Up')
 			{
+				event.preventDefault();
 				KeysPressed.keyArrowUp = true;
 			}
 			if (event.key === 'ArrowDown' || event.key === 'Down')
 			{
+				event.preventDefault();
 				KeysPressed.keyArrowDown = true;
 			}
 			if (event.key === 'Space' || event.key === ' ')
 			{
+				event.preventDefault();
 				KeysPressed.keySpace = true;
 			}
 			
@@ -2001,68 +2023,68 @@ const Game: React.FC = () =>
 
 	// const [unlockedGnome, setUnlockedGnome] = useState<boolean>(false);
 
-	var lastGameState: GameState =
-	{
-		score1: 0,
-		score2: 0,
-		paddle1:
-		{
-			x: 0,
-			y: (canvasHeight / 2)
-		},
-		paddle2:
-		{
-			x: canvasWidth - 50,
-			y: (canvasHeight / 2)
-		},
-		ball:
-		{
-			x: (canvasWidth / 2),
-			y: (canvasHeight / 2)
-		},
-		ball2:
-		{
-			x: (canvasWidth / 2),
-			y: (canvasHeight / 2)
-		},
-		ball2lock: false,
-		// gnome:
-		// {
-		// 	isUnlocked: false,
-		// },
-		harkinian:
-		{
-			pos:
-			{
-				x: 0,
-				y: 0
-			}
-		// 	isUnlocked: false
-		},
-		fox:
-		{
-			isUnlocked: false,
-			isEvil: false,
-			isEnraged: false,
-			hasSizeOf: 100,
-			pos:
-			{
-				x: (canvasWidth / 2),
-				y: (canvasHeight / 2)
-			},
-		},
-		triggers:
-		{
-			triggeredGnome: false,
-			triggeredHarkinian: false,
-			triggeredPopup: false
-		}
-	}
+	// var lastGameState: GameState =
+	// {
+	// 	score1: 0,
+	// 	score2: 0,
+	// 	paddle1:
+	// 	{
+	// 		x: 0,
+	// 		y: (canvasRef.current.height / 2)
+	// 	},
+	// 	paddle2:
+	// 	{
+	// 		x: canvasRef.current.width - 50 * resizingFactor,
+	// 		y: (canvasRef.current.height / 2)
+	// 	},
+	// 	ball:
+	// 	{
+	// 		x: (canvasRef.current.width / 2),
+	// 		y: (canvasRef.current.height / 2)
+	// 	},
+	// 	ball2:
+	// 	{
+	// 		x: (canvasRef.current.width / 2),
+	// 		y: (canvasRef.current.height / 2)
+	// 	},
+	// 	ball2lock: false,
+	// 	// gnome:
+	// 	// {
+	// 	// 	isUnlocked: false,
+	// 	// },
+	// 	harkinian:
+	// 	{
+	// 		pos:
+	// 		{
+	// 			x: 0,
+	// 			y: 0
+	// 		}
+	// 	// 	isUnlocked: false
+	// 	},
+	// 	fox:
+	// 	{
+	// 		isUnlocked: false,
+	// 		isEvil: false,
+	// 		isEnraged: false,
+	// 		hasSizeOf: 100,
+	// 		pos:
+	// 		{
+	// 			x: (canvasRef.current.width / 2),
+	// 			y: (canvasRef.current.height / 2)
+	// 		},
+	// 	},
+	// 	triggers:
+	// 	{
+	// 		triggeredGnome: false,
+	// 		triggeredHarkinian: false,
+	// 		triggeredPopup: false
+	// 	}
+	// }
 
-	function updateGameState(): void
-	{
-		lastGameState = receivedGameState;
-	}
+	// function updateGameState(): void
+	// {
+	// 	lastGameState = receivedGameState;
+	// }
 
 	function prepareKeyString(): void
 	{
@@ -2131,6 +2153,9 @@ const Game: React.FC = () =>
 		{
 			const context = canvasRef.current.getContext('2d');
 
+			canvasRef.current.width = backendWidth * resizingFactor;
+			canvasRef.current.height = backendHeight * resizingFactor;
+
 			// const drawClassic = (timestamp: number) =>
 			// {
 			// 	// if (!thenRef.current)
@@ -2192,7 +2217,7 @@ const Game: React.FC = () =>
 
 					// lastGameState = receivedGameState;
 
-					context.clearRect(0, 0, canvasWidth, canvasHeight);
+					context.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
 
 					// updateGameState();
 					// sendKeystrokes();
@@ -2282,7 +2307,7 @@ const Game: React.FC = () =>
         //     console.log("Unregistering Events...");
         //     socket.off('GameLoop');
         // };
-	}, [receivedGameState]); //frameRate
+	}, [receivedGameState, resizingFactor]); //frameRate
 
 	// function drawBallFromBackend(ctx: CanvasRenderingContext2D, backendFrame: GameState): void
 	// {
@@ -2300,7 +2325,13 @@ const Game: React.FC = () =>
 		<div>
 			{/* <JoinRandom /> */}
 			<JoinRandomPlus />
-			<canvas ref={canvasRef} tabIndex={0} width={canvasWidth} height={canvasHeight}></canvas>
+			<canvas
+				ref={canvasRef}
+				// width="1200"
+				// height="720"
+				// style={{ border: "1px solid black" }}
+				style={{ border: "1px solid black", width: '100%', height: '100%', display: 'block' }}
+			></canvas>
 			<audio ref={audioGnome}>
         		<source src={audioGnomeSrc} type="audio/mp3"/>
       		</audio>

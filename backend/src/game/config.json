@@ -1,7 +1,7 @@
 {
 	"game_canvas": {
-		"width": 1200,
-		"height": 720
+		"width": 1024,
+		"height": 576
 	},
 	"paddle": {
 		"buffer": 0,
