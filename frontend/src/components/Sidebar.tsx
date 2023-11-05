@@ -26,7 +26,10 @@ interface Opponent {
 //         <Text>Welcome! Change your avatar and username in the account section.</Text>
             // <UpdateUser/>
             //<FileUpload />
-//         <Button mt={2} size="sm" colorScheme="green" onClick={() => toast.closeAll()}>
+//         <Button mt={2} size="sm" colorScheme="green" onClick={() => {
+    // navigate('/profile');
+    // toast.closeAll();
+// }}>
 //           Got it!
 //         </Button>
 //       </Box>
