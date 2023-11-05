@@ -25,8 +25,8 @@
 		"minSize":	30,
 		"maxSize":	45,
 		"timeStick2Paddle":	3,
-		"minVelocity":	3,
-		"maxVelocity":	6,
+		"minVelocity":	5,
+		"maxVelocity":	10,
 		"maxTimeGoodEvil":	15,
 		"getEnragedIn":	10,
 		"showUpWhen":	30

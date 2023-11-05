@@ -538,10 +538,13 @@ export class GameState
 		this.ball.position.y = config.game_canvas.height / 2;
 		this.ball.direction = this.calcRandomDirection(this.instance.getRound());
 
-		this.paddle1.position.y = (config.game_canvas.height - this.paddle1.height) / 2;
-		this.paddle2.position.y = (config.game_canvas.height - this.paddle2.height) / 2;
+		if (this.isExtended === false)
+		{
+			this.paddle1.position.y = (config.game_canvas.height - this.paddle1.height) / 2;
+			this.paddle2.position.y = (config.game_canvas.height - this.paddle2.height) / 2;
+		}
 
-		if (!this.isExtended)
+		if (this.isExtended === false)
 			return;
 
 		this.fox.hasSizeOf = config.fox.minSize;
@@ -554,6 +557,6 @@ export class GameState
 		this.ball2.direction = this.calcRandomDirection(this.instance.getRound());
 
 		//make the game faster each round 
-		this.ball.velocity = config.ball.velocity + (this.instance.getRound() / 5);
+		this.ball.velocity = config.ball.velocity + (this.instance.getRound() / 10);
 	}
 }
