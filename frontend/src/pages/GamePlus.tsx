@@ -96,8 +96,8 @@ interface KeyPresses
 const Game: React.FC = () =>
 {
 	const canvasRef = useRef<HTMLCanvasElement | null>(null);
-	const canvasWidth: number = 1366; //1200
-	const canvasHeight: number = 768; //720
+	const canvasWidth: number = 1200; //1200
+	const canvasHeight: number = 720; //720
 
 	// const [frameRate, setFrameRate] = useState(60);
 	// const thenRef = useRef<number | null>(null);
@@ -2209,7 +2209,7 @@ const Game: React.FC = () =>
 					drawBalls(context, receivedGameState.ball.x, receivedGameState.ball.y, receivedGameState.ball2lock, receivedGameState.ball2.x, receivedGameState.ball2.y); // DONE
 					
 					drawPaddles(context, receivedGameState.paddle1.x, receivedGameState.paddle1.y, receivedGameState.paddle2.x, receivedGameState.paddle2.y); // DONE
-					console.log("FE - fox.isUnlocked: " + receivedGameState.fox.isUnlocked);
+					// console.log("FE - fox.isUnlocked: " + receivedGameState.fox.isUnlocked);
 					drawFox(context, receivedGameState.score1, receivedGameState.score2, receivedGameState.fox.isUnlocked, receivedGameState.fox.isEvil, receivedGameState.fox.isEnraged, receivedGameState.fox.pos.x, receivedGameState.fox.pos.y); // DONE
 					
 					// console.log("FE - main loop - START");
