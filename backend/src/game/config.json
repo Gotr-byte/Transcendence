@@ -17,8 +17,9 @@
     "win": 50,
 	"startTime": 5000,
 	"mmTimeout": 60000,
-	"unlockSecondBallAt": 20,
-	"unlockPopupsAt": 10,
+	"unlockGnomeAt": 5,
+	"unlockSecondBallAt": 40,
+	"unlockPopupsAt": 50,
 	"fox": {
 		"minSize":	30,
 		"maxSize":	45,
@@ -27,6 +28,6 @@
 		"maxVelocity":	6,
 		"maxTimeGoodEvil":	15,
 		"getEnragedIn":	10,
-		"showUpWhen":	5
+		"showUpWhen":	30
 	}
 }

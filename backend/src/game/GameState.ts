@@ -129,6 +129,7 @@ export class GameState
 	public extendedVersion(): void
 	{
 		this.triggerTriggerables();
+		this.controlGnome();
 		this.unlockBall();
 		this.unlockFox();
 		if (this.ball2.isUnlocked)
@@ -153,6 +154,91 @@ export class GameState
 		//do collision logic here and let them bounce
 	}
 
+	public controlGnome(): void
+	{
+		if (this.triggers.triggeredGnome === true)
+		{
+			if (this.fox.isUnlocked)
+			{
+				// 50% chance to swap the first ball with the fox
+				if (Math.floor(Math.random() * 100) % 2 === 0)
+				{
+					let tempX1 = this.ball.position.x;
+					let tempY1 = this.ball.position.y;
+					let tempDirX1 = this.ball.direction.x;
+					let tempDirY1 = this.ball.direction.y;
+
+					let tempX2 = this.fox.position.x;
+					let tempY2 = this.fox.position.y;
+					let tempDirX2 = this.fox.direction.x;
+					let tempDirY2 = this.fox.direction.y;
+
+					this.ball.position.x = tempX2;
+					this.ball.position.y = tempY2;
+					this.ball.direction.x = tempDirX2;
+					this.ball.direction.y = tempDirY2;
+
+					this.fox.position.x = tempX1;
+					this.fox.position.y = tempY1;
+					this.fox.direction.x = tempDirX1;
+					this.fox.direction.y = tempDirY1;
+				}
+			}
+			if (this.ball2.isUnlocked)
+			{
+				// 50% chance to swap the 2 balls
+				if (Math.floor(Math.random() * 100) % 2 === 0)
+				{
+					let tempX1 = this.ball.position.x;
+					let tempY1 = this.ball.position.y;
+					let tempDirX1 = this.ball.direction.x;
+					let tempDirY1 = this.ball.direction.y;
+
+					let tempX2 = this.ball2.position.x;
+					let tempY2 = this.ball2.position.y;
+					let tempDirX2 = this.ball2.direction.x;
+					let tempDirY2 = this.ball2.direction.y;
+
+					this.ball.position.x = tempX2;
+					this.ball.position.y = tempY2;
+					this.ball.direction.x = tempDirX2;
+					this.ball.direction.y = tempDirY2;
+
+					this.ball2.position.x = tempX1;
+					this.ball2.position.y = tempY1;
+					this.ball2.direction.x = tempDirX1;
+					this.ball2.direction.y = tempDirY1;
+				}
+			}
+			if (this.fox.isUnlocked && this.ball2.isUnlocked)
+			{
+				// 50% chance to swap the fox with the second ball
+				if (Math.floor(Math.random() * 100) % 2 === 0)
+				{
+					let tempX1 = this.ball2.position.x;
+					let tempY1 = this.ball2.position.y;
+					let tempDirX1 = this.ball2.direction.x;
+					let tempDirY1 = this.ball2.direction.y;
+
+					let tempX2 = this.fox.position.x;
+					let tempY2 = this.fox.position.y;
+					let tempDirX2 = this.fox.direction.x;
+					let tempDirY2 = this.fox.direction.y;
+
+					this.ball2.position.x = tempX2;
+					this.ball2.position.y = tempY2;
+					this.ball2.direction.x = tempDirX2;
+					this.ball2.direction.y = tempDirY2;
+
+					this.fox.position.x = tempX1;
+					this.fox.position.y = tempY1;
+					this.fox.direction.x = tempDirX1;
+					this.fox.direction.y = tempDirY1;
+				}
+			}
+		}
+	}
+
 	public triggerTriggerables(): void
 	{
 		if (this.instance.getScore1() + this.instance.getScore2() >= config.unlockPopupsAt)
@@ -161,6 +247,13 @@ export class GameState
 				this.triggers.triggeredPopup = true;
 			else
 				this.triggers.triggeredPopup = false;
+		}
+		if (this.instance.getScore1() + this.instance.getScore2() >= config.unlockGnomeAt)
+		{
+			if (Math.floor(Math.random() * 1000) === 666)
+				this.triggers.triggeredGnome = true;
+			else
+				this.triggers.triggeredGnome = false;
 		}
 	}
 
@@ -411,6 +504,6 @@ export class GameState
 		this.ball2.direction = this.calcRandomDirection(this.instance.getRound());
 
 		//make the game faster each round 
-		this.ball.velocity = config.ball.velocity + (this.instance.getRound() / 2);
+		this.ball.velocity = config.ball.velocity + (this.instance.getRound() / 5);
 	}
 }
