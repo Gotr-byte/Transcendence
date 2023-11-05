@@ -65,7 +65,7 @@ interface Gnome
 interface Harkinian
 {
 	pos: Coordinates;
-	// isUnlocked: boolean;
+	isUnlocked: boolean;
 }
 
 interface Fox
@@ -202,8 +202,7 @@ const Game: React.FC = () =>
 	
 	// King Harkinian
 	
-	// var harkinianIsActive = false;
-	const [harkinianIsActive, setHarkinianIsActive] = useState<boolean>(false);
+	var harkinianIsActive = false;
 	var harkinianX = canvasWidth / 2;
 	var harkinianY = canvasHeight / 2;
 	var harkinianWidth = 200;
@@ -249,7 +248,7 @@ const Game: React.FC = () =>
 		ball2: Coordinates;
 		ball2lock: boolean;
 		// gnome: Gnome;
-		harkinian: Harkinian;
+		// harkinian: Harkinian;
 		fox: Fox;
 		triggers: Triggerables;
 	}
@@ -664,8 +663,7 @@ const Game: React.FC = () =>
 	{
 		ctx.font = "20px Sherwood";
 		ctx.fillStyle = "#" + colorCodeRGBScore;
-		ctx.textAlign = 'center'; // Horizontal centering
-		ctx.fillText(`Score P1: ${score1}`, 50, 20);
+		ctx.fillText(`Score P1: ${score1}`, 100, 20);
 		ctx.fillText(`Score P2: ${score2}`, canvasWidth - 100, 20);
 	}
 	
@@ -702,31 +700,31 @@ const Game: React.FC = () =>
 		}
 	}
 	
-	function drawHarkinian(ctx: CanvasRenderingContext2D, score1: number, score2: number, triggered: boolean, posX: number, posY: number): void
-	{
-		if (score1 + score2 >= 15)
-		{
-			if (harkinianIsActive === false)
-			{
-				if (triggered === true) //(Math.floor(Math.random()*1000) === 666)
-				{
-					setHarkinianIsActive(true);
-					videoHarkinianHit.current.play();
-					audioHarkinianOah.current.play();
-					audioHarkinianHit.current.play();
-					//harkinian_hit(Math.floor(Math.random() * 100));
-				}
-			}
-			else if (videoHarkinianHit.current.paused === false)
-			{
-				ctx.drawImage(videoHarkinianHit.current, posX - (harkinianWidth / 2), posY - (harkinianHeight / 2), harkinianWidth, harkinianHeight);
-			}
-			else
-			{
-				setHarkinianIsActive(false);
-			}
-		}
-	}
+	// function drawHarkinian(ctx: CanvasRenderingContext2D): void
+	// {
+	// 	if (lastGameState.harkinian.isUnlocked === true)
+	// 	{
+	// 		if (harkinianIsActive === false)
+	// 		{
+	// 			if (lastGameState.triggerables.triggeredHarkinian === true) //(Math.floor(Math.random()*1000) === 666)
+	// 			{
+	// 				harkinianIsActive = true;
+	// 				videoHarkinianHit.current.play();
+	// 				audioHarkinianOah.current.play();
+	// 				audioHarkinianHit.current.play();
+	// 				//harkinian_hit(Math.floor(Math.random() * 100));
+	// 			}
+	// 		}
+	// 		else if (videoHarkinianHit.current.paused === false)
+	// 		{
+	// 			ctx.drawImage(videoHarkinianHit.current, lastGameState.harkinian.pos.x, lastGameState.harkinian.pos.y, harkinianWidth, harkinianHeight);
+	// 		}
+	// 		else
+	// 		{
+	// 			harkinianIsActive = false;
+	// 		}
+	// 	}
+	// }
 	
 	function drawFox(ctx: CanvasRenderingContext2D, score1: number, score2: number, foxUnlocked: boolean, foxEvil: boolean, foxEnraged: boolean, foxPosX: number, foxPosY: number): void
 	{
@@ -2030,15 +2028,15 @@ const Game: React.FC = () =>
 		// {
 		// 	isUnlocked: false,
 		// },
-		harkinian:
-		{
-			pos:
-			{
-				x: 0,
-				y: 0
-			}
+		// harkinian:
+		// {
+		// 	pos:
+		// 	{
+		// 		x: 0,
+		// 		y: 0
+		// 	},
 		// 	isUnlocked: false
-		},
+		// },
 		fox:
 		{
 			isUnlocked: false,
@@ -2218,7 +2216,7 @@ const Game: React.FC = () =>
 					// console.log("FE - main loop - unlockedGnome: " + unlockedGnome);
 					// console.log("FE - main loop - END");
 					drawGnome(context, receivedGameState.score1, receivedGameState.score2, receivedGameState.triggers.triggeredGnome, receivedGameState.ball.x, receivedGameState.ball.y, receivedGameState.ball2.x, receivedGameState.ball2.y, receivedGameState.fox.pos.x, receivedGameState.fox.pos.y, Date.now());
-					drawHarkinian(context, receivedGameState.score1, receivedGameState.score2, receivedGameState.triggers.triggeredHarkinian, receivedGameState.harkinian.pos.x, receivedGameState.harkinian.pos.y);
+					// drawHarkinian(context);
 					drawScore(context, receivedGameState.score1, receivedGameState.score2); // DONE
 
 					if (receivedGameState.score1 + receivedGameState.score2 >= 35)

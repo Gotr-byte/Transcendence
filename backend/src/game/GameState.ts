@@ -48,11 +48,6 @@ export class Paddle {
 	) {}
 }
 
-export class Harkinian
-{
-	public position:	Coordinate = new Coordinate(config.game_canvas.width / 2, config.game_canvas.height / 2);
-}
-
 export class Triggerables
 {
 	public triggeredGnome:		boolean = false;
@@ -82,7 +77,6 @@ export class GameState
 	public ball:		Ball;
 	public ball2:		Ball;
 	public fox: 		Fox;
-	public harkinian:	Harkinian;
 	public triggers:	Triggerables;
 	public winner:		number;
 
@@ -96,7 +90,6 @@ export class GameState
 		this.ball = new Ball(this.calcRandomDirection(Math.random() * 2), true, config.ball.velocity);
 		this.ball2 = new Ball(this.calcRandomDirection(Math.random() * 2), false, config.ball.velocity);
 		this.fox = new Fox(this.calcRandomDirection(Math.random() * 2));
-		this.harkinian = new Harkinian();
 		this.triggers = new Triggerables();
 		this.winner = 0;
 	}
@@ -137,7 +130,6 @@ export class GameState
 	{
 		this.triggerTriggerables();
 		this.controlGnome();
-		this.controlHarkinian();
 		this.unlockBall();
 		this.unlockFox();
 		if (this.ball2.isUnlocked)
@@ -247,63 +239,21 @@ export class GameState
 		}
 	}
 
-	public controlHarkinian(): void
-	{
-		if (this.triggers.triggeredHarkinian === true)
-		{
-			let mod: number = 1;
-			if (this.fox.isUnlocked)
-				mod++;
-			if (this.ball2.isUnlocked)
-				mod++;
-
-			let selector: number = Math.floor(Math.random() * 100) % mod;
-			if (selector === 0)
-			{
-				this.harkinian.position.x = this.ball.position.x;
-				this.harkinian.position.y = this.ball.position.y;
-				this.ball.direction.x = -(this.ball.direction.x);
-				this.ball.direction.y = -(this.ball.direction.y);
-			}
-			if (selector === 1)
-			{
-				this.harkinian.position.x = this.fox.position.x;
-				this.harkinian.position.y = this.fox.position.y;
-				this.fox.direction.x = -(this.fox.direction.x);
-				this.fox.direction.y = -(this.fox.direction.y);
-			}
-			if (selector === 2)
-			{
-				this.harkinian.position.x = this.ball2.position.x;
-				this.harkinian.position.y = this.ball2.position.y;
-				this.ball2.direction.x = -(this.ball2.direction.x);
-				this.ball2.direction.y = -(this.ball2.direction.y);
-			}
-		}
-	}
-
 	public triggerTriggerables(): void
 	{
-		if (this.instance.getScore1() + this.instance.getScore2() >= config.unlockGnomeAt)
-		{
-			if (Math.floor(Math.random() * 666) === 333)
-				this.triggers.triggeredGnome = true;
-			else
-				this.triggers.triggeredGnome = false;
-		}
-		if (this.instance.getScore1() + this.instance.getScore2() >= config.unlockHarkinianAt)
-		{
-			if (Math.floor(Math.random() * 666) === 333)
-				this.triggers.triggeredHarkinian = true;
-			else
-				this.triggers.triggeredHarkinian = false;
-		}
 		if (this.instance.getScore1() + this.instance.getScore2() >= config.unlockPopupsAt)
 		{
-			if (Math.floor(Math.random() * 666) === 333)
+			if (Math.floor(Math.random() * 1000) === 666)
 				this.triggers.triggeredPopup = true;
 			else
 				this.triggers.triggeredPopup = false;
+		}
+		if (this.instance.getScore1() + this.instance.getScore2() >= config.unlockGnomeAt)
+		{
+			if (Math.floor(Math.random() * 1000) === 666)
+				this.triggers.triggeredGnome = true;
+			else
+				this.triggers.triggeredGnome = false;
 		}
 	}
 
