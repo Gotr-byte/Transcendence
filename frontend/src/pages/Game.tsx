@@ -29,8 +29,8 @@ const Game: React.FC = () => {
   const [gameState, setGameState] = useState<GameState | null>(null);
   const [resizingFactor, setResizingFactor] = useState<number>(1);
 
-  var backendWidth: number = 1024;
-  var backendHeight: number = 576;
+  var backendWidth: number = 1366;
+  var backendHeight: number = 768;
 
   const updateResizingFactor = () => {
 	if (window.innerWidth >= 1366 && window.innerHeight >= 768)
@@ -163,7 +163,7 @@ const Game: React.FC = () => {
         ctx.fillText(gameState.score1 + " : " + gameState.score2, canvas.width / 2, canvas.height / 2);
         // Draw the ball in white
         ctx.beginPath();
-        ctx.arc(gameState.ball.x * resizingFactor, gameState.ball.y * resizingFactor, 15 * resizingFactor, 0, 2 * Math.PI * resizingFactor); // 15 is the radius of the ball
+        ctx.arc(gameState.ball.x * resizingFactor, gameState.ball.y * resizingFactor, 15 * resizingFactor, 0, 2 * Math.PI); // 15 is the radius of the ball
         ctx.fillStyle = "white";
         ctx.fill();
         ctx.closePath();

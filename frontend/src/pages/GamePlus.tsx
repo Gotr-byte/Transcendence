@@ -5,14 +5,14 @@ import JoinRandom from '../components/Game/JoinRandom';
 import JoinRandomPlus from '../components/Game/JoinRandomPlus';
 import ReceivedGameData from '../components/Game/ReceiveGameData';
 
-// import musicBavariaSrc from '../../public/assets/Music_Meanwhile_in_Bavaria.mp3';
-// import musicMushroomKingdomSrc from '../../public/assets/Music_Mushroom_Kingdom.mp3';
-// import musicNumberOneSrc from '../../public/assets/Music_We_Are_Number_One.mp3';
-// import musicSpaceDyeVestSrc from '../../public/assets/Music_Space_Dye_Vest.mp3';
-// import musicStubbSrc from '../../public/assets/Music_Stubb_a_Dubb.mp3';
+import musicBavariaSrc from '../../public/assets/Music_Meanwhile_in_Bavaria.mp3';
+import musicMushroomKingdomSrc from '../../public/assets/Music_Mushroom_Kingdom.mp3';
+import musicNumberOneSrc from '../../public/assets/Music_We_Are_Number_One.mp3';
+import musicSpaceDyeVestSrc from '../../public/assets/Music_Space_Dye_Vest.mp3';
+import musicStubbSrc from '../../public/assets/Music_Stubb_a_Dubb.mp3';
 
-// import videoMcrolldSrc from '../../public/assets/Video_Mcrolld.mp4';
-// import videoMcrolldReverseSrc from '../../public/assets/Video_Mcrolld_reverse.mp4';
+import videoMcrolldSrc from '../../public/assets/Video_Mcrolld.mp4';
+import videoMcrolldReverseSrc from '../../public/assets/Video_Mcrolld_reverse.mp4';
 
 import audioGnomeSrc from '../../public/assets/SoundEffect_Gnome.mp3';
 import imageGnomeSrc from '../../public/assets/Image_Gnome.png';
@@ -100,8 +100,8 @@ const Game: React.FC = () =>
 	// const canvasHeight: number = 576; //720
 	const [resizingFactor, setResizingFactor] = useState<number>(1);
   
-	var backendWidth: number = 1024;
-	var backendHeight: number = 576;
+	var backendWidth: number = 1366;
+	var backendHeight: number = 768;
   
 	const updateResizingFactor = () => {
 	  if (window.innerWidth >= 1366 && window.innerHeight >= 768)
@@ -591,34 +591,34 @@ const Game: React.FC = () =>
 		{
 			videoHarkinianHit.current.src = videoHarkinianHitSrc;
 		}
-		// if (musicBavaria.current)
-		// {
-		// 	musicBavaria.current.src = musicBavariaSrc;
-		// }
-		// if (musicMushroomKingdom.current)
-		// {
-		// 	musicMushroomKingdom.current.src = musicMushroomKingdomSrc;
-		// }
-		// if (musicNumberOne.current)
-		// {
-		// 	musicNumberOne.current.src = musicNumberOneSrc;
-		// }
-		// if (musicSpaceDyeVest.current)
-		// {
-		// 	musicSpaceDyeVest.current.src = musicSpaceDyeVestSrc;
-		// }
-		// if (musicStubb.current)
-		// {
-		// 	musicStubb.current.src = musicStubbSrc;
-		// }
-		// if (videoMcrolld.current)
-		// {
-		// 	  videoMcrolld.current.src = videoMcrolldSrc;
-		// }
-		// if (videoMcrolldReverse.current)
-		// {
-		// 	  videoMcrolldReverse.current.src = videoMcrolldReverseSrc;
-		// }
+		if (musicBavaria.current)
+		{
+			musicBavaria.current.src = musicBavariaSrc;
+		}
+		if (musicMushroomKingdom.current)
+		{
+			musicMushroomKingdom.current.src = musicMushroomKingdomSrc;
+		}
+		if (musicNumberOne.current)
+		{
+			musicNumberOne.current.src = musicNumberOneSrc;
+		}
+		if (musicSpaceDyeVest.current)
+		{
+			musicSpaceDyeVest.current.src = musicSpaceDyeVestSrc;
+		}
+		if (musicStubb.current)
+		{
+			musicStubb.current.src = musicStubbSrc;
+		}
+		if (videoMcrolld.current)
+		{
+			  videoMcrolld.current.src = videoMcrolldSrc;
+		}
+		if (videoMcrolldReverse.current)
+		{
+			  videoMcrolldReverse.current.src = videoMcrolldReverseSrc;
+		}
 	}, []);
 
 	function randomizeColors(): void
@@ -1562,11 +1562,11 @@ const Game: React.FC = () =>
 			}
 			if (mcrolldQueued)
 			{
-				ctx.drawImage(videoMcrolldReverse.current, (canvasRef.current.width - 1024) / 2, (canvasRef.current.height - 768) / 2, 1024 * resizingFactor, 768 * resizingFactor);
+				ctx.drawImage(videoMcrolldReverse.current, (canvasRef.current.width - 1024 * resizingFactor) / 2, (canvasRef.current.height - 768 * resizingFactor) / 2, 1024 * resizingFactor, 768 * resizingFactor);
 			}
 			else if (mcrolldReverseQueued)
 			{
-				ctx.drawImage(videoMcrolld.current, (canvasRef.current.width - 1024) / 2, (canvasRef.current.height - 768) / 2, 1024 * resizingFactor, 768 * resizingFactor);
+				ctx.drawImage(videoMcrolld.current, (canvasRef.current.width - 1024 * resizingFactor) / 2, (canvasRef.current.height - 768 * resizingFactor) / 2, 1024 * resizingFactor, 768 * resizingFactor);
 			}
 			// ctx.drawImage(videoToDraw, (canvasWidth - 1024) / 2, (canvasHeight - 768) / 2, 1024, 768);
 		}
@@ -2224,7 +2224,7 @@ const Game: React.FC = () =>
 	
 					drawBackground(context); // DONE
 					
-					// mcrolld(context, receivedGameState.score1, receivedGameState.score2);
+					mcrolld(context, receivedGameState.score1, receivedGameState.score2);
 
 					if (receivedGameState.score1 + receivedGameState.score2 < 35)
 					{
@@ -2254,7 +2254,7 @@ const Game: React.FC = () =>
 					// updateVariables();
 			
 					// collisionCheck();
-					// control_music(receivedGameState.score1, receivedGameState.score2); // DONE
+					control_music(receivedGameState.score1, receivedGameState.score2); // DONE
 					control_RGB(); // Random RGB from collisions DEACTIVATED
 			
 					// movePaddles();
@@ -2380,7 +2380,7 @@ const Game: React.FC = () =>
 			<audio ref={audioFoxEnrage}>
         		<source src={audioFoxEnrageSrc} type="audio/mp3"/>
       		</audio>
-			{/* <audio ref={musicBavaria}>
+			<audio ref={musicBavaria}>
         		<source src={musicBavariaSrc} type="audio/mp3"/>
       		</audio>
 			<audio ref={musicMushroomKingdom}>
@@ -2400,7 +2400,7 @@ const Game: React.FC = () =>
       		</video>
 			  <video ref={videoMcrolldReverse} style={{ display: 'none' }}>
         		<source src={videoMcrolldReverseSrc} type="video/mp4"/>
-      		</video> */}
+      		</video>
 			<video ref={videoHarkinianHit} style={{ display: 'none' }}>
         		<source src={videoHarkinianHitSrc} type="video/mp4"/>
       		</video>

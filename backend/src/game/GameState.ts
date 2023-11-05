@@ -86,6 +86,7 @@ export class GameState
 	public triggers:	Triggerables;
 	public winner:		number;
 	public roundStart:	number;
+	public speedIncCnt: number;
 
 	constructor(
 		private isExtended: boolean,
@@ -101,6 +102,7 @@ export class GameState
 		this.triggers = new Triggerables();
 		this.winner = 0;
 		this.roundStart = Date.now();
+		this.speedIncCnt = 0;
 	}
 
 	public getGameInstance(): GameInstance
@@ -137,7 +139,7 @@ export class GameState
 
 	public extendedVersion(): void
 	{
-		// this.adjustBallVelocityDuringRound();
+		this.adjustBallVelocityDuringRound();
 		this.triggerTriggerables();
 		this.controlGnome();
 		this.controlHarkinian();
@@ -161,8 +163,11 @@ export class GameState
 	{
 		let timeNow: number = Date.now();
 
-		if (timeNow - this.roundStart >= 1000)
-			this.ball.velocity += 0.01;
+		if (timeNow - this.roundStart >= 1000 * this.speedIncCnt)
+		{
+			this.ball.velocity += 0.1;
+			this.speedIncCnt++;
+		}
 	}
 
 	public foxBallCollission(): void
@@ -558,8 +563,9 @@ export class GameState
 		if (this.isExtended === false)
 			return;
 
-		// this.ball.velocity -= ((Date.now() - this.roundStart) / 10000);
+		this.ball.velocity -= (this.speedIncCnt * 0.1);
 		this.roundStart = Date.now();
+		this.speedIncCnt = 0;
 		this.fox.hasSizeOf = config.fox.minSize;
 		this.fox.isEnraged = false;
 		this.fox.isEvil = false;
@@ -570,6 +576,6 @@ export class GameState
 		this.ball2.direction = this.calcRandomDirection(this.instance.getRound());
 
 		//make the game faster each round 
-		this.ball.velocity = config.ball.velocity + (this.instance.getRound() / 10);
+		this.ball.velocity = config.ball.velocity + (this.instance.getRound() / 20);
 	}
 }
