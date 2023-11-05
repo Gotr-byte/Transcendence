@@ -1,7 +1,7 @@
 {
 	"game_canvas": {
-		"width": 1200,
-		"height": 720
+		"width": 1024,
+		"height": 576
 	},
 	"paddle": {
 		"buffer": 0,
@@ -14,7 +14,7 @@
 		"velocity": 5,
 		"radius": 15
 	},
-    "win": 5,
+    "win": 3,
 	"startTime": 5000,
 	"mmTimeout": 60000,
 	"unlockGnomeAt": 5,
