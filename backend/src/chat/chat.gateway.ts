@@ -47,9 +47,9 @@ export class ChatGateway implements OnGatewayConnection {
     // }
 
     // THIS IS THE VALIDATION CHECK FOR THE ACCESSING USER
-    const userId = this.socketService.isValidUser(client);
+    const validUser = this.socketService.isValidUser(client);
 
-    if (!userId) {
+    if (!validUser) {
       console.log('Emitting error and disconnecting'); // Check if this block is executed
       client.emit('error', 'Not authenticated');
       client.shouldHandleDisconnect = false;
@@ -57,7 +57,7 @@ export class ChatGateway implements OnGatewayConnection {
       return;
     }
 
-    const rooms = await this.chatService.handleUserConnection(+userId);
+    const rooms = await this.chatService.handleUserConnection(+validUser.id);
     rooms.forEach((room) => client.join(room));
   }
 

@@ -42,9 +42,9 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     // }
 
     // THIS IS THE VALIDATION CHECK FOR THE ACCESSING USER
-    const userId = this.socketService.isValidUser(client);
+    const validUser = this.socketService.isValidUser(client);
 
-    if (!userId) {
+    if (!validUser) {
       console.log('Emitting error and disconnecting'); // Check if this block is executed
       client.emit('error', 'Not authenticated');
       client.shouldHandleDisconnect = false;
@@ -52,7 +52,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
       return;
     }
 
-    this.socketService.registerOnlineUser(+userId, client);
+    this.socketService.registerOnlineUser(+validUser.id, client);
     console.info(`Client connected with ID: ${client.id}`);
   }
 
