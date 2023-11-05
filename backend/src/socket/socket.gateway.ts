@@ -19,7 +19,7 @@ declare module "socket.io" {
 }
 
 @UseFilters(new WsExceptionFilter())
-// @UseGuards(WsAuthGuard)
+@UseGuards(WsAuthGuard)
 @WebSocketGateway({
   cors: {
     origin: [process.env.FRONTEND_URL!, process.env.FRONTEND_URL_NO_PORT!],
@@ -31,27 +31,28 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private readonly socketService: SocketService) {}
 
   async handleConnection(@ConnectedSocket() client: Socket) {
-    let userId = (client.request as any)?.session?.passport?.user?.id;
-    if (!userId) {
-      userId = client.handshake.query.userId as string;
-    }
-    if (!userId) {
-      client.shouldHandleDisconnect = false
-      client.disconnect();
-      return;
-    }
-
-    // THIS IS THE VALIDATION CHECK FOR THE ACCESSING USER
-    // const validUser = this.socketService.getValidUser(client);
-
-    // if (!validUser) {
-    //   console.log('Emitting error and disconnecting'); // Check if this block is executed
-    //   client.emit('error', 'Not authenticated');
+    // let userId = (client.request as any)?.session?.passport?.user?.id;
+    // if (!userId) {
+    //   userId = client.handshake.query.userId as string;
+    // }
+    // if (!userId) {
+    //   client.shouldHandleDisconnect = false
     //   client.disconnect();
     //   return;
     // }
 
-    this.socketService.registerOnlineUser(+userId, client);
+    // THIS IS THE VALIDATION CHECK FOR THE ACCESSING USER
+    const validUser = this.socketService.isValidUser(client);
+
+    if (!validUser) {
+      console.log('Emitting error and disconnecting'); // Check if this block is executed
+      client.emit('error', 'Not authenticated');
+      client.shouldHandleDisconnect = false;
+      client.disconnect();
+      return;
+    }
+
+    this.socketService.registerOnlineUser(+validUser.id, client);
     console.info(`Client connected with ID: ${client.id}`);
   }
 

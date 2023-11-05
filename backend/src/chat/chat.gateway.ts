@@ -17,7 +17,7 @@ import { WsExceptionFilter } from 'src/filters/ws-exception-filter';
 import { ChatSharedService } from './shared/chat-shared.service';
 import { ChannelUserRestrictionTypes } from '@prisma/client';
 
-// @UseGuards(WsAuthGuard)
+@UseGuards(WsAuthGuard)
 @UseFilters(new WsExceptionFilter())
 @UsePipes(new WSValidationPipe())
 @WebSocketGateway({
@@ -31,31 +31,33 @@ export class ChatGateway implements OnGatewayConnection {
 
   constructor(
     private readonly chatService: ChatService, // ... Other services
-    private readonly chatSharedService: ChatSharedService, // ... Other services
+    private readonly chatSharedService: ChatSharedService,
+    private readonly socketService: SocketService // ... Other services
   ) {}
 
   async handleConnection(@ConnectedSocket() client: Socket): Promise<void> {
-    let userId = (client.request as any)?.session?.passport?.user?.id;
-    if (!userId) {
-      userId = client.handshake.query.userId as string;
-    }
-    if (!userId) {
+    // let userId = (client.request as any)?.session?.passport?.user?.id;
+    // if (!userId) {
+    //   userId = client.handshake.query.userId as string;
+    // }
+    // if (!userId) {
+    //   client.shouldHandleDisconnect = false;
+    //   client.disconnect();
+    //   return;
+    // }
+
+    // THIS IS THE VALIDATION CHECK FOR THE ACCESSING USER
+    const validUser = this.socketService.isValidUser(client);
+
+    if (!validUser) {
+      console.log('Emitting error and disconnecting'); // Check if this block is executed
+      client.emit('error', 'Not authenticated');
       client.shouldHandleDisconnect = false;
       client.disconnect();
       return;
     }
 
-    // THIS IS THE VALIDATION CHECK FOR THE ACCESSING USER
-    // const validUser = this.socketService.getValidUser(client);
-
-    // if (!validUser) {
-    //   console.log('Emitting error and disconnecting'); // Check if this block is executed
-    //   client.emit('error', 'Not authenticated');
-    //   client.disconnect();
-    //   return;
-    // }
-
-    const rooms = await this.chatService.handleUserConnection(+userId);
+    const rooms = await this.chatService.handleUserConnection(+validUser.id);
     rooms.forEach((room) => client.join(room));
   }
 

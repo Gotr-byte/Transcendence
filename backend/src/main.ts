@@ -25,15 +25,15 @@ async function bootstrap() {
   app.use(passport.session());
   app.useWebSocketAdapter(new CustomWsAdapter(sessionMiddleware, app));
   // Swagger configuration
-  const config = new DocumentBuilder()
-    .setTitle('Transcendence API Testing Ground')
-    .setDescription('API description + testing ground for Transcendence')
-    .setVersion('1.0')
-    .addTag('api')
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  // const config = new DocumentBuilder()
+  //   .setTitle('Transcendence API Testing Ground')
+  //   .setDescription('API description + testing ground for Transcendence')
+  //   .setVersion('1.0')
+  //   .addTag('api')
+  //   .addBearerAuth()
+  //   .build();
+  // const document = SwaggerModule.createDocument(app, config);
+  // SwaggerModule.setup('api', app, document);
 
   app.useGlobalFilters(new HttpExceptionFilter());
   await app.listen(process.env.BACKEND_PORT || 4000);
