@@ -1,11 +1,6 @@
 import { WebsocketContext } from "../Context/WebsocketContexts";
 import {Button} from "@chakra-ui/react"
 import {useContext, useState, useEffect} from "react"
-// import SendDirectMessageProps from "../Chat/SendDirectMessage";
-
-type MatchmakingPayload = {
-  content: string;
-};
 
 export const JoinRandom: React.FC = () => {
 
