@@ -17,6 +17,13 @@ interface GameState {
   scoreTwo: number;
 }
 
+interface KeyPresses
+{
+	keyArrowUp: boolean;
+	keyArrowDown: boolean;
+	keySpace: boolean;
+}
+
 const Game: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [gameState, setGameState] = useState<GameState | null>(null);
@@ -35,66 +42,143 @@ const Game: React.FC = () => {
     });
   }, [socketIo]);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key == "ArrowUp" || event.key == "ArrowDown") {
-        console.log(event.key);
-        socketIo.emit("keypress", event.key);
-      }
-    };
+  var KeysPressed: KeyPresses =
+	{
+		keyArrowUp: false,
+		keyArrowDown: false,
+		keySpace: false
+	}
 
-    document.addEventListener("keydown", handleKeyDown);
+	var keyString: string = "";
+	
+	useEffect(() => {
+		// Function to handle key down event
+		const handleKeyDown = (event: KeyboardEvent) =>
+		{
+			if (event.key === 'ArrowUp' || event.key === 'Up')
+			{
+				KeysPressed.keyArrowUp = true;
+			}
+			if (event.key === 'ArrowDown' || event.key === 'Down')
+			{
+				KeysPressed.keyArrowDown = true;
+			}
+			if (event.key === 'Space' || event.key === ' ')
+			{
+				KeysPressed.keySpace = true;
+			}
+			
+			keyString = "";
 
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [socketIo]);
+			if (KeysPressed.keyArrowUp === true)
+			{
+				keyString = "ARROWUP";
+			}
+			else if (KeysPressed.keyArrowDown === true)
+			{
+				keyString = "ARROWDOWN";
+			}
+			if (KeysPressed.keySpace === true && keyString != "")
+			{
+				keyString = keyString + "+SPACE";
+			}
+			
+			socketIo.emit('keypress', keyString);
+		};
+	
+		// Function to handle key up event
+		const handleKeyUp = (event: KeyboardEvent) =>
+		{
+			if (event.key === 'ArrowUp' || event.key === 'Up')
+			{
+				KeysPressed.keyArrowUp = false;
+			}
+			if (event.key === 'ArrowDown' || event.key === 'Down')
+			{
+				KeysPressed.keyArrowDown = false;
+			}
+			if (event.key === 'Space' || event.key === ' ')
+			{
+				KeysPressed.keySpace = false;
+			}
+			
+			keyString = "";
+
+			if (KeysPressed.keyArrowUp === true)
+			{
+				keyString = "ARROWUP";
+			}
+			else if (KeysPressed.keyArrowDown === true)
+			{
+				keyString = "ARROWDOWN";
+			}
+			if (KeysPressed.keySpace === true && keyString != "")
+			{
+				keyString = keyString + "+SPACE";
+			}
+
+			socketIo.emit('keypress', keyString);
+		};
+	
+		// Attach event listeners when the component mounts
+		document.addEventListener('keydown', handleKeyDown);
+		document.addEventListener('keyup', handleKeyUp);
+	
+		// Clean up event listeners when the component unmounts
+		return () => {
+			document.removeEventListener('keydown', handleKeyDown);
+			document.removeEventListener('keyup', handleKeyUp);
+		};
+	
+	}, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (canvas && gameState) {
       const ctx = canvas.getContext("2d");
       if (ctx) {
-        // Fill the canvas with white color
-        ctx.fillStyle = "white";
+        // Fill the canvas with black color
+        ctx.fillStyle = "black";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-        //paddles paddles are blue
-        ctx.fillStyle = "blue";
+        // Paddles are white
+        ctx.fillStyle = "white";
         ctx.beginPath();
-        ctx.fillRect(gameState.paddle1.x, gameState.paddle1.y, 50, 240);
+        ctx.fillRect(gameState.paddle1.x, gameState.paddle1.y, 10, 70);
         ctx.closePath();
         ctx.beginPath();
-        ctx.fillRect(gameState.paddle2.x, gameState.paddle2.y, 50, 240);
+        ctx.fillRect(gameState.paddle2.x, gameState.paddle2.y, 10, 70);
         ctx.closePath();
         ctx.font = "48px serif";
-        ctx.fillText(gameState.score1 + " : " + gameState.score2, 500, 360);
-        // Draw the ball in red
+		ctx.textAlign = 'center'; // Horizontal centering
+		ctx.textBaseline = 'middle'; // Vertical centering
+        ctx.fillText(gameState.score1 + " : " + gameState.score2, canvas.width / 2, canvas.height / 2);
+        // Draw the ball in white
         ctx.beginPath();
-        ctx.arc(gameState.ball.x, gameState.ball.y, 10, 0, 2 * Math.PI); // 10 is the radius of the ball
-        ctx.fillStyle = "red";
+        ctx.arc(gameState.ball.x, gameState.ball.y, 15, 0, 2 * Math.PI); // 10 is the radius of the ball
+        ctx.fillStyle = "white";
         ctx.fill();
         ctx.closePath();
         // Draw the  second ball in yellow
-        if (gameState.ball2lock) {
-          ctx.beginPath();
-          ctx.arc(gameState.ball2.x, gameState.ball2.y, 10, 0, 2 * Math.PI); // 10 is the radius of the ball
-          ctx.fillStyle = "yellow";
-          ctx.fill();
-          ctx.closePath();
-        }
-        if (gameState.fox.isUnlocked) {
-          ctx.beginPath();
-          ctx.arc(
-            gameState.fox.pos.x,
-            gameState.fox.pos.y,
-            gameState.fox.hasSizeOf,
-            0,
-            2 * Math.PI
-          ); // 10 is the radius of the ball
-          ctx.fillStyle = "orange";
-          ctx.fill();
-          ctx.closePath();
-        }
+        // if (gameState.ball2lock) {
+        //   ctx.beginPath();
+        //   ctx.arc(gameState.ball2.x, gameState.ball2.y, 15, 0, 2 * Math.PI); // 10 is the radius of the ball
+        //   ctx.fillStyle = "yellow";
+        //   ctx.fill();
+        //   ctx.closePath();
+        // }
+        // if (gameState.fox.isUnlocked) {
+        //   ctx.beginPath();
+        //   ctx.arc(
+        //     gameState.fox.pos.x,
+        //     gameState.fox.pos.y,
+        //     gameState.fox.hasSizeOf,
+        //     0,
+        //     2 * Math.PI
+        //   ); // 10 is the radius of the ball
+        //   ctx.fillStyle = "orange";
+        //   ctx.fill();
+        //   ctx.closePath();
+        // }
       }
     }
   }, [gameState]);
