@@ -2,6 +2,7 @@ import {
   ConnectedSocket,
   MessageBody,
   OnGatewayDisconnect,
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer,
@@ -19,7 +20,7 @@ import * as config from './config.json';
   cors: { origin: [process.env.FRONTEND_URL!, process.env.FRONTEND_URL_NO_PORT!],
   },
 })
-export class GameGateway implements OnGatewayDisconnect {
+export class GameGateway implements OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer() server: Server;
   constructor(
     private readonly gameService: GameService,
@@ -27,13 +28,12 @@ export class GameGateway implements OnGatewayDisconnect {
     private readonly userService: UserService,
   ) {}
 
-  //wait only 1 minute for matching partner
-  async resetWaitingUser(): Promise<void>
+  //wait only mmTimeout milliseconds for matching partner
+  afterInit()
   {
     setInterval( () => {
-      console.log("TimeoutQueue");
       this.gameService.timoutQueue();
-    }, 500);
+    }, 1000);
   }
 
   @SubscribeMessage('match-random')

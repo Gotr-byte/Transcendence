@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useContext } from "react";
+import React, { useRef, useEffect, useState, useContext } from "react";
 import { WebsocketContext } from "../components/Context/WebsocketContexts";
 import JoinRandom from "../components/Game/JoinRandom";
 import { Box } from "@chakra-ui/react";
@@ -63,10 +63,6 @@ const Game: React.FC = () => {
 			{
 				KeysPressed.keyArrowDown = true;
 			}
-			if (event.key === 'Space' || event.key === ' ')
-			{
-				KeysPressed.keySpace = true;
-			}
 			
 			keyString = "";
 
@@ -77,10 +73,6 @@ const Game: React.FC = () => {
 			else if (KeysPressed.keyArrowDown === true)
 			{
 				keyString = "ARROWDOWN";
-			}
-			if (KeysPressed.keySpace === true && keyString != "")
-			{
-				keyString = keyString + "+SPACE";
 			}
 			
 			socketIo.emit('keypress', keyString);
@@ -97,10 +89,6 @@ const Game: React.FC = () => {
 			{
 				KeysPressed.keyArrowDown = false;
 			}
-			if (event.key === 'Space' || event.key === ' ')
-			{
-				KeysPressed.keySpace = false;
-			}
 			
 			keyString = "";
 
@@ -111,10 +99,6 @@ const Game: React.FC = () => {
 			else if (KeysPressed.keyArrowDown === true)
 			{
 				keyString = "ARROWDOWN";
-			}
-			if (KeysPressed.keySpace === true && keyString != "")
-			{
-				keyString = keyString + "+SPACE";
 			}
 
 			socketIo.emit('keypress', keyString);

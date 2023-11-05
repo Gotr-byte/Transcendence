@@ -66,8 +66,20 @@ export class UserService {
     user: User,
     dto: ChangeUserDto | ChangeUserPropsDto,
   ): Promise<ShowLoggedUserDto> {
+    this.updateUserViaId(user.id, dto);
     const updatedUser = await this.prisma.user.update({
       where: { id: user.id },
+      data: { ...dto },
+    });
+    return updatedUser;
+  }
+
+  async updateUserViaId(
+    userId: number,
+    dto: ChangeUserDto | ChangeUserPropsDto,
+  ): Promise<ShowLoggedUserDto> {
+    const updatedUser = await this.prisma.user.update({
+      where: { id: userId },
       data: { ...dto },
     });
     return ShowLoggedUserDto.from(updatedUser);

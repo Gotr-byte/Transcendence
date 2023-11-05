@@ -71,9 +71,9 @@ export class GameInstance
 
 	public whoWon(): number
 	{
-		if (this.player1Score > config.win)
+		if (this.player1Score >= config.win)
 			return 1;
-		if (this.player2Score > config.win)
+		if (this.player2Score >= config.win)
 			return 2;
 		return 0;
 	}
