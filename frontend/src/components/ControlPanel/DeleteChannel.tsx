@@ -43,6 +43,7 @@ const DeleteChannel: React.FC = () => {
 				throw new Error(`HTTP error! status: ${response.status}`);
 			}
 			alert(`Channel Id: ${id} successfully deleted`);
+			window.location.reload();
 			setId(0);
 		} catch (error) {
 			console.error(`There was a problem deleting the channel ${id}`, error);

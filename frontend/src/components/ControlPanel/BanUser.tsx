@@ -32,6 +32,7 @@ const BanUser: React.FC = () => {
       }
       const data = await response.json();
       console.log("Channel created:", data);
+			window.location.reload();
     } catch (error) {
       console.error("There was a problem enabling restriction", error);
     }

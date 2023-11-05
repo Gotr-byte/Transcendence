@@ -33,7 +33,7 @@ const BlockUser: React.FC = () => {
 			}
 
 			const data = await response.text();
-			console.log("Friend added:", data);
+			alert(`You blocked ${username}`);
 		} catch (error) {
 			console.error("There was a problem adding the friend:", error);
 		}

@@ -56,6 +56,8 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   async handleDisconnect(@ConnectedSocket() client: Socket) {
+    console.log(client.id);
+    console.log(client.shouldHandleDisconnect);
     if (client.shouldHandleDisconnect === false)
       return;
     await this.socketService.disconnectUser(client.id);
