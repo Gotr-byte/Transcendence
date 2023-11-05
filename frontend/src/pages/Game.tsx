@@ -10,11 +10,11 @@ interface Coordinates {
 }
 
 interface GameState {
-  paddleOne: Coordinates;
-  paddleTwo: Coordinates;
+  paddle1: Coordinates;
+  paddle2: Coordinates;
   ball: Coordinates;
-  scoreOne: number;
-  scoreTwo: number;
+  score1: number;
+  score2: number;
 }
 
 interface KeyPresses
