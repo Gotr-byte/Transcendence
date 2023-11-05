@@ -15,13 +15,7 @@ import { User } from '@prisma/client';
 import { GameInstance } from './GameInstance';
 import { GameState } from './GameState';
 import * as config from './config.json';
-import { UseFilters, UseGuards } from '@nestjs/common';
-import { WsExceptionFilter } from 'src/filters/ws-exception-filter';
-import { WsAuthGuard } from 'src/auth/guards/socket-guards';
 
-
-@UseFilters(new WsExceptionFilter())
-@UseGuards(WsAuthGuard)
 @WebSocketGateway({
   cors: { origin: [process.env.FRONTEND_URL!, process.env.FRONTEND_URL_NO_PORT!],
   },

@@ -71,4 +71,6 @@ export class SocketService {
     }
     return socketIds;
   }
+
+  getSocket
 }
