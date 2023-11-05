@@ -48,20 +48,20 @@ export default function Profile() {
         <TabPanel>
           <UpdateUser />
           <FileUpload/>
-          <AddFriend />
-          <DeleteFriend />
-          <CreateChannel />
-          <Spacer />
-          <EditChannel />
-          <Spacer />
-          <DeleteChannel />
-          <PrivateChannelInvitation />
-          <BlockUser />
-          <UnblockUser />
-          <DesignateAdmin/>
-          <BanUserTemp/> 
-          <LiftRestrictions/>
-          <KickUser />
+          {/* <AddFriend /> */}
+          {/* <DeleteFriend /> */}
+          {/* <CreateChannel /> */}
+          {/* <Spacer /> */}
+          {/* <EditChannel /> */}
+          {/* <Spacer /> */}
+          {/* <DeleteChannel /> */}
+          {/* <PrivateChannelInvitation /> */}
+          {/* <BlockUser /> */}
+          {/* <UnblockUser /> */}
+          {/* <DesignateAdmin/> */}
+          {/* <BanUserTemp/>  */}
+          {/* <LiftRestrictions/> */}
+          {/* <KickUser /> */}
           <TwoFactorAuthSetup/>
         </TabPanel>
         <TabPanel>

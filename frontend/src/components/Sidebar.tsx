@@ -110,6 +110,7 @@ export const Sidebar = () => {
                 console.log("Game Over");
                 onClose();
                 window.location.href = "/chat";
+                // navigate("/chat")
               }}
             >
               Ok
@@ -140,6 +141,7 @@ export const Sidebar = () => {
               console.log("Welcome received");
               onClose();
               window.location.href = "/profile";
+              //navigate("/profile");
             }}
           >
             Ok
