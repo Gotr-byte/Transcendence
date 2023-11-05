@@ -51,13 +51,11 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
     //   return;
     // }
 
-    this.socketService.registerOnlineUser(+userId, client.id);
+    this.socketService.registerOnlineUser(+userId, client);
     console.info(`Client connected with ID: ${client.id}`);
   }
 
   async handleDisconnect(@ConnectedSocket() client: Socket) {
-    console.log(client.id);
-    console.log(client.shouldHandleDisconnect);
     if (client.shouldHandleDisconnect === false)
       return;
     await this.socketService.disconnectUser(client.id);

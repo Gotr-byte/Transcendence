@@ -10,11 +10,15 @@ export class SocketService {
 
   constructor(private readonly userService: UserService) {}
 
-  async registerOnlineUser(userId: number, socketId: string): Promise<void> {
-    this.userSocketMap.set(socketId, userId);
+  async registerOnlineUser(userId: number, client: Socket): Promise<void> {
+    this.userSocketMap.set(client.id, userId);
     const user = await this.userService.getUserById(+userId);
     await this.userService.updateUser(user, { isOnline: true });
     console.log(this.userSocketMap); //debug
+    if (!user.achievements.includes('WELCOME')) {
+      await this.userService.addAchievement(user.id, 'WELCOME');
+      client.emit('welcome', `Welcome ${user.username}!`)
+    }
   }
 
   async disconnectUser(socketId: string): Promise<void> {
