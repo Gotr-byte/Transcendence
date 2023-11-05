@@ -30,16 +30,19 @@ export default function Chat() {
       <TabPanels>
         <TabPanel>
           <ChatUI />
+          <p>To join a room pres + button, and then click on room name to enter</p>
+          <p>Press f5 to implement changes :)</p>
           <AddFriend />
           <DeleteFriend />
+          <BlockUser />
+          <UnblockUser />
           <CreateChannel />
           <Spacer />
+          <p>Use up/down arrow keys to change id, read id from top left corner</p>
           <EditChannel />
           <Spacer />
           <DeleteChannel />
           <PrivateChannelInvitation />
-          <BlockUser />
-          <UnblockUser />
           <DesignateAdmin />
           <BanUserTemp />
           <LiftRestrictions />
