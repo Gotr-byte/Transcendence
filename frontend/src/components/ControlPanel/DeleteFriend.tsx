@@ -54,7 +54,7 @@ const DeleteFriend: React.FC = () => {
 				onChange={handleUsernameChange}
         maxLength={15}
 				/>
-			<button onClick={handleDelete}>Delete Friend</button>
+			<button onClick={handleDelete}>Unfriend</button>
 		</div>
 	);
 };
