@@ -207,9 +207,6 @@ export class GameService
 					'isEnraged': gameState?.fox.isEnraged,
 					'hasSizeOf': gameState?.fox.hasSizeOf,
 					'pos': gameState?.fox.position
-				},
-				'triggers': {
-					'triggeredPopup': gameState?.triggers.triggeredPopup
 				}
 			});
 			player2.emit('GameLoop', 
@@ -227,11 +224,6 @@ export class GameService
 					'isEnraged': gameState?.fox.isEnraged,
 					'hasSizeOf': gameState?.fox.hasSizeOf,
 					'pos': gameState?.fox.position
-				},
-				'triggers': {
-					'triggeredGnome': gameState?.triggers.triggeredGnome,
-					'triggeredHarkinian': gameState?.triggers.triggeredHarkinian,
-					'triggeredPopup': gameState?.triggers.triggeredPopup
 				}
 			});
 		}, 1000 / config.fps);

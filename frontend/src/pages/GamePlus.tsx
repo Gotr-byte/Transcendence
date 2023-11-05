@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState, useContext } from 'react';
 import { WebsocketContext } from "../components/Context/WebsocketContexts";
 
 import JoinRandom from '../components/Game/JoinRandom';
-import JoinRandomPlus from '../components/Game/JoinRandomPlus';
 import ReceivedGameData from '../components/Game/ReceiveGameData';
 
 import musicBavariaSrc from '../../public/assets/Music_Meanwhile_in_Bavaria.mp3';
@@ -248,7 +247,7 @@ const Game: React.FC = () =>
 		// gnome: Gnome;
 		// harkinian: Harkinian;
 		fox: Fox;
-		triggers: Triggerables;
+		// triggerables: Triggerables;
 	}
 	
 	
@@ -1549,60 +1548,80 @@ const Game: React.FC = () =>
 		}
 	}
 	
-	function popup_trap(score1: number, score2: number, trigger: boolean): void
-	{
-		if (score1 + score2 >= 10) //isUnlockedPopups
-		{
-			if (trigger === true) //(Math.floor(Math.random() * 10000) === 666)
-			{
-				var selector = Math.floor(Math.random() * 100) % 11; // % 5
-				if (selector === 0)
-				{
-					alert("Run!");
-				}
-				else if (selector === 1)
-				{
-					alert("Hide!");
-				}
-				else if (selector === 2)
-				{
-					alert("Resist!");
-				}
-				else if (selector === 3)
-				{
-					alert("Fight!");
-				}
-				else if (selector === 4)
-				{
-					alert("Dog!");
-				}
-				else if (selector === 5)
-				{
-					alert("Try rump!");
-				}
-				else if (selector === 6)
-				{
-					alert("Be wary of danger!");
-				}
-				else if (selector === 7)
-				{
-					alert("Seek grace!");
-				}
-				else if (selector === 8)
-				{
-					alert("Visions of madness!");
-				}
-				else if (selector === 9)
-				{
-					alert("Ahh, suffering...");
-				}
-				else if (selector === 10)
-				{
-					alert("Praise the faith!");
-				}
-			}
-		}
-	}
+	// function popup_trap(): void
+	// {
+	// 	// if (isUnlockedPopups)
+	// 	// {
+	// 		if (lastGameState.triggerables.triggeredPopup === true) //(Math.floor(Math.random() * 10000) === 666)
+	// 		{
+	// 			var selector = Math.floor(Math.random() * 100) % 11; // % 5
+	// 			if (selector === 0)
+	// 			{
+	// 				alert("Run!");
+	// 			}
+	// 			else if (selector === 1)
+	// 			{
+	// 				alert("Hide!");
+	// 			}
+	// 			else if (selector === 2)
+	// 			{
+	// 				alert("Resist!");
+	// 			}
+	// 			else if (selector === 3)
+	// 			{
+	// 				alert("Fight!");
+	// 			}
+	// 			else if (selector === 4)
+	// 			{
+	// 				alert("Dog!");
+	// 			}
+	// 			else if (selector === 5)
+	// 			{
+	// 				alert("Try rump!");
+	// 			}
+	// 			else if (selector === 6)
+	// 			{
+	// 				alert("Be wary of danger!");
+	// 			}
+	// 			else if (selector === 7)
+	// 			{
+	// 				alert("Seek grace!");
+	// 			}
+	// 			else if (selector === 8)
+	// 			{
+	// 				alert("Visions of madness!");
+	// 			}
+	// 			else if (selector === 9)
+	// 			{
+	// 				alert("Ahh, suffering...");
+	// 			}
+	// 			else if (selector === 10)
+	// 			{
+	// 				alert("Praise the faith!");
+	// 			}
+	// 			// if (selector === 0)
+	// 			// {
+	// 			// 	alert("cLICK THIS LINK AND WIN 1 BITCOIN!!! http://hostmyvirus.co.ck/f1L3r4p3");
+	// 			// }
+	// 			// else if (selector === 1)
+	// 			// {
+	// 			// 	alert("Want see many womans whit BIG BALLS??? Clik her http://baitandhack.ro/r4n50mM0n573r-Tr0j4n");
+	// 			// }
+	// 			// else if (selector === 2)
+	// 			// {
+	// 			// 	alert("You are FBI suspekt childs pronorgafy! You have right to a turny! Free lawers best servis CALL NOW!!! +40769 666 911");
+	// 			// }
+	// 			// else if (selector === 1)
+	// 			// {
+	// 			// 	alert("1 new message from Elon Musk: Hello I am Elon Musk I end world hunger I love you send $100 to my wallet 4DZpldiB34afdq5BjdwT9ayHyLJnkMbKevc8 I send you 1000.000.000 DOGE");
+	// 			// }
+	// 			// else if (selector === 2)
+	// 			// {
+	// 			// 	alert("Legal drugs online order 100% SAFE http://jestesglupilol.pl");
+	// 			// }
+	// 		}
+	// 	// }
+	// }
 	
 	// function updateVariables(): void
 	// {
@@ -2046,13 +2065,13 @@ const Game: React.FC = () =>
 				x: (canvasWidth / 2),
 				y: (canvasHeight / 2)
 			},
-		},
-		triggers:
-		{
-			triggeredGnome: false,
-			triggeredHarkinian: false,
-			triggeredPopup: false
 		}
+		// triggerables:
+		// {
+		// 	triggeredGnome: false,
+		// 	triggeredHarkinian: false,
+		// 	triggeredPopup: false
+		// }
 	}
 
 	function updateGameState(): void
@@ -2232,7 +2251,7 @@ const Game: React.FC = () =>
 					// moveBalls();
 					// moveFox(timestamp);
 			
-					popup_trap(receivedGameState.score1, receivedGameState.score2, receivedGameState.triggers.triggeredPopup);
+					// popup_trap();
 			
 					// updateVariables();
 					// updateScores();
@@ -2295,7 +2314,6 @@ const Game: React.FC = () =>
 	return (
 		<div>
 			<JoinRandom />
-			<JoinRandomPlus />
 			<canvas ref={canvasRef} tabIndex={0} width={canvasWidth} height={canvasHeight}></canvas>
 			<audio ref={audioGnome}>
         		<source src={audioGnomeSrc} type="audio/mp3"/>

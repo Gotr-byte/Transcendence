@@ -18,7 +18,6 @@
 	"startTime": 5000,
 	"mmTimeout": 60000,
 	"unlockSecondBallAt": 20,
-	"unlockPopupsAt": 10,
 	"fox": {
 		"minSize":	30,
 		"maxSize":	45,
