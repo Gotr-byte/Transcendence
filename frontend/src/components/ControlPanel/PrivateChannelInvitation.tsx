@@ -49,6 +49,11 @@ const PrivateChannelInvitation: React.FC = () => {
 				alert(`Channel ID or username doesnt exist on the server`);
 				return;
 			}
+
+			if (response.status === 409) {
+				alert(`${username} is already member of that channel`);
+				return;
+			}
 	
 			// Error handling
 			if (!response.ok) {
@@ -57,7 +62,7 @@ const PrivateChannelInvitation: React.FC = () => {
 
 			// Log the response
 			const data = await response.text();
-			alert(`${username} was liberated on channel Id: ${id}`);
+			alert(`${username} is now member of channel Id: ${id}`);
 		} catch (error) {
 			console.error("There was a problem creating the channel:", error);
 		}
