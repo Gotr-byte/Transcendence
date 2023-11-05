@@ -6,7 +6,7 @@ type MatchmakingPayload = {
   content: string;
 };
 
-export const JoinRandomPlus: React.FC<SendDirectMessageProps> = () => {
+export const JoinRandomPlus: React.FC = () => {
 
 const socket = useContext(WebsocketContext);
 const [receivedPrompts, setReceivedPrompts] = useState<
@@ -30,7 +30,6 @@ const onSubmit = () => {
     <Button variant="solid" size="xl" onClick={onSubmit}>
        Join Random Game Plus
       </Button>
-    <p>{receivedPrompts.content}</p>
     </ div>
        
     );

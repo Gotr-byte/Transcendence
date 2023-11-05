@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 interface Opponent {
+    gameType: string;
     playerOneId: number;
     playeroneName: string;
     playerTwoId: number;

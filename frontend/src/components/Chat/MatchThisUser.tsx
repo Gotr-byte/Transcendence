@@ -3,11 +3,11 @@ import { Button } from "@chakra-ui/react";
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-interface SendDirectMessageProps {
+interface MatchThisUserProps {
   username: string;
 }
 
-export const MatchThisUser: React.FC<SendDirectMessageProps> = ({
+export const MatchThisUser: React.FC<MatchThisUserProps> = ({
   username,
 }) => {
   const socket = useContext(WebsocketContext);
