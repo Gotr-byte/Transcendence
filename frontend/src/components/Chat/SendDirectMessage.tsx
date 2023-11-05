@@ -71,11 +71,7 @@ export const SendDirectMessage: React.FC<SendDirectMessageProps> = ({
 		if (id === null) return;
 		const eventName = `user-msg-${id}`;
 		socket.on(eventName, (newMessage: ReceivedMessagePayload) => {
-			const taggedMessage = {
-				...newMessage,
-				content: newMessage.sender + ": " + newMessage.content,
-			};
-			setReceivedMessages((prev) => [...prev, taggedMessage]);
+			setReceivedMessages((prev) => [...prev, newMessage]);
 		});
 		return () => {
 			console.log("Unregistering Events...");
@@ -113,7 +109,7 @@ export const SendDirectMessage: React.FC<SendDirectMessageProps> = ({
 						>
 							{receivedMessages.map((msg, index) => (
 								<div key={index}>
-									<p>{msg.content}</p>
+									<p><strong>{msg.sender}:</strong> {msg.content}</p>
 								</div>
 							))}
 						</div>

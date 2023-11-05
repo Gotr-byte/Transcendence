@@ -68,13 +68,19 @@ export class ChannelController {
     @ChannelId() @Param('channelId', ChannelIdValidationPipe) channelId: number,
     @AuthUser() user: User,
   ): Promise<ShowUsersRoles> {
-    if (1000 < +channelId)
-      throw new BadRequestException('ChannelId is too big');
+    const userId = user.id;
     const userList = await this.channelService.getChannelUsers(
       +channelId,
       user.id,
     );
-    return userList;
+    const filteredUsers = userList.users.filter((user) => user.id !== userId);
+
+    const updatedData = {
+      ...userList,
+      users: filteredUsers,
+      usersNo: filteredUsers.length, // Update the count if necessary
+    };
+    return updatedData;
   }
 
   @Post('id/:channelId/join')

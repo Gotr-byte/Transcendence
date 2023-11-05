@@ -12,6 +12,7 @@ interface User {
 	username: string;
 	avatar: string;
 	isOnline: boolean;
+	inGame: boolean;
 	role: UserRole;
 }
 
@@ -39,7 +40,6 @@ const ChatUsers: React.FC<ChatUsersProps> = ({ currentRoomId }) => {
 			}
 
 			try {
-				console.log(currentRoomId);
 				const response = await fetch(
 					`${
 						import.meta.env.VITE_API_URL

@@ -1,5 +1,5 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import { ChannelMember } from '@prisma/client';
+import { ChannelMember, ChannelUserRestriction } from '@prisma/client';
 import { NotFoundError } from 'rxjs';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CustomError } from 'src/shared/shared.errors';
@@ -38,6 +38,22 @@ export class ChatSharedService {
     });
     if (removed.count === 0)
       throw new ConflictException('User is not on channel');
+  }
+
+
+  async getCurrentRestriction(
+    channelId: number,
+    userId: number,
+  ): Promise<ChannelUserRestriction | null> {
+    const restriction = await this.prisma.channelUserRestriction.findUnique({
+      where: {
+        restrictedUserId_restrictedChannelId: {
+          restrictedUserId: userId,
+          restrictedChannelId: channelId,
+        },
+      },
+    });
+    return restriction;
   }
 
   async ensureUserIsMember(channelId: number, userId: number): Promise<void> {

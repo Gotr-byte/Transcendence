@@ -14,6 +14,8 @@ import { WSValidationPipe } from 'src/filters/ws-validation-pipe';
 import { WsAuthGuard } from 'src/auth/guards/socket-guards';
 import { SocketService } from 'src/socket/socket.service';
 import { WsExceptionFilter } from 'src/filters/ws-exception-filter';
+import { ChatSharedService } from './shared/chat-shared.service';
+import { ChannelUserRestrictionTypes } from '@prisma/client';
 
 // @UseGuards(WsAuthGuard)
 @UseFilters(new WsExceptionFilter())
@@ -29,7 +31,7 @@ export class ChatGateway implements OnGatewayConnection {
 
   constructor(
     private readonly chatService: ChatService, // ... Other services
-    private readonly socketService: SocketService, // ... Other services
+    private readonly chatSharedService: ChatSharedService, // ... Other services
   ) {}
 
   async handleConnection(@ConnectedSocket() client: Socket): Promise<void> {
@@ -38,7 +40,7 @@ export class ChatGateway implements OnGatewayConnection {
       userId = client.handshake.query.userId as string;
     }
     if (!userId) {
-      client.shouldHandleDisconnect = false
+      client.shouldHandleDisconnect = false;
       client.disconnect();
       return;
     }
@@ -64,6 +66,13 @@ export class ChatGateway implements OnGatewayConnection {
   ): Promise<void> {
     const userId = await this.chatService.getUserIdFromSocket(client.id);
 
+    const restriction = await this.chatSharedService.getCurrentRestriction(
+      channelMessageDto.channelId,
+      userId,
+    );
+    if (restriction?.restrictionType === ChannelUserRestrictionTypes.MUTED)
+      return;
+
     // Get notifications and messages to send from the service
     const chatEvents = await this.chatService.handleChannelMessage(
       userId,
@@ -73,34 +82,22 @@ export class ChatGateway implements OnGatewayConnection {
     // Emit the messages and notifications
     for (const chatEvent of chatEvents) {
       const receiverId = chatEvent.receiverId;
-      const isBlocked = await this.chatService.userIsBlocked(
+      const memberSocketIds = await this.chatService.getSocketIdsFromUserId(
         receiverId,
-        userId,
       );
 
-      if (!isBlocked) {
-        const memberSocketIds = await this.chatService.getSocketIdsFromUserId(
-          receiverId,
-        );
-
-        memberSocketIds.forEach((socketId) => {
-          if (userId == receiverId) {
-            // If the sender is the receiver (message to self), emit directly to the client.
-            client.emit(chatEvent.event, chatEvent.message);
-          } else {
-            // Otherwise, emit to the recipient's socket.
-            client.to(socketId).emit(chatEvent.event, chatEvent.message);
-            client
-              .to(socketId)
-              .emit('chat-notifications', chatEvent.notification);
-          }
-        });
-      } else {
-        // Optionally handle the case where the user is blocked, e.g., notify the sender.
-        console.log(
-          `Message not sent. User ${userId} is blocked by User ${receiverId}.`,
-        );
-      }
+      memberSocketIds.forEach((socketId) => {
+        if (userId == receiverId) {
+          // If the sender is the receiver (message to self), emit directly to the client.
+          client.emit(chatEvent.event, chatEvent.message);
+        } else {
+          // Otherwise, emit to the recipient's socket.
+          client.to(socketId).emit(chatEvent.event, chatEvent.message);
+          client
+            .to(socketId)
+            .emit('chat-notifications', chatEvent.notification);
+        }
+      });
     }
   }
 
