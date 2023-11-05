@@ -14,30 +14,30 @@ import ReceivedGameData from '../components/Game/ReceiveGameData';
 // import videoMcrolldSrc from '../../public/assets/Video_Mcrolld.mp4';
 // import videoMcrolldReverseSrc from '../../public/assets/Video_Mcrolld_reverse.mp4';
 
-import audioGnomeSrc from '../../public/assets/SoundEffect_Gnome.mp3';
-import imageGnomeSrc from '../../public/assets/Image_Gnome.png';
+// import audioGnomeSrc from '../../public/assets/SoundEffect_Gnome.mp3';
+// import imageGnomeSrc from '../../public/assets/Image_Gnome.png';
 
-import audioHarkinianOahSrc from '../../public/assets/SoundEffect_Harkinian_Oah.mp3';
-import audioHarkinianHitSrc from '../../public/assets/SoundEffect_Harkinian_Hit.mp3';
-import videoHarkinianHitSrc from '../../public/assets/Video_Harkinian_Hit.mp4';
+// import audioHarkinianOahSrc from '../../public/assets/SoundEffect_Harkinian_Oah.mp3';
+// import audioHarkinianHitSrc from '../../public/assets/SoundEffect_Harkinian_Hit.mp3';
+// import videoHarkinianHitSrc from '../../public/assets/Video_Harkinian_Hit.mp4';
 
-import imageFoxBadSrc from '../../public/assets/Image_Fox_bad.png';
-import imageFoxGoodSrc from '../../public/assets/Image_Fox_good.png';
-import imageFoxEnragedSrc from '../../public/assets/Image_Fox_enraged_ORIGINAL.png';
-import audioFoxEnrageSrc from '../../public/assets/SoundEffect_Fox_Enrage.mp3';
+// import imageFoxBadSrc from '../../public/assets/Image_Fox_bad.png';
+// import imageFoxGoodSrc from '../../public/assets/Image_Fox_good.png';
+// import imageFoxEnragedSrc from '../../public/assets/Image_Fox_enraged_ORIGINAL.png';
+// import audioFoxEnrageSrc from '../../public/assets/SoundEffect_Fox_Enrage.mp3';
 
-import audioFoxMeowSrc from '../../public/assets/SoundEffect_Fox_Meow.mp3';
-import audioFoxWoofSrc from '../../public/assets/SoundEffect_Fox_Woof.mp3';
-import audioFoxQuackSrc from '../../public/assets/SoundEffect_Fox_Quack.mp3';
-import audioFoxChickenSrc from '../../public/assets/SoundEffect_Fox_Chicken.mp3';
-import audioFoxGoatSrc from '../../public/assets/SoundEffect_Fox_Goat.mp3';
-import audioFoxPigSrc from '../../public/assets/SoundEffect_Fox_Pig.mp3';
-import audioFoxTweetSrc from '../../public/assets/SoundEffect_Fox_Tweet.mp3';
-import audioFoxAheeSrc from '../../public/assets/SoundEffect_Fox_Ahee.mp3';
-import audioFoxChaSrc from '../../public/assets/SoundEffect_Fox_Cha.mp3';
-import audioFoxKakaSrc from '../../public/assets/SoundEffect_Fox_Kaka.mp3';
-import audioFoxPapaSrc from '../../public/assets/SoundEffect_Fox_Papa.mp3';
-import audioFoxYokSrc from '../../public/assets/SoundEffect_Fox_Yok.mp3';
+// import audioFoxMeowSrc from '../../public/assets/SoundEffect_Fox_Meow.mp3';
+// import audioFoxWoofSrc from '../../public/assets/SoundEffect_Fox_Woof.mp3';
+// import audioFoxQuackSrc from '../../public/assets/SoundEffect_Fox_Quack.mp3';
+// import audioFoxChickenSrc from '../../public/assets/SoundEffect_Fox_Chicken.mp3';
+// import audioFoxGoatSrc from '../../public/assets/SoundEffect_Fox_Goat.mp3';
+// import audioFoxPigSrc from '../../public/assets/SoundEffect_Fox_Pig.mp3';
+// import audioFoxTweetSrc from '../../public/assets/SoundEffect_Fox_Tweet.mp3';
+// import audioFoxAheeSrc from '../../public/assets/SoundEffect_Fox_Ahee.mp3';
+// import audioFoxChaSrc from '../../public/assets/SoundEffect_Fox_Cha.mp3';
+// import audioFoxKakaSrc from '../../public/assets/SoundEffect_Fox_Kaka.mp3';
+// import audioFoxPapaSrc from '../../public/assets/SoundEffect_Fox_Papa.mp3';
+// import audioFoxYokSrc from '../../public/assets/SoundEffect_Fox_Yok.mp3';
 
 interface Coordinates
 {
@@ -296,7 +296,7 @@ const Game: React.FC = () =>
 
 	// Gnome
 	const imageGnome = useRef<HTMLImageElement>(new Image());
-	imageGnome.current.src = imageGnomeSrc;
+	// imageGnome.current.src = imageGnomeSrc;
 	imageGnome.current.width = 168;
 	imageGnome.current.height = 171;
 	const audioGnome = useRef<HTMLAudioElement | null>(null);
@@ -308,15 +308,15 @@ const Game: React.FC = () =>
 	
 	// Fox
 	const imageFoxBad = useRef<HTMLImageElement>(new Image());
-	imageFoxBad.current.src = imageFoxBadSrc;
+	// imageFoxBad.current.src = imageFoxBadSrc;
 	imageFoxBad.current.width = 50;
 	imageFoxBad.current.height = 49;
 	const imageFoxGood = useRef<HTMLImageElement>(new Image());
-	imageFoxGood.current.src = imageFoxGoodSrc;
+	// imageFoxGood.current.src = imageFoxGoodSrc;
 	imageFoxGood.current.width = 50;
 	imageFoxGood.current.height = 49;
 	const imageFoxEnraged = useRef<HTMLImageElement>(new Image());
-	imageFoxEnraged.current.src = imageFoxEnragedSrc;
+	// imageFoxEnraged.current.src = imageFoxEnragedSrc;
 	imageFoxEnraged.current.width = 153;
 	imageFoxEnraged.current.height = 149;
 	const audioFoxEnrage = useRef<HTMLAudioElement | null>(null);
@@ -521,76 +521,76 @@ const Game: React.FC = () =>
 	// Set the multimedia sources when the component has rendered
 	useEffect(() =>
 	{
-		if (audioGnome.current)
-		{
-			audioGnome.current.src = audioGnomeSrc;
-		}
-		if (audioHarkinianHit.current)
-		{
-			audioHarkinianHit.current.src = audioHarkinianHitSrc;
-		}
-		if (audioHarkinianOah.current)
-		{
-			audioHarkinianOah.current.src = audioHarkinianOahSrc;
-		}
-		if (audioFoxMeow.current)
-		{
-			audioFoxMeow.current.src = audioFoxMeowSrc;
-			foxGoodSoundPlaying = audioFoxMeow.current;
-		}
-		if (audioFoxWoof.current)
-		{
-			audioFoxWoof.current.src = audioFoxWoofSrc;
-		}
-		if (audioFoxQuack.current)
-		{
-			audioFoxQuack.current.src = audioFoxQuackSrc;
-		}
-		if (audioFoxChicken.current)
-		{
-			audioFoxChicken.current.src = audioFoxChickenSrc;
-		}
-		if (audioFoxGoat.current)
-		{
-			audioFoxGoat.current.src = audioFoxGoatSrc;
-		}
-		if (audioFoxPig.current)
-		{
-			audioFoxPig.current.src = audioFoxPigSrc;
-		}
-		if (audioFoxTweet.current)
-		{
-			audioFoxTweet.current.src = audioFoxTweetSrc;
-		}
-		if (audioFoxAhee.current)
-		{
-			audioFoxAhee.current.src = audioFoxAheeSrc;
-			foxEvilSoundPlaying = audioFoxAhee.current;
-		}
-		if (audioFoxCha.current)
-		{
-			audioFoxCha.current.src = audioFoxChaSrc;
-		}
-		if (audioFoxKaka.current)
-		{
-			audioFoxKaka.current.src = audioFoxKakaSrc;
-		}
-		if (audioFoxPapa.current)
-		{
-			audioFoxPapa.current.src = audioFoxPapaSrc;
-		}
-		if (audioFoxYok.current)
-		{
-			audioFoxYok.current.src = audioFoxYokSrc;
-		}
-		if (audioFoxEnrage.current)
-		{
-			audioFoxEnrage.current.src = audioFoxEnrageSrc;
-		}
-		if (videoHarkinianHit.current)
-		{
-			videoHarkinianHit.current.src = videoHarkinianHitSrc;
-		}
+		// if (audioGnome.current)
+		// {
+		// 	audioGnome.current.src = audioGnomeSrc;
+		// }
+		// if (audioHarkinianHit.current)
+		// {
+		// 	audioHarkinianHit.current.src = audioHarkinianHitSrc;
+		// }
+		// if (audioHarkinianOah.current)
+		// {
+		// 	audioHarkinianOah.current.src = audioHarkinianOahSrc;
+		// }
+		// if (audioFoxMeow.current)
+		// {
+		// 	audioFoxMeow.current.src = audioFoxMeowSrc;
+		// 	foxGoodSoundPlaying = audioFoxMeow.current;
+		// }
+		// if (audioFoxWoof.current)
+		// {
+		// 	audioFoxWoof.current.src = audioFoxWoofSrc;
+		// }
+		// if (audioFoxQuack.current)
+		// {
+		// 	audioFoxQuack.current.src = audioFoxQuackSrc;
+		// }
+		// if (audioFoxChicken.current)
+		// {
+		// 	audioFoxChicken.current.src = audioFoxChickenSrc;
+		// }
+		// if (audioFoxGoat.current)
+		// {
+		// 	audioFoxGoat.current.src = audioFoxGoatSrc;
+		// }
+		// if (audioFoxPig.current)
+		// {
+		// 	audioFoxPig.current.src = audioFoxPigSrc;
+		// }
+		// if (audioFoxTweet.current)
+		// {
+		// 	audioFoxTweet.current.src = audioFoxTweetSrc;
+		// }
+		// if (audioFoxAhee.current)
+		// {
+		// 	audioFoxAhee.current.src = audioFoxAheeSrc;
+		// 	foxEvilSoundPlaying = audioFoxAhee.current;
+		// }
+		// if (audioFoxCha.current)
+		// {
+		// 	audioFoxCha.current.src = audioFoxChaSrc;
+		// }
+		// if (audioFoxKaka.current)
+		// {
+		// 	audioFoxKaka.current.src = audioFoxKakaSrc;
+		// }
+		// if (audioFoxPapa.current)
+		// {
+		// 	audioFoxPapa.current.src = audioFoxPapaSrc;
+		// }
+		// if (audioFoxYok.current)
+		// {
+		// 	audioFoxYok.current.src = audioFoxYokSrc;
+		// }
+		// if (audioFoxEnrage.current)
+		// {
+		// 	audioFoxEnrage.current.src = audioFoxEnrageSrc;
+		// }
+		// if (videoHarkinianHit.current)
+		// {
+		// 	videoHarkinianHit.current.src = videoHarkinianHitSrc;
+		// }
 		// if (musicBavaria.current)
 		// {
 		// 	musicBavaria.current.src = musicBavariaSrc;
@@ -698,20 +698,35 @@ const Game: React.FC = () =>
 				{
 					setGnomeStartTime(timestamp);
 					setGnomeIsActive(true);
-					audioGnome.current.play();
+					// audioGnome.current.play();
 					// gnome_swap();
 				}
 			}
 			else if (timestamp - gnomeStartTime <= 200)
 			{
-				ctx.drawImage(imageGnome.current, (ball1X - 80) * resizingFactor, (ball1Y - 90) * resizingFactor);
+				// ctx.drawImage(imageGnome.current, (ball1X - 80) * resizingFactor, (ball1Y - 90) * resizingFactor);
+				ctx.beginPath();
+				ctx.rect((ball1X - 80) * resizingFactor, (ball1Y - 90) * resizingFactor, 150 * resizingFactor, 150 * resizingFactor);
+				ctx.fillStyle = "blue";
+				ctx.fill();
+				ctx.closePath();
 				if (score1 + score2 >= 40)
 				{
-					ctx.drawImage(imageGnome.current, (ball2X - 80) * resizingFactor, (ball2Y - 90) * resizingFactor);
+					// ctx.drawImage(imageGnome.current, (ball2X - 80) * resizingFactor, (ball2Y - 90) * resizingFactor);
+					ctx.beginPath();
+					ctx.rect((ball2X - 80) * resizingFactor, (ball2Y - 90) * resizingFactor, 150 * resizingFactor, 150 * resizingFactor);
+					ctx.fillStyle = "blue";
+					ctx.fill();
+					ctx.closePath();
 				}
 				if (score1 + score2 >= 30)
 				{
-					ctx.drawImage(imageGnome.current, (foxX - 80) * resizingFactor, (foxY - 90) * resizingFactor);
+					// ctx.drawImage(imageGnome.current, (foxX - 80) * resizingFactor, (foxY - 90) * resizingFactor);
+					ctx.beginPath();
+					ctx.rect((foxX - 80) * resizingFactor, (foxY - 90) * resizingFactor, 150 * resizingFactor, 150 * resizingFactor);
+					ctx.fillStyle = "blue";
+					ctx.fill();
+					ctx.closePath();
 				}
 			}
 			else
@@ -725,20 +740,26 @@ const Game: React.FC = () =>
 	{
 		if (score1 + score2 >= 15)
 		{
+			let showHarkinian: boolean = true;
 			if (harkinianIsActive === false)
 			{
 				if (triggered === true) //(Math.floor(Math.random()*1000) === 666)
 				{
 					setHarkinianIsActive(true);
-					videoHarkinianHit.current.play();
-					audioHarkinianOah.current.play();
-					audioHarkinianHit.current.play();
+					// videoHarkinianHit.current.play();
+					// audioHarkinianOah.current.play();
+					// audioHarkinianHit.current.play();
 					//harkinian_hit(Math.floor(Math.random() * 100));
 				}
 			}
-			else if (videoHarkinianHit.current.paused === false)
+			else if (showHarkinian === true)
 			{
-				ctx.drawImage(videoHarkinianHit.current, (posX - (harkinianWidth / 2)) * resizingFactor, (posY - (harkinianHeight / 2)) * resizingFactor, harkinianWidth * resizingFactor, harkinianHeight * resizingFactor);
+				// ctx.drawImage(videoHarkinianHit.current, (posX - (harkinianWidth / 2)) * resizingFactor, (posY - (harkinianHeight / 2)) * resizingFactor, harkinianWidth * resizingFactor, harkinianHeight * resizingFactor);
+				ctx.beginPath();
+				ctx.rect((posX - (harkinianWidth / 2)) * resizingFactor, (posY - (harkinianHeight / 2)) * resizingFactor, 150 * resizingFactor, 150 * resizingFactor);
+				ctx.fillStyle = "orange";
+				ctx.fill();
+				ctx.closePath();
 			}
 			else
 			{
@@ -753,15 +774,30 @@ const Game: React.FC = () =>
 		{
 			if (foxEnraged === true)
 			{
-				ctx.drawImage(imageFoxEnraged.current, foxPosX * resizingFactor, foxPosY * resizingFactor);
+				// ctx.drawImage(imageFoxEnraged.current, foxPosX * resizingFactor, foxPosY * resizingFactor);
+				ctx.beginPath();
+				ctx.rect(foxPosX * resizingFactor, foxPosY * resizingFactor, 50 * resizingFactor, 50 * resizingFactor);
+				ctx.fillStyle = "red";
+				ctx.fill();
+				ctx.closePath();
 			}
 			else if (foxEvil === true)
 			{
-				ctx.drawImage(imageFoxBad.current, foxPosX * resizingFactor, foxPosY * resizingFactor);
+				// ctx.drawImage(imageFoxBad.current, foxPosX * resizingFactor, foxPosY * resizingFactor);
+				ctx.beginPath();
+				ctx.rect(foxPosX * resizingFactor, foxPosY * resizingFactor, 50 * resizingFactor, 50 * resizingFactor);
+				ctx.fillStyle = "orange";
+				ctx.fill();
+				ctx.closePath();
 			}
 			else
 			{
-				ctx.drawImage(imageFoxGood.current, foxPosX * resizingFactor, foxPosY * resizingFactor);
+				// ctx.drawImage(imageFoxGood.current, foxPosX * resizingFactor, foxPosY * resizingFactor);
+				ctx.beginPath();
+				ctx.rect(foxPosX * resizingFactor, foxPosY * resizingFactor, 50 * resizingFactor, 50 * resizingFactor);
+				ctx.fillStyle = "yellow";
+				ctx.fill();
+				ctx.closePath();
 			}
 		}
 	}
@@ -2332,7 +2368,7 @@ const Game: React.FC = () =>
 				// style={{ border: "1px solid black" }}
 				style={{ border: "1px solid black", width: '100%', height: '100%', display: 'block' }}
 			></canvas>
-			<audio ref={audioGnome}>
+			{/* <audio ref={audioGnome}>
         		<source src={audioGnomeSrc} type="audio/mp3"/>
       		</audio>
 			<audio ref={audioHarkinianHit}>
@@ -2379,7 +2415,7 @@ const Game: React.FC = () =>
       		</audio>
 			<audio ref={audioFoxEnrage}>
         		<source src={audioFoxEnrageSrc} type="audio/mp3"/>
-      		</audio>
+      		</audio> */}
 			{/* <audio ref={musicBavaria}>
         		<source src={musicBavariaSrc} type="audio/mp3"/>
       		</audio>
@@ -2401,9 +2437,9 @@ const Game: React.FC = () =>
 			  <video ref={videoMcrolldReverse} style={{ display: 'none' }}>
         		<source src={videoMcrolldReverseSrc} type="video/mp4"/>
       		</video> */}
-			<video ref={videoHarkinianHit} style={{ display: 'none' }}>
+			{/* <video ref={videoHarkinianHit} style={{ display: 'none' }}>
         		<source src={videoHarkinianHitSrc} type="video/mp4"/>
-      		</video>
+      		</video> */}
 			{/* <ReceivedGameData /> */}
 		</div>
 	);
