@@ -85,6 +85,7 @@ export class GameState
 	public harkinian:	Harkinian;
 	public triggers:	Triggerables;
 	public winner:		number;
+	public roundStart:	number;
 
 	constructor(
 		private isExtended: boolean,
@@ -99,6 +100,7 @@ export class GameState
 		this.harkinian = new Harkinian();
 		this.triggers = new Triggerables();
 		this.winner = 0;
+		this.roundStart = Date.now();
 	}
 
 	public getGameInstance(): GameInstance
@@ -135,6 +137,7 @@ export class GameState
 
 	public extendedVersion(): void
 	{
+		// this.adjustBallVelocityDuringRound();
 		this.triggerTriggerables();
 		this.controlGnome();
 		this.controlHarkinian();
@@ -152,6 +155,14 @@ export class GameState
 			//this.foxBallCollission();
 		}
 
+	}
+
+	public adjustBallVelocityDuringRound(): void
+	{
+		let timeNow: number = Date.now();
+
+		if (timeNow - this.roundStart >= 1000)
+			this.ball.velocity += 0.01;
 	}
 
 	public foxBallCollission(): void
@@ -547,6 +558,8 @@ export class GameState
 		if (this.isExtended === false)
 			return;
 
+		// this.ball.velocity -= ((Date.now() - this.roundStart) / 10000);
+		this.roundStart = Date.now();
 		this.fox.hasSizeOf = config.fox.minSize;
 		this.fox.isEnraged = false;
 		this.fox.isEvil = false;
