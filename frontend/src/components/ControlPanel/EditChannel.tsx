@@ -80,6 +80,7 @@ const EditChannel: React.FC = () => {
 			// Log the response
 			const data = await response.json();
 			console.log("Channel created:", data);
+			window.location.reload();
 		} catch (error) {
 			setError(`There was a problem creating the channel: ${error}`);
 			console.error("There was a problem creating the channel:", error);

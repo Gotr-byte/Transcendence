@@ -62,6 +62,7 @@ const BanUserTemp: React.FC = () => {
 			const data = await response.json();
 			if (!duration) alert(`${restrictionType} ${username} indefinitely`);
 			else alert(`${restrictionType} ${username} until ${duration}`);
+			window.location.reload();
 		} catch (error) {
 			console.error("There was a problem enabling restriction", error);
 		}

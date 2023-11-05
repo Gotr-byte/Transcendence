@@ -46,6 +46,7 @@ const KickUser: React.FC = () => {
 			}
 			const data = await response.text();
 			alert(`${username} was kicked from Channel Id: ${id}`);
+			window.location.reload();
 		} catch (error) {
 			// setError(`There was a problem enablig restriction ${error}`);
 			console.error("There was a problem enabling restriction", error);
