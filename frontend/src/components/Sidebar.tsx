@@ -5,6 +5,8 @@ import { NavLink } from 'react-router-dom';
 import { useContext } from 'react';
 import { WebsocketContext } from '../components/Context/WebsocketContexts';
 import { useNavigate } from 'react-router-dom';
+import UpdateUser from './ControlPanel/UpdateUser';
+import FileUpload from './ControlPanel/FileUpload';
 
 
 interface Opponent {
@@ -15,6 +17,21 @@ interface Opponent {
     playerTwoName: string;
     timestamp: number;
 }
+
+// const InitialLoginPrompt = () => {
+//     const toast = useToast();
+  
+//     return (
+//       <Box p={4} color="white" bg="blue.500" borderRadius="md">
+//         <Text>Welcome! Change your avatar and username in the account section.</Text>
+            // <UpdateUser/>
+            //<FileUpload />
+//         <Button mt={2} size="sm" colorScheme="green" onClick={() => toast.closeAll()}>
+//           Got it!
+//         </Button>
+//       </Box>
+//     );
+//   };
 
 export const Sidebar = () => {
     const socketIo = useContext(WebsocketContext);
@@ -77,6 +94,7 @@ export const Sidebar = () => {
                 // position: 'top-right',
                 // variant: 'subtle',
                 // colorScheme: 'pink',
+                // render: () => <InitialLoginPrompt />,
             // });
         // });
 
