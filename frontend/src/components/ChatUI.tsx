@@ -172,6 +172,11 @@ const handleNewMessage = (newMessage: ReceivedMessagePayload) => {
 					onChange={(e) =>
 						setSentMessage({ ...sentMessage, content: e.target.value })
 					}
+					onKeyPress={(e) => {
+						if (e.key === 'Enter') {
+							onSubmit();
+						}
+					}}
 				/>
 				<Button onClick={onSubmit}>Send</Button>
 			</Grid>
