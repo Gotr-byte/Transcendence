@@ -66,8 +66,24 @@ export const Sidebar = () => {
             });
         });
 
+        // socketIo.on('initialLoginPrompt', () => {
+            // Show the toast for the initial login prompt
+            // toast({
+                // title: 'Welcome!',
+                // description: 'Welcome traveller! Change your avatar and username in the account section!',
+                // status: 'info',
+                // duration: 9000,
+                // isClosable: true,
+                // position: 'top-right',
+                // variant: 'subtle',
+                // colorScheme: 'pink',
+            // });
+        // });
+
         return () => {
             socketIo.off('GameRequest');
+            socketIo.off('EndGame');
+            // socketIo.off('initialLoginPrompt');
         };
     }, [toast, socketIo]);
 

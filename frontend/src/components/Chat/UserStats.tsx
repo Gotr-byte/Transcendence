@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 
 interface Stats {
+    position: number;
     matchesPlayed: number;
     matchesWon: number;
     totalPoints: number;
@@ -48,6 +49,7 @@ function UserStats({ username }: UserStatsProps) {
                     <Th></Th>
                 </Tr>
                 <Tr>
+                    <Th>Position</Th>
                     <Th>Matches Played</Th>
                     <Th>Matches Won</Th>
                     <Th>Total Points</Th>
@@ -55,6 +57,7 @@ function UserStats({ username }: UserStatsProps) {
             </Thead>
             <Tbody>
                 <Tr>
+                    <Td>{stats.position}</Td>
                     <Td>{stats.matchesPlayed}</Td>
                     <Td>{stats.matchesWon}</Td>
                     <Td>{stats.totalPoints}</Td>
